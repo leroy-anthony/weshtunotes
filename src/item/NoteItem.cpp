@@ -54,7 +54,7 @@ namespace Item
         m_plainTextEdit->setContentsMargins(0,0,0,0);
         setItemColor(  QColor("#F7F7C8") ); //Fixme : à mettre dans préférence (du panier ?)
 
-        m_tag = new Tag::NoteTag( this );
+        m_tag = new Tag::NoteTag( this, "default" );
 
 
         connect( m_plainTextEdit, SIGNAL(textChanged()),  this, SLOT(adaptSizeFromText()));
@@ -211,8 +211,7 @@ namespace Item
 
     void NoteItem::addTag( const QString & tagName, const QString & tagState )
     {
-        Tag::NoteTag * tag = new Tag::NoteTag(this);
-        tag->load( tagName ); //A optimiser, on n'a a charger qu'une seule fois, puis cloner...
+        Tag::NoteTag * tag = new Tag::NoteTag( this, tagName );
         tag->setCurrentState( tagState );
         m_tags << tag;
         m_horizontalLayout->insertWidget(0,tag);
@@ -223,8 +222,7 @@ namespace Item
     void NoteItem::tagApply( QAction * action )
     {
         QString tagName = action->text();
-        Tag::NoteTag * tag = new Tag::NoteTag(this);
-        tag->load( tagName );
+        Tag::NoteTag * tag = new Tag::NoteTag( this, tagName );
         m_tags << tag;
         m_horizontalLayout->insertWidget(0,tag);
         m_plainTextEdit->selectAll();
