@@ -1,0 +1,13 @@
+#add_subdirectory(config)
+#add_subdirectory(datawarehouse)
+#add_subdirectory(debug)
+#add_subdirectory(effect)
+#add_subdirectory(media)
+#add_subdirectory(metadata)
+#add_subdirectory(model)
+#add_subdirectory(view)
+#add_subdirectory(widget)
+#add_subdirectory(explorer)
+add_subdirectory(scene)
+
+add_subdirectory(main)
