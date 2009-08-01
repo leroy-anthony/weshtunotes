@@ -182,7 +182,8 @@ namespace Tag
     void State::load( Config::Configuration & settings )
     {
         m_name = settings.value( "name" ).toString();
-        m_symbol = settings.value( "symbol" ).toString();
+        m_symbol = settings.value( "symbol", "" ).toString();
+        qDebug() << "load" << m_symbol;
         m_bold = settings.value( "bold" ).toBool();
         m_italic = settings.value( "italic" ).toBool();
         m_alignment = settings.value( "alignment" ).toInt();
