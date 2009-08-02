@@ -89,6 +89,8 @@ namespace Scene
         a = addAction(QIcon("icon:format-justify-right.png"),"alignRight");
         connect(a, SIGNAL(triggered(bool)), this, SLOT(setAlignmentRight(bool)));
 
+        m_toolBar->addSeparator();
+
         m_colorItem = new QtColorPicker();
         m_colorItem->setStandardColors();
         m_toolBar->addWidget(m_colorItem);
@@ -96,6 +98,7 @@ namespace Scene
 
         a = addAction(QIcon("icon:edit-delete.png"),"del");
         connect(a, SIGNAL(triggered(bool)), this, SLOT(deleteItem()));
+        a->setCheckable( false );
 
         m_toolBarScene = this;
     }
