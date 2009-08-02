@@ -24,8 +24,15 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-
     app.setOrganizationName("weshTuNotes Corp.");
+
+    if ( !QSystemTrayIcon::isSystemTrayAvailable() )
+    {
+        QMessageBox::critical(0, QObject::tr("Systray"), QObject::tr("I couldn't detect any system tray on this system."));
+        return 1;
+    }
+
+    QApplication::setQuitOnLastWindowClosed(false);
 
     QDir::addSearchPath( "icon", "/home/kahal/Programmation/workspace/weshTuNotes/data/icon" );
 
