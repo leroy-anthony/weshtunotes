@@ -40,7 +40,7 @@ namespace Handle
 {
 
     QWidget * HandleItem::m_w = 0;
-    //    int HandleItem::m_index = 0;
+        int HandleItem::m_index = 0;
     int HandleItem::m_id = 1;
 
     HandleItem::HandleItem( Scene::AbstractScene * parent, int x, int y ) :
@@ -51,7 +51,6 @@ namespace Handle
             m_moveHandle(this),
             m_parentHandle(0),
             m_modeDegroupement(false),
-            m_index(0),
             m_x(x),
             m_y(y)
     {
@@ -230,7 +229,7 @@ namespace Handle
 
     void HandleItem::resetInsert()
     {
-        //m_index = -1;
+        m_index = -1;
         m_w->setVisible(false);
     }
 
