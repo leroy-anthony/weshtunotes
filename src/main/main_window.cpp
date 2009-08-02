@@ -33,6 +33,7 @@ MainWindow::MainWindow(QWidget * parent, int argc, char *argv[]) :
     initView();
     initToolBar();
     initMedia();
+    initSystemTray();
 
     m_treeExplorer->loadBaskets();
 
@@ -45,7 +46,7 @@ MainWindow::MainWindow(QWidget * parent, int argc, char *argv[]) :
     m_tagFactory = Tag::TagFactory::newTagFactory();
     m_tagFactory->loadTags();
 
-     connect(actionCustomize,SIGNAL(activated()), this, SLOT(showTagFactory()));
+    connect(actionCustomize,SIGNAL(activated()), this, SLOT(showTagFactory()));
 }
 
 MainWindow::~MainWindow()
@@ -114,7 +115,6 @@ void MainWindow::initMedia()
 
     connect(m_treeExplorer,SIGNAL(itemActivated(QTreeWidgetItem*,int)),this,SLOT(loadScene(QTreeWidgetItem*,int)));
 
-    
 }
 
 void MainWindow::loadScene( QTreeWidgetItem * item , int column )
@@ -131,4 +131,51 @@ Scene::AbstractScene * MainWindow::currentScene()
 void MainWindow::showTagFactory()
 {
     m_tagFactory->show();
+}
+
+void MainWindow::initSystemTray()
+{
+    m_trayIcon = new QSystemTrayIcon(this);
+    QIcon icon("icon:triangle.svg");
+    m_trayIcon->setIcon(icon);
+    m_trayIcon->show();
+    connect(m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
+    setWindowIcon(icon);
+
+    QAction * minimizeAction = new QAction(tr("Mi&nimize"), this);
+    minimizeAction->setIcon(QApplication::style()->standardIcon(QStyle::SP_TitleBarMinButton));
+    connect(minimizeAction, SIGNAL(triggered()), this, SLOT(hide()));
+    QAction * maximizeAction = new QAction(tr("Ma&ximize"), this);
+    maximizeAction->setIcon(QApplication::style()->standardIcon(QStyle::SP_TitleBarMaxButton));
+    connect(maximizeAction, SIGNAL(triggered()), this, SLOT(showMaximized()));
+    QAction * restoreAction = new QAction(tr("&Restore"), this);
+    restoreAction->setIcon(QApplication::style()->standardIcon(QStyle::SP_TitleBarNormalButton));
+    connect(restoreAction, SIGNAL(triggered()), this, SLOT(showNormal()));
+    QAction * quitAction = new QAction(tr("&Quit"), this);
+    quitAction->setIcon(QApplication::style()->standardIcon(QStyle::SP_TitleBarCloseButton));
+    connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
+
+    QMenu * trayIconMenu = new QMenu(this);
+    trayIconMenu->addAction(minimizeAction);
+    trayIconMenu->addAction(maximizeAction);
+    trayIconMenu->addAction(restoreAction);
+    trayIconMenu->addSeparator();
+    trayIconMenu->addAction(quitAction);
+
+    m_trayIcon->setContextMenu(trayIconMenu);
+}
+
+void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
+{
+    switch (reason)
+    {
+    case QSystemTrayIcon::Trigger:
+        setVisible(!isVisible());
+    case QSystemTrayIcon::DoubleClick:
+        break;
+    case QSystemTrayIcon::MiddleClick:
+        break;
+    default:
+        ;
+    }
 }

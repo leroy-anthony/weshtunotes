@@ -22,6 +22,7 @@
 #include <QGraphicsView>
 #include <QList>
 #include <QToolBar>
+#include <QSystemTrayIcon>
 
 #include "ui_main_window.h"
 
@@ -47,11 +48,13 @@ public:
 public slots:
     void loadScene( QTreeWidgetItem * item , int column = 0 );
     void showTagFactory();
+     void iconActivated( QSystemTrayIcon::ActivationReason reason );
 
 private:
     void initView();
     void initToolBar();
     void initMedia();
+    void initSystemTray();
 
     Scene::AbstractScene * m_currentScene;
     Scene::ToolBarScene * m_controlerScene;
@@ -61,6 +64,8 @@ private:
     Tag::TagFactory * m_tagFactory;
 
     Explorer::TreeExplorer * m_treeExplorer;
+
+    QSystemTrayIcon * m_trayIcon;
 
 };
 
