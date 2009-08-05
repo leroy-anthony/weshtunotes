@@ -47,7 +47,7 @@ namespace Item
         void save( const QString & fileName, const QString & handleId  );
 
         void addTag( const QString & tagName, const QString & tagState );
-
+        
     public slots:
         void setBold( bool checked );
         void setAlignment ( Qt::Alignment a );
@@ -67,9 +67,6 @@ namespace Item
 
     signals:
         void colorChange();
-
-    protected:
-        void resizeEvent ( QResizeEvent * event );
 
     private:
         QHBoxLayout  * m_horizontalLayout;

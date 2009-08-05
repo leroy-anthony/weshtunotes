@@ -40,7 +40,7 @@ namespace Handle
 {
 
     QWidget * HandleItem::m_w = 0;
-        int HandleItem::m_index = 0;
+    int HandleItem::m_index = 0;
     int HandleItem::m_id = 1;
 
     HandleItem::HandleItem( Scene::AbstractScene * parent, int x, int y ) :
@@ -92,7 +92,6 @@ namespace Handle
         m_contentLayout->addWidget(w);
         m_item = w;
         setDefaultColor(m_item->color());
-        connect( m_item, SIGNAL(colorChange()),  this, SLOT(setDefaultColor()));
     }
 
     void HandleItem::setDefaultColor()
@@ -192,7 +191,7 @@ namespace Handle
         int size = m_contentLayout->count();
 
         m_w->setVisible(true);
-        m_w->setMinimumHeight(height);
+    //    m_w->setMaximumHeight(height);
 
         QPoint p =mapFromGlobal( pt );
 

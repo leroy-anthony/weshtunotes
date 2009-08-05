@@ -33,7 +33,7 @@ namespace Handle
             m_oldCursorX(-1),
             m_oldCursorY(-1)
     {
-        setMinimumWidth(9);
+        setFixedWidth(9);
         setDefaultColor(parent->defaultColor());
     }
 

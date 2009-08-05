@@ -49,8 +49,6 @@ namespace Handle
         HandleItem( Scene::AbstractScene * parent, int x, int y );
         virtual ~HandleItem();
 
-        // void add( QWidget * w );
-
         void add( Item::AbstractItem * w );
         void add( HandleItem * h );
         void remove( HandleItem * h );

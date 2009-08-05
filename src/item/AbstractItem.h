@@ -50,6 +50,7 @@ namespace Item
 
     signals:
         void editItem( Item::AbstractItem * item );
+        void sizeChange();
 
     public slots:
         virtual void isSelected();
