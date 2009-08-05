@@ -38,6 +38,8 @@ namespace Item
     NoteItem::NoteItem(QWidget * parent) :
             AbstractItem(parent)
     {
+        setContentsMargins(0,0,0,0);
+
         m_horizontalLayout = new QHBoxLayout(this);
         m_horizontalLayout->setMargin(0);
         m_horizontalLayout->setContentsMargins(0,0,0,0);
@@ -49,6 +51,7 @@ namespace Item
         m_plainTextEdit->setFrameShape(QFrame::NoFrame);
         m_plainTextEdit->setFontPointSize(8);
         m_plainTextEdit->setContentsMargins(0,0,0,0);
+        m_plainTextEdit->setFixedHeight(26);
 
         setItemColor(  QColor("#F7F7C8") ); //Fixme : à mettre dans préférence (du panier ?)
 
@@ -71,7 +74,7 @@ namespace Item
     void NoteItem::adaptSizeFromText()
     {
         int heightMax =  m_plainTextEdit->document()->size().toSize().height();
-        m_plainTextEdit->setFixedHeight( heightMax+2 );
+        m_plainTextEdit->setFixedHeight( heightMax+1 );
     }
 
     void NoteItem::edit()
