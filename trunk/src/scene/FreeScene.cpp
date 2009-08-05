@@ -76,8 +76,9 @@ namespace Scene
     Handle::HandleItem *  FreeScene::addItems( int x, int y, const QString & dataFile )
     {
         Handle::HandleItem * handle = newHandle( x, y );
-        handle->handleId();
+
         Item::AbstractItem * item = newItem( x, y, QColor(115,115,115) );
+
         handle->add( item );
 
         addHandleToScene( handle );
@@ -97,7 +98,11 @@ namespace Scene
         }
 
         w = addWidget(handle);
+
         w->setPos(handle->x(),handle->y());
+        //w->setMinimumHeight(0);
+       // w->resize(w->geometry().width(), han );
+
 
         m_handles[handle] = w;
         m_items[w] = handle;

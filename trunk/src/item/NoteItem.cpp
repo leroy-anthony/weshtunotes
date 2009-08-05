@@ -39,23 +39,20 @@ namespace Item
             AbstractItem(parent)
     {
         m_horizontalLayout = new QHBoxLayout(this);
-        m_horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
         m_horizontalLayout->setMargin(0);
         m_horizontalLayout->setContentsMargins(0,0,0,0);
         m_horizontalLayout->setSpacing(0);
         m_horizontalLayout->setSizeConstraint(QLayout::SetMaximumSize);
 
-
         m_plainTextEdit = new QTextEdit();
-        m_plainTextEdit->setObjectName(QString::fromUtf8("plainTextEdit"));
         m_plainTextEdit->setFrameStyle(QFrame::Box | QFrame::Plain);
         m_plainTextEdit->setFrameShape(QFrame::NoFrame);
         m_plainTextEdit->setFontPointSize(8);
         m_plainTextEdit->setContentsMargins(0,0,0,0);
+
         setItemColor(  QColor("#F7F7C8") ); //Fixme : à mettre dans préférence (du panier ?)
 
         m_tag = new Tag::NoteTag( this, "default" );
-
 
         connect( m_plainTextEdit, SIGNAL(textChanged()),  this, SLOT(adaptSizeFromText()));
         connect( m_plainTextEdit, SIGNAL(selectionChanged()),  this, SLOT(edit()));
@@ -71,26 +68,10 @@ namespace Item
     {
     }
 
-    void NoteItem::resizeEvent ( QResizeEvent * event )
-    {
-        adaptSizeFromText();
-        QWidget::resizeEvent(event);
-    }
-
     void NoteItem::adaptSizeFromText()
     {
-        //FIXME: problème de taille à cause de la taille fixe...
         int heightMax =  m_plainTextEdit->document()->size().toSize().height();
-        if ( heightMax > 64 )
-        {
-            m_plainTextEdit->setMinimumHeight( heightMax );
-            m_plainTextEdit->setMaximumHeight( heightMax );
-        }
-        else
-        {
-            m_plainTextEdit->setMinimumHeight( 64 );
-            m_plainTextEdit->setMaximumHeight( 64 );
-        }
+        m_plainTextEdit->setFixedHeight( heightMax+2 );
     }
 
     void NoteItem::edit()

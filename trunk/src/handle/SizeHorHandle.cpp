@@ -38,7 +38,7 @@ namespace Handle
         l->setContentsMargins( 0, 0, 0, 0 );
         l->setSpacing( 0 );
 
-        setMinimumWidth(9);
+        setFixedWidth(9);
         setDefaultColor(parent->defaultColor());
     }
 
