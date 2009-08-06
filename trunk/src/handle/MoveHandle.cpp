@@ -43,12 +43,11 @@ namespace Handle
 
     void MoveHandle::setDefaultColor( const QColor & c )
     {
-        //setStyleSheet( QString("background: %1;").arg(c.name()) );
-
-        QColor c2(c);
-         c2.setAlpha(0.6);
-        setStyleSheet(QString("background: qlineargradient(x1:0.5, y1:0, x2:0.5, y2:1, stop:0 %1, stop:1 %2)").arg(c.name()).arg(c2.name()));
+        //QColor c2(c);
+         //c2.setAlpha(0.6);
+        //setStyleSheet(QString("background: qlineargradient(x1:0.5, y1:0, x2:0.5, y2:1, stop:0 %1, stop:1 %2)").arg(c.name()).arg(c2.name()));
         m_defaultColor = QColor(c);
+        setDefaultColor();
     }
 
     void MoveHandle::setDefaultColor()

@@ -65,9 +65,6 @@ namespace Item
 
         void isSelected();
 
-    signals:
-        void colorChange();
-
     private:
         QHBoxLayout  * m_horizontalLayout;
         QTextEdit    * m_plainTextEdit;
