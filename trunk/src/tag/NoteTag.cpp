@@ -44,6 +44,8 @@ namespace Tag
 
         loadTagsMenu();
         load(name);
+
+        hide();
     }
 
     NoteTag::~NoteTag()
