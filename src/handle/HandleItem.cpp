@@ -77,7 +77,7 @@ namespace Handle
             QFrame * line = new QFrame();
             line->setMinimumHeight(24);
             line->setStyleSheet("background: #F7F7C8;");
-            line->setStyleSheet("border-color: black; border-width: 2px; border-style: dashed;");
+            line->setStyleSheet("border-color: black; border-width: 1px; border-style: dashed;");
 
             m_w = line;
         }

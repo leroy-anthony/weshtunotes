@@ -74,7 +74,7 @@ namespace Item
     void NoteItem::adaptSizeFromText()
     {
         int heightMax =  m_plainTextEdit->document()->size().toSize().height();
-        m_plainTextEdit->setFixedHeight( heightMax+1 );
+        m_plainTextEdit->setFixedHeight( heightMax+2 );
     }
 
     void NoteItem::edit()

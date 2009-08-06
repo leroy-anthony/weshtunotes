@@ -95,7 +95,7 @@ QT_WRAP_CPP(weshnotes weshnotes_SRC ${weshnotes_MOC})
 QT_WRAP_UI(weshnotes weshnotes_UI_H weshnotes_UI_SRC ${weshnotes_UI})
 
 
-add_executable(weshnotes ${weshnotes_SRC})
+add_executable(weshnotes WIN32 MACOSX_BUNDLE ${weshnotes_SRC})
 target_link_libraries(weshnotes ${QT_LIBRARIES})
 
 
