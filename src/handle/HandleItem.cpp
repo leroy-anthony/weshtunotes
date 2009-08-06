@@ -92,6 +92,7 @@ namespace Handle
         m_contentLayout->addWidget(w);
         m_item = w;
         setDefaultColor(m_item->color());
+        connect( w, SIGNAL(colorChange()), this, SLOT(setDefaultColor()) );
     }
 
     void HandleItem::setDefaultColor()
