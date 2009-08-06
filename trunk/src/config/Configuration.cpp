@@ -32,14 +32,15 @@ namespace Config
     QString Constant::root = "root";
 
     Configuration::Configuration():
-            QSettings( QCoreApplication::organizationName(), Constant::main )
+            QSettings( QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationName(), Constant::main )
     {
     }
 
     Configuration::Configuration( const QString & config ):
-            QSettings( QCoreApplication::organizationName(), config )
+            QSettings( QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationName(), config )
     {
     }
+
 
     Configuration::~Configuration()
     {
