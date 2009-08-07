@@ -75,13 +75,7 @@ namespace Handle
 
     void MoveHandle::enterEvent( QEvent * event )
     {
-        setSelectionColor();
         setCursor(Qt::OpenHandCursor);
-    }
-
-    void MoveHandle::leaveEvent( QEvent * event )
-    {
-        setDefaultColor();
     }
 
     void MoveHandle::mouseMoveEvent ( QMouseEvent * event )

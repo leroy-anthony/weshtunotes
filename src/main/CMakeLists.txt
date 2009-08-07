@@ -37,6 +37,8 @@ set(weshnotes_SRC
 ../handle/HandleItem.cpp
 ../handle/SizeHorHandle.cpp
 ../handle/MoveHandle.cpp
+../handle/DeleteHandle.cpp
+../handle/GraphicHandleItem.cpp
 ${weshnotes_SRC})
 
 
@@ -46,6 +48,8 @@ set(weshnotes_MOC
 ../handle/HandleItem.h
 ../handle/SizeHorHandle.h
 ../handle/MoveHandle.h
+../handle/DeleteHandle.h
+../handle/GraphicHandleItem.h
 ${weshnotes_MOC})
 
 

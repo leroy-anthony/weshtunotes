@@ -17,51 +17,39 @@
  Boston, MA 02110-1301, USA.
  */
 
-#ifndef MOVEHANDLE_H_
-#define MOVEHANDLE_H_
+#include "GraphicHandleItem.h"
 
 #include "../main/general.h"
 
-#include <QWidget>
+#include <QPainter>
+#include <QStyleOptionGraphicsItem>
+#include <QPen>
 
 namespace Handle
 {
 
-    class HandleItem;
-
-    class MoveHandle : public QWidget
+    GraphicHandleItem::GraphicHandleItem():
+            QGraphicsProxyWidget()
     {
-    public:
-        MoveHandle( HandleItem * parent );
-        virtual ~MoveHandle();
+        setWindowFrameMargins(0,0,2,2);
+    }
 
-        void setHoverMode( bool isHover );
+    void GraphicHandleItem::paint(QPainter *painter,
+                                  const QStyleOptionGraphicsItem *option,
+                                  QWidget *w)
+    {
+        QRectF r = option->rect;
+        r.setX(r.x()+2);
+        r.setY(r.y()+2);
 
-        void setDefaultColor();
-        void setSelectionColor();
-        void setDefaultColor( const QColor & c );
+        painter->save();
+        painter->setOpacity(0.5);
+        painter->setBrush(Qt::gray);
+        painter->setPen(Qt::lightGray);
+        painter->drawRect(r);
+        painter->restore();
 
-    protected:
-        void mouseReleaseEvent ( QMouseEvent * event );
-        void mousePressEvent ( QMouseEvent * event );
-        void mouseMoveEvent ( QMouseEvent * event );
-        void enterEvent( QEvent * event );
-
-    private:
-        QColor m_defaultColor;
-
-        enum Mode { Nothing, Move };
-
-        Mode m_mode;
-
-        int m_decalageMoveX;
-        int m_decalageMoveY;
-
-        int m_oldCursorX;
-        int m_oldCursorY;
-
-    };
+        QGraphicsProxyWidget::paint(painter,option,w);
+    }
 
 }
-
-#endif /*MOVEHANDLE_H_*/

@@ -34,11 +34,14 @@
 #include <QGraphicsLayout>
 #include <QLabel>
 #include <QAction>
+#include <QColor>
 #include <QApplication>
 #include <QGraphicsSvgItem>
 
 #include "../handle/HandleItem.h"
 #include "../config/Configuration.h"
+
+#include "../handle/GraphicHandleItem.h"
 
 namespace Scene
 {
@@ -50,6 +53,7 @@ namespace Scene
             m_currentHandle(0),
             m_modeItem(Nothing)
     {
+        setBackgroundBrush(QColor(Qt::cyan).lighter(190));
     }
 
     FreeScene::~FreeScene()
@@ -60,6 +64,7 @@ namespace Scene
     {
         Handle::HandleItem * handle = new Handle::HandleItem( this, x, y );
         connect( handle, SIGNAL(move(Handle::HandleItem*,int,int)), this, SLOT(moveItem(Handle::HandleItem*,int,int)));
+        connect( handle, SIGNAL(delItem(Handle::HandleItem*)), this, SLOT(delItem(Handle::HandleItem*)));
 
         return handle;
     }
@@ -97,19 +102,16 @@ namespace Scene
             m_handles.remove(handle);
         }
 
-        w = addWidget(handle);
+        Handle::GraphicHandleItem * g = new Handle::GraphicHandleItem();
+        g->setWidget(handle);
+        addItem(g);
 
-        w->setPos(handle->x(),handle->y());
-        //w->setMinimumHeight(0);
-       // w->resize(w->geometry().width(), han );
+        g->setPos(handle->x(),handle->y());
 
+        m_handles[handle] = g;
+        m_items[g] = handle;
 
-        m_handles[handle] = w;
-        m_items[w] = handle;
-
-        //w->setOpacity(0.9);
-
-        return w;
+        return g;
     }
 
     void FreeScene::removeGraphicsItemFromScene( Handle::HandleItem * handle )

@@ -46,12 +46,11 @@ namespace Scene
         virtual Item::AbstractItem * currentAbstractItem() = 0;
         virtual Handle::HandleItem * currentHandle()       = 0;
 
-        virtual void delItem( Handle::HandleItem * h ) = 0;
-
         virtual void load( const QString & fileName );
         virtual void save( const QString & fileName );
 
     public slots:
+        virtual void delItem( Handle::HandleItem * h ) = 0;
         virtual void moveItem( Handle::HandleItem * handleItem, int x, int y ) = 0;
 
     protected:

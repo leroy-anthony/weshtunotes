@@ -62,7 +62,6 @@ namespace Scene
         void setFontPointSize( const QString & size );
         void currentCharFormatChanged( const QTextCharFormat & f );
 
-        void deleteItem();
         void setColorItem( const QColor & c );
 
     private:

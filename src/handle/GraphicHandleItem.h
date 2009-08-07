@@ -17,51 +17,23 @@
  Boston, MA 02110-1301, USA.
  */
 
-#ifndef MOVEHANDLE_H_
-#define MOVEHANDLE_H_
+#ifndef GRAPHICHANDLEITEM_H
+#define GRAPHICHANDLEITEM_H
 
-#include "../main/general.h"
-
-#include <QWidget>
+#include <QGraphicsProxyWidget>
 
 namespace Handle
 {
 
-    class HandleItem;
-
-    class MoveHandle : public QWidget
+    class GraphicHandleItem : public QGraphicsProxyWidget
     {
     public:
-        MoveHandle( HandleItem * parent );
-        virtual ~MoveHandle();
+        GraphicHandleItem();
 
-        void setHoverMode( bool isHover );
-
-        void setDefaultColor();
-        void setSelectionColor();
-        void setDefaultColor( const QColor & c );
-
-    protected:
-        void mouseReleaseEvent ( QMouseEvent * event );
-        void mousePressEvent ( QMouseEvent * event );
-        void mouseMoveEvent ( QMouseEvent * event );
-        void enterEvent( QEvent * event );
-
-    private:
-        QColor m_defaultColor;
-
-        enum Mode { Nothing, Move };
-
-        Mode m_mode;
-
-        int m_decalageMoveX;
-        int m_decalageMoveY;
-
-        int m_oldCursorX;
-        int m_oldCursorY;
+        virtual void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
 
     };
 
 }
 
-#endif /*MOVEHANDLE_H_*/
+#endif // GRAPHICHANDLEITEM_H

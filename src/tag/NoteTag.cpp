@@ -39,8 +39,9 @@ namespace Tag
             m_sizeSymbol(32),
             m_name(name)
     {
+        setContentsMargins( 0, 0, 0, 0 );
         m_symbolLayout = new QHBoxLayout(this);
-        m_symbolLayout->setContentsMargins(2,2,2,2);
+        m_symbolLayout->setContentsMargins( 0, 0, 0, 0 );
 
         loadTagsMenu();
         load(name);
@@ -144,7 +145,7 @@ namespace Tag
         }
         else if ( m_name == "default" )
         {
-            m_symbol.setPixmap( QPixmap("icon:add.svg").scaled(QSize(12,12)) );
+            m_symbol.setPixmap( QPixmap("icon:list-add.png").scaled(QSize(12,12)) );
             m_symbolLayout->addWidget(&m_symbol);
         }
 
