@@ -17,51 +17,38 @@
  Boston, MA 02110-1301, USA.
  */
 
-#ifndef MOVEHANDLE_H_
-#define MOVEHANDLE_H_
+#ifndef DELETEHANDLE_H
+#define DELETEHANDLE_H
 
-#include "../main/general.h"
-
-#include <QWidget>
+#include <QPushButton>
+#include <QColor>
 
 namespace Handle
 {
-
     class HandleItem;
 
-    class MoveHandle : public QWidget
+    class DeleteHandle : public QPushButton
     {
+        Q_OBJECT
+
     public:
-        MoveHandle( HandleItem * parent );
-        virtual ~MoveHandle();
+        DeleteHandle( HandleItem * parent );
+
+        void setDefaultColor();
+        void setDefaultColor( const QColor & c );
 
         void setHoverMode( bool isHover );
 
-        void setDefaultColor();
-        void setSelectionColor();
-        void setDefaultColor( const QColor & c );
-
-    protected:
-        void mouseReleaseEvent ( QMouseEvent * event );
-        void mousePressEvent ( QMouseEvent * event );
-        void mouseMoveEvent ( QMouseEvent * event );
-        void enterEvent( QEvent * event );
+    signals:
+        void delItem();
 
     private:
         QColor m_defaultColor;
 
-        enum Mode { Nothing, Move };
-
-        Mode m_mode;
-
-        int m_decalageMoveX;
-        int m_decalageMoveY;
-
-        int m_oldCursorX;
-        int m_oldCursorY;
+        HandleItem * m_handleItemRoot;
 
     };
 
 }
 
-#endif /*MOVEHANDLE_H_*/
+#endif // DELETEHANDLE_H

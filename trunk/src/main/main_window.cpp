@@ -63,9 +63,6 @@ void MainWindow::initView()
 {
     m_view = new QGraphicsView();
 
-    m_view->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
-    m_view->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
-
     centralwidget->layout()->addWidget( m_view );
 
     m_view->show();
@@ -136,7 +133,7 @@ void MainWindow::showTagFactory()
 void MainWindow::initSystemTray()
 {
     m_trayIcon = new QSystemTrayIcon(this);
-    QIcon icon("icon:triangle.svg");
+    QIcon icon("icon:basket.png");
     m_trayIcon->setIcon(icon);
     m_trayIcon->show();
     connect(m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));

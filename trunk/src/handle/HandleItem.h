@@ -37,6 +37,7 @@
 
 #include "MoveHandle.h"
 #include "SizeHorHandle.h"
+#include "DeleteHandle.h"
 
 namespace Handle
 {
@@ -97,6 +98,7 @@ namespace Handle
 
     public slots:
         void setDefaultColor();
+        void delItem2();
 
     protected:
         virtual void paintEvent( QPaintEvent * event );
@@ -104,6 +106,7 @@ namespace Handle
     signals:
         void move( Handle::HandleItem * handleItem, int x, int y );
         void resize( Handle::HandleItem * handleItem, int x, int y );
+        void delItem( Handle::HandleItem * handleItem );
 
     private:
 
@@ -124,6 +127,7 @@ namespace Handle
 
         SizeHorHandle m_sizeHorHandle;
         MoveHandle m_moveHandle;
+        DeleteHandle m_deleteHandle;
         HandleItem * m_parentHandle;
 
 
@@ -136,6 +140,9 @@ namespace Handle
         int m_y;
         int m_height;
         int m_width;
+
+        int m_decalX;
+        int m_decalY;
 
         QColor m_defaultColor;
 

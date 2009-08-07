@@ -96,10 +96,6 @@ namespace Scene
         m_toolBar->addWidget(m_colorItem);
         connect(m_colorItem, SIGNAL(colorChanged(const QColor &)), SLOT(setColorItem(const QColor &)));
 
-        a = addAction(QIcon("icon:edit-delete.png"),"del");
-        connect(a, SIGNAL(triggered(bool)), this, SLOT(deleteItem()));
-        a->setCheckable( false );
-
         m_toolBarScene = this;
     }
 
@@ -212,14 +208,6 @@ namespace Scene
         if ( currentAbstractItem() != 0 )
         {
             dynamic_cast<Item::IVisualItemEdition*>(currentAbstractItem())->setItemColor(c);
-        }
-    }
-
-    void ToolBarScene::deleteItem()
-    {
-        if ( m_mainWindow->currentScene() != 0 )
-        {
-            m_mainWindow->currentScene()->delItem( m_mainWindow->currentScene()->currentHandle() );
         }
     }
 

@@ -64,13 +64,7 @@ namespace Handle
 
     void SizeHorHandle::enterEvent( QEvent * event )
     {
-        setSelectionColor();
         setCursor(Qt::SizeHorCursor);
-    }
-
-    void SizeHorHandle::leaveEvent( QEvent * event )
-    {
-        setDefaultColor();
     }
 
     void SizeHorHandle::mouseReleaseEvent ( QMouseEvent * event )

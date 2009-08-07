@@ -30,7 +30,7 @@ namespace Tag
             m_tag(tag),
             m_item(tag->noteItem()),
             m_name("default"),
-            m_symbol("icon:triangle.svg"),
+            m_symbol("icon:list-add.png"),
             m_bold(true),
             m_italic(true),
             m_alignment(Qt::AlignLeft),
@@ -183,7 +183,6 @@ namespace Tag
     {
         m_name = settings.value( "name" ).toString();
         m_symbol = settings.value( "symbol", "" ).toString();
-        qDebug() << "load" << m_symbol;
         m_bold = settings.value( "bold" ).toBool();
         m_italic = settings.value( "italic" ).toBool();
         m_alignment = settings.value( "alignment" ).toInt();

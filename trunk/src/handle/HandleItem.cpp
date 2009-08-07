@@ -49,28 +49,36 @@ namespace Handle
             m_item(0),
             m_sizeHorHandle(this),
             m_moveHandle(this),
+            m_deleteHandle(this),
             m_parentHandle(0),
             m_modeDegroupement(false),
+            m_decalX(2),
+            m_decalY(2),
             m_x(x),
             m_y(y)
     {
-        setContentsMargins( 2,2,2,2 );
+        setContentsMargins( m_decalX, m_decalY, m_decalX, m_decalY );
         m_handleId = QString("handle%1").arg(m_id);
         ++m_id;
 
         m_handleLayout = new QGridLayout( this );
-        m_handleLayout->addWidget( &m_moveHandle, 0, 0 );
-        m_handleLayout->addWidget( &m_sizeHorHandle, 0, 2 );
         m_handleLayout->setContentsMargins( 0, 0, 0, 0 );
         m_handleLayout->setSpacing( 0 );
-
         m_handleLayout->setSizeConstraint(QLayout::SetMaximumSize);
+
+        m_handleLayout->addWidget( &m_moveHandle, 0, 0 );//, 2, 1, 0 );
 
         m_contentLayout = new QVBoxLayout();
         m_contentLayout->setContentsMargins( 0, 0, 0, 0 );
         m_contentLayout->setSpacing( 0 );
-
         m_handleLayout->addLayout( m_contentLayout, 0, 1 );
+
+        QVBoxLayout * h = new QVBoxLayout( this );
+        h->addWidget( &m_deleteHandle );
+        h->addWidget( &m_sizeHorHandle );
+        m_handleLayout->addLayout( h, 0, 2 );
+
+        connect( &m_deleteHandle, SIGNAL(released()), this, SLOT(delItem2()) );
 
         if ( m_w == 0 )
         {
@@ -107,8 +115,10 @@ namespace Handle
     {
         m_defaultColor = QColor(color);
         setStyleSheet( QString("background: %1;").arg(m_defaultColor.name()) );
+
         m_moveHandle.setDefaultColor(m_defaultColor);
         m_sizeHorHandle.setDefaultColor(m_defaultColor);
+        m_deleteHandle.setDefaultColor(m_defaultColor);
     }
 
     const QColor & HandleItem::defaultColor()
@@ -134,7 +144,7 @@ namespace Handle
 
         if ( h == 0 )
         {
-            setContentsMargins( 2, 2, 2, 2 );
+            setContentsMargins( m_decalX, m_decalY, m_decalX, m_decalY );
             update();
         }
         else
@@ -192,7 +202,7 @@ namespace Handle
         int size = m_contentLayout->count();
 
         m_w->setVisible(true);
-    //    m_w->setMaximumHeight(height);
+        //    m_w->setMaximumHeight(height);
 
         QPoint p =mapFromGlobal( pt );
 
@@ -267,6 +277,7 @@ namespace Handle
     {
         m_moveHandle.setHoverMode( isHover );
         m_sizeHorHandle.setHoverMode( isHover );
+        m_deleteHandle.setHoverMode( isHover );
         if ( m_item != 0 )
         {
             m_item->setVisibleTag(isHover);
@@ -276,7 +287,7 @@ namespace Handle
     void HandleItem::enterEvent( QEvent * event )
     {
         setHoverMode( true );
-        setContentsMargins( 2,2,2,2 );
+        setContentsMargins( m_decalX, m_decalY, m_decalX, m_decalY );
     }
 
     void HandleItem::leaveEvent( QEvent * event )
@@ -357,7 +368,13 @@ namespace Handle
     {
         QRect r = event->rect();
         QPainter painter(this);
+
         painter.drawRect( r.x(), r.y(), r.width()-1, r.height()-1 );
+    }
+
+    void HandleItem::delItem2()
+    {
+        emit delItem( this );
     }
 
 }
