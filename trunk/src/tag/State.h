@@ -24,7 +24,7 @@
 #include <QMenu>
 #include <QMouseEvent>
 
-#include "../item/ITextEdition.h"
+#include "../interface/ITextEdition.h"
 #include "../item/NoteItem.h"
 #include "../config/Configuration.h"
 
@@ -36,39 +36,26 @@ namespace Item
 namespace Tag
 {
 
-    class State : public Item::ITextEdition, Item::IVisualItemEdition
+    class State : public Item::ITextEdition, public Item::IVisualItemEdition
     {
     public:
         State( NoteTag * tag );
 
         void setItem( Item::NoteItem * item );
-        const QString & symbol();
+
         const QString & name();
         void setName( const QString & name );
 
         void setBold( bool checked );
-        bool bold();
-
         void setItalic( bool italic );
-        bool italic();
-
         void setFontStrikeOut ( bool strikeOut );
-        bool fontStrikeOut();
-
         void setAlignment( Qt::Alignment );
         void setFontUnderline( bool underLine );
-
         void setTextColor( const QColor & color );
-        const QColor & textColor();
-
         void setFontFamily( const QFont & font );
-        const QString & fontFamily();
-
         void setFontPointSize( int weight );
-        int fontPointSize();
 
         void setItemColor( const QColor & color );
-        const QColor & itemColor(); // todo: remove thss !!
 
         void load( Config::Configuration & settings );
         void load();
@@ -83,16 +70,9 @@ namespace Tag
         Item::NoteItem * m_item;
 
         QString m_name;
-        QString m_symbol;
-        bool m_bold;
-        bool m_italic;
-        int m_alignment;
-        bool m_underLine;
-        bool m_strikeOut;
-        QColor m_colorFont;
-        QColor m_colorItem;
-        QString m_font;
-        int m_weight;
+        
+
+        
     };
 
 }

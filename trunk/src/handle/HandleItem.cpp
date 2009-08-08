@@ -33,6 +33,7 @@
 #include <QSizePolicy>
 #include <QApplication>
 #include <QSvgRenderer>
+#include <QMessageBox>
 
 #include "../config/Configuration.h"
 
@@ -73,12 +74,12 @@ namespace Handle
         m_contentLayout->setSpacing( 0 );
         m_handleLayout->addLayout( m_contentLayout, 0, 1 );
 
-        QVBoxLayout * h = new QVBoxLayout( this );
+        QVBoxLayout * h = new QVBoxLayout();
         h->addWidget( &m_deleteHandle );
         h->addWidget( &m_sizeHorHandle );
         m_handleLayout->addLayout( h, 0, 2 );
 
-        connect( &m_deleteHandle, SIGNAL(released()), this, SLOT(delItem2()) );
+        connect( &m_deleteHandle, SIGNAL(pressed()), this, SLOT(delItem2()) );
 
         if ( m_w == 0 )
         {
@@ -374,7 +375,14 @@ namespace Handle
 
     void HandleItem::delItem2()
     {
-        emit delItem( this );
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(0, tr("Delete note"),
+                                      tr("Do you want really delete this note ?"),
+                                      QMessageBox::Yes | QMessageBox::No );
+        if (reply == QMessageBox::Yes)
+        {
+            emit delItem( this );
+        }
     }
 
 }

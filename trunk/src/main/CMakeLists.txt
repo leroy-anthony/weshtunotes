@@ -43,6 +43,12 @@ set(weshnotes_SRC
 ${weshnotes_SRC})
 
 
+set(weshnotes_SRC 
+../interface/IVisualItemEdition.cpp
+../interface/ITextEdition.cpp
+${weshnotes_SRC})
+
+
 set(weshnotes_MOC 
 ../item/AbstractItem.h 
 ../item/NoteItem.h
@@ -77,6 +83,7 @@ ${weshnotes_MOC})
 
 set(weshnotes_SRC 
 ../config/Configuration.cpp
+../config/ImageFactory.cpp
 ${weshnotes_SRC})
 
 

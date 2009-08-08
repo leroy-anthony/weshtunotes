@@ -28,6 +28,7 @@
 #include "../item/NoteItem.h"
 #include "../main/general.h"
 #include "../tag/TagFactory.h"
+#include "../config/ImageFactory.h"
 
 namespace Tag
 {
@@ -143,16 +144,16 @@ namespace Tag
         if ( m_name != "default" && m_currentState != 0 )
         {
             QString symbol = m_currentState->symbol();
-            qDebug() << symbol;
             if ( symbol != "" )
             {
-                m_symbol.setPixmap(QPixmap(m_currentState->symbol()).scaled(m_sizeSymbol,m_sizeSymbol));
+                m_symbol.setPixmap(Config::ImageFactory::pixmap(m_currentState->symbol()).scaled(m_sizeSymbol,m_sizeSymbol));
                 m_symbolLayout->addWidget(&m_symbol);
+                show();
             }
         }
         else if ( m_name == "default" )
         {
-            m_symbol.setPixmap( QPixmap("icon:list-add.png").scaled(QSize(12,12)) );
+            m_symbol.setPixmap( Config::ImageFactory::pixmap(Config::Image::addBasket).scaled(QSize(12,12)) );
             m_symbolLayout->addWidget(&m_symbol);
         }
 

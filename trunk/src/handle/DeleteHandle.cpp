@@ -20,6 +20,7 @@
 #include "DeleteHandle.h"
 
 #include "HandleItem.h"
+#include "../config/ImageFactory.h"
 
 namespace Handle
 {
@@ -28,7 +29,7 @@ namespace Handle
             QPushButton(parent),
             m_handleItemRoot(parent)
     {
-        setIcon(QIcon("icon:application-exit.png"));
+        setIcon(Config::ImageFactory::icon(Config::Image::exitAction));
         setIconSize(QSize(9,9));
         setFixedWidth(9);
         setFixedHeight(9);
