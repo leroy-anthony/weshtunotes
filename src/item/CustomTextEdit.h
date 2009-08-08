@@ -17,31 +17,31 @@
  Boston, MA 02110-1301, USA.
  */
 
-#ifndef ITEXTEDITION_H
-#define ITEXTEDITION_H
+#ifndef CUSTOMTEXTEDIT_H
+#define CUSTOMTEXTEDIT_H
 
-#include <Qt>
-#include <QColor>
-#include <QFont>
+#include <QTextEdit>
+#include <QMimeData>
 
 namespace Item
 {
 
-    class ITextEdition
+    class CustomTextEdit : public QTextEdit
     {
-    public:
+        Q_OBJECT
 
-        virtual void setBold( bool checked ) = 0;
-        virtual void setItalic( bool italic ) = 0;
-        virtual void setAlignment( Qt::Alignment ) = 0;
-        virtual void setFontUnderline( bool underLine ) = 0;
-        virtual void setTextColor( const QColor & color ) = 0;
-        virtual void setFontFamily( const QFont & font ) = 0;
-        virtual void setFontPointSize( int weight ) = 0;
-        virtual void setFontStrikeOut ( bool strikeOut ) = 0;
+    public:
+        CustomTextEdit();
+
+    public slots:
+        void adaptSizeFromText();
+
+    protected:
+        bool canInsertFromMimeData( const QMimeData *source ) const;
+        void insertFromMimeData( const QMimeData *source );
 
     };
 
 }
 
-#endif // ITEXTEDITION_H
+#endif // CUSTOMTEXTEDIT_H

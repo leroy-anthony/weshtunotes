@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading ui file 'tag_factory.ui'
 **
-** Created: Sat Aug 1 00:46:48 2009
-**      by: Qt User Interface Compiler version 4.5.1
+** Created: Sat Aug 8 13:45:37 2009
+**      by: Qt User Interface Compiler version 4.5.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling ui file!
 ********************************************************************************/
@@ -14,6 +14,7 @@
 #include <QtGui/QAction>
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
+#include <QtGui/QCheckBox>
 #include <QtGui/QComboBox>
 #include <QtGui/QDialog>
 #include <QtGui/QFontComboBox>
@@ -54,14 +55,6 @@ public:
     QFrame *frame_5;
     QGridLayout *gridLayout_2;
     QLabel *label;
-    QGroupBox *groupBox;
-    QGridLayout *gridLayout_3;
-    QLabel *label_2;
-    QToolButton *toolButton;
-    QToolButton *toolButton_6;
-    QLabel *label_3;
-    QtColorPicker *m_colorItem;
-    QSpacerItem *horizontalSpacer;
     QGroupBox *groupBox_2;
     QGridLayout *gridLayout;
     QLabel *label_6;
@@ -78,6 +71,15 @@ public:
     QToolButton *m_strikeText;
     QLineEdit *m_nameTagOrState;
     QSpacerItem *verticalSpacer;
+    QGroupBox *groupBox;
+    QGridLayout *gridLayout_3;
+    QLabel *label_2;
+    QLabel *label_3;
+    QtColorPicker *m_colorItem;
+    QSpacerItem *horizontalSpacer;
+    QCheckBox *m_withColorBackground;
+    QToolButton *toolButton;
+    QToolButton *toolButton_6;
     QFrame *line;
     QFrame *frame_6;
     QHBoxLayout *horizontalLayout;
@@ -176,42 +178,6 @@ public:
 
         gridLayout_2->addWidget(label, 0, 0, 1, 1);
 
-        groupBox = new QGroupBox(frame_5);
-        groupBox->setObjectName(QString::fromUtf8("groupBox"));
-        gridLayout_3 = new QGridLayout(groupBox);
-        gridLayout_3->setObjectName(QString::fromUtf8("gridLayout_3"));
-        label_2 = new QLabel(groupBox);
-        label_2->setObjectName(QString::fromUtf8("label_2"));
-
-        gridLayout_3->addWidget(label_2, 0, 0, 1, 1);
-
-        toolButton = new QToolButton(groupBox);
-        toolButton->setObjectName(QString::fromUtf8("toolButton"));
-
-        gridLayout_3->addWidget(toolButton, 0, 2, 1, 1);
-
-        toolButton_6 = new QToolButton(groupBox);
-        toolButton_6->setObjectName(QString::fromUtf8("toolButton_6"));
-
-        gridLayout_3->addWidget(toolButton_6, 0, 3, 1, 1);
-
-        label_3 = new QLabel(groupBox);
-        label_3->setObjectName(QString::fromUtf8("label_3"));
-
-        gridLayout_3->addWidget(label_3, 1, 0, 1, 1);
-
-        m_colorItem = new QtColorPicker(groupBox);
-        m_colorItem->setObjectName(QString::fromUtf8("m_colorItem"));
-
-        gridLayout_3->addWidget(m_colorItem, 1, 2, 1, 2);
-
-        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        gridLayout_3->addItem(horizontalSpacer, 0, 4, 1, 1);
-
-
-        gridLayout_2->addWidget(groupBox, 1, 0, 1, 4);
-
         groupBox_2 = new QGroupBox(frame_5);
         groupBox_2->setObjectName(QString::fromUtf8("groupBox_2"));
         gridLayout = new QGridLayout(groupBox_2);
@@ -292,6 +258,48 @@ public:
 
         gridLayout_2->addItem(verticalSpacer, 7, 0, 1, 1);
 
+        groupBox = new QGroupBox(frame_5);
+        groupBox->setObjectName(QString::fromUtf8("groupBox"));
+        gridLayout_3 = new QGridLayout(groupBox);
+        gridLayout_3->setObjectName(QString::fromUtf8("gridLayout_3"));
+        label_2 = new QLabel(groupBox);
+        label_2->setObjectName(QString::fromUtf8("label_2"));
+
+        gridLayout_3->addWidget(label_2, 0, 0, 1, 1);
+
+        label_3 = new QLabel(groupBox);
+        label_3->setObjectName(QString::fromUtf8("label_3"));
+
+        gridLayout_3->addWidget(label_3, 1, 0, 1, 1);
+
+        m_colorItem = new QtColorPicker(groupBox);
+        m_colorItem->setObjectName(QString::fromUtf8("m_colorItem"));
+        m_colorItem->setEnabled(false);
+
+        gridLayout_3->addWidget(m_colorItem, 1, 2, 1, 2);
+
+        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        gridLayout_3->addItem(horizontalSpacer, 0, 4, 1, 1);
+
+        m_withColorBackground = new QCheckBox(groupBox);
+        m_withColorBackground->setObjectName(QString::fromUtf8("m_withColorBackground"));
+
+        gridLayout_3->addWidget(m_withColorBackground, 1, 1, 1, 1);
+
+        toolButton = new QToolButton(groupBox);
+        toolButton->setObjectName(QString::fromUtf8("toolButton"));
+
+        gridLayout_3->addWidget(toolButton, 0, 1, 1, 1);
+
+        toolButton_6 = new QToolButton(groupBox);
+        toolButton_6->setObjectName(QString::fromUtf8("toolButton_6"));
+
+        gridLayout_3->addWidget(toolButton_6, 0, 2, 1, 1);
+
+
+        gridLayout_2->addWidget(groupBox, 1, 0, 1, 4);
+
 
         verticalLayout->addWidget(frame_5);
 
@@ -347,11 +355,6 @@ public:
         pushButton_4->setText(QApplication::translate("TagFactory", "PushButton", 0, QApplication::UnicodeUTF8));
         pushButton_3->setText(QApplication::translate("TagFactory", "PushButton", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("TagFactory", "Name:", 0, QApplication::UnicodeUTF8));
-        groupBox->setTitle(QApplication::translate("TagFactory", "Appareance", 0, QApplication::UnicodeUTF8));
-        label_2->setText(QApplication::translate("TagFactory", "Emblem:", 0, QApplication::UnicodeUTF8));
-        toolButton->setText(QApplication::translate("TagFactory", "...", 0, QApplication::UnicodeUTF8));
-        toolButton_6->setText(QApplication::translate("TagFactory", "...", 0, QApplication::UnicodeUTF8));
-        label_3->setText(QApplication::translate("TagFactory", "Background:", 0, QApplication::UnicodeUTF8));
         groupBox_2->setTitle(QApplication::translate("TagFactory", "Fonts", 0, QApplication::UnicodeUTF8));
         label_6->setText(QApplication::translate("TagFactory", "Font:", 0, QApplication::UnicodeUTF8));
         label_5->setText(QApplication::translate("TagFactory", "Color:", 0, QApplication::UnicodeUTF8));
@@ -381,6 +384,12 @@ public:
         m_italicText->setText(QApplication::translate("TagFactory", "...", 0, QApplication::UnicodeUTF8));
         m_underlineText->setText(QApplication::translate("TagFactory", "...", 0, QApplication::UnicodeUTF8));
         m_strikeText->setText(QApplication::translate("TagFactory", "...", 0, QApplication::UnicodeUTF8));
+        groupBox->setTitle(QApplication::translate("TagFactory", "Appareance", 0, QApplication::UnicodeUTF8));
+        label_2->setText(QApplication::translate("TagFactory", "Emblem:", 0, QApplication::UnicodeUTF8));
+        label_3->setText(QApplication::translate("TagFactory", "Background:", 0, QApplication::UnicodeUTF8));
+        m_withColorBackground->setText(QString());
+        toolButton->setText(QApplication::translate("TagFactory", "...", 0, QApplication::UnicodeUTF8));
+        toolButton_6->setText(QApplication::translate("TagFactory", "...", 0, QApplication::UnicodeUTF8));
         m_okButton->setText(QApplication::translate("TagFactory", "Ok", 0, QApplication::UnicodeUTF8));
         m_quitButton->setText(QApplication::translate("TagFactory", "Cancel", 0, QApplication::UnicodeUTF8));
         Q_UNUSED(TagFactory);

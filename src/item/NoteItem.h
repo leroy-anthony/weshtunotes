@@ -21,8 +21,8 @@
 #define NOTEITEM_H_
 
 #include <QHBoxLayout>
-#include <QTextEdit>
 
+#include "CustomTextEdit.h"
 #include "AbstractItem.h"
 #include "ITextEdition.h"
 #include "IVisualItemEdition.h"
@@ -54,6 +54,7 @@ namespace Item
         void setItalic ( bool italic );
         void setFontFamily( const QFont & font );
         void setFontUnderline ( bool underline );
+        void setFontStrikeOut ( bool strikeOut );
         void setFontPointSize ( int weight );
         void setTextBackgroundColor ( const QColor & c );
         void setTextColor( const QColor & c );
@@ -67,11 +68,10 @@ namespace Item
 
     private:
         QHBoxLayout  * m_horizontalLayout;
-        QTextEdit    * m_plainTextEdit;
+        CustomTextEdit    * m_plainTextEdit;
         QList<Tag::NoteTag*> m_tags;
 
     private slots:
-        void adaptSizeFromText();
         void edit();
 
     };

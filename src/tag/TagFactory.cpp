@@ -60,6 +60,7 @@ namespace Tag
 
         connect(m_nameTagOrState, SIGNAL(editingFinished()), this, SLOT(changeNameTagOrState()));
 
+        connect(m_withColorBackground, SIGNAL(stateChanged(int)), this, SLOT(withColorBackground(int)));
         connect(m_colorItem, SIGNAL(colorChanged(const QColor &)), SLOT(changeItemColor(const QColor &)));
 
         connect(m_boldText, SIGNAL(released()), this, SLOT(changeState()));
@@ -162,6 +163,18 @@ namespace Tag
         if ( m_currentState != 0 )
         {
             m_currentState->setTextColor( color );
+        }
+    }
+
+    void TagFactory::withColorBackground( int state )
+    {
+        if ( state == 0 )
+        {
+            m_colorItem->setDisabled(true);
+        }
+        else
+        {
+            m_colorItem->setDisabled(false);
         }
     }
 

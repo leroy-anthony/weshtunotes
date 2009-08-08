@@ -81,6 +81,8 @@ namespace Scene
         connect(a, SIGNAL(triggered(bool)), this, SLOT(setItalic(bool)));
         a = addAction(QIcon("icon:format-text-underline.png"),"underLine");
         connect(a, SIGNAL(triggered(bool)), this, SLOT(setFontUnderline(bool)));
+        a = addAction(QIcon("icon:format-text-strikethrough.png"),"strikeout");
+        connect(a, SIGNAL(triggered(bool)), this, SLOT(setFontStrikeOut(bool)));
 
         a = addAction(QIcon("icon:format-justify-left.png"),"alignLeft");
         connect(a, SIGNAL(triggered(bool)), this, SLOT(setAlignmentLeft(bool)));
@@ -144,6 +146,14 @@ namespace Scene
         if ( currentAbstractItem() != 0 )
         {
             dynamic_cast<Item::ITextEdition*>(currentAbstractItem())->setItalic(checked);
+        }
+    }
+
+    void ToolBarScene::setFontStrikeOut( bool strikeOut )
+    {
+        if ( currentAbstractItem() != 0 )
+        {
+            dynamic_cast<Item::ITextEdition*>(currentAbstractItem())->setFontStrikeOut(strikeOut);
         }
     }
 

@@ -52,6 +52,9 @@ namespace Tag
         void setItalic( bool italic );
         bool italic();
 
+        void setFontStrikeOut ( bool strikeOut );
+        bool fontStrikeOut();
+
         void setAlignment( Qt::Alignment );
         void setFontUnderline( bool underLine );
 
@@ -85,6 +88,7 @@ namespace Tag
         bool m_italic;
         int m_alignment;
         bool m_underLine;
+        bool m_strikeOut;
         QColor m_colorFont;
         QColor m_colorItem;
         QString m_font;

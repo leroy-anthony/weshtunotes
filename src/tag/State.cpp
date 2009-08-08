@@ -35,6 +35,7 @@ namespace Tag
             m_italic(true),
             m_alignment(Qt::AlignLeft),
             m_underLine(true),
+            m_strikeOut(true),
             m_colorFont(QColor(150,150,150)),
             m_font("DejaVu Sans"),
             m_weight(16),
@@ -82,6 +83,20 @@ namespace Tag
         {
             m_item->setFontUnderline( underLine );
         }
+    }
+
+    void State::setFontStrikeOut ( bool strikeOut )
+    {
+        m_strikeOut = strikeOut;
+        if ( m_item != 0 )
+        {
+            m_item->setFontStrikeOut( strikeOut );
+        }
+    }
+
+    bool State::fontStrikeOut()
+    {
+        return m_strikeOut;
     }
 
     void State::setTextColor( const QColor & color )
@@ -185,6 +200,7 @@ namespace Tag
         m_symbol = settings.value( "symbol", "" ).toString();
         m_bold = settings.value( "bold" ).toBool();
         m_italic = settings.value( "italic" ).toBool();
+        m_strikeOut = settings.value( "strikeOut" ).toBool();
         m_alignment = settings.value( "alignment" ).toInt();
         m_underLine = settings.value( "underline" ).toBool();
         m_colorFont = settings.value( "colorFont" ).value<QColor>();
@@ -206,6 +222,7 @@ namespace Tag
         settings.setValue( "symbol", m_symbol );
         settings.setValue( "bold", m_bold );
         settings.setValue( "italic", m_italic );
+        settings.setValue( "strikeOut", m_strikeOut );
         settings.setValue( "alignment", m_alignment );
         settings.setValue( "underline", m_underLine );
         settings.setValue( "colorFont", m_colorFont );
@@ -229,6 +246,7 @@ namespace Tag
         setTextColor( m_colorFont );
         setFontFamily( m_font );
         setFontPointSize( m_weight );
+        setFontStrikeOut( m_strikeOut );
         setItemColor( m_colorItem );
     }
 
