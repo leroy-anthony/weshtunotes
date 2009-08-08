@@ -76,7 +76,14 @@ namespace Tag
 
     void NoteTag::mousePressEvent( QMouseEvent * e )
     {
-        m_menu.popup(QCursor::pos());
+        if ( TagFactory::tagsNames().size() > 0 )
+        {
+            m_menu.popup(QCursor::pos());
+        }
+        else
+        {
+            Tag::TagFactory::newTagFactory()->show();
+        }
     }
 
     Item::NoteItem * NoteTag::noteItem()

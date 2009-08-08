@@ -53,6 +53,7 @@ namespace Scene
     public slots:
         void setBold( bool checked );
         void setItalic( bool checked );
+        void setFontStrikeOut( bool strikeOut );
         void setAlignmentRight( bool checked );
         void setAlignmentLeft( bool checked );
         void setAlignmentCenter( bool checked );

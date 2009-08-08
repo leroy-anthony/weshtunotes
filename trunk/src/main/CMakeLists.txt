@@ -34,6 +34,7 @@ ${weshnotes_MOC})
 set(weshnotes_SRC 
 ../item/AbstractItem.cpp 
 ../item/NoteItem.cpp
+../item/CustomTextEdit.cpp
 ../handle/HandleItem.cpp
 ../handle/SizeHorHandle.cpp
 ../handle/MoveHandle.cpp
@@ -45,6 +46,7 @@ ${weshnotes_SRC})
 set(weshnotes_MOC 
 ../item/AbstractItem.h 
 ../item/NoteItem.h
+../item/CustomTextEdit.h
 ../handle/HandleItem.h
 ../handle/SizeHorHandle.h
 ../handle/MoveHandle.h

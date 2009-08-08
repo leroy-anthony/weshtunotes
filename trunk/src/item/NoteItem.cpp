@@ -46,35 +46,19 @@ namespace Item
         m_horizontalLayout->setSpacing(0);
         m_horizontalLayout->setSizeConstraint(QLayout::SetMaximumSize);
 
-        m_plainTextEdit = new QTextEdit();
-        m_plainTextEdit->setFrameStyle(QFrame::Box | QFrame::Plain);
-        m_plainTextEdit->setFrameShape(QFrame::NoFrame);
-        m_plainTextEdit->setFontPointSize(8);
-        m_plainTextEdit->setContentsMargins(0,0,0,0);
-        m_plainTextEdit->setFixedHeight(26);
-
-        setItemColor(  QColor("#F7F7C8") ); //Fixme : à mettre dans préférence (du panier ?)
-
+        m_plainTextEdit = new CustomTextEdit();
         m_tag = new Tag::NoteTag( this, "default" );
-
-        connect( m_plainTextEdit, SIGNAL(textChanged()),  this, SLOT(adaptSizeFromText()));
-        connect( m_plainTextEdit, SIGNAL(selectionChanged()),  this, SLOT(edit()));
-
-        Scene::ToolBarScene * toolBar = Scene::ToolBarScene::toolBarScene();
-        connect( m_plainTextEdit, SIGNAL(currentCharFormatChanged(const QTextCharFormat &)), toolBar, SLOT(currentCharFormatChanged(const QTextCharFormat &)));
 
         m_horizontalLayout->addWidget(m_tag);
         m_horizontalLayout->addWidget(m_plainTextEdit);
+
+        setItemColor( QColor("#F7F7C8") ); //Fixme : à mettre dans préférence (du panier ?)
+
+        connect( m_plainTextEdit, SIGNAL(selectionChanged()),  this, SLOT(edit()));
     }
 
     NoteItem::~NoteItem()
     {
-    }
-
-    void NoteItem::adaptSizeFromText()
-    {
-        int heightMax =  m_plainTextEdit->document()->size().toSize().height();
-        m_plainTextEdit->setFixedHeight( heightMax+2 );
     }
 
     void NoteItem::edit()
@@ -112,6 +96,13 @@ namespace Item
     void NoteItem::setFontUnderline( bool underline )
     {
         m_plainTextEdit->setFontUnderline( underline );
+    }
+
+    void NoteItem::setFontStrikeOut( bool strikeOut )
+    {
+        QFont f(m_plainTextEdit->font());
+        f.setStrikeOut( strikeOut );
+        m_plainTextEdit->setFont(f);
     }
 
     void NoteItem::setFontPointSize( int weight )
@@ -169,7 +160,7 @@ namespace Item
         m_plainTextEdit->setHtml(stream.readAll());
         f.close();
 
-        adaptSizeFromText();
+        m_plainTextEdit->adaptSizeFromText();
 
         m_plainTextEdit->blockSignals( false );
     }
