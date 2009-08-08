@@ -24,6 +24,7 @@
 #include "../explorer/TreeExplorer.h"
 #include "../basket/ItemTreeBasket.h"
 #include "../config/Configuration.h"
+#include "../config/ImageFactory.h"
 
 MainWindow::MainWindow(QWidget * parent, int argc, char *argv[]) :
         QMainWindow(parent)
@@ -86,17 +87,17 @@ void MainWindow::initMedia()
     layoutButtonExplorer->setSpacing(2);
 
     QToolButton * qq = new QToolButton();
-    qq->setIcon(QIcon("icon:document-new.png"));
+    qq->setIcon(Config::ImageFactory::icon(Config::Image::newBasket));
     connect( qq, SIGNAL(clicked()), m_treeExplorer, SLOT(addBasketToRoot()) );
     layoutButtonExplorer->addWidget(qq);
 
     QToolButton * q = new QToolButton();
-    q->setIcon(QIcon("icon:list-add.png"));
+    q->setIcon(Config::ImageFactory::icon(Config::Image::addBasket));
     connect( q, SIGNAL(clicked()), m_treeExplorer, SLOT(addToCurrentBasket()) );
     layoutButtonExplorer->addWidget(q);
 
     QToolButton * qqq = new QToolButton();
-    qqq->setIcon(QIcon("icon:edit-delete.png"));
+    qqq->setIcon(Config::ImageFactory::icon(Config::Image::deleteAction));
     connect( qqq, SIGNAL(clicked()), m_treeExplorer, SLOT(delCurrentBasket()) );
     layoutButtonExplorer->addWidget(qqq);
 
@@ -133,11 +134,10 @@ void MainWindow::showTagFactory()
 void MainWindow::initSystemTray()
 {
     m_trayIcon = new QSystemTrayIcon(this);
-    QIcon icon("icon:basket.png");
-    m_trayIcon->setIcon(icon);
+    m_trayIcon->setIcon(Config::ImageFactory::icon(Config::Image::application));
     m_trayIcon->show();
     connect(m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
-    setWindowIcon(icon);
+    setWindowIcon(Config::ImageFactory::icon(Config::Image::application));
 
     QAction * minimizeAction = new QAction(tr("Mi&nimize"), this);
     minimizeAction->setIcon(QApplication::style()->standardIcon(QStyle::SP_TitleBarMinButton));

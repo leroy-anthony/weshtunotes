@@ -23,6 +23,7 @@
 #include <QCoreApplication>
 
 #include "../config/Configuration.h"
+#include "../config/ImageFactory.h"
 
 namespace Basket
 {
@@ -50,7 +51,7 @@ namespace Basket
 
     void ItemTreeBasket::initItemTreeBasket()
     {
-        setIcon( 0, QIcon("icon:im-status-message-edit.png") );
+        setIcon( 0, Config::ImageFactory::icon(Config::Image::basket) );
     }
 
     ItemTreeBasket::~ItemTreeBasket()

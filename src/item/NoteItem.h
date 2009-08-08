@@ -24,8 +24,8 @@
 
 #include "CustomTextEdit.h"
 #include "AbstractItem.h"
-#include "ITextEdition.h"
-#include "IVisualItemEdition.h"
+#include "../interface/ITextEdition.h"
+#include "../interface/IVisualItemEdition.h"
 
 namespace Tag
 {

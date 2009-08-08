@@ -46,9 +46,6 @@ namespace Item
 
     bool CustomTextEdit::canInsertFromMimeData( const QMimeData *source ) const
     {
-        qDebug() << "html" << source->hasHtml ();
-        qDebug() << "url" << source->hasUrls ();
-
         if (source->hasImage())
         {
             return true;

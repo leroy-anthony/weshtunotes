@@ -21,9 +21,10 @@
 
 #include <QStyle>
 
-#include "../item/ITextEdition.h"
-#include "../item/IVisualItemEdition.h"
+#include "../interface/ITextEdition.h"
+#include "../interface/IVisualItemEdition.h"
 #include "../main/main_window.h"
+#include "../config/ImageFactory.h"
 
 namespace Scene
 {
@@ -75,20 +76,22 @@ namespace Scene
 
         //TODO classe pour récupérer une seule instance d'icone.
 
-        a = addAction(QIcon("icon:format-text-bold.png"),tr("bold"));
+
+
+        a = addAction(Config::ImageFactory::icon(Config::Image::textBold),tr("bold"));
         connect(a, SIGNAL(triggered(bool)), this, SLOT(setBold(bool)));
-        a = addAction(QIcon("icon:format-text-italic.png"),"italic");
+        a = addAction(Config::ImageFactory::icon(Config::Image::textItalic),"italic");
         connect(a, SIGNAL(triggered(bool)), this, SLOT(setItalic(bool)));
-        a = addAction(QIcon("icon:format-text-underline.png"),"underLine");
+        a = addAction(Config::ImageFactory::icon(Config::Image::textUnderline),"underLine");
         connect(a, SIGNAL(triggered(bool)), this, SLOT(setFontUnderline(bool)));
-        a = addAction(QIcon("icon:format-text-strikethrough.png"),"strikeout");
+        a = addAction(Config::ImageFactory::icon(Config::Image::textStrikeOut),"strikeout");
         connect(a, SIGNAL(triggered(bool)), this, SLOT(setFontStrikeOut(bool)));
 
-        a = addAction(QIcon("icon:format-justify-left.png"),"alignLeft");
+        a = addAction(Config::ImageFactory::icon(Config::Image::textJustifyLeft),"alignLeft");
         connect(a, SIGNAL(triggered(bool)), this, SLOT(setAlignmentLeft(bool)));
-        a = addAction(QIcon("icon:format-justify-center.png"),"alignCenter");
+        a = addAction(Config::ImageFactory::icon(Config::Image::textJustifyCenter),"alignCenter");
         connect(a, SIGNAL(triggered(bool)), this, SLOT(setAlignmentCenter(bool)));
-        a = addAction(QIcon("icon:format-justify-right.png"),"alignRight");
+        a = addAction(Config::ImageFactory::icon(Config::Image::textJustifyRight),"alignRight");
         connect(a, SIGNAL(triggered(bool)), this, SLOT(setAlignmentRight(bool)));
 
         m_toolBar->addSeparator();
@@ -237,6 +240,9 @@ namespace Scene
         m_comboFont->setCurrentIndex( m_comboFont->findText(f.font().family()) );
 
         m_colorText->setCurrentColor(f.foreground().color());
+
+        a = m_actions[ "strikeout" ];
+        a->setChecked(f.fontStrikeOut());
 
         if ( currentAbstractItem() != 0 )
         {

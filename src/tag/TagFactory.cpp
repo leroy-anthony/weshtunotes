@@ -20,6 +20,7 @@
 #include "TagFactory.h"
 
 #include "../main/general.h"
+#include "../config/ImageFactory.h"
 #include "../tag/NoteTag.h"
 
 namespace Tag
@@ -49,10 +50,10 @@ namespace Tag
         m_colorText->setStandardColors();
         m_colorItem->setStandardColors();
 
-        m_boldText->setIcon(QIcon("icon:format-text-bold.png"));
-        m_italicText->setIcon(QIcon("icon:format-text-italic.png"));
-        m_underlineText->setIcon(QIcon("icon:format-text-underline.png"));
-        m_strikeText->setIcon(QIcon("icon:format-text-strikethrough.png"));
+        m_boldText->setIcon(Config::ImageFactory::icon(Config::Image::textBold));
+        m_italicText->setIcon(Config::ImageFactory::icon(Config::Image::textItalic));
+        m_underlineText->setIcon(Config::ImageFactory::icon(Config::Image::textUnderline));
+        m_strikeText->setIcon(Config::ImageFactory::icon(Config::Image::textStrikeOut));
 
         connect(m_newTagButton, SIGNAL(clicked()), this, SLOT(newTag()));
         connect(m_newStateButton, SIGNAL(clicked()), this, SLOT(newState()));
@@ -79,9 +80,6 @@ namespace Tag
     void TagFactory::loadTags()
     {
         Config::Configuration settings( "tags" );
-
-        //m_menu = new QMenu();
-
 
         QStringList tags = settings.childGroups();
         for ( int i=0 ; i<tags.size() ; ++i )
@@ -201,7 +199,7 @@ namespace Tag
             m_currentState->setBold( m_boldText->isChecked() );
             m_currentState->setItalic( m_italicText->isChecked() );
             m_currentState->setFontUnderline( m_underlineText->isChecked() );
-            //m_currentState->setStrike( m_boldText->down() );
+            m_currentState->setFontStrikeOut( m_strikeText->isChecked() );
         }
     }
 
@@ -247,6 +245,8 @@ namespace Tag
         m_fontText->setCurrentFont( state->fontFamily() );
         m_colorText->setCurrentColor( state->textColor() );
         m_sizeText->setCurrentIndex( m_sizeText->findText( QString("%1").arg(state->fontPointSize()) ) );
+        m_strikeText->setChecked( state->fontStrikeOut() );
+        m_underlineText->setChecked( state->underline() );
     }
 
     void TagFactory::ok()
@@ -270,8 +270,6 @@ namespace Tag
     {
         reject();
     }
-
-    //QMenu * TagFactory::m_menu = 0;
 
     void TagFactory::showMenuTag()
     {
