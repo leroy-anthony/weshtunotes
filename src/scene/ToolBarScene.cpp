@@ -25,6 +25,7 @@
 #include "../interface/IVisualItemEdition.h"
 #include "../main/main_window.h"
 #include "../config/ImageFactory.h"
+#include "../widget/ColorCombo.h"
 
 namespace Scene
 {
@@ -73,9 +74,6 @@ namespace Scene
         m_colorText->setStandardColors();
         m_toolBar->addWidget(m_colorText);
         connect(m_colorText, SIGNAL(colorChanged(const QColor &)), SLOT(setTextColor(const QColor &)));
-
-        //TODO classe pour récupérer une seule instance d'icone.
-
 
 
         a = addAction(Config::ImageFactory::icon(Config::Image::textBold),tr("bold"));
@@ -222,6 +220,13 @@ namespace Scene
         {
             dynamic_cast<Item::IVisualItemEdition*>(currentAbstractItem())->setItemColor(c);
         }
+    }
+
+    void ToolBarScene::currentItemChanged( Item::AbstractItem * item )
+    {
+        m_colorItem->blockSignals(true);
+        m_colorItem->setCurrentColor( item->color() );
+        m_colorItem->blockSignals(false);
     }
 
     void ToolBarScene::currentCharFormatChanged( const QTextCharFormat & f )

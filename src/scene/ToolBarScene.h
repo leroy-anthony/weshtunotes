@@ -62,6 +62,7 @@ namespace Scene
         void setFontFamily( const QFont & font );
         void setFontPointSize( const QString & size );
         void currentCharFormatChanged( const QTextCharFormat & f );
+        void currentItemChanged( Item::AbstractItem * item );
 
         void setColorItem( const QColor & c );
 
