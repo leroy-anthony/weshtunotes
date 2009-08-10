@@ -146,7 +146,7 @@ void QtColorPicker::paintEvent(QPaintEvent *e)
 {
     if (dirty) {
         int iconSize = style()->pixelMetric(QStyle::PM_SmallIconSize);
-        QPixmap pix(iconSize, iconSize);
+        QPixmap pix(48, 32);
         pix.fill(palette().button().color());
 
         QPainter p(&pix);

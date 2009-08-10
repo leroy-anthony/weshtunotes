@@ -63,6 +63,8 @@ namespace Item
 
     void NoteItem::edit()
     {
+        Scene::ToolBarScene * toolBar = Scene::ToolBarScene::toolBarScene();
+        toolBar->currentItemChanged( this );
         emit AbstractItem::editItem((AbstractItem*)this);
     }
 
@@ -182,6 +184,7 @@ namespace Item
     {
         Scene::ToolBarScene * toolBar = Scene::ToolBarScene::toolBarScene();
         toolBar->currentCharFormatChanged( m_plainTextEdit->currentCharFormat() );
+        toolBar->currentItemChanged( this );
     }
 
     void NoteItem::addTag( const QString & tagName, const QString & tagState )
