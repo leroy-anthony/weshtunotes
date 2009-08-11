@@ -9,6 +9,7 @@ set(weshnotes_MOC main_window.h )
 set(weshnotes_SRC 
 ../widget/VerticalButton.cpp
 ../widget/qtcolorpicker.cpp
+../widget/ColorCombo.cpp
 ${weshnotes_SRC})
 
 
@@ -112,4 +113,4 @@ add_executable(weshnotes WIN32 MACOSX_BUNDLE ${weshnotes_SRC})
 target_link_libraries(weshnotes ${QT_LIBRARIES})
 
 
-install(TARGETS weshnotes DESTINATION ${weshnotes_DESTINATION})
+install(TARGETS weshnotes DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/)
