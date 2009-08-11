@@ -34,9 +34,10 @@ int main(int argc, char *argv[])
 
     QApplication::setQuitOnLastWindowClosed(false);
 
-    QDir::addSearchPath( "icon", "./data/icon" );
-    QDir::addSearchPath( "icon", "/usr/share/weshtunotes/data/icon" );
-    QDir::addSearchPath( "icon", "/usr/local/share/weshtunotes/data/icon" );
+    //FIXME: faire mieux ...
+    QDir::addSearchPath( "icon", "./data/icon" ); // windows
+    QDir::addSearchPath( "icon", "/usr/share/weshtunotes/data/icon" ); // unix
+    QDir::addSearchPath( "icon", "/usr/local/share/weshtunotes/data/icon" ); // unix
     
     //Démarrage de l'application
     MainWindow ui( 0, argc, argv );
