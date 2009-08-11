@@ -21,6 +21,4 @@ ADD_DEFINITIONS( ${QT_DEFINITIONS} )
 
 set(CMAKE_CXX_FLAGS "-g -Wall")
 
-set(weshnotes_DESTINATION "./../../../bin")
-
 add_subdirectory(src)
