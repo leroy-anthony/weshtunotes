@@ -19,7 +19,6 @@
 
 #include <QMainWindow>
 #include <QtGui>
-#include <QGraphicsView>
 #include <QList>
 #include <QToolBar>
 #include <QSystemTrayIcon>
@@ -32,6 +31,7 @@
 #include "../item/NoteItem.h"
 #include "../explorer/TreeExplorer.h"
 #include "../tag/TagFactory.h"
+#include "../scene/CustomGraphicsView.h"
 
 using namespace std;
 
@@ -59,7 +59,7 @@ private:
     Scene::AbstractScene * m_currentScene;
     Scene::ToolBarScene * m_controlerScene;
 
-    QGraphicsView * m_view;
+    Scene::CustomGraphicsView * m_view;
 
     Tag::TagFactory * m_tagFactory;
 
