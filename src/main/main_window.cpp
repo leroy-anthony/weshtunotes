@@ -62,7 +62,7 @@ void MainWindow::initToolBar()
 
 void MainWindow::initView()
 {
-    m_view = new QGraphicsView();
+    m_view = new Scene::CustomGraphicsView();
 
     centralwidget->layout()->addWidget( m_view );
 

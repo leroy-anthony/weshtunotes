@@ -39,6 +39,7 @@ set(weshnotes_SRC
 ./src/scene/AbstractScene.cpp 
 ./src/scene/FreeScene.cpp
 ./src/scene/ToolBarScene.cpp
+./src/scene/CustomGraphicsView.cpp
 ./src/item/AbstractItem.cpp 
 ./src/item/NoteItem.cpp
 ./src/item/CustomTextEdit.cpp
@@ -68,6 +69,7 @@ set(weshnotes_MOC
 ./src/scene/AbstractScene.h 
 ./src/scene/FreeScene.h
 ./src/scene/ToolBarScene.h
+./src/scene/CustomGraphicsView.h
 ./src/item/AbstractItem.h 
 ./src/item/NoteItem.h
 ./src/item/CustomTextEdit.h
