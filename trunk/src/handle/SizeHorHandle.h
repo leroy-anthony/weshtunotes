@@ -46,14 +46,19 @@ namespace Handle
         void mousePressEvent ( QMouseEvent * event );
         void mouseMoveEvent ( QMouseEvent * event );
         void enterEvent( QEvent * event );
+        void paintEvent( QPaintEvent * event );
 
     private:    
+        void drawHandle( QPainter & painter, HandleItem * h, int & x, int & y, QRect & r );
+
         enum Mode { Nothing, ScaleXItem };
         Mode m_mode;
 
         HandleItem * m_handleItemRoot;
 
         QColor m_defaultColor;
+
+        bool m_isHover;
 
     };
 

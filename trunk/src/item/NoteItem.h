@@ -47,6 +47,8 @@ namespace Item
         void save( const QString & fileName, const QString & handleId  );
 
         void addTag( const QString & tagName, const QString & tagState );
+
+        void adaptSize();
         
     public slots:
         void setBold( bool checked );

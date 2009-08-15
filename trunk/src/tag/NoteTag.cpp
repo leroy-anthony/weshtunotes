@@ -34,20 +34,17 @@ namespace Tag
 {
 
     NoteTag::NoteTag( Item::NoteItem * noteItem, const QString & name ):
-            QWidget(noteItem),
+            QLabel(noteItem),
             m_noteItem(noteItem),
             m_currentState(0),
-            m_sizeSymbol(32),
-            m_name(name)
+            m_name(name),
+            m_visible(false),
+            m_sizeSymbol(32)
     {
-        setContentsMargins( 0, 0, 0, 0 );
-        m_symbolLayout = new QHBoxLayout(this);
-        m_symbolLayout->setContentsMargins( 0, 0, 0, 0 );
+        setContentsMargins( 2, 2, 2, 2 );
 
         loadTagsMenu();
         load(name);
-
-        hide();
     }
 
     NoteTag::~NoteTag()
@@ -146,18 +143,14 @@ namespace Tag
             QString symbol = m_currentState->symbol();
             if ( symbol != "" )
             {
-                m_symbol.setPixmap(Config::ImageFactory::pixmap(m_currentState->symbol()).scaled(m_sizeSymbol,m_sizeSymbol));
-                m_symbolLayout->addWidget(&m_symbol);
-                show();
+                setPixmap(Config::ImageFactory::pixmap(m_currentState->symbol()).scaled(m_sizeSymbol,m_sizeSymbol));
+                m_visible = true;
             }
         }
         else if ( m_name == "default" )
         {
-            m_symbol.setPixmap( Config::ImageFactory::pixmap(Config::Image::addBasket).scaled(QSize(12,12)) );
-            m_symbolLayout->addWidget(&m_symbol);
+            setPixmap( Config::ImageFactory::pixmap(Config::Image::addBasket).scaled(QSize(12,12)) );
         }
-
-        m_symbol.setMaximumSize(QSize(m_sizeSymbol,m_sizeSymbol));
     }
 
     void NoteTag::load( const QString & name )
@@ -216,6 +209,19 @@ namespace Tag
         state->save();
 
         return tag;
+    }
+
+    void NoteTag::setVisibleTag( bool visible )
+    {
+        m_visible = visible;
+    }
+
+    void NoteTag::paintEvent( QPaintEvent * event )
+    {
+        if ( m_visible )
+        {
+            QLabel::paintEvent( event );
+        }
     }
 
 }

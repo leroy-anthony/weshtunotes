@@ -56,6 +56,8 @@ namespace Handle
 
         void moveItem( int x, int y );
 
+        void resize( const QSize & );
+
         enum Mode { Nothing, ScaleXItem };
 
         bool isRoot();
@@ -96,12 +98,14 @@ namespace Handle
         const QString & handleId();
         void setHandleId( const QString & id );
 
+        const QList<Handle::HandleItem*> & handles();
+
     public slots:
         void setDefaultColor();
         void delItem2();
 
     protected:
-        virtual void paintEvent( QPaintEvent * event );
+        void paintEvent( QPaintEvent * event );
 
     signals:
         void move( Handle::HandleItem * handleItem, int x, int y );

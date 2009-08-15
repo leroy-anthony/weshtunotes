@@ -62,7 +62,11 @@ namespace Item
 
     void AbstractItem::setVisibleTag( bool visible )
     {
-        m_tag->setVisible(visible);
+        m_tag->setVisibleTag(visible);
+    }
+
+    void AbstractItem::adaptSize()
+    {
     }
 
 }

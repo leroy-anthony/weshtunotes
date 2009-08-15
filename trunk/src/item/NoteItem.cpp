@@ -31,6 +31,7 @@
 #include "../scene/ToolBarScene.h"
 #include "../config/Configuration.h"
 #include "../tag/NoteTag.h"
+#include "../config/ImageFactory.h"
 
 namespace Item
 {
@@ -59,6 +60,11 @@ namespace Item
 
     NoteItem::~NoteItem()
     {
+    }
+
+    void NoteItem::adaptSize()
+    {
+        m_plainTextEdit->adaptSizeFromText();
     }
 
     void NoteItem::edit()
@@ -169,7 +175,10 @@ namespace Item
 
     void NoteItem::setItemColor( const QColor & color )
     {
-        setStyleSheet("background: "+color.name()+";");
+  //      setStyleSheet("background: "+color.name()+";");
+                setStyleSheet( QString("background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 %1, stop:1 %2)")
+                       .arg(color.lighter(150).name())
+                       .arg(color.name()));
         m_plainTextEdit->setStyleSheet(styleSheet());
         m_color = QColor(color);
         emit colorChange();
