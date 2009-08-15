@@ -31,6 +31,8 @@ namespace Item
     CustomTextEdit::CustomTextEdit():
             QTextEdit()
     {
+        setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         setFrameStyle(QFrame::Box | QFrame::Plain);
         setFrameShape(QFrame::NoFrame);
         setFontPointSize(8);

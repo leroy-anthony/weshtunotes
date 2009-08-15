@@ -20,6 +20,7 @@
 #include "main_window.h"
 
 #include <QSpacerItem>
+#include <QGLWidget>
 
 #include "../explorer/TreeExplorer.h"
 #include "../basket/ItemTreeBasket.h"
@@ -63,7 +64,9 @@ void MainWindow::initToolBar()
 void MainWindow::initView()
 {
     m_view = new Scene::CustomGraphicsView();
-
+    QGLFormat format(QGL::SampleBuffers);
+    m_view->setViewport(new QGLWidget(format));
+    
     centralwidget->layout()->addWidget( m_view );
 
     m_view->show();
@@ -111,7 +114,7 @@ void MainWindow::initMedia()
 
     m_treeExplorer->setHeaderHidden( true );
 
-    connect(m_treeExplorer,SIGNAL(itemActivated(QTreeWidgetItem*,int)),this,SLOT(loadScene(QTreeWidgetItem*,int)));
+    connect(m_treeExplorer,SIGNAL(itemClicked(QTreeWidgetItem*,int)),this,SLOT(loadScene(QTreeWidgetItem*,int)));
 
 }
 

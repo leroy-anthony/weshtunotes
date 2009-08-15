@@ -35,7 +35,7 @@ namespace Item
 namespace Tag
 {
 
-    class NoteTag : public QWidget
+    class NoteTag : public QLabel
     {
         Q_OBJECT
 
@@ -61,8 +61,11 @@ namespace Tag
 
         static NoteTag * newTag();
 
+        void setVisibleTag( bool visible );
+
     protected:
         void mousePressEvent( QMouseEvent * e );
+        void paintEvent( QPaintEvent * event );
 
     private:
         void loadSymbol();
@@ -72,12 +75,11 @@ namespace Tag
 
         Item::NoteItem * m_noteItem;
         QList<State*> m_states;
-        State  * m_currentState;
+        State * m_currentState;
 
         QString m_name;
 
-        QHBoxLayout * m_symbolLayout;
-        QLabel m_symbol;
+        bool m_visible;
         int m_sizeSymbol;
     };
 

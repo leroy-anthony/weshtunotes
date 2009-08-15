@@ -48,6 +48,8 @@ namespace Item
 
         void setVisibleTag( bool visible );
 
+        virtual void adaptSize();
+
     signals:
         void editItem( Item::AbstractItem * item );
         void sizeChange();
