@@ -138,7 +138,7 @@ namespace Handle
         bool m_modeDegroupement;
 
         static int m_index;
-        static QWidget * m_w;
+        static QWidget * m_insertIndicator;
 
         int m_x;
         int m_y;

@@ -40,7 +40,7 @@
 namespace Handle
 {
 
-    QWidget * HandleItem::m_w = 0;
+    QWidget * HandleItem::m_insertIndicator = 0;
     int HandleItem::m_index = 0;
     int HandleItem::m_id = 1;
 
@@ -82,14 +82,11 @@ namespace Handle
 
         connect( &m_deleteHandle, SIGNAL(pressed()), this, SLOT(delItem2()) );
 
-        if ( m_w == 0 )
+        if ( m_insertIndicator == 0 )
         {
-            QFrame * line = new QFrame();
-            line->setMinimumHeight(24);
-            line->setStyleSheet("background: #F7F7C8;");
-            line->setStyleSheet("border-color: black; border-width: 1px; border-style: dashed;");
-
-            m_w = line;
+            m_insertIndicator = new QFrame();
+            m_insertIndicator->setMinimumHeight(24);
+            m_insertIndicator->setStyleSheet("border-color: black; border-width: 1px; border-style: solid;");
         }
     }
 
@@ -223,18 +220,21 @@ namespace Handle
 
     void HandleItem::insert( QPoint  pt, int height )
     {
+        if ( m_index != -1 )
+        {
+            m_contentLayout->removeWidget(m_contentLayout->itemAt(m_index)->widget());
+        }
+
         int size = m_contentLayout->count();
+        //    m_insertIndicator->setMaximumHeight(height);
 
-        m_w->setVisible(true);
-        //    m_w->setMaximumHeight(height);
-
-        QPoint p =mapFromGlobal( pt );
+        QPoint p = mapFromGlobal( pt );
 
         int choix = 0;
         int distance = 99999;
         QWidget * w = 0;
         int d = 0;
-        for ( int i=0 ; i<=size ; i++ )
+        for ( int i=0 ; i<=size ; ++i )
         {
             if ( i != size )
             {
@@ -254,17 +254,15 @@ namespace Handle
             }
         }
 
-        if ( m_index != choix )
-        {
-            m_index = choix;
-            insert( m_w, choix );
-        }
+        m_index = choix;
+        insert( m_insertIndicator, choix );
+        m_insertIndicator->setVisible(true);
     }
 
     void HandleItem::resetInsert()
     {
         m_index = -1;
-        m_w->setVisible(false);
+        m_insertIndicator->setVisible(false);
     }
 
     bool HandleItem::modeDegroupement()
