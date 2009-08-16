@@ -102,7 +102,7 @@ namespace Basket
     {
         m_contentScene->load( m_directory );
         m_basketId = m_contentScene->id();
-        //setData( 0, Qt::UserRole, m_basketId );
+
         setText(1,m_basketId);
         int childsSize = childCount();
         for ( int i=0 ; i<childsSize ; ++i )

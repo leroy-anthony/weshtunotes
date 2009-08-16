@@ -31,6 +31,7 @@ namespace Config
     public:
         static QString main;
         static QString root;
+        static QString lastBasket;
     };
 
     class Configuration : public QSettings
@@ -42,8 +43,8 @@ namespace Config
 
         QStringList masterBaskets();
         static void saveMasterBaskets( const QStringList & masterBaskets );
-        static void saveCurrentBasket( const QString & name );
-        static QString loadCurrentBasket();
+        static void saveLastBasket( const QString & name );
+        static QString loadLastBasket();
 
         static QDir dir( const QString & dirConfig );
         static void removeConfigDir( const QString & dir );
