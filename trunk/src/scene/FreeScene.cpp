@@ -292,7 +292,7 @@ namespace Scene
         }
     }
 
-    void FreeScene::save( const QString & fileName )
+    void FreeScene::save( const QString & id, const QString & fileName )
     {
         QList<Handle::HandleItem*> handles = m_handles.keys();
 
@@ -301,6 +301,7 @@ namespace Scene
         settings.sync();
 
         settings.beginGroup("scene");
+        settings.setValue("id",id);
         settings.beginWriteArray("items");
         for (int i=0 ; i<handles.size() ; ++i)
         {
@@ -334,6 +335,7 @@ namespace Scene
         QList<QStringList> listItem;
 
         settings.beginGroup("scene");
+        m_id = settings.value("id").toString();
         int size = settings.beginReadArray("items");
         for ( int i=0 ; i<size ; ++i )
         {

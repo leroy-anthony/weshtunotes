@@ -27,6 +27,7 @@
 
 namespace Basket
 {
+    int ItemTreeBasket::m_id = 0;
 
     ItemTreeBasket::ItemTreeBasket( Explorer::TreeExplorer * treeExplorer, const QString & name ):
             QTreeWidgetItem( treeExplorer, QStringList(name) ),
@@ -51,6 +52,9 @@ namespace Basket
 
     void ItemTreeBasket::initItemTreeBasket()
     {
+        m_basketId = QString("basket%1").arg(m_id);
+        ++m_id;
+
         setIcon( 0, Config::ImageFactory::icon(Config::Image::basket) );
     }
 
@@ -86,7 +90,7 @@ namespace Basket
 
     void ItemTreeBasket::save()
     {
-        m_contentScene->save( m_directory );
+        m_contentScene->save( m_basketId, m_directory );
         int childsSize = childCount();
         for ( int i=0 ; i<childsSize ; ++i )
         {
@@ -97,6 +101,9 @@ namespace Basket
     void ItemTreeBasket::load()
     {
         m_contentScene->load( m_directory );
+        m_basketId = m_contentScene->id();
+        //setData( 0, Qt::UserRole, m_basketId );
+        setText(1,m_basketId);
         int childsSize = childCount();
         for ( int i=0 ; i<childsSize ; ++i )
         {
@@ -113,6 +120,21 @@ namespace Basket
         }
 
         Config::Configuration::removeConfigDir( m_directory );
+    }
+
+    void ItemTreeBasket::setBasketId( const QString & id )
+    {
+        m_basketId = id;
+        QString idStr = QString(id).replace("basket","");
+        if ( idStr.toInt() > m_id )
+        {
+            m_id = idStr.toInt() + 1;
+        }
+    }
+
+    const QString & ItemTreeBasket::basketId()
+    {
+        return m_basketId;
     }
 
 }

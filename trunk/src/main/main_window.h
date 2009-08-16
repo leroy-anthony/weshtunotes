@@ -64,6 +64,7 @@ private:
     Tag::TagFactory * m_tagFactory;
 
     Explorer::TreeExplorer * m_treeExplorer;
+    Basket::ItemTreeBasket * m_lastBasketLoad;
 
     QSystemTrayIcon * m_trayIcon;
 

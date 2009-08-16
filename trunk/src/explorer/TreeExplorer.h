@@ -39,6 +39,8 @@ namespace Explorer
         TreeExplorer( QWidget * parent );
         virtual ~TreeExplorer();
 
+        QTreeWidgetItem * loadFromConfigCurrentBasket();
+
     public slots:
         void delCurrentBasket();
         Basket::ItemTreeBasket * addBasketToRoot();

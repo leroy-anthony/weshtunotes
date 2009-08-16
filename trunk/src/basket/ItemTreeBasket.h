@@ -49,6 +49,9 @@ namespace Basket
 
         void del();
 
+         void setBasketId( const QString & id );
+         const QString & basketId();
+
     private:
         void initItemTreeBasket();
 
@@ -56,6 +59,9 @@ namespace Basket
         QString m_folder;
         QString m_name;
         Scene::AbstractScene * m_contentScene;
+
+        QString m_basketId;
+        static int m_id;
 
     };
 

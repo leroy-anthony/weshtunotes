@@ -34,8 +34,13 @@ namespace Scene
     {
     }
 
-    void AbstractScene::save( const QString &  fileName )
+    void AbstractScene::save( const QString & id, const QString &  fileName )
     {
+    }
+
+    const QString & AbstractScene::id()
+    {
+        return m_id;
     }
 
 }
