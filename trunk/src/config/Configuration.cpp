@@ -69,7 +69,7 @@ namespace Config
 
     QDir Configuration::dir( const QString & dirConfig )
     {
-        QSettings s( QCoreApplication::organizationName(), dirConfig );
+        QSettings s( QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationName(), dirConfig );
         QFileInfo fileInfo(s.fileName());
         QDir dir = fileInfo.absoluteDir();
 
