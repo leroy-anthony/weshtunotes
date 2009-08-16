@@ -53,13 +53,13 @@ namespace Handle
             m_deleteHandle(this),
             m_parentHandle(0),
             m_modeDegroupement(false),
-            m_decalX(1),
-            m_decalY(1),
+            m_contentMarginX(1),
+            m_contentMarginY(1),
             m_x(x),
             m_y(y)
     {
         QWidget::resize(400,height());
-        setContentsMargins( m_decalX, m_decalY, m_decalX, m_decalY );
+        setContentsMargins( m_contentMarginX, m_contentMarginY, m_contentMarginX, m_contentMarginY );
         m_handleId = QString("handle%1").arg(m_id);
         ++m_id;
 
@@ -124,11 +124,6 @@ namespace Handle
         m_deleteHandle.setDefaultColor(m_defaultColor);
     }
 
-    const QColor & HandleItem::defaultColor()
-    {
-        return m_defaultColor;
-    }
-
     void HandleItem::add( HandleItem * h )
     {
         if ( h != 0 )
@@ -148,7 +143,7 @@ namespace Handle
 
         if ( h == 0 )
         {
-            setContentsMargins( m_decalX, m_decalY, m_decalX, m_decalY );
+            setContentsMargins( m_contentMarginX, m_contentMarginY, m_contentMarginX, m_contentMarginY );
             update();
         }
         else
@@ -156,11 +151,6 @@ namespace Handle
             setContentsMargins( 0, 0, 0, 0 );
         }
 
-    }
-
-    HandleItem * HandleItem::parentHandle()
-    {
-        return m_parentHandle;
     }
 
     void HandleItem::remove( HandleItem * h )
@@ -190,16 +180,6 @@ namespace Handle
         }
 
         QWidget::resize( size );
-    }
-
-    bool HandleItem::isRoot()
-    {
-        return (m_scene != 0);
-    }
-
-    Item::AbstractItem *  HandleItem::noteItem()
-    {
-        return m_item;
     }
 
     HandleItem * HandleItem::handleItemAt( int x, int y )
@@ -265,19 +245,9 @@ namespace Handle
         m_insertIndicator->setVisible(false);
     }
 
-    bool HandleItem::modeDegroupement()
-    {
-        return m_modeDegroupement;
-    }
-
     void HandleItem::setModeDegroupement( bool m_mode )
     {
         m_modeDegroupement = m_mode;
-    }
-
-    int HandleItem::size()
-    {
-        return m_handles.size();
     }
 
     HandleItem * HandleItem::child()
@@ -290,18 +260,13 @@ namespace Handle
         return 0;
     }
 
-    const QList<HandleItem*> & HandleItem::children()
-    {
-        return m_handles;
-    }
-
     void HandleItem::setHoverMode( bool isHover )
     {
         m_moveHandle.setHoverMode( isHover );
+        m_sizeHorHandle.setHoverMode( isHover );
 
-        if ( m_parentHandle == 0 )
+        if ( m_parentHandle == 0 ) // on ne peut pas effacer les handles qui dans dans des handles
         {
-            m_sizeHorHandle.setHoverMode( isHover );
             m_deleteHandle.setHoverMode( isHover );
         }
 
@@ -314,7 +279,7 @@ namespace Handle
     void HandleItem::enterEvent( QEvent * event )
     {
         setHoverMode( true );
-        setContentsMargins( m_decalX, m_decalY, m_decalX, m_decalY );
+        setContentsMargins( m_contentMarginX, m_contentMarginY, m_contentMarginX, m_contentMarginY );
     }
 
     void HandleItem::leaveEvent( QEvent * event )
@@ -366,21 +331,6 @@ namespace Handle
         setDefaultColor( settings.value("color").value<QColor>() );
     }
 
-    int HandleItem::x()
-    {
-        return m_x;
-    }
-
-    int HandleItem::y()
-    {
-        return m_y;
-    }
-
-    const QString & HandleItem::handleId()
-    {
-        return m_handleId;
-    }
-
     void HandleItem::setHandleId( const QString & id )
     {
         m_handleId = id;
@@ -426,7 +376,62 @@ namespace Handle
         }
     }
 
-    const QList<Handle::HandleItem*> & HandleItem::handles()
+    int HandleItem::x()
+    {
+        return m_x;
+    }
+
+    int HandleItem::y()
+    {
+        return m_y;
+    }
+
+    int HandleItem::contentMarginX()
+    {
+        return m_contentMarginX;
+    }
+
+    int HandleItem::contentMarginY()
+    {
+        return m_contentMarginY;
+    }
+
+    const QString & HandleItem::handleId()
+    {
+        return m_handleId;
+    }
+
+    const QColor & HandleItem::defaultColor()
+    {
+        return m_defaultColor;
+    }
+
+    HandleItem * HandleItem::parentHandle()
+    {
+        return m_parentHandle;
+    }
+
+    bool HandleItem::isRoot()
+    {
+        return (m_scene != 0);
+    }
+
+    Item::AbstractItem *  HandleItem::noteItem()
+    {
+        return m_item;
+    }
+
+    bool HandleItem::modeDegroupement()
+    {
+        return m_modeDegroupement;
+    }
+
+    int HandleItem::size()
+    {
+        return m_handles.size();
+    }
+
+    const QList<HandleItem*> & HandleItem::children()
     {
         return m_handles;
     }

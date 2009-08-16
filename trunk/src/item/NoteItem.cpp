@@ -60,6 +60,12 @@ namespace Item
 
     NoteItem::~NoteItem()
     {
+        delete m_tag;
+
+        for ( int i=0 ; m_tags.size() ; ++i )
+        {
+            delete m_tags[i];
+        }
     }
 
     void NoteItem::adaptSize()

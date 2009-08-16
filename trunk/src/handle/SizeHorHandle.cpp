@@ -90,24 +90,24 @@ namespace Handle
         update();
     }
 
-    void SizeHorHandle::drawHandle( QPainter & painter, HandleItem * h, int & x, int & y, QRect & r )
+    void SizeHorHandle::drawHandle( QPainter & painter, HandleItem * h, int & x, int & y, QRect & r, int & decal  )
     {
-        if ( h->handles().size() ==0 )
-
+        if ( h->children().size() ==0 )
         {
-            QLinearGradient gradient( 0, y, 0,h->height()+y);
+            QLinearGradient gradient( 0, y-decal, 0,h->height()+y-decal);
             gradient.setColorAt( 0, h->defaultColor().lighter(150) );
             gradient.setColorAt( 1, h->defaultColor() );
             painter.setBrush( gradient );
-            painter.drawRect( x, y, r.width(), h->height() );
-            y += h->height();
+            painter.drawRect( x, y, r.width(), h->height()-decal );
+            y += h->height()-decal;
+            decal=0;
         }
         else
         {
-            QList<HandleItem*> handles = h->handles();
+            QList<HandleItem*> handles = h->children();
             for ( int i=0 ; i<handles.size() ; ++i )
             {
-                drawHandle(painter,handles[i],x,y,r);
+                drawHandle(painter,handles[i],x,y,r,decal);
             }
         }
     }
@@ -122,7 +122,7 @@ namespace Handle
         painter.setPen(pen);
 
         HandleItem * h = dynamic_cast<HandleItem*>(parentWidget());
-        QList<HandleItem*> handles = h->handles();
+        QList<HandleItem*> handles = h->children();
 
         if ( m_isHover )
         {
@@ -139,17 +139,23 @@ namespace Handle
             if ( handles.size() > 0 )
             {
                 HandleItem * h = dynamic_cast<HandleItem*>(parentWidget());
-                QList<HandleItem*> handles = h->handles();
+                QList<HandleItem*> handles = h->children();
                 int x = r.x();
                 int y = r.y();
+
+                int decal = 0;
+                if ( y != 0 )
+                {
+                    decal = h->height() - r.height() - (h->parentHandle() == 0 ? h->contentMarginX()+h->contentMarginY() : 0);
+                }
                 for ( int i=0 ; i<handles.size() ; ++i )
                 {
-                    drawHandle( painter, handles[i], x, y, r );
+                    drawHandle( painter, handles[i], x, y, r, decal );
                 }
             }
             else
             {
-                QLinearGradient gradient( 0, 0, 0, r.height());
+                QLinearGradient gradient( 0, 0, 0, r.height() + (h->height() - r.height()) );
                 gradient.setColorAt( 0, h->defaultColor().lighter(150) );
                 gradient.setColorAt( 1, h->defaultColor() );
                 painter.setBrush( gradient );

@@ -50,9 +50,11 @@ namespace Config
     public:
         static const QIcon & icon( const QString & iconId );
         static const QPixmap & pixmap( const QString & pixmapId );
+        static void clean();
 
     protected:
         ImageFactory();
+        ~ImageFactory();
 
     private:
         static QMap<QString,QIcon> m_cacheIcons;

@@ -45,6 +45,16 @@ namespace Config
     {
     }
 
+    ImageFactory::~ImageFactory()
+    {
+    }
+
+    void ImageFactory::clean()
+    {
+        m_cacheIcons.clear();
+        m_cachePixmaps.clear();
+    }
+
     const QIcon & ImageFactory::icon( const QString & iconId )
     {
         if ( !m_cacheIcons.contains( iconId ) )

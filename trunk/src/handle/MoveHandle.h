@@ -49,13 +49,12 @@ namespace Handle
         void paintEvent( QPaintEvent * event );
 
     private:
-        void drawHandle( QPainter & painter, HandleItem * h, int & x, int & y, QRect & r );
+        void drawHandle( QPainter & painter, HandleItem * h, int & x, int & y, QRect & r, int & decal );
+        void drawGrip( QPainter & painter, QRect & r );
 
         QColor m_defaultColor;
 
         enum Mode { Nothing, Move };
-
-        bool m_isHover;
 
         Mode m_mode;
 
@@ -64,6 +63,8 @@ namespace Handle
 
         int m_oldCursorX;
         int m_oldCursorY;
+
+        bool m_isHover;
 
     };
 
