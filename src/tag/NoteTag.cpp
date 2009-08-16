@@ -49,6 +49,10 @@ namespace Tag
 
     NoteTag::~NoteTag()
     {
+        for ( int i=0 ; i<m_states.size() ; ++i )
+        {
+            delete m_states[i];
+        }
     }
 
     void NoteTag::apply()

@@ -92,13 +92,14 @@ namespace Handle
         void save( const QString & fileName );
         void load( const QString & fileName );
 
+        int contentMarginX();
+        int contentMarginY();
+
         int x();
         int y();
 
         const QString & handleId();
         void setHandleId( const QString & id );
-
-        const QList<Handle::HandleItem*> & handles();
 
     public slots:
         void setDefaultColor();
@@ -113,13 +114,10 @@ namespace Handle
         void delItem( Handle::HandleItem * handleItem );
 
     private:
-
         QGridLayout * m_handleLayout;
         QLayout * m_contentLayout;
 
         QList<Handle::HandleItem*> m_handles;
-
-
 
         Mode m_modeHandle;
 
@@ -140,13 +138,13 @@ namespace Handle
         static int m_index;
         static QWidget * m_insertIndicator;
 
+        int m_contentMarginX;
+        int m_contentMarginY;
+
         int m_x;
         int m_y;
         int m_height;
         int m_width;
-
-        int m_decalX;
-        int m_decalY;
 
         QColor m_defaultColor;
 

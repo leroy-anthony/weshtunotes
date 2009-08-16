@@ -54,6 +54,11 @@ namespace Scene
             m_modeItem(Nothing)
     {
         setBackgroundBrush(QColor(Qt::cyan).lighter(190));
+        /*
+          QGraphicsScene::BspTreeIndex
+          QGraphicsScene::NoIndex
+          */
+        setItemIndexMethod(QGraphicsScene::NoIndex);
     }
 
     FreeScene::~FreeScene()

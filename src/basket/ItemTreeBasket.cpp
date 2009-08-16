@@ -56,6 +56,7 @@ namespace Basket
 
     ItemTreeBasket::~ItemTreeBasket()
     {
+        delete m_contentScene;
     }
 
     const QString & ItemTreeBasket::name()

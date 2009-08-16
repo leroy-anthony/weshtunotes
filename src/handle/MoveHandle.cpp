@@ -121,25 +121,58 @@ namespace Handle
         update();
     }
     
-    void MoveHandle::drawHandle( QPainter & painter, HandleItem * h, int & x, int & y, QRect & r )
+    void MoveHandle::drawHandle( QPainter & painter, HandleItem * h, int & x, int & y, QRect & r, int & decal )
     {
-        if ( h->handles().size() ==0 )
+        if ( h->children().size() ==0 )
 
         {
-            QLinearGradient gradient( 0, y, 0,h->height()+y);
+            QLinearGradient gradient( 0, y-decal, 0,h->height()+y-decal);
             gradient.setColorAt( 0, h->defaultColor().lighter(150) );
             gradient.setColorAt( 1, h->defaultColor() );
             painter.setBrush( gradient );
-            painter.drawRect( x, y, r.width(), h->height() );
-            y += h->height();
+            painter.drawRect( x, y, r.width(), h->height()-decal );
+            y += h->height()-decal;
+            decal=0;
         }
         else
         {
-            QList<HandleItem*> handles = h->handles();
+            QList<HandleItem*> handles = h->children();
             for ( int i=0 ; i<handles.size() ; ++i )
             {
-                drawHandle(painter,handles[i],x,y,r);
+                drawHandle(painter,handles[i],x,y,r,decal);
             }
+        }
+    }
+
+    void MoveHandle::drawGrip( QPainter & painter, QRect & r )
+    {
+        int xGrips             = 2;
+        int marginedHeight = (r.height() * 80 / 100); // 10% empty on top, and 10% empty on bottom, so 20% of the height should be empty of any grip, and 80% should be in the grips
+        int nbGrips            = (marginedHeight - 3) / 6;
+        if (nbGrips < 2)
+            nbGrips = 2;
+        int yGrips             = (r.height() + 1 - nbGrips * 6 - 3) / 2; // +1 to avoid rounding errors, -nbGrips*6-3 the size of the grips
+        QColor darker  = palette().color(QPalette::Highlight).dark(130);
+        QColor lighter = palette().color(QPalette::Highlight).light(130);
+        for (int i = 0; i < nbGrips; ++i)
+        {
+            /// Dark color:
+            painter.setPen(darker);
+            // Top-left point:
+            painter.drawPoint(xGrips,     yGrips);
+            painter.drawPoint(xGrips + 1, yGrips);
+            painter.drawPoint(xGrips,     yGrips + 1);
+            // Bottom-right point:
+            painter.drawPoint(xGrips + 4, yGrips + 3);
+            painter.drawPoint(xGrips + 5, yGrips + 3);
+            painter.drawPoint(xGrips + 4, yGrips + 4);
+            /// Light color:
+            painter.setPen(lighter);
+            // Top-left point:
+            painter.drawPoint(xGrips + 1, yGrips + 1);
+            // Bottom-right point:
+            painter.drawPoint(xGrips + 5, yGrips + 4);
+            yGrips += 6;
         }
     }
 
@@ -157,7 +190,6 @@ namespace Handle
             QLinearGradient gradient(0,0,0, height());
             gradient.setColorAt(0, palette().color(QPalette::Highlight).lighter(150));
             gradient.setColorAt(1, palette().color(QPalette::Highlight));
-            
             painter.setBrush(gradient);
 
             painter.drawRect( r.x(), r.y(), r.width(), r.height() );
@@ -165,47 +197,25 @@ namespace Handle
         else
         {
             HandleItem * h = dynamic_cast<HandleItem*>(parentWidget());
-            QList<HandleItem*> handles = h->handles();
+            QList<HandleItem*> handles = h->children();
             int x = r.x();
             int y = r.y();
+
+            int decal = 0;
+            if ( y != 0 )
+            {
+                decal = h->height() - r.height() - (h->parentHandle() == 0 ? h->contentMarginX()+h->contentMarginY() : 0);
+            }
+
             for ( int i=0 ; i<handles.size() ; ++i )
             {
-                drawHandle( painter, handles[i], x, y, r );
+                drawHandle( painter, handles[i], x, y, r, decal );
             }
         }
 
         if ( m_isHover )
         {
-            int xGrips             = 2;
-            int marginedHeight = (r.height() * 80 / 100); // 10% empty on top, and 10% empty on bottom, so 20% of the height should be empty of any grip, and 80% should be in the grips
-            int nbGrips            = (marginedHeight - 3) / 6;
-            if (nbGrips < 2)
-                nbGrips = 2;
-            int yGrips             = (r.height() + 1 - nbGrips * 6 - 3) / 2; // +1 to avoid rounding errors, -nbGrips*6-3 the size of the grips
-            QColor darker  = palette().color(QPalette::Highlight).dark(130);
-            QColor lighter = palette().color(QPalette::Highlight).light(130);
-            for (int i = 0; i < nbGrips; ++i)
-            {
-                /// Dark color:
-                painter.setPen(darker);
-                // Top-left point:
-                painter.drawPoint(xGrips,     yGrips);
-                painter.drawPoint(xGrips + 1, yGrips);
-                painter.drawPoint(xGrips,     yGrips + 1);
-                // Bottom-right point:
-                painter.drawPoint(xGrips + 4, yGrips + 3);
-                painter.drawPoint(xGrips + 5, yGrips + 3);
-                painter.drawPoint(xGrips + 4, yGrips + 4);
-                /// Light color:
-                painter.setPen(lighter);
-                // Top-left point:
-                painter.drawPoint(xGrips + 1, yGrips + 1);
-                // Bottom-right point:
-                painter.drawPoint(xGrips + 5, yGrips + 4);
-                yGrips += 6;
-            }
+            drawGrip( painter, r );
         }
-
     }
-    
 }

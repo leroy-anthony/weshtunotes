@@ -54,6 +54,8 @@ MainWindow::MainWindow(QWidget * parent, int argc, char *argv[]) :
 MainWindow::~MainWindow()
 {
     m_treeExplorer->saveBaskets();
+    Config::ImageFactory::clean();
+    delete m_tagFactory;
 }
 
 void MainWindow::initToolBar()
@@ -66,7 +68,34 @@ void MainWindow::initView()
     m_view = new Scene::CustomGraphicsView();
     QGLFormat format(QGL::SampleBuffers);
     m_view->setViewport(new QGLWidget(format));
-    
+    /*
+      QGraphicsView::FullViewportUpdate
+      QGraphicsView::MinimalViewportUpdate
+      QGraphicsView::SmartViewportUpdate
+      QGraphicsView::BoundingRectViewportUpdate
+      QGraphicsView::NoViewportUpdate
+      */
+    m_view->setViewportUpdateMode( QGraphicsView::FullViewportUpdate );
+    /*
+      QGraphicsView::CacheNone
+      QGraphicsView::CacheBackground
+      */
+    m_view->setCacheMode( QGraphicsView::CacheNone );
+    /*
+      QGraphicsView::DontAdjustForAntialiasing
+      QGraphicsView::DontSavePainterState
+      QGraphicsView::DontClipPainter
+      */
+    //m_view->setOptimizationFlags( QGraphicsView::DontClipPainter );
+    /*
+      QPainter::Antialiasing
+      QPainter::TextAntialiasing
+      QPainter::SmoothPixmapTransform
+      QPainter::HighQualityAntialiasing
+      QPainter::NonCosmeticDefaultPen
+      */
+    //m_view->setRenderHints(QPainter::NonCosmeticDefaultPen | QPainter::HighQualityAntialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform);
+
     centralwidget->layout()->addWidget( m_view );
 
     m_view->show();
