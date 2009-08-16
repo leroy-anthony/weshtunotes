@@ -30,6 +30,7 @@ namespace Config
 
     QString Constant::main = "main";
     QString Constant::root = "root";
+    QString Constant::lastBasket = "lastBasket";
 
     Configuration::Configuration():
             QSettings( QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationName(), Constant::main )
@@ -58,17 +59,17 @@ namespace Config
         settings.sync();
     }
 
-    void Configuration::saveCurrentBasket( const QString & name )
+    void Configuration::saveLastBasket( const QString & name )
     {
         Configuration settings;
-        settings.setValue( "current_basket", name );
+        settings.setValue( Constant::lastBasket, name );
         settings.sync();
     }
 
-    QString Configuration::loadCurrentBasket()
+    QString Configuration::loadLastBasket()
     {
         Configuration settings;
-        return settings.value( "current_basket" ).toString();
+        return settings.value( Constant::lastBasket ).toString();
     }
 
     QStringList Configuration::subDirs( const QString & directory )

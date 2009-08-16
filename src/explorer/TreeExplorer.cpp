@@ -155,7 +155,7 @@ namespace Explorer
     QTreeWidgetItem * TreeExplorer::loadFromConfigCurrentBasket()
     {
         setColumnCount(2);
-        QString currentBasket = Config::Configuration::loadCurrentBasket();
+        QString currentBasket = Config::Configuration::loadLastBasket();
         QList<QTreeWidgetItem*> baskets = findItems( currentBasket, Qt::MatchFixedString | Qt::MatchRecursive, 1 );
         setColumnCount(1);
         if ( baskets.size() > 0 )

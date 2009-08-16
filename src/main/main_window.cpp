@@ -59,7 +59,7 @@ MainWindow::~MainWindow()
     m_treeExplorer->saveBaskets();
     if ( m_lastBasketLoad != 0 )
     {
-        Config::Configuration::saveCurrentBasket( m_lastBasketLoad->basketId() );
+        Config::Configuration::saveLastBasket( m_lastBasketLoad->basketId() );
     }
     Config::ImageFactory::clean();
     delete m_tagFactory;
