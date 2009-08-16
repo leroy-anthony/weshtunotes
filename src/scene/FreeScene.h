@@ -51,7 +51,7 @@ namespace Scene
         void delItem( Handle::HandleItem * h );
 
         void load( const QString & fileName );
-        void save( const QString & fileName );
+        void save( const QString & id, const QString & fileName );
 
     protected:
         void mousePressEvent( QGraphicsSceneMouseEvent * mouseEvent );

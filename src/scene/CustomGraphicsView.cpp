@@ -38,6 +38,8 @@ namespace Scene
         setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
         setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
         setSceneRect(-100000,-100000,200000,200000);
+
+        setViewportMargins(4,4,4,4);
     }
 
     void CustomGraphicsView::mousePressEvent(QMouseEvent * event)

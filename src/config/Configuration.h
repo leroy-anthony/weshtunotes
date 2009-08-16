@@ -42,6 +42,8 @@ namespace Config
 
         QStringList masterBaskets();
         static void saveMasterBaskets( const QStringList & masterBaskets );
+        static void saveCurrentBasket( const QString & name );
+        static QString loadCurrentBasket();
 
         static QDir dir( const QString & dirConfig );
         static void removeConfigDir( const QString & dir );

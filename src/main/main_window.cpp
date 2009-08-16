@@ -28,7 +28,8 @@
 #include "../config/ImageFactory.h"
 
 MainWindow::MainWindow(QWidget * parent, int argc, char *argv[]) :
-        QMainWindow(parent)
+        QMainWindow(parent),
+        m_lastBasketLoad(0)
 {
     setupUi(this);
 
@@ -38,6 +39,8 @@ MainWindow::MainWindow(QWidget * parent, int argc, char *argv[]) :
     initSystemTray();
 
     m_treeExplorer->loadBaskets();
+
+    m_treeExplorer->loadFromConfigCurrentBasket();
 
     QList<QTreeWidgetItem*> items = m_treeExplorer->selectedItems();
     if ( items.size() > 0 )
@@ -54,6 +57,10 @@ MainWindow::MainWindow(QWidget * parent, int argc, char *argv[]) :
 MainWindow::~MainWindow()
 {
     m_treeExplorer->saveBaskets();
+    if ( m_lastBasketLoad != 0 )
+    {
+        Config::Configuration::saveCurrentBasket( m_lastBasketLoad->basketId() );
+    }
     Config::ImageFactory::clean();
     delete m_tagFactory;
 }
@@ -150,6 +157,7 @@ void MainWindow::initMedia()
 void MainWindow::loadScene( QTreeWidgetItem * item , int column )
 {
     Basket::ItemTreeBasket * i = dynamic_cast<Basket::ItemTreeBasket*>(item);
+    m_lastBasketLoad = i;
     m_view->setScene(  i->scene() );
 }
 

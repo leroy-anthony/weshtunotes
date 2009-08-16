@@ -54,9 +54,21 @@ namespace Config
     void Configuration::saveMasterBaskets( const QStringList & masterBaskets )
     {
         Configuration settings;
-        settings.clear();
         settings.setValue( "root", masterBaskets );
         settings.sync();
+    }
+
+    void Configuration::saveCurrentBasket( const QString & name )
+    {
+        Configuration settings;
+        settings.setValue( "current_basket", name );
+        settings.sync();
+    }
+
+    QString Configuration::loadCurrentBasket()
+    {
+        Configuration settings;
+        return settings.value( "current_basket" ).toString();
     }
 
     QStringList Configuration::subDirs( const QString & directory )

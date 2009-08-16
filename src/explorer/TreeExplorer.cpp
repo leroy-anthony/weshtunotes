@@ -152,4 +152,20 @@ namespace Explorer
         }
     }
 
+    QTreeWidgetItem * TreeExplorer::loadFromConfigCurrentBasket()
+    {
+        setColumnCount(2);
+        QString currentBasket = Config::Configuration::loadCurrentBasket();
+        QList<QTreeWidgetItem*> baskets = findItems( currentBasket, Qt::MatchFixedString | Qt::MatchRecursive, 1 );
+        setColumnCount(1);
+        if ( baskets.size() > 0 )
+        {
+            expandItem(baskets[0]);
+            setCurrentItem(baskets[0]);
+            return baskets[0];
+        }
+
+        return 0;
+    }
+
 }
