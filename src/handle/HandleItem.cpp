@@ -86,7 +86,9 @@ namespace Handle
         {
             m_insertIndicator = new QFrame();
             m_insertIndicator->setMinimumHeight(24);
-            m_insertIndicator->setStyleSheet("border-color: black; border-width: 1px; border-style: solid;");
+            m_insertIndicator->setStyleSheet(QString("background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 %1, stop:1 %2)")
+                       .arg(palette().color(QPalette::Highlight).lighter(150).name())
+                       .arg(palette().color(QPalette::Highlight).name()));
         }
     }
 
