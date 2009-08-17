@@ -377,6 +377,7 @@ namespace Scene
                     //TODO: replace me by item->load() ???
                     Item::AbstractItem * item = newItem( 0, 0, settings.value("color").value<QColor>() );
                     handle->add( item );
+                    item->setMaximumWidth(settings.value("width").toInt());
                     QString id = settings.value("data").toString();
                     item->setItemId(id);
                     itemsToLoad[ id ] = item;
