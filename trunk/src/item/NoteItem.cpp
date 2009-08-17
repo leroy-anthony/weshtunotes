@@ -141,6 +141,7 @@ namespace Item
         settings.beginGroup( handleId );
         settings.setValue("data",m_itemId);
         settings.setValue("color",m_color);
+        settings.setValue("width",width());
 
         QStringList namesTags;
         for ( int i=0 ; i<m_tags.size() ; ++i )
@@ -162,7 +163,7 @@ namespace Item
     }
 
     void NoteItem::load( const QString & fileName )
-    {
+    {       
         m_plainTextEdit->blockSignals( true );
 
         Config::Configuration settings( fileName );
@@ -181,8 +182,8 @@ namespace Item
 
     void NoteItem::setItemColor( const QColor & color )
     {
-  //      setStyleSheet("background: "+color.name()+";");
-                setStyleSheet( QString("background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 %1, stop:1 %2)")
+        //      setStyleSheet("background: "+color.name()+";");
+        setStyleSheet( QString("background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 %1, stop:1 %2)")
                        .arg(color.lighter(150).name())
                        .arg(color.name()));
         m_plainTextEdit->setStyleSheet(styleSheet());

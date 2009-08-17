@@ -306,6 +306,7 @@ namespace Handle
         settings.beginGroup(m_handleId);
         settings.setValue("x",m_x);
         settings.setValue("y",m_y);
+
         if ( childs.size() > 0 )
         {
             settings.setValue("items",childs);
