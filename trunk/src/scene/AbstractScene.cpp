@@ -38,9 +38,25 @@ namespace Scene
     {
     }
 
+    void AbstractScene::saveViewOnDisk( const QString & fileName )
+    {
+    }
+
+    void AbstractScene::loadViewFromDisk( const QString & fileName )
+    {
+    }
+
     const QString & AbstractScene::id()
     {
         return m_id;
+    }
+
+    void AbstractScene::storeView( CustomGraphicsView * view )
+    {
+    }
+
+    void AbstractScene::restoreView( CustomGraphicsView * view )
+    {
     }
 
 }

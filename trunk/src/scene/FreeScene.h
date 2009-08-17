@@ -21,13 +21,13 @@
 #define FREESCENE_H_
 
 #include "AbstractScene.h"
+
 #include "../item/NoteItem.h"
+#include "../scene/CustomGraphicsView.h"
 
 #include <QGraphicsScene>
 #include <QGraphicsProxyWidget>
-
 #include <QHash>
-
 #include <QToolBar>
 
 namespace Scene
@@ -52,6 +52,10 @@ namespace Scene
 
         void load( const QString & fileName );
         void save( const QString & id, const QString & fileName );
+        void saveViewOnDisk( const QString & fileName );
+        void loadViewFromDisk( const QString & fileName );
+        void storeView( CustomGraphicsView * view );
+        void restoreView( CustomGraphicsView * view );
 
     protected:
         void mousePressEvent( QGraphicsSceneMouseEvent * mouseEvent );
@@ -66,6 +70,10 @@ namespace Scene
         Item::AbstractItem * m_currentAbstractItem;
         Handle::HandleItem * m_currentHandle;
         QPointF m_mouseLocalPositionItem;
+
+        QTransform m_transformView;
+        int m_horizontalScrollBarValueView;
+        int m_verticalScrollBarValueView;
 
         QHash<Handle::HandleItem * ,QGraphicsProxyWidget*> m_handles;
         QHash<QGraphicsProxyWidget * ,Handle::HandleItem*> m_items;
