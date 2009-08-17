@@ -39,7 +39,6 @@ MainWindow::MainWindow(QWidget * parent, int argc, char *argv[]) :
     initSystemTray();
 
     m_treeExplorer->loadBaskets();
-
     m_treeExplorer->loadFromConfigCurrentBasket();
 
     QList<QTreeWidgetItem*> items = m_treeExplorer->selectedItems();
@@ -56,6 +55,13 @@ MainWindow::MainWindow(QWidget * parent, int argc, char *argv[]) :
 
 MainWindow::~MainWindow()
 {
+    if ( m_lastBasketLoad != 0 )
+    {
+       m_view->horizontalScrollBar()->setValue(m_view->horizontalScrollBar()->value()-53); // valeur magic !!
+       m_view->verticalScrollBar()->setValue(m_view->verticalScrollBar()->value()+159); // valeur magic !!
+       m_lastBasketLoad->scene()->storeView( m_view );
+    }
+
     m_treeExplorer->saveBaskets();
     if ( m_lastBasketLoad != 0 )
     {
@@ -157,8 +163,16 @@ void MainWindow::initMedia()
 void MainWindow::loadScene( QTreeWidgetItem * item , int column )
 {
     Basket::ItemTreeBasket * i = dynamic_cast<Basket::ItemTreeBasket*>(item);
+
+    if ( m_lastBasketLoad != 0 )
+    {
+        m_lastBasketLoad->scene()->storeView( m_view );
+    }
+
     m_lastBasketLoad = i;
     m_view->setScene(  i->scene() );
+    i->scene()->restoreView( m_view );
+
 }
 
 Scene::AbstractScene * MainWindow::currentScene()

@@ -37,6 +37,8 @@
 #include <QColor>
 #include <QApplication>
 #include <QGraphicsSvgItem>
+#include <QGraphicsView>
+#include <QScrollBar>
 
 #include "../handle/HandleItem.h"
 #include "../config/Configuration.h"
@@ -51,7 +53,9 @@ namespace Scene
             m_currentGraphicsItem(0),
             m_currentAbstractItem(0),
             m_currentHandle(0),
-            m_modeItem(Nothing)
+            m_modeItem(Nothing),
+            m_horizontalScrollBarValueView(0),
+            m_verticalScrollBarValueView(0)
     {
         setBackgroundBrush(QColor(Qt::cyan).lighter(190));
         /*
@@ -324,6 +328,7 @@ namespace Scene
             handles[i]->save(fileName);
         }
 
+        saveViewOnDisk( fileName );
     }
 
     void FreeScene::load( const QString &  fileName )
@@ -393,6 +398,47 @@ namespace Scene
         {
             itemsToLoad[ itemsToLoad.keys()[j] ]->load( fileName );
         }
+
+        loadViewFromDisk( fileName );
     }
+
+    void FreeScene::saveViewOnDisk( const QString & fileName )
+    {
+        Config::Configuration settings( fileName );
+        settings.beginGroup("scene");
+        settings.setValue("transform",m_transformView);
+        settings.setValue("hscroll",m_horizontalScrollBarValueView);
+        settings.setValue("vscroll",m_verticalScrollBarValueView);
+        settings.endGroup();
+        settings.sync();
+    }
+
+    void FreeScene::loadViewFromDisk( const QString & fileName  )
+    {
+        Config::Configuration settings( fileName );
+        settings.beginGroup("scene");
+        m_transformView = settings.value("transform").value<QTransform>();
+        m_horizontalScrollBarValueView = settings.value("hscroll").toInt();
+        m_verticalScrollBarValueView   = settings.value("vscroll").toInt();
+    }
+
+    void FreeScene::storeView( CustomGraphicsView * view )
+    {
+        view->setInteractive(false);
+        m_transformView = view->transform();
+        m_horizontalScrollBarValueView = view->horizontalScrollBar()->value();
+        m_verticalScrollBarValueView = view->verticalScrollBar()->value();
+        view->setInteractive(true);
+    }
+
+    void FreeScene::restoreView( CustomGraphicsView * view  )
+    {
+        view->setInteractive(false);
+        view->setTransform(m_transformView);
+        view->horizontalScrollBar()->setValue(m_horizontalScrollBarValueView);
+        view->verticalScrollBar()->setValue(m_verticalScrollBarValueView);
+        view->setInteractive(true);
+    }
+
 }
 

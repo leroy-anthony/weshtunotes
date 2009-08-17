@@ -30,6 +30,7 @@ namespace Handle
 #include <QAction>
 
 #include "../item/AbstractItem.h"
+#include "../scene/CustomGraphicsView.h"
 
 namespace Scene
 {
@@ -48,6 +49,11 @@ namespace Scene
 
         virtual void load( const QString & fileName );
         virtual void save( const QString & id, const QString & fileName );
+
+        virtual void saveViewOnDisk( const QString & fileName );
+        virtual void loadViewFromDisk( const QString & fileName );
+        virtual void storeView( CustomGraphicsView * view );
+        virtual void restoreView( CustomGraphicsView * view );
 
         const QString & id();
 

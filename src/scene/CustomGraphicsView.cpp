@@ -36,7 +36,7 @@ namespace Scene
         setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
-        setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+        setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);//FullViewportUpdate);
         setSceneRect(-100000,-100000,200000,200000);
 
         setViewportMargins(4,4,4,4);

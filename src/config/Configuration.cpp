@@ -20,7 +20,6 @@
 #include "Configuration.h"
 
 #include <QFileInfo>
-#include <QSettings>
 #include <QCoreApplication>
 
 #include "../main/general.h"
