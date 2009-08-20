@@ -87,8 +87,8 @@ namespace Handle
             m_insertIndicator = new QFrame();
             m_insertIndicator->setMinimumHeight(24);
             m_insertIndicator->setStyleSheet(QString("background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 %1, stop:1 %2)")
-                       .arg(palette().color(QPalette::Highlight).lighter(150).name())
-                       .arg(palette().color(QPalette::Highlight).name()));
+                                             .arg(palette().color(QPalette::Highlight).lighter(150).name())
+                                             .arg(palette().color(QPalette::Highlight).name()));
         }
     }
 
@@ -306,6 +306,8 @@ namespace Handle
         settings.beginGroup(m_handleId);
         settings.setValue("x",m_x);
         settings.setValue("y",m_y);
+        settings.setValue("height",height());
+        settings.setValue("width",width());
 
         if ( childs.size() > 0 )
         {

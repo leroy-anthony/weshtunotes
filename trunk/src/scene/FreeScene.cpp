@@ -1,16 +1,16 @@
 /*
  Copyright (c) 2009 LEROY Anthony <leroy.anthony@gmail.com>
-
+ 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Library General Public
  License as published by the Free Software Foundation; either
  version 3 of the License, or (at your option) any later version.
-
+ 
  This library is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  Library General Public License for more details.
-
+ 
  You should have received a copy of the GNU Library General Public License
  along with this library; see the file COPYING.LIB.  If not, write to
  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
@@ -47,7 +47,7 @@
 
 namespace Scene
 {
-
+    
     FreeScene::FreeScene(QWidget * parent) :
             AbstractScene(),
             m_currentGraphicsItem(0),
@@ -64,33 +64,33 @@ namespace Scene
           */
         setItemIndexMethod(QGraphicsScene::NoIndex);
     }
-
+    
     FreeScene::~FreeScene()
     {
     }
-
+    
     Handle::HandleItem * FreeScene::newHandle( int x, int y )
     {
         Handle::HandleItem * handle = new Handle::HandleItem( this, x, y );
         connect( handle, SIGNAL(move(Handle::HandleItem*,int,int)), this, SLOT(moveItem(Handle::HandleItem*,int,int)));
         connect( handle, SIGNAL(delItem(Handle::HandleItem*)), this, SLOT(delItem(Handle::HandleItem*)));
-
+        
         return handle;
     }
-
+    
     Item::AbstractItem * FreeScene::newItem( int x, int y, const QColor & color )
     {
         Item::NoteItem * item = new Item::NoteItem();
         //       item->setItemColor( color );
         connect( item, SIGNAL(editItem(Item::AbstractItem*)), this, SLOT(editItem(Item::AbstractItem*)));
-
+        
         return item;
     }
-
+    
     Handle::HandleItem *  FreeScene::addItems( int x, int y, const QString & dataFile )
     {
         Handle::HandleItem * handle = newHandle( x, y );
-
+        
         Item::AbstractItem * item = newItem( x, y, QColor(115,115,115) );
 
         handle->add( item );
@@ -337,6 +337,7 @@ namespace Scene
 
         QMap<QString,Handle::HandleItem*> handles;
         QMap<QString,Item::AbstractItem*> itemsToLoad;
+        QMap<Handle::HandleItem*,QSize>  handlesSizes;
         QList<QStringList> listItem;
 
         settings.beginGroup("scene");
@@ -364,6 +365,8 @@ namespace Scene
                 handle->setHandleId(items[i]);
                 handles[ items[i] ] = handle;
 
+                handlesSizes[ handle ] = QSize( settings.value("width").toInt(), settings.value("height").toInt() );
+
                 QStringList itemsToAdd = settings.value("items").toStringList();
                 if ( itemsToAdd.size()>0 )
                 {
@@ -377,7 +380,7 @@ namespace Scene
                     //TODO: replace me by item->load() ???
                     Item::AbstractItem * item = newItem( 0, 0, settings.value("color").value<QColor>() );
                     handle->add( item );
-                    item->setMaximumWidth(settings.value("width").toInt());
+
                     QString id = settings.value("data").toString();
                     item->setItemId(id);
                     itemsToLoad[ id ] = item;
@@ -395,10 +398,16 @@ namespace Scene
             addHandleToScene( handle );
         }
 
+        for ( int j=0 ; j<handlesSizes.keys().size() ; ++j )
+        {
+            handlesSizes.keys()[j]->resize( handlesSizes[ handlesSizes.keys()[j] ] );
+        }
+        
         for ( int j=0 ; j<itemsToLoad.keys().size() ; ++j )
         {
             itemsToLoad[ itemsToLoad.keys()[j] ]->load( fileName );
         }
+
 
         loadViewFromDisk( fileName );
     }
