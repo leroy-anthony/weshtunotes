@@ -25,6 +25,7 @@
 #include <QClipboard>
 #include <QMimeData>
 #include <QApplication>
+#include <QGLWidget>
 
 #include "AbstractScene.h"
 #include "../main/general.h"
@@ -37,12 +38,44 @@ namespace Scene
             m_scale(1.0),
             m_move(false)
     {
+        QGLFormat format(QGL::SampleBuffers);
+        setViewport(new QGLWidget(format));
+        /*
+      QGraphicsView::FullViewportUpdate
+      QGraphicsView::MinimalViewportUpdate
+      QGraphicsView::SmartViewportUpdate
+      QGraphicsView::BoundingRectViewportUpdate
+      QGraphicsView::NoViewportUpdate
+      */
+        setViewportUpdateMode( QGraphicsView::FullViewportUpdate );
+        /*
+      QGraphicsView::CacheNone
+      QGraphicsView::CacheBackground
+      */
+        setCacheMode( QGraphicsView::CacheNone );
+        /*
+      QGraphicsView::DontAdjustForAntialiasing
+      QGraphicsView::DontSavePainterState
+      QGraphicsView::DontClipPainter
+      */
+        //m_view->setOptimizationFlags( QGraphicsView::DontClipPainter );
+        /*
+      QPainter::Antialiasing
+      QPainter::TextAntialiasing
+      QPainter::SmoothPixmapTransform
+      QPainter::HighQualityAntialiasing
+      QPainter::NonCosmeticDefaultPen
+      */
+        //m_view->setRenderHints(QPainter::NonCosmeticDefaultPen | QPainter::HighQualityAntialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform);
+        setRenderHint(QPainter::Antialiasing, true);
+        setRenderHint(QPainter::TextAntialiasing, true);
+        setRenderHint(QPainter::HighQualityAntialiasing, false);
+
         setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
         setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);//FullViewportUpdate);
         setSceneRect(-100000,-100000,200000,200000);
-
         setViewportMargins(4,4,4,4);
 
         setAcceptDrops(true);

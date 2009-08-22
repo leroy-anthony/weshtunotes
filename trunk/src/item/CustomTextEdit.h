@@ -20,13 +20,13 @@
 #ifndef CUSTOMTEXTEDIT_H
 #define CUSTOMTEXTEDIT_H
 
-#include <QTextEdit>
+#include <QTextBrowser>
 #include <QMimeData>
 
 namespace Item
 {
 
-    class CustomTextEdit : public QTextEdit
+    class CustomTextEdit : public QTextBrowser
     {
         Q_OBJECT
 
@@ -37,6 +37,7 @@ namespace Item
 
     public slots:
         void adaptSizeFromText();
+        void openAnchor( const QUrl & url );
 
     protected:
         bool canInsertFromMimeData( const QMimeData *source ) const;
