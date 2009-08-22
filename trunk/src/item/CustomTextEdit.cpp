@@ -80,8 +80,24 @@ namespace Item
         {
             QImage image = qvariant_cast<QImage>(source->imageData());
             QTextCursor cursor = this->textCursor();
-            QUrl url = source->urls()[0];
-            QString fileName = QDir::searchPaths( Config::Constant::dirDataKey )[0] + QDir::separator() + QUrl::toPercentEncoding(url.toString()) + ".jpg";
+
+            QString fileName = QDir::searchPaths( Config::Constant::dirDataKey )[0] + QDir::separator();
+            if ( source->urls().size() > 0 )
+            {
+                fileName += QUrl::toPercentEncoding(source->urls()[0].toString());
+            }
+            else
+            {
+                static char str[] = "abcdefghijklmnopqrstuvwxyz01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                srand(time(NULL));
+                for (int i=0; i<20; i++)
+                {
+                    int index = makeRand(62);
+                    fileName.append(QChar(str[index]));
+                }
+            }
+            fileName += QDateTime::currentDateTime().toString("_yyyy_MM_dd_hh_mm_ss_zzz") + ".jpg";
+
             image.save( fileName );
             cursor.insertImage( image, fileName );
         }

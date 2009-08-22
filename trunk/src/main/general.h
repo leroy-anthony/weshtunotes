@@ -22,4 +22,6 @@
 
 #include <QDebug>
 
+#define makeRand(max) (int)((double)rand() / ((double)RAND_MAX + 1) * max)
+
 #endif // GENERAL_H
