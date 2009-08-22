@@ -30,8 +30,14 @@ namespace Config
     {
     public:
         static QString main;
-        static QString root;
         static QString lastBasket;
+        static QString home;
+        static QString dirBasket;
+        static QString homeData;
+        static QString homeBaskets;
+        static QString dirBasketKey;
+        static QString dirDataKey;
+        static int defaultHandleWidth;
     };
 
     class Configuration : public QSettings
@@ -40,6 +46,8 @@ namespace Config
         Configuration();
         Configuration( const QString & config );
         ~Configuration();
+
+        static void iniConfigration();
 
         QStringList masterBaskets();
         static void saveMasterBaskets( const QStringList & masterBaskets );

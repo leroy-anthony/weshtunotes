@@ -28,6 +28,7 @@ namespace Handle
 #include <QGraphicsScene>
 #include <QList>
 #include <QAction>
+#include <QMimeData>
 
 #include "../item/AbstractItem.h"
 #include "../scene/CustomGraphicsView.h"
@@ -55,6 +56,8 @@ namespace Scene
         virtual void storeView( CustomGraphicsView * view );
         virtual void restoreView( CustomGraphicsView * view );
 
+        virtual void addData( const QMimeData * data );
+
         const QString & id();
 
     public slots:
@@ -62,6 +65,9 @@ namespace Scene
         virtual void moveItem( Handle::HandleItem * handleItem, int x, int y ) = 0;
 
     protected:
+        bool canInsertFromMimeData( const QMimeData *source ) const;
+        void insertFromMimeData( const QMimeData *source );
+
         //QString m_sceneId;
         QString m_id;
 

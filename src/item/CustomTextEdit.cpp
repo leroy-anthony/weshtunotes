@@ -21,8 +21,11 @@
 #include "CustomTextEdit.h"
 
 #include <QUrl>
+#include <QDir>
+#include <QUrlInfo>
 
 #include "../main/general.h"
+#include "../config/Configuration.h"
 #include "../scene/ToolBarScene.h"
 
 namespace Item
@@ -58,18 +61,26 @@ namespace Item
         }
     }
 
+    void CustomTextEdit::addData( const QMimeData *source )
+    {
+        CustomTextEdit::insertFromMimeData( source );
+    }
+
     void CustomTextEdit::insertFromMimeData( const QMimeData *source )
     {
         if (source->hasImage())
         {
             QImage image = qvariant_cast<QImage>(source->imageData());
             QTextCursor cursor = this->textCursor();
-            QTextDocument *document = this->document();
-            document->addResource(QTextDocument::ImageResource, QUrl("image"), image);
-            cursor.insertImage("image");
+            QUrl url = source->urls()[0];
+            QString fileName = QDir::searchPaths( Config::Constant::dirDataKey )[0] + QDir::separator() + QUrl::toPercentEncoding(url.toString()) + ".jpg";
+            image.save( fileName );
+            cursor.insertImage( image, fileName );
         }
-
-        return QTextEdit::insertFromMimeData(source);
+        else
+        {
+            QTextEdit::insertFromMimeData( source );
+        }
     }
 
     void CustomTextEdit::adaptSizeFromText()

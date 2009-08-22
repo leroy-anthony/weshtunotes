@@ -47,6 +47,7 @@ namespace Scene
         Item::AbstractItem * currentAbstractItem();
         Handle::HandleItem * currentHandle();
 
+        void addData( const QMimeData * data );
         Handle::HandleItem * addItems( int x, int y, const QString & dataFile  );
         void delItem( Handle::HandleItem * h );
 

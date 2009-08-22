@@ -40,24 +40,27 @@ namespace Basket
         void load();
         void save();
 
-        const QString & name();
-        const QString & folder();
-        const QString & directory();
+        const QString & configFilePath();
 
         Scene::AbstractScene * scene();
         void setScene( Scene::AbstractScene * scene);
 
         void del();
 
-         void setBasketId( const QString & id );
-         const QString & basketId();
+        void setBasketId( const QString & id );
+        const QString & basketId();
+
+    protected:
+        const QString & directory();
+        const QString & name();
 
     private:
         void initItemTreeBasket();
 
         QString m_directory;
-        QString m_folder;
         QString m_name;
+        QString m_configFilePath;
+
         Scene::AbstractScene * m_contentScene;
 
         QString m_basketId;

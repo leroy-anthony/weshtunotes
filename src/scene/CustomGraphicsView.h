@@ -21,14 +21,20 @@
 #define CUSTOMGRAPHICSVIEW_H
 
 #include <QGraphicsView>
+#include <QDragEnterEvent>
 
 namespace Scene
 {
 
     class CustomGraphicsView : public QGraphicsView
     {
+        Q_OBJECT
+
     public:
         CustomGraphicsView();
+
+    public slots:
+        void paste();
 
     protected:
         void wheelEvent( QWheelEvent * e );

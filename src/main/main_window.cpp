@@ -51,6 +51,7 @@ MainWindow::MainWindow(QWidget * parent, int argc, char *argv[]) :
     m_tagFactory->loadTags();
 
     connect(actionCustomize,SIGNAL(activated()), this, SLOT(showTagFactory()));
+    connect(actionPaste,SIGNAL(activated()), m_view, SLOT(paste()));
 }
 
 MainWindow::~MainWindow()

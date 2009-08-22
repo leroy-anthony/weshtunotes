@@ -27,6 +27,8 @@
 #include <QTextCursor>
 #include <QFile>
 #include <QDir>
+#include <QUrl>
+
 
 #include "../scene/ToolBarScene.h"
 #include "../config/Configuration.h"
@@ -141,7 +143,6 @@ namespace Item
         settings.beginGroup( handleId );
         settings.setValue("data",m_itemId);
         settings.setValue("color",m_color);
-        settings.setValue("width",width());
 
         QStringList namesTags;
         for ( int i=0 ; i<m_tags.size() ; ++i )
@@ -178,11 +179,24 @@ namespace Item
         m_plainTextEdit->adaptSizeFromText();
 
         m_plainTextEdit->blockSignals( false );
+
+        m_fileName = fileName; 
+    }
+
+    void NoteItem::load( const QMimeData * mimeData )
+    {
+        m_plainTextEdit->blockSignals( true );
+
+        m_plainTextEdit->addData( mimeData );
+        m_plainTextEdit->adaptSizeFromText();
+
+        m_plainTextEdit->blockSignals( false );
+
+        update();
     }
 
     void NoteItem::setItemColor( const QColor & color )
     {
-        //      setStyleSheet("background: "+color.name()+";");
         setStyleSheet( QString("background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 %1, stop:1 %2)")
                        .arg(color.lighter(150).name())
                        .arg(color.name()));
@@ -215,13 +229,34 @@ namespace Item
 
     void NoteItem::tagApply( QAction * action )
     {
-        QString tagName = action->text();
-        Tag::NoteTag * tag = new Tag::NoteTag( this, tagName );
-        m_tags << tag;
-        m_horizontalLayout->insertWidget(0,tag);
-        m_plainTextEdit->selectAll();
-        tag->apply();
-        m_plainTextEdit->undo();
+        if ( action->isChecked() ) {
+            QString tagName = action->text();
+            Tag::NoteTag * tag = new Tag::NoteTag( this, tagName );
+            m_tags << tag;
+            m_horizontalLayout->insertWidget(0,tag);
+            m_plainTextEdit->selectAll();
+            tag->apply();
+            m_plainTextEdit->undo();
+        } else {
+            // supprimer
+            QString tagName = action->text();
+            for ( int i=0 ; i<m_tags.size() ; ++i )
+            {
+                if ( m_tags[i]->name() == tagName )
+                {
+                    m_horizontalLayout->removeWidget(m_tags[i]);
+                    m_tags.removeAt(i);
+                    break;
+                }
+            }
+            load( m_fileName );
+            for ( int i=0 ; i<m_tags.size() ; ++i )
+            {
+                m_plainTextEdit->selectAll();
+                m_tags[i]->apply();
+                m_plainTextEdit->undo();
+            }
+        }
     }
 
 }
