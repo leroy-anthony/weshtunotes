@@ -23,16 +23,19 @@
 #include <QUrl>
 #include <QDir>
 #include <QUrlInfo>
+#include <QDesktopServices>
+#include <QUrlInfo>
 
 #include "../main/general.h"
 #include "../config/Configuration.h"
 #include "../scene/ToolBarScene.h"
+#include "../config/ImageFactory.h"
 
 namespace Item
 {
 
     CustomTextEdit::CustomTextEdit():
-            QTextEdit()
+            QTextBrowser()
     {
         setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -42,11 +45,16 @@ namespace Item
         setContentsMargins(0,0,0,0);
         setFixedHeight(26);
         setAcceptRichText(true);
+        setTextInteractionFlags(Qt::TextBrowserInteraction|Qt::TextEditorInteraction);
+
+        setOpenExternalLinks( true );
+        setOpenLinks ( false );
 
         Scene::ToolBarScene * toolBar = Scene::ToolBarScene::toolBarScene();
 
-        connect( this, SIGNAL(textChanged()),  this, SLOT(adaptSizeFromText()));
+        connect( this, SIGNAL(textChanged()), this, SLOT(adaptSizeFromText()));
         connect( this, SIGNAL(currentCharFormatChanged(const QTextCharFormat &)), toolBar, SLOT(currentCharFormatChanged(const QTextCharFormat &)));
+        connect( this, SIGNAL(anchorClicked(const QUrl&)), this, SLOT(openAnchor(const QUrl&)));
     }
 
     bool CustomTextEdit::canInsertFromMimeData( const QMimeData *source ) const
@@ -77,6 +85,16 @@ namespace Item
             image.save( fileName );
             cursor.insertImage( image, fileName );
         }
+        else if (source->hasUrls())
+        {
+            QList<QUrl> urls = source->urls();
+            for ( int i=0 ; i<urls.size() ; ++i )
+            {
+                QFileInfo fileInfo(urls[i].path());
+                QTextCursor cursor = this->textCursor();
+                cursor.insertHtml("<a href=\""+fileInfo.filePath()+"\"><img src=\"icon:application-msword.png\" />"+fileInfo.fileName()+"</a>");
+            }
+        }
         else
         {
             QTextEdit::insertFromMimeData( source );
@@ -87,6 +105,11 @@ namespace Item
     {
         int heightMax =  document()->size().toSize().height();
         setFixedHeight( heightMax+2 );
+    }
+
+    void CustomTextEdit::openAnchor( const QUrl & url )
+    {
+        QDesktopServices::openUrl(url);
     }
 
 }
