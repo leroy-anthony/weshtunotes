@@ -22,7 +22,11 @@
 #include <QMatrix>
 #include <QPoint>
 #include <QWheelEvent>
+#include <QClipboard>
+#include <QMimeData>
+#include <QApplication>
 
+#include "AbstractScene.h"
 #include "../main/general.h"
 
 namespace Scene
@@ -40,6 +44,8 @@ namespace Scene
         setSceneRect(-100000,-100000,200000,200000);
 
         setViewportMargins(4,4,4,4);
+
+        setAcceptDrops(true);
     }
 
     void CustomGraphicsView::mousePressEvent(QMouseEvent * event)
@@ -100,6 +106,16 @@ namespace Scene
 
         mat.translate(mousePosition.x() - (width() / 2), mousePosition.y() - (height() / 2));
         setMatrix(mat);
+    }
+
+    void CustomGraphicsView::paste()
+    {
+        AbstractScene * s =  dynamic_cast<AbstractScene*>( scene() );
+
+        const QClipboard * clipboard = QApplication::clipboard();
+        const QMimeData * mimeData = clipboard->mimeData();
+
+        s->addData( mimeData );
     }
 
 }

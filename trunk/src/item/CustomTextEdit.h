@@ -33,6 +33,8 @@ namespace Item
     public:
         CustomTextEdit();
 
+        void addData( const QMimeData *source );
+
     public slots:
         void adaptSizeFromText();
 

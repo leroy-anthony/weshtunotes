@@ -27,9 +27,15 @@
 namespace Config
 {
 
+    int Constant::defaultHandleWidth = 400;
     QString Constant::main = "main";
-    QString Constant::root = "root";
     QString Constant::lastBasket = "lastBasket";
+    QString Constant::dirBasketKey = "dirBasket";
+    QString Constant::dirDataKey = "data";
+    QString Constant::home = QDir::homePath()+QDir::separator()+".weshTuNotes";
+    QString Constant::homeData = QDir::homePath()+QDir::separator()+".weshTuNotes"+QDir::separator()+"data";
+    QString Constant::homeBaskets = QDir::homePath()+QDir::separator()+".weshTuNotes"+QDir::separator()+"baskets";
+    QString Constant::dirBasket = Configuration().value(Constant::dirBasketKey,Constant::homeBaskets).toString();
 
     Configuration::Configuration():
             QSettings( QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationName(), Constant::main )
@@ -37,10 +43,23 @@ namespace Config
     }
 
     Configuration::Configuration( const QString & config ):
-            QSettings( QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationName(), config )
+            QSettings( Constant::dirBasket+QDir::separator()+config, QSettings::IniFormat )
     {
     }
 
+    void Configuration::iniConfigration()
+    {
+        QDir::addSearchPath( "icon", "./data/icon" ); // windows
+        QDir::addSearchPath( "icon", "/usr/share/weshtunotes/data/icon" ); // unix
+        QDir::addSearchPath( "icon", "/usr/local/share/weshtunotes/data/icon" ); // unix
+
+        QDir dir(Constant::homeData);
+        if ( !dir.exists() )
+        {
+            dir.mkpath(Constant::homeData);
+        }
+        QDir::addSearchPath( "data", Constant::homeData );
+    }
 
     Configuration::~Configuration()
     {
@@ -48,14 +67,10 @@ namespace Config
 
     QStringList Configuration::masterBaskets()
     {
-        return value( Constant::root ).toStringList();
-    }
+        QDir dir(Constant::dirBasket);
+        dir.setFilter( QDir::Dirs | QDir::NoDotAndDotDot );
 
-    void Configuration::saveMasterBaskets( const QStringList & masterBaskets )
-    {
-        Configuration settings;
-        settings.setValue( "root", masterBaskets );
-        settings.sync();
+        return dir.entryList();
     }
 
     void Configuration::saveLastBasket( const QString & name )
@@ -81,7 +96,7 @@ namespace Config
 
     QDir Configuration::dir( const QString & dirConfig )
     {
-        QSettings s( QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationName(), dirConfig );
+        Configuration s( dirConfig );
         QFileInfo fileInfo(s.fileName());
         QDir dir = fileInfo.absoluteDir();
 

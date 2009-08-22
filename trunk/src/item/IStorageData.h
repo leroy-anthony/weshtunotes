@@ -20,7 +20,7 @@
 #ifndef ISTORAGEDATA_H
 #define ISTORAGEDATA_H
 
-#include <Qt>
+#include <QMimeData>
 #include <QColor>
 #include <QFont>
 
@@ -35,6 +35,7 @@ namespace Item
 
         virtual void save( const QString & fileName, const QString & handleId  ) = 0;
         virtual void load( const QString & fileName ) = 0;
+        virtual void load( const QMimeData * data ) = 0;
 
     //protected:
     //     ItemStorage m_itemStorage;

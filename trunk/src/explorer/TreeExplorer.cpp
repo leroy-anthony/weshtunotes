@@ -128,10 +128,7 @@ namespace Explorer
             QTreeWidgetItem * item = topLevelItem( i );
             Basket::ItemTreeBasket * b = dynamic_cast<Basket::ItemTreeBasket*>(item);
             b->save();
-            masterBasket << b->name();
         }
-
-        Config::Configuration::saveMasterBaskets( masterBasket );
     }
 
     void TreeExplorer::loadBasket( const QString & name )
@@ -145,7 +142,7 @@ namespace Explorer
         b->load();
         setCurrentItem( b );
 
-        QStringList l = Config::Configuration::subDirs( b->directory() );
+        QStringList l = Config::Configuration::subDirs( b->configFilePath() );
         for ( int i=0 ; i<l.size() ; ++i )
         {
             loadBasket( b, l[i] );

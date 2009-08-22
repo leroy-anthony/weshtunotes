@@ -24,6 +24,7 @@
 #include <QStylePainter>
 #include <QStyleOptionButton>
 #include <QtSvg>
+#include <QWidgetAction>
 
 #include "../item/NoteItem.h"
 #include "../main/general.h"
@@ -68,7 +69,10 @@ namespace Tag
         QStringList tags = TagFactory::tagsNames();
         for ( int i=0 ; i<tags.size() ; ++i )
         {
-            m_menu.addAction(tags[i]);
+            QAction * action = new QAction(0);
+            action->setText(tags[i]);
+            action->setCheckable(true);
+            m_menu.addAction(action);
         }
         if ( m_noteItem != 0 )
         {

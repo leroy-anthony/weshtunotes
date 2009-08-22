@@ -69,6 +69,24 @@ namespace Scene
     {
     }
     
+    void FreeScene::addData( const QMimeData * data )
+    {
+        QGraphicsView * view = views()[0];
+        QPointF pt = view->mapToScene( view->viewport()->width()/2-200, view->viewport()->height()/2 );
+
+        Handle::HandleItem * handle = newHandle( pt.x(), pt.y() );
+
+        Item::AbstractItem * item = newItem( pt.x(), pt.y(), QColor(115,115,115) );
+
+        handle->add( item );
+
+        addHandleToScene( handle );
+
+        item->load( data );
+
+        static_cast<QWidget*>(handle)->resize( item->width(), item->height() );
+    }
+
     Handle::HandleItem * FreeScene::newHandle( int x, int y )
     {
         Handle::HandleItem * handle = new Handle::HandleItem( this, x, y );
@@ -398,16 +416,15 @@ namespace Scene
             addHandleToScene( handle );
         }
 
-        for ( int j=0 ; j<handlesSizes.keys().size() ; ++j )
-        {
-            handlesSizes.keys()[j]->resize( handlesSizes[ handlesSizes.keys()[j] ] );
-        }
-        
         for ( int j=0 ; j<itemsToLoad.keys().size() ; ++j )
         {
             itemsToLoad[ itemsToLoad.keys()[j] ]->load( fileName );
         }
 
+        for ( int j=0 ; j<handlesSizes.keys().size() ; ++j )
+        {
+            handlesSizes.keys()[j]->resize( handlesSizes[ handlesSizes.keys()[j] ] );
+        }
 
         loadViewFromDisk( fileName );
     }

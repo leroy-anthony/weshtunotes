@@ -59,4 +59,8 @@ namespace Scene
     {
     }
 
+    void AbstractScene::addData( const QMimeData * data )
+    {
+    }
+
 }

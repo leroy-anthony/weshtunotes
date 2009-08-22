@@ -43,6 +43,7 @@ namespace Item
         NoteItem( QWidget * parent  = 0 );
         ~NoteItem();
 
+        void load( const QMimeData * data );
         void load( const QString & fileName );
         void save( const QString & fileName, const QString & handleId  );
 
@@ -72,6 +73,7 @@ namespace Item
         QHBoxLayout  * m_horizontalLayout;
         CustomTextEdit    * m_plainTextEdit;
         QList<Tag::NoteTag*> m_tags;
+        QString m_fileName;
 
     private slots:
         void edit();

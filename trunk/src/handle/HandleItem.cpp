@@ -58,7 +58,7 @@ namespace Handle
             m_x(x),
             m_y(y)
     {
-        QWidget::resize(400,height());
+        QWidget::resize(Config::Constant::defaultHandleWidth,height());
         setContentsMargins( m_contentMarginX, m_contentMarginY, m_contentMarginX, m_contentMarginY );
         m_handleId = QString("handle%1").arg(m_id);
         ++m_id;
@@ -115,8 +115,6 @@ namespace Handle
     void HandleItem::setDefaultColor( const QColor & color )
     {
         m_defaultColor = QColor(color);
-        // setStyleSheet( QString("background: %1;").arg(m_defaultColor.name()) );
-
         setStyleSheet( QString("background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 %1, stop:1 %2)")
                        .arg(m_defaultColor.lighter(150).name())
                        .arg(m_defaultColor.name()));
@@ -202,13 +200,14 @@ namespace Handle
 
     void HandleItem::insert( QPoint  pt, int height )
     {
-        if ( m_index != -1 )
+        int size = m_contentLayout->count();
+        if ( m_index >=0 && m_index < size )
         {
             m_contentLayout->removeWidget(m_contentLayout->itemAt(m_index)->widget());
+            size = m_contentLayout->count();
         }
 
-        int size = m_contentLayout->count();
-        //    m_insertIndicator->setMaximumHeight(height);
+        //m_insertIndicator->setMaximumHeight(height);
 
         QPoint p = mapFromGlobal( pt );
 
@@ -216,7 +215,7 @@ namespace Handle
         int distance = 99999;
         QWidget * w = 0;
         int d = 0;
-        for ( int i=0 ; i<=size ; ++i )
+        for ( int i=0 ; i<=size && size != 0 ; ++i )
         {
             if ( i != size )
             {
@@ -355,18 +354,6 @@ namespace Handle
         painter.setPen(palette().color(QPalette::Highlight));
 
         painter.drawRect( r.x(), r.y(), r.width()-1, r.height()-1 );
-        /*
-        int x = r.x();
-        int y = r.y();
-        for ( int i=0 ; i<m_handles.size() ; ++i )
-        {
-            HandleItem * h = m_handles[i];
-            QBrush b(h->defaultColor());
-            painter.setBrush(b);
-            painter.drawRect( x, y, r.width()-1, h->height()+2 );
-            y += h->height()+2;
-        }
-        */
     }
 
     void HandleItem::delItem2()

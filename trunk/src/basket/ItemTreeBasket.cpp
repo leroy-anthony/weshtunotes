@@ -31,9 +31,9 @@ namespace Basket
 
     ItemTreeBasket::ItemTreeBasket( Explorer::TreeExplorer * treeExplorer, const QString & name ):
             QTreeWidgetItem( treeExplorer, QStringList(name) ),
-            m_directory( name + QDir::separator() + name ),
-            m_folder( name ),
+            m_directory( name ),
             m_name( name ),
+            m_configFilePath( name + QDir::separator() + name ),
             m_contentScene(0)
     {
         initItemTreeBasket();
@@ -44,8 +44,8 @@ namespace Basket
             m_name( name ),
             m_contentScene(0)
     {
-        m_folder = itemTreeBasket->folder() + QDir::separator() + name;
-        m_directory = itemTreeBasket->folder() + QDir::separator() + name + QDir::separator() + name;
+        m_directory = itemTreeBasket->directory() + QDir::separator() + name;
+        m_configFilePath = m_directory + QDir::separator() + name;
 
         initItemTreeBasket();
     }
@@ -73,9 +73,9 @@ namespace Basket
         return m_directory;
     }
 
-    const QString & ItemTreeBasket::folder()
+    const QString & ItemTreeBasket::configFilePath()
     {
-        return m_folder;
+        return m_configFilePath;
     }
 
     Scene::AbstractScene * ItemTreeBasket::scene()
@@ -90,7 +90,7 @@ namespace Basket
 
     void ItemTreeBasket::save()
     {
-        m_contentScene->save( m_basketId, m_directory );
+        m_contentScene->save( m_basketId, m_configFilePath );
         int childsSize = childCount();
         for ( int i=0 ; i<childsSize ; ++i )
         {
@@ -100,7 +100,7 @@ namespace Basket
 
     void ItemTreeBasket::load()
     {
-        m_contentScene->load( m_directory );
+        m_contentScene->load( m_configFilePath );
         m_basketId = m_contentScene->id();
 
         setText(1,m_basketId);
@@ -119,7 +119,7 @@ namespace Basket
             dynamic_cast<ItemTreeBasket*>(child(i))->del();
         }
 
-        Config::Configuration::removeConfigDir( m_directory );
+        Config::Configuration::removeConfigDir( m_configFilePath );
     }
 
     void ItemTreeBasket::setBasketId( const QString & id )

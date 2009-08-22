@@ -20,6 +20,7 @@
 #include <QApplication>
 
 #include "main_window.h"
+#include "../config/Configuration.h"
 
 int main(int argc, char *argv[])
 {
@@ -34,11 +35,8 @@ int main(int argc, char *argv[])
 
     QApplication::setQuitOnLastWindowClosed(false);
 
-    //FIXME: faire mieux ...
-    QDir::addSearchPath( "icon", "./data/icon" ); // windows
-    QDir::addSearchPath( "icon", "/usr/share/weshtunotes/data/icon" ); // unix
-    QDir::addSearchPath( "icon", "/usr/local/share/weshtunotes/data/icon" ); // unix
-    
+    Config::Configuration::iniConfigration();
+
     //Démarrage de l'application
     MainWindow ui( 0, argc, argv );
     ui.show();

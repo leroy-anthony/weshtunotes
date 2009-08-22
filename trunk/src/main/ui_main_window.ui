@@ -540,7 +540,14 @@
     </property>
     <addaction name="actionCustomize"/>
    </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="actionPaste"/>
+   </widget>
    <addaction name="menuFichier"/>
+   <addaction name="menuEdit"/>
    <addaction name="menuOptions"/>
    <addaction name="menuTag"/>
    <addaction name="menuAide"/>
@@ -595,6 +602,17 @@
   <action name="actionCustomize">
    <property name="text">
     <string>Customize</string>
+   </property>
+  </action>
+  <action name="actionPaste">
+   <property name="text">
+    <string>Paste</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+V</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
  </widget>
