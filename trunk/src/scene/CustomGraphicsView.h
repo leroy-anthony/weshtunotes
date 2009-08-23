@@ -36,6 +36,10 @@ namespace Scene
     public slots:
         void paste();
 
+        void resetZoom();
+        void doubleZoom();
+        void demiZoom();
+
     protected:
         void wheelEvent( QWheelEvent * e );
         void mousePressEvent( QMouseEvent * event );

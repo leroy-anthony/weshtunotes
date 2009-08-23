@@ -59,15 +59,9 @@ namespace Scene
       QGraphicsView::DontClipPainter
       */
         //m_view->setOptimizationFlags( QGraphicsView::DontClipPainter );
-        /*
-      QPainter::Antialiasing
-      QPainter::TextAntialiasing
-      QPainter::SmoothPixmapTransform
-      QPainter::HighQualityAntialiasing
-      QPainter::NonCosmeticDefaultPen
-      */
-        //m_view->setRenderHints(QPainter::NonCosmeticDefaultPen | QPainter::HighQualityAntialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform);
-        setRenderHint(QPainter::Antialiasing, true);
+
+        setRenderHint(QPainter::SmoothPixmapTransform);
+        setRenderHint(QPainter::Antialiasing, false);
         setRenderHint(QPainter::TextAntialiasing, true);
         setRenderHint(QPainter::HighQualityAntialiasing, false);
 
@@ -149,6 +143,21 @@ namespace Scene
         const QMimeData * mimeData = clipboard->mimeData();
 
         s->addData( mimeData );
+    }
+
+    void CustomGraphicsView::resetZoom()
+    {
+        resetMatrix();
+    }
+
+    void CustomGraphicsView::doubleZoom()
+    {
+        scale(2.0,2.0);
+    }
+
+    void CustomGraphicsView::demiZoom()
+    {
+        scale(0.5,0.5);
     }
 
 }
