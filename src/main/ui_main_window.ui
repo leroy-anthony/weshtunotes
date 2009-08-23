@@ -531,8 +531,8 @@
     <property name="title">
      <string>Fichier</string>
     </property>
-    <addaction name="actionOuvrir"/>
-    <addaction name="actionQuitter"/>
+    <addaction name="actionSave"/>
+    <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuTag">
     <property name="title">
@@ -584,12 +584,15 @@
     </property>
    </widget>
   </widget>
-  <action name="actionOuvrir">
+  <action name="actionSave">
    <property name="text">
-    <string>Ouvrir</string>
+    <string>Sauver</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
   </action>
-  <action name="actionQuitter">
+  <action name="actionQuit">
    <property name="text">
     <string>Quitter</string>
    </property>
@@ -617,22 +620,5 @@
   </action>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>actionQuitter</sender>
-   <signal>activated()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>236</x>
-     <y>224</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>
