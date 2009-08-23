@@ -89,7 +89,7 @@ namespace Item
             else
             {
                 static char str[] = "abcdefghijklmnopqrstuvwxyz01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-                srand(time(NULL));
+                srand(QTime::currentTime().msec());
                 for (int i=0; i<20; i++)
                 {
                     int index = makeRand(62);
