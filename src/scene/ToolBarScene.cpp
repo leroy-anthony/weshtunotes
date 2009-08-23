@@ -99,6 +99,20 @@ namespace Scene
         m_toolBar->addWidget(m_colorItem);
         connect(m_colorItem, SIGNAL(colorChanged(const QColor &)), SLOT(setColorItem(const QColor &)));
 
+        m_toolBar->addSeparator();
+
+        a = addAction(Config::ImageFactory::icon(Config::Image::zoomOriginal),"zoomOriginal");
+        connect(a, SIGNAL(triggered(bool)), mainWindow->currentView(), SLOT(resetZoom()));
+        a->setCheckable( false );
+
+        a = addAction(Config::ImageFactory::icon(Config::Image::zoomIn),"zoomIn");
+        connect(a, SIGNAL(triggered(bool)), mainWindow->currentView(), SLOT(doubleZoom()));
+        a->setCheckable( false );
+
+        a = addAction(Config::ImageFactory::icon(Config::Image::zoomOut),"zoomOut");
+        connect(a, SIGNAL(triggered(bool)), mainWindow->currentView(), SLOT(demiZoom()));
+        a->setCheckable( false );
+
         m_toolBarScene = this;
     }
 
