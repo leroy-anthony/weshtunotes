@@ -42,6 +42,9 @@ namespace Config
         static QString application;
         static QString exitAction;
         static QString basket;
+        static QString zoomOriginal;
+        static QString zoomIn;
+        static QString zoomOut;
     };
 
     class ImageFactory

@@ -37,6 +37,9 @@ namespace Config
     QString Image::application       = "basket.png";
     QString Image::exitAction        = "application-exit.png";
     QString Image::basket            = "im-status-message-edit.png";
+    QString Image::zoomOriginal      = "zoom-original.png";
+    QString Image::zoomIn            = "zoom-in.png";
+    QString Image::zoomOut           = "zoom-out.png";
 
     QMap<QString,QIcon> ImageFactory::m_cacheIcons;
     QMap<QString,QPixmap> ImageFactory::m_cachePixmaps;
