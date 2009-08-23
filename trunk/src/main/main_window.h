@@ -44,11 +44,13 @@ public:
     ~MainWindow();
 
     Scene::AbstractScene * currentScene();
+    Scene::CustomGraphicsView * currentView();
 
 public slots:
     void loadScene( QTreeWidgetItem * item , int column = 0 );
     void showTagFactory();
-     void iconActivated( QSystemTrayIcon::ActivationReason reason );
+    void iconActivated( QSystemTrayIcon::ActivationReason reason );
+    void save();
 
 private:
     void initView();

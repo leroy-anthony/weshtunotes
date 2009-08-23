@@ -25,6 +25,7 @@
 #include "../basket/ItemTreeBasket.h"
 #include "../config/Configuration.h"
 #include "../config/ImageFactory.h"
+#include "../config/ConfigDialog.h"
 
 MainWindow::MainWindow(QWidget * parent, int argc, char *argv[]) :
         QMainWindow(parent),
@@ -49,17 +50,27 @@ MainWindow::MainWindow(QWidget * parent, int argc, char *argv[]) :
     m_tagFactory = Tag::TagFactory::newTagFactory();
     m_tagFactory->loadTags();
 
-    connect(actionCustomize,SIGNAL(activated()), this, SLOT(showTagFactory()));
-    connect(actionPaste,SIGNAL(activated()), m_view, SLOT(paste()));
+    connect( actionCustomize, SIGNAL(activated()), this, SLOT(showTagFactory()));
+    connect( actionPaste, SIGNAL(activated()), m_view, SLOT(paste()));
+    connect( actionSave, SIGNAL(activated()), this, SLOT(save()));
+    connect( actionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
 }
 
 MainWindow::~MainWindow()
 {
+    save();
+
+    Config::ImageFactory::clean();
+    delete m_tagFactory;
+}
+
+void MainWindow::save()
+{
     if ( m_lastBasketLoad != 0 )
     {
-       m_view->horizontalScrollBar()->setValue(m_view->horizontalScrollBar()->value()-53); // valeur magic !!
-       m_view->verticalScrollBar()->setValue(m_view->verticalScrollBar()->value()+159); // valeur magic !!
-       m_lastBasketLoad->scene()->storeView( m_view );
+        m_view->horizontalScrollBar()->setValue(m_view->horizontalScrollBar()->value()-53); // valeur magic !!
+        m_view->verticalScrollBar()->setValue(m_view->verticalScrollBar()->value()+159); // valeur magic !!
+        m_lastBasketLoad->scene()->storeView( m_view );
     }
 
     m_treeExplorer->saveBaskets();
@@ -67,8 +78,6 @@ MainWindow::~MainWindow()
     {
         Config::Configuration::saveLastBasket( m_lastBasketLoad->basketId() );
     }
-    Config::ImageFactory::clean();
-    delete m_tagFactory;
 }
 
 void MainWindow::initToolBar()
@@ -149,6 +158,11 @@ void MainWindow::loadScene( QTreeWidgetItem * item , int column )
 Scene::AbstractScene * MainWindow::currentScene()
 {
     return dynamic_cast<Scene::AbstractScene*>(m_view->scene());
+}
+
+Scene::CustomGraphicsView * MainWindow::currentView()
+{
+    return m_view;
 }
 
 void MainWindow::showTagFactory()
