@@ -154,10 +154,15 @@ namespace Handle
         int yGrips             = (r.height() + 1 - nbGrips * 6 - 3) / 2; // +1 to avoid rounding errors, -nbGrips*6-3 the size of the grips
         QColor darker  = palette().color(QPalette::Highlight).dark(130);
         QColor lighter = palette().color(QPalette::Highlight).light(130);
+
+        QPen p;
+        p.setWidth(1);
+
         for (int i = 0; i < nbGrips; ++i)
         {
             /// Dark color:
-            painter.setPen(darker);
+            p.setColor(darker);
+            painter.setPen(p);
             // Top-left point:
             painter.drawPoint(xGrips,     yGrips);
             painter.drawPoint(xGrips + 1, yGrips);
@@ -167,7 +172,7 @@ namespace Handle
             painter.drawPoint(xGrips + 5, yGrips + 3);
             painter.drawPoint(xGrips + 4, yGrips + 4);
             /// Light color:
-            painter.setPen(lighter);
+            p.setColor(lighter);
             // Top-left point:
             painter.drawPoint(xGrips + 1, yGrips + 1);
             // Bottom-right point:
@@ -183,6 +188,7 @@ namespace Handle
         
         QPen pen;//palette().color(QPalette::Highlight));
         pen.setStyle(Qt::NoPen);
+        pen.setWidth(1);
         painter.setPen(pen);
 
         if ( m_isHover )

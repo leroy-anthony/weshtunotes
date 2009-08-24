@@ -119,6 +119,7 @@ namespace Handle
 
         QPen pen;
         pen.setStyle(Qt::NoPen);
+        pen.setWidth(1);
         painter.setPen(pen);
 
         HandleItem * h = dynamic_cast<HandleItem*>(parentWidget());

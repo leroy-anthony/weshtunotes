@@ -349,11 +349,17 @@ namespace Handle
     {
         QRect r = event->rect();
         QPainter painter(this);
+        painter.setBackgroundMode( Qt::OpaqueMode );
 
-        QBrush b(palette().color(QPalette::Highlight));
-        painter.setPen(palette().color(QPalette::Highlight));
+        QBrush b(m_defaultColor);
 
-        painter.drawRect( r.x(), r.y(), r.width()-1, r.height()-1 );
+        QPen p;
+        p.setWidth(2);
+        p.setColor(palette().color(QPalette::Highlight));
+
+        painter.setPen(p);
+        painter.setBrush(b);
+        painter.drawRect( r.x(), r.y(), r.width(), r.height()-1 );
     }
 
     void HandleItem::delItem2()
