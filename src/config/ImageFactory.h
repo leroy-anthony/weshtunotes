@@ -45,6 +45,7 @@ namespace Config
         static QString zoomOriginal;
         static QString zoomIn;
         static QString zoomOut;
+        static QString zoomFitBest;
     };
 
     class ImageFactory

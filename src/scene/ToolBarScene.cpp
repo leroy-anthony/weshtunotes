@@ -110,7 +110,11 @@ namespace Scene
         a->setCheckable( false );
 
         a = addAction(Config::ImageFactory::icon(Config::Image::zoomOut),"zoomOut");
-        connect(a, SIGNAL(triggered(bool)), mainWindow->currentView(), SLOT(demiZoom()));
+        connect(a, SIGNAL(triggered(bool)), mainWindow->currentView(), SLOT(halfZoom()));
+        a->setCheckable( false );
+
+        a = addAction(Config::ImageFactory::icon(Config::Image::zoomFitBest),"zoomFitBest");
+        connect(a, SIGNAL(triggered(bool)), mainWindow->currentView(), SLOT(fitInViewZoom()));
         a->setCheckable( false );
 
         m_toolBarScene = this;

@@ -26,6 +26,7 @@
 #include <QMimeData>
 #include <QApplication>
 #include <QGLWidget>
+#include <QGraphicsItem>
 
 #include "AbstractScene.h"
 #include "../main/general.h"
@@ -148,7 +149,10 @@ namespace Scene
 
     void CustomGraphicsView::resetZoom()
     {
+        int dx = matrix().dx();
+        int dy = matrix().dy();
         resetMatrix();
+        translate(dx,dy);
     }
 
     void CustomGraphicsView::doubleZoom()
@@ -156,9 +160,41 @@ namespace Scene
         scale(2.0,2.0);
     }
 
-    void CustomGraphicsView::demiZoom()
+    void CustomGraphicsView::halfZoom()
     {
         scale(0.5,0.5);
+    }
+
+    void CustomGraphicsView::fitInViewZoom()
+    {
+        QList<QGraphicsItem*> itemList = items();
+        double minx = 9999;
+        double miny = 9999;
+        double maxx = -9999;
+        double maxy = -9999;
+        for ( int i=0 ; i<itemList.size() ; ++i )
+        {
+            QGraphicsItem * item = itemList[i];
+            if ( minx > item->x() )
+            {
+                minx = item->x();
+            }
+
+            if ( miny > item->y() )
+            {
+                miny= item->y();
+            }
+            if ( maxx < item->x() + item->boundingRect().width() )
+            {
+                maxx = item->x() + item->boundingRect().width();
+            }
+
+            if ( maxy < item->y() + item->boundingRect().height() )
+            {
+                maxy= item->y() + item->boundingRect().height();
+            }
+        }
+        fitInView(minx,miny,maxx-minx,maxy-miny,Qt::KeepAspectRatio);
     }
 
 }

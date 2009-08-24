@@ -40,6 +40,7 @@ namespace Config
     QString Image::zoomOriginal      = "zoom-original.png";
     QString Image::zoomIn            = "zoom-in.png";
     QString Image::zoomOut           = "zoom-out.png";
+    QString Image::zoomFitBest       = "zoom-fit-best.png";
 
     QMap<QString,QIcon> ImageFactory::m_cacheIcons;
     QMap<QString,QPixmap> ImageFactory::m_cachePixmaps;
