@@ -38,7 +38,8 @@ namespace Scene
 
         void resetZoom();
         void doubleZoom();
-        void demiZoom();
+        void halfZoom();
+        void fitInViewZoom();
 
     protected:
         void wheelEvent( QWheelEvent * e );
