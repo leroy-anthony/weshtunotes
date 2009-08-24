@@ -60,10 +60,11 @@ namespace Scene
       */
         //m_view->setOptimizationFlags( QGraphicsView::DontClipPainter );
 
-        setRenderHint(QPainter::SmoothPixmapTransform);
+        setRenderHint(QPainter::SmoothPixmapTransform, true);
         setRenderHint(QPainter::Antialiasing, false);
         setRenderHint(QPainter::TextAntialiasing, true);
         setRenderHint(QPainter::HighQualityAntialiasing, false);
+        setRenderHint(QPainter::NonCosmeticDefaultPen, true);
 
         setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
