@@ -25,6 +25,7 @@
 #include <QUrlInfo>
 #include <QDesktopServices>
 #include <QUrlInfo>
+#include <QFileIconProvider>
 
 #include "../main/general.h"
 #include "../config/Configuration.h"
@@ -110,7 +111,19 @@ namespace Item
                 if ( urls[i].scheme() == "file" )
                 {
                     QFileInfo fileInfo(urls[i].path());
-                    cursor.insertHtml("<a href=\""+urls[i].toString()+"\"><img src=\"icon:application-msword.png\" />"+fileInfo.fileName()+"</a>");
+                    QFileIconProvider f;
+                    QIcon icon = f.icon(fileInfo);
+                    //référence l'image
+                    document()->addResource(QTextDocument::ImageResource, QUrl(f.type(fileInfo)), icon.pixmap(32,32).toImage());
+                    QTextImageFormat imageFormat;
+                    //spécifie l'image référencée
+                    imageFormat.setName(f.type(fileInfo));
+                    imageFormat.setAnchor(true);
+                    imageFormat.setAnchorHref(urls[i].toString());
+                    //ajoute l'image référencée
+                    cursor.insertImage(imageFormat);
+
+                    cursor.insertHtml("<a href=\""+urls[i].toString()+"\">"+fileInfo.fileName()+"</a>");
                 }
                 else
                 {
