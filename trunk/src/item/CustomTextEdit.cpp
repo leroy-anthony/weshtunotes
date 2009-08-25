@@ -103,12 +103,20 @@ namespace Item
         }
         else if (source->hasUrls())
         {
+            QTextCursor cursor = this->textCursor();
             QList<QUrl> urls = source->urls();
             for ( int i=0 ; i<urls.size() ; ++i )
             {
-                QFileInfo fileInfo(urls[i].path());
-                QTextCursor cursor = this->textCursor();
-                cursor.insertHtml("<a href=\""+fileInfo.filePath()+"\"><img src=\"icon:application-msword.png\" />"+fileInfo.fileName()+"</a>");
+                if ( urls[i].scheme() == "file" )
+                {
+                    QFileInfo fileInfo(urls[i].path());
+                    cursor.insertHtml("<a href=\""+urls[i].toString()+"\"><img src=\"icon:application-msword.png\" />"+fileInfo.fileName()+"</a>");
+                }
+                else
+                {
+                    cursor.insertHtml("<a href=\""+urls[i].toString()+"\">"+urls[i].toString()+"</a>");
+
+                }
             }
         }
         else
