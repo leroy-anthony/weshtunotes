@@ -25,6 +25,7 @@
 #include <QInputDialog>
 
 #include "../scene/FreeScene.h"
+#include "../scene/LayoutScene.h"
 #include "../basket/ItemTreeBasket.h"
 #include "../config/Configuration.h"
 
@@ -34,6 +35,8 @@ namespace Explorer
     TreeExplorer::TreeExplorer( QWidget * parent ):
             QTreeWidget(parent)
     {
+        setHeaderLabel ( tr("Paniers") );
+        setHeaderHidden ( false );
     }
 
     TreeExplorer::~TreeExplorer()
@@ -103,7 +106,7 @@ namespace Explorer
             insertTopLevelItem(  topLevelItemCount(), b );
         }
 
-        b->setScene( new Scene::FreeScene( 0 ) );
+        b->load();
 
         return b;
     }
@@ -139,7 +142,7 @@ namespace Explorer
     void TreeExplorer::loadBasket( Basket::ItemTreeBasket * parent, const QString & name )
     {
         Basket::ItemTreeBasket * b = addBasket( parent, name );
-        b->load();
+
         setCurrentItem( b );
 
         QStringList l = Config::Configuration::subDirs( b->configFilePath() );

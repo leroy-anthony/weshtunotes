@@ -21,6 +21,8 @@
 
 #include "../main/general.h"
 
+#include "kmimetype.h"
+
 namespace Config
 {
 
@@ -41,9 +43,11 @@ namespace Config
     QString Image::zoomIn            = "zoom-in.png";
     QString Image::zoomOut           = "zoom-out.png";
     QString Image::zoomFitBest       = "zoom-fit-best.png";
+    QString Image::listScene         = "format-list-unordered.png";
 
-    QMap<QString,QIcon> ImageFactory::m_cacheIcons;
-    QMap<QString,QPixmap> ImageFactory::m_cachePixmaps;
+    QMap<QString,KIcon> ImageFactory::m_cacheIcons;
+    KPixmapCache ImageFactory::m_cachePixmaps("myapp-pixmaps");
+    KIconLoader ImageFactory::kIconLoader;
 
     ImageFactory::ImageFactory()
     {
@@ -56,27 +60,49 @@ namespace Config
     void ImageFactory::clean()
     {
         m_cacheIcons.clear();
-        m_cachePixmaps.clear();
+        m_cachePixmaps.discard();
     }
 
-    const QIcon & ImageFactory::icon( const QString & iconId )
+    const KIcon & ImageFactory::icon( const QString & iconId )
     {
         if ( !m_cacheIcons.contains( iconId ) )
         {
-            m_cacheIcons[ iconId ] = QIcon("icon:"+iconId);
+            m_cacheIcons[ iconId ] = KIcon(/*"icon:"+*/iconId);
         }
 
         return m_cacheIcons[ iconId ];
     }
 
-    const QPixmap & ImageFactory::pixmap( const QString & pixmapId )
+    const QPixmap & ImageFactory::pixmap( const QString & pixmapId, QPixmap & pix )
     {
-        if ( !m_cachePixmaps.contains( pixmapId ) )
+        if ( !m_cachePixmaps.find( pixmapId, pix ) )
         {
-            m_cachePixmaps[ pixmapId ] = QPixmap("icon:"+pixmapId);
+            pix = QPixmap("icon:"+pixmapId);
+            m_cachePixmaps.insert( pixmapId, pix );
         }
 
-        return m_cachePixmaps[ pixmapId ];
+        return pix;
+    }
+
+    const QPixmap & ImageFactory::loadMimeTypeIcon( const QString & iconName, QPixmap & pix )
+    {
+        if ( !m_cachePixmaps.find( iconName, pix ) )
+        {
+            pix = kIconLoader.loadMimeTypeIcon( iconName, KIconLoader::Desktop );
+            m_cachePixmaps.insert( iconName, pix );
+        }
+
+        return pix;
+    }
+
+    QString ImageFactory::iconPath( const QString & iconName )
+    {
+        return kIconLoader.iconPath( iconName, KIconLoader::Desktop );
+    }
+
+    QString ImageFactory::iconNameForUrl( const KUrl & url )
+    {
+        return KMimeType::iconNameForUrl( url );
     }
 
 }

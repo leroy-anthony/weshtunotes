@@ -49,7 +49,7 @@ namespace Handle
         void paintEvent( QPaintEvent * event );
 
     private:    
-        void drawHandle( QPainter & painter, HandleItem * h, int & x, int & y, QRect & r, int & decal  );
+        void drawHandle( QPainter & painter, HandleItem * h, int & x, int & y );
 
         enum Mode { Nothing, ScaleXItem };
         Mode m_mode;

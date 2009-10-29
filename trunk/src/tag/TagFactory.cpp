@@ -205,6 +205,8 @@ namespace Tag
 
     void TagFactory::loadTagOrState( QTreeWidgetItem * item , int column )
     {
+        Q_UNUSED( column );
+
         if ( m_currentState != 0 )
         {
             m_currentState->save();

@@ -43,8 +43,6 @@ namespace Tag
             m_sizeSymbol(32)
     {
         setContentsMargins( 2, 2, 2, 2 );
-
-        loadTagsMenu();
         load(name);
     }
 
@@ -61,34 +59,6 @@ namespace Tag
         if ( m_currentState != 0 )
         {
             m_currentState->apply();
-        }
-    }
-
-    void NoteTag::loadTagsMenu()
-    {
-        QStringList tags = TagFactory::tagsNames();
-        for ( int i=0 ; i<tags.size() ; ++i )
-        {
-            QAction * action = new QAction(0);
-            action->setText(tags[i]);
-            action->setCheckable(true);
-            m_menu.addAction(action);
-        }
-        if ( m_noteItem != 0 )
-        {
-            connect(&m_menu, SIGNAL(triggered(QAction*)), m_noteItem, SLOT(tagApply(QAction*)));
-        }
-    }
-
-    void NoteTag::mousePressEvent( QMouseEvent * e )
-    {
-        if ( TagFactory::tagsNames().size() > 0 )
-        {
-            m_menu.popup(QCursor::pos());
-        }
-        else
-        {
-            Tag::TagFactory::newTagFactory()->show();
         }
     }
 
@@ -151,13 +121,11 @@ namespace Tag
             QString symbol = m_currentState->symbol();
             if ( symbol != "" )
             {
-                setPixmap(Config::ImageFactory::pixmap(m_currentState->symbol()).scaled(m_sizeSymbol,m_sizeSymbol));
+                QPixmap pix;
+                Config::ImageFactory::pixmap(m_currentState->symbol(),pix);
+                setPixmap(pix.scaled(m_sizeSymbol,m_sizeSymbol));
                 m_visible = true;
             }
-        }
-        else if ( m_name == "default" )
-        {
-            setPixmap( Config::ImageFactory::pixmap(Config::Image::addBasket).scaled(QSize(12,12)) );
         }
     }
 

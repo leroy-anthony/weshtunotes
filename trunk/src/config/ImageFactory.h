@@ -21,8 +21,13 @@
 #define IMAGEFACTORY_H
 
 #include <QMap>
-#include <QIcon>
 #include <QPixmap>
+
+#include <kurl.h>
+#include <KIcon>
+#include <kiconloader.h>
+#include <kiconcache.h>
+#include <kpixmapcache.h>
 
 namespace Config
 {
@@ -46,23 +51,29 @@ namespace Config
         static QString zoomIn;
         static QString zoomOut;
         static QString zoomFitBest;
+        static QString listScene;
     };
 
     class ImageFactory
     {
 
     public:
-        static const QIcon & icon( const QString & iconId );
-        static const QPixmap & pixmap( const QString & pixmapId );
+        static const KIcon & icon( const QString & iconId );
+        static const QPixmap & pixmap( const QString & pixmapId, QPixmap & pix  );
         static void clean();
+
+        static const QPixmap & loadMimeTypeIcon( const QString & iconName, QPixmap & pix  );
+        static QString iconPath( const QString & iconName );
+        static QString iconNameForUrl( const KUrl & url );
 
     protected:
         ImageFactory();
         ~ImageFactory();
 
     private:
-        static QMap<QString,QIcon> m_cacheIcons;
-        static QMap<QString,QPixmap> m_cachePixmaps;
+        static QMap<QString,KIcon> m_cacheIcons;
+        static KPixmapCache m_cachePixmaps;
+        static KIconLoader kIconLoader;
 
     };
 

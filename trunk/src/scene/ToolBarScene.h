@@ -22,14 +22,16 @@
 
 #include "../main/general.h"
 
+#include <kcolorcombo.h>
+#include <kfontaction.h>
+#include <kfontsizeaction.h>
+#include <KAction>
+#include <KToolBar>
+#include <kactioncollection.h>
+
 #include <QObject>
-#include <QMainWindow>
-#include <QToolBar>
 #include <QTextCharFormat>
 #include <QComboBox>
-#include <QFontComboBox>
-
-#include "../widget/qtcolorpicker.h"
 
 class MainWindow;
 
@@ -60,30 +62,27 @@ namespace Scene
         void setFontUnderline( bool checked );
         void setTextColor( const QColor & c );
         void setFontFamily( const QFont & font );
-        void setFontPointSize( const QString & size );
+        void setFontPointSize( int size );
         void currentCharFormatChanged( const QTextCharFormat & f );
         void currentItemChanged( Item::AbstractItem * item );
 
         void setColorItem( const QColor & c );
 
     private:
-        QAction * addAction( QString name );
-        QAction * addAction( const QIcon & icon, QString name );
+        KAction * addAction( QString name );
+        KAction * addAction( const KIcon & icon, QString name );
 
         Item::AbstractItem * currentAbstractItem();
 
         MainWindow * m_mainWindow;
-        QToolBar * m_toolBar;
 
-        QtColorPicker * m_colorText;
-        QComboBox     * m_comboFontSize;
-        QFontComboBox * m_comboFont;
+        KColorCombo     * m_colorText;
+        KFontSizeAction * m_actionFontSize;
+        KFontAction   * m_actionFont;
 
-        QtColorPicker * m_colorItem;
+        KColorCombo * m_colorItem;
 
-        QMap<QString,QAction*> m_actions;
-
-        static ToolBarScene * m_toolBarScene;
+        static ToolBarScene * m_toolBar;
 
     };
 

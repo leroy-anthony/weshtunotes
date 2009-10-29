@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<gui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1" xmlns="http://www.kde.org/standards/kxmlgui/1.0" xsi:schemaLocation="http://www.kde.org/standards/kxmlgui/1.0&#xa;                         http://www.kde.org/standards/kxmlgui/1.0/kxmlgui.xsd" name="weshtunotes" >
+ <MenuBar>
+  <Menu name="file" >
+   <text>&amp;File</text>
+   <Action name="file_save" />
+  </Menu>
+  <Menu name="edit" >
+   <text>&amp;Edit</text>
+   <Action name="clear" />
+  </Menu>
+  <Menu name="text" >
+   <text>&amp;Text</text>
+   <Action name="bold" />
+   <Action name="italic" />
+   <Action name="strikeout" />
+   <Action name="alignleft" />
+   <Action name="aligncenter" />
+   <Action name="alignright" />
+  </Menu>
+  <Menu name="view" >
+   <text>&amp;View</text>
+   <Action name="actualsize" />
+   <Action name="zoomin" />
+   <Action name="zoomout" />
+   <Action name="fittopage" />
+   <Action name="listscene" />
+  <Action name="freescene" />
+  </Menu>
+  <Menu name="Configuration" >
+   <text>&amp;Configuration</text>
+   <Action name="clear" />
+  </Menu>
+  <Menu name="help" >
+   <text>&amp;Help</text>
+   <Action name="help_contents" />
+   <Action name="help_plugins_contents" />
+   <Action name="help_whats_this" />
+   <Action name="help_show_tip" />
+   <Separator/>
+   <Action name="help_welcome_baskets" />
+   <Action name="likeback_send_a_comment" />
+   <Separator/>
+   <Action name="help_about_app" />
+   <Action name="help_about_kde" />
+  </Menu>
+ </MenuBar>
+ <ToolBar iconText="icononly" name="textToolBar" >
+  <text>Text Toolbar</text>
+  <Action name="fontfamily" />
+  <Action name="fontsize" />
+  <Action name="fontcolor" />
+  <Action name="bold" />
+  <Action name="italic" />
+  <Action name="underline" />
+  <Action name="strikeout" />
+  <Action name="alignleft" />
+  <Action name="aligncenter" />
+  <Action name="alignright" />
+ </ToolBar>
+ <ToolBar iconText="icononly" name="noteToolBar" >
+  <text>Note Toolbar</text>
+  <Action name="notecolor" />
+ </ToolBar>
+ <ToolBar iconText="icononly" name="viewToolBar" >
+  <text>View Toolbar</text>
+  <Action name="view_actual_size" />
+  <Action name="view_zoom_in" />
+  <Action name="view_zoom_out" />
+  <Action name="view_fit_to_page" />
+ </ToolBar>
+ <ActionProperties scheme="Default" >
+  <Action shortcut="Ctrl+B" name="bold" />
+ </ActionProperties>
+</gui>

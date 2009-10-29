@@ -17,29 +17,48 @@
  Boston, MA 02110-1301, USA.
  */
 
-#include <QApplication>
+#include <KApplication>
+#include <KCmdLineArgs>
+#include <KAboutData>
+#include <kuniqueapplication.h>
+#include <kmessagebox.h>
 
 #include "main_window.h"
 #include "../config/Configuration.h"
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
+    KAboutData aboutData("KWeshTuNotes",
+                         0,
+                         ki18n("KWeshTuNotes"),
+                         "0.0",
+                         ki18n("Prise de note"),
+                         KAboutData::License_GPL,
+                         ki18n("(c) 2009"),
+                         ki18n("Some text..."),
+                         "http://code.google.com/p/weshtunotes/",
+                         "leroy.anthony@gmail.com");
+
+    KCmdLineArgs::init( argc, argv, &aboutData );
+
+    KApplication app;
     app.setOrganizationName("weshTuNotes Corp.");
 
-    if ( !QSystemTrayIcon::isSystemTrayAvailable() )
+    if ( !KSystemTrayIcon::isSystemTrayAvailable() )
     {
-        QMessageBox::critical(0, QObject::tr("Systray"), QObject::tr("I couldn't detect any system tray on this system."));
+        KMessageBox::error(0, QObject::tr("Systray"), QObject::tr("I couldn't detect any system tray on this system."));
         return 1;
     }
 
-    QApplication::setQuitOnLastWindowClosed(false);
+   // KApplication::setQuitOnLastWindowClosed(false);
 
     Config::Configuration::iniConfigration();
 
     //Démarrage de l'application
-    MainWindow ui( 0, argc, argv );
-    ui.show();
+    MainWindow * main = new MainWindow( 0, argc, argv );
+    main->show();
+
+   //
 
     return app.exec();
 }

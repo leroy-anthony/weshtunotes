@@ -21,6 +21,10 @@
 
 #include <QSpacerItem>
 
+#include <QCalendarWidget>
+#include <kactioncollection.h>
+#include <kstandardaction.h>
+
 #include "../explorer/TreeExplorer.h"
 #include "../basket/ItemTreeBasket.h"
 #include "../config/Configuration.h"
@@ -28,16 +32,36 @@
 #include "../config/ConfigDialog.h"
 
 MainWindow::MainWindow(QWidget * parent, int argc, char *argv[]) :
-        QMainWindow(parent),
+        KXmlGuiWindow(parent),
         m_lastBasketLoad(0)
 {
     setupUi(this);
 
     initView();
-    initToolBar();
-    initMedia();
-    initSystemTray();
 
+    initMedia();
+
+
+    m_tagFactory = Tag::TagFactory::newTagFactory();
+    m_tagFactory->loadTags();
+
+    setupActions();
+    initToolBar();
+    initSystemTray();
+    createGUI("data:main_ui.rc");
+
+    loadData();
+}
+
+MainWindow::~MainWindow()
+{
+    save();
+
+    delete m_tagFactory;
+}
+
+void MainWindow::loadData()
+{
     m_treeExplorer->loadBaskets();
     m_treeExplorer->loadFromConfigCurrentBasket();
 
@@ -47,21 +71,27 @@ MainWindow::MainWindow(QWidget * parent, int argc, char *argv[]) :
         loadScene(items[0]);
     }
 
-    m_tagFactory = Tag::TagFactory::newTagFactory();
-    m_tagFactory->loadTags();
-
-    connect( actionCustomize, SIGNAL(activated()), this, SLOT(showTagFactory()));
-    connect( actionPaste, SIGNAL(activated()), m_view, SLOT(paste()));
-    connect( actionSave, SIGNAL(activated()), this, SLOT(save()));
-    connect( actionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
+    if ( m_lastBasketLoad->scene()->type() == Scene::FreeScene::type )
+    {
+        actionCollection()->action( Scene::FreeScene::type )->setChecked(true);
+        actionCollection()->action( Scene::FreeScene::type )->setDisabled(true);
+        actionCollection()->action( Scene::LayoutScene::type )->setDisabled(false);
+        actionCollection()->action( Scene::LayoutScene::type )->setChecked(false);
+    }
+    else
+    {
+        actionCollection()->action( Scene::LayoutScene::type )->setChecked(true);
+        actionCollection()->action( Scene::FreeScene::type )->setChecked(false);
+        actionCollection()->action( Scene::LayoutScene::type )->setDisabled(true);
+        actionCollection()->action( Scene::FreeScene::type )->setDisabled(false);
+    }
 }
 
-MainWindow::~MainWindow()
+void MainWindow::setupActions()
 {
-    save();
-
-    Config::ImageFactory::clean();
-    delete m_tagFactory;
+    KStandardAction::save(this, SLOT(save()), actionCollection());
+    KStandardAction::quit(qApp, SLOT(quit()), actionCollection());
+    KStandardAction::paste(m_view, SLOT(paste()), actionCollection());
 }
 
 void MainWindow::save()
@@ -88,27 +118,24 @@ void MainWindow::initToolBar()
 void MainWindow::initView()
 {
     m_view = new Scene::CustomGraphicsView();
-
     centralwidget->layout()->addWidget( m_view );
-
     m_view->show();
 }
 
-
 void MainWindow::initMedia()
 {
-    dockFichier->setWindowTitle(tr("Paniers"));
-
     m_treeExplorer = new Explorer::TreeExplorer(this);
 
     // creation du layout du dock
     QLayout * layoutDock = new QVBoxLayout( dockWidgetContents );
-    layoutDock->setMargin(0);
+    layoutDock->setMargin(4);
     layoutDock->setSpacing(0);
 
     QWidget * widget = new QWidget();
+    dockFichier->setTitleBarWidget(widget);
+
     QLayout * layoutButtonExplorer = new QHBoxLayout( widget );
-    layoutButtonExplorer->setMargin(0);
+    layoutButtonExplorer->setMargin(4);
     layoutButtonExplorer->setSpacing(2);
 
     QToolButton * qq = new QToolButton();
@@ -128,13 +155,7 @@ void MainWindow::initMedia()
 
     layoutButtonExplorer->addItem(new QSpacerItem(0,0,QSizePolicy::Expanding,QSizePolicy::Ignored));
 
-    layoutDock->addWidget( widget );
-
-
-
     layoutDock->addWidget( m_treeExplorer );
-
-    m_treeExplorer->setHeaderHidden( true );
 
     connect(m_treeExplorer,SIGNAL(itemClicked(QTreeWidgetItem*,int)),this,SLOT(loadScene(QTreeWidgetItem*,int)));
 
@@ -150,8 +171,24 @@ void MainWindow::loadScene( QTreeWidgetItem * item , int column )
     }
 
     m_lastBasketLoad = i;
-    m_view->setScene(  i->scene() );
+    Scene::AbstractScene * scene = i->scene();
+    m_view->setScene( scene );
     i->scene()->restoreView( m_view );
+
+    if ( m_lastBasketLoad->scene()->type() == Scene::FreeScene::type )
+    {
+        actionCollection()->action( Scene::FreeScene::type )->setChecked(true);
+        actionCollection()->action( Scene::FreeScene::type )->setDisabled(true);
+        actionCollection()->action( Scene::LayoutScene::type )->setDisabled(false);
+        actionCollection()->action( Scene::LayoutScene::type )->setChecked(false);
+    }
+    else
+    {
+        actionCollection()->action( Scene::LayoutScene::type )->setChecked(true);
+        actionCollection()->action( Scene::FreeScene::type )->setChecked(false);
+        actionCollection()->action( Scene::LayoutScene::type )->setDisabled(true);
+        actionCollection()->action( Scene::FreeScene::type )->setDisabled(false);
+    }
 
 }
 
@@ -172,46 +209,40 @@ void MainWindow::showTagFactory()
 
 void MainWindow::initSystemTray()
 {
-    m_trayIcon = new QSystemTrayIcon(this);
+    m_trayIcon = new KSystemTrayIcon(this);
     m_trayIcon->setIcon(Config::ImageFactory::icon(Config::Image::application));
     m_trayIcon->show();
-    connect(m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
     setWindowIcon(Config::ImageFactory::icon(Config::Image::application));
-
-    QAction * minimizeAction = new QAction(tr("Mi&nimize"), this);
-    minimizeAction->setIcon(QApplication::style()->standardIcon(QStyle::SP_TitleBarMinButton));
-    connect(minimizeAction, SIGNAL(triggered()), this, SLOT(hide()));
-    QAction * maximizeAction = new QAction(tr("Ma&ximize"), this);
-    maximizeAction->setIcon(QApplication::style()->standardIcon(QStyle::SP_TitleBarMaxButton));
-    connect(maximizeAction, SIGNAL(triggered()), this, SLOT(showMaximized()));
-    QAction * restoreAction = new QAction(tr("&Restore"), this);
-    restoreAction->setIcon(QApplication::style()->standardIcon(QStyle::SP_TitleBarNormalButton));
-    connect(restoreAction, SIGNAL(triggered()), this, SLOT(showNormal()));
-    QAction * quitAction = new QAction(tr("&Quit"), this);
-    quitAction->setIcon(QApplication::style()->standardIcon(QStyle::SP_TitleBarCloseButton));
-    connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
-
-    QMenu * trayIconMenu = new QMenu(this);
-    trayIconMenu->addAction(minimizeAction);
-    trayIconMenu->addAction(maximizeAction);
-    trayIconMenu->addAction(restoreAction);
-    trayIconMenu->addSeparator();
-    trayIconMenu->addAction(quitAction);
-
-    m_trayIcon->setContextMenu(trayIconMenu);
 }
 
-void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
+void MainWindow::layoutScene()
 {
-    switch (reason)
-    {
-    case QSystemTrayIcon::Trigger:
-        setVisible(!isVisible());
-    case QSystemTrayIcon::DoubleClick:
-        break;
-    case QSystemTrayIcon::MiddleClick:
-        break;
-    default:
-        ;
-    }
+    m_lastBasketLoad->scene()->setType( Scene::LayoutScene::type );
+    m_lastBasketLoad->save();
+    m_lastBasketLoad->load();
+
+    m_view->setScene( m_lastBasketLoad->scene() );
+
+    actionCollection()->action( Scene::LayoutScene::type )->setDisabled(true);
+    actionCollection()->action( Scene::LayoutScene::type )->setChecked(true);
+
+    actionCollection()->action( Scene::FreeScene::type )->setChecked(false);
+    actionCollection()->action( Scene::FreeScene::type )->setDisabled(false);
+}
+
+void MainWindow::freeScene()
+{
+    m_lastBasketLoad->scene()->setType( Scene::FreeScene::type );
+    m_lastBasketLoad->save();
+    m_lastBasketLoad->load();
+
+    m_view->setScene( m_lastBasketLoad->scene() );
+    m_view->fitInViewZoom();
+    m_view->resetZoom();
+
+    actionCollection()->action( Scene::FreeScene::type )->setDisabled(true);
+    actionCollection()->action( Scene::FreeScene::type )->setChecked(true);
+
+    actionCollection()->action( Scene::LayoutScene::type )->setChecked(false);
+    actionCollection()->action( Scene::LayoutScene::type )->setDisabled(false);
 }

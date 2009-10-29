@@ -34,7 +34,7 @@ namespace Handle
             m_oldCursorY(-1),
             m_isHover(false)
     {
-        setFixedWidth(10);
+        setFixedWidth(9);
         setDefaultColor(parent->defaultColor());
     }
     
@@ -66,6 +66,7 @@ namespace Handle
     
     void MoveHandle::mouseReleaseEvent ( QMouseEvent * event )
     {
+        Q_UNUSED( event );
         m_mode = Nothing;
     }
     
@@ -79,6 +80,7 @@ namespace Handle
     
     void MoveHandle::enterEvent( QEvent * event )
     {
+        Q_UNUSED( event );
         setCursor(Qt::OpenHandCursor);
     }
     
@@ -121,37 +123,36 @@ namespace Handle
         update();
     }
     
-    void MoveHandle::drawHandle( QPainter & painter, HandleItem * h, int & x, int & y, QRect & r, int & decal )
+    void MoveHandle::drawHandle( QPainter & painter, HandleItem * h, int & x, int & y )
     {
         if ( h->children().size() ==0 )
 
         {
-            QLinearGradient gradient( 0, y-decal, 0,h->height()+y-decal);
+            QLinearGradient gradient( 0, y, 0,h->height()+y);
             gradient.setColorAt( 0, h->defaultColor().lighter(150) );
             gradient.setColorAt( 1, h->defaultColor() );
             painter.setBrush( gradient );
-            painter.drawRect( x, y, r.width(), h->height()-decal );
-            y += h->height()-decal;
-            decal=0;
+            painter.drawRect( x, y, width(), height() );
+            y += h->height();
         }
         else
         {
             QList<HandleItem*> handles = h->children();
             for ( int i=0 ; i<handles.size() ; ++i )
             {
-                drawHandle(painter,handles[i],x,y,r,decal);
+                drawHandle(painter,handles[i],x,y);
             }
         }
     }
 
-    void MoveHandle::drawGrip( QPainter & painter, QRect & r )
+    void MoveHandle::drawGrip( QPainter & painter )
     {
         int xGrips             = 2;
-        int marginedHeight = (r.height() * 80 / 100); // 10% empty on top, and 10% empty on bottom, so 20% of the height should be empty of any grip, and 80% should be in the grips
+        int marginedHeight = (height() * 80 / 100); // 10% empty on top, and 10% empty on bottom, so 20% of the height should be empty of any grip, and 80% should be in the grips
         int nbGrips            = (marginedHeight - 3) / 6;
         if (nbGrips < 2)
             nbGrips = 2;
-        int yGrips             = (r.height() + 1 - nbGrips * 6 - 3) / 2; // +1 to avoid rounding errors, -nbGrips*6-3 the size of the grips
+        int yGrips             = (height() + 1 - nbGrips * 6 - 3) / 2; // +1 to avoid rounding errors, -nbGrips*6-3 the size of the grips
         QColor darker  = palette().color(QPalette::Highlight).dark(130);
         QColor lighter = palette().color(QPalette::Highlight).light(130);
 
@@ -183,7 +184,6 @@ namespace Handle
 
     void MoveHandle::paintEvent( QPaintEvent * event )
     {
-        QRect r = event->rect();
         QPainter painter(this);
         
         QPen pen;//palette().color(QPalette::Highlight));
@@ -198,30 +198,24 @@ namespace Handle
             gradient.setColorAt(1, palette().color(QPalette::Highlight));
             painter.setBrush(gradient);
 
-            painter.drawRect( r.x(), r.y(), r.width(), r.height() );
+            painter.drawRect( 0, 0, width(), height() );
         }
         else
         {
             HandleItem * h = dynamic_cast<HandleItem*>(parentWidget());
             QList<HandleItem*> handles = h->children();
-            int x = r.x();
-            int y = r.y();
 
-            int decal = 0;
-            if ( y != 0 )
-            {
-                decal = h->height() - r.height() - (h->parentHandle() == 0 ? h->contentMarginX()+h->contentMarginY() : 0);
-            }
-
+            int x = 0;
+            int y = 0;
             for ( int i=0 ; i<handles.size() ; ++i )
             {
-                drawHandle( painter, handles[i], x, y, r, decal );
+                drawHandle( painter, handles[i], x, y );
             }
         }
 
         if ( m_isHover )
         {
-            drawGrip( painter, r );
+            drawGrip( painter );
         }
     }
 }

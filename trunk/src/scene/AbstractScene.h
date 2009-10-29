@@ -48,28 +48,44 @@ namespace Scene
         virtual Item::AbstractItem * currentAbstractItem() = 0;
         virtual Handle::HandleItem * currentHandle()       = 0;
 
-        virtual void load( const QString & fileName );
-        virtual void save( const QString & id, const QString & fileName );
+        virtual QGraphicsProxyWidget * addHandleToScene( Handle::HandleItem * handle ) = 0;
+        virtual Handle::HandleItem * newHandle( int x, int y ) = 0;
+        virtual Item::AbstractItem * newItem( int x, int y ) = 0;
 
-        virtual void saveViewOnDisk( const QString & fileName );
-        virtual void loadViewFromDisk( const QString & fileName );
-        virtual void storeView( CustomGraphicsView * view );
-        virtual void restoreView( CustomGraphicsView * view );
+        void load( const QString & fileName );
+        void save( const QString & id, const QString & fileName );
+
+        void saveViewOnDisk( const QString & fileName );
+        void loadViewFromDisk( const QString & fileName );
+        void storeView( CustomGraphicsView * view );
+        void restoreView( CustomGraphicsView * view );
 
         virtual void addData( const QMimeData * data );
 
         const QString & id();
 
+        const QString & type();
+        void setType( const QString & type );
+
     public slots:
         virtual void delItem( Handle::HandleItem * h ) = 0;
         virtual void moveItem( Handle::HandleItem * handleItem, int x, int y ) = 0;
+        virtual void resize( QResizeEvent * event );
 
     protected:
+        void buildListHandleToLoad( Handle::HandleItem * h, QStringList & l );
         bool canInsertFromMimeData( const QMimeData *source ) const;
         void insertFromMimeData( const QMimeData *source );
 
-        //QString m_sceneId;
+        QTransform m_transformView;
+        int m_horizontalScrollBarValueView;
+        int m_verticalScrollBarValueView;
+
+        QHash<Handle::HandleItem * ,QGraphicsProxyWidget*> m_handles;
+
         QString m_id;
+
+        QString m_type;
 
     };
 

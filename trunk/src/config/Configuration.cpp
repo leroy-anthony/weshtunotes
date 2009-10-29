@@ -52,6 +52,8 @@ namespace Config
         QDir::addSearchPath( "icon", "./data/icon" ); // windows
         QDir::addSearchPath( "icon", "/usr/share/weshtunotes/data/icon" ); // unix
         QDir::addSearchPath( "icon", "/usr/local/share/weshtunotes/data/icon" ); // unix
+        QDir::addSearchPath( "icon", "/home/kahal/Programmation/C++/weshtunotes/data/icon" );
+        QDir::addSearchPath( "data", "/home/kahal/Programmation/C++/weshtunotes/data" );
 
         QDir dir(Constant::homeData);
         if ( !dir.exists() )

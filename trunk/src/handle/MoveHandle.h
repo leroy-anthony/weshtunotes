@@ -49,8 +49,8 @@ namespace Handle
         void paintEvent( QPaintEvent * event );
 
     private:
-        void drawHandle( QPainter & painter, HandleItem * h, int & x, int & y, QRect & r, int & decal );
-        void drawGrip( QPainter & painter, QRect & r );
+        void drawHandle( QPainter & painter, HandleItem * h, int & x, int & y );
+        void drawGrip( QPainter & painter );
 
         QColor m_defaultColor;
 

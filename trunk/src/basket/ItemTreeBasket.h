@@ -38,6 +38,8 @@ namespace Basket
         ~ItemTreeBasket();
 
         void load();
+        void load( const QString & type );
+
         void save();
 
         const QString & configFilePath();

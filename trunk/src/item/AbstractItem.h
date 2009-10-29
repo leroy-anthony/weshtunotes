@@ -26,6 +26,8 @@
 
 #include "IStorageData.h"
 
+#include "../tag/AddTag.h"
+
 namespace Tag
 {
     class NoteTag;
@@ -34,7 +36,7 @@ namespace Tag
 namespace Item
 {
 
-    class AbstractItem :  public QWidget, public IStorageData
+    class AbstractItem :  public QWidget
     {
         Q_OBJECT
 
@@ -46,9 +48,16 @@ namespace Item
 
         void setItemId( const QString & id );
 
-        void setVisibleTag( bool visible );
+        void setVisibleAddTag( bool visible );
 
         virtual void adaptSize();
+
+        virtual void save( const QString & fileName, const QString & handleId  ) = 0;
+        virtual void load( const QString & fileName ) = 0;
+        virtual void load( const QMimeData * data ) = 0;
+
+        void setItemColor( const QColor & color );
+        const QColor & itemColor();
 
     signals:
         void editItem( Item::AbstractItem * item );
@@ -67,7 +76,7 @@ namespace Item
         QString m_itemId;
         static int m_id;
 
-        Tag::NoteTag * m_tag;
+        Tag::AddTag * m_addTag;
 
     };
 
