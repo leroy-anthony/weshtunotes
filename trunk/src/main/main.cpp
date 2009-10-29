@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 {
     KAboutData aboutData("KWeshTuNotes",
                          0,
-                         ki18n("KWeshTuNotes"),
+                         ki18n("(K) Wesh ! Tu Notes ?"),
                          "0.0",
                          ki18n("Prise de note"),
                          KAboutData::License_GPL,
