@@ -21,6 +21,9 @@
 
 namespace Item
 {
+    ITextEdition::~ITextEdition()
+    {
+    }
 
     void ITextEdition::saveTextEdition( Config::Configuration & settings )
     {

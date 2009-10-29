@@ -30,9 +30,9 @@ namespace Handle
             m_handleItemRoot(parent)
     {
         setIcon(Config::ImageFactory::icon(Config::Image::exitAction));
-        setIconSize(QSize(10,10));
-        setFixedWidth(10);
-        setFixedHeight(10);
+        setIconSize(QSize(9,9));
+        setFixedWidth(9);
+        setFixedHeight(9);
         setContentsMargins(0,0,0,0);
         setDefaultColor(parent->defaultColor());
         setFlat(true);

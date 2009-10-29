@@ -507,44 +507,44 @@
     </property>
    </layout>
   </widget>
-  <widget class="QMenuBar" name="menubar">
+  <widget class="KMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
      <width>803</width>
-     <height>24</height>
+     <height>25</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuAide">
+   <widget class="KMenu" name="menuAide">
     <property name="title">
      <string>Aide</string>
     </property>
     <addaction name="actionA_propos"/>
    </widget>
-   <widget class="QMenu" name="menuOptions">
+   <widget class="KMenu" name="menuOptions">
     <property name="title">
      <string>Options</string>
     </property>
    </widget>
-   <widget class="QMenu" name="menuFichier">
-    <property name="title">
-     <string>Fichier</string>
-    </property>
-    <addaction name="actionSave"/>
-    <addaction name="actionQuit"/>
-   </widget>
-   <widget class="QMenu" name="menuTag">
+   <widget class="KMenu" name="menuTag">
     <property name="title">
      <string>Tag</string>
     </property>
     <addaction name="actionCustomize"/>
    </widget>
-   <widget class="QMenu" name="menuEdit">
+   <widget class="KMenu" name="menuEdit">
     <property name="title">
      <string>Edit</string>
     </property>
     <addaction name="actionPaste"/>
+   </widget>
+   <widget class="KMenu" name="menuFichier">
+    <property name="title">
+     <string>Fichier</string>
+    </property>
+    <addaction name="actionSave"/>
+    <addaction name="actionQuit"/>
    </widget>
    <addaction name="menuFichier"/>
    <addaction name="menuEdit"/>
@@ -563,17 +563,20 @@
    <property name="minimumSize">
     <size>
      <width>100</width>
-     <height>36</height>
+     <height>39</height>
     </size>
    </property>
    <property name="autoFillBackground">
     <bool>false</bool>
    </property>
+   <property name="floating">
+    <bool>false</bool>
+   </property>
    <property name="features">
-    <set>QDockWidget::NoDockWidgetFeatures</set>
+    <set>QDockWidget::DockWidgetMovable</set>
    </property>
    <property name="windowTitle">
-    <string>Media</string>
+    <string notr="true"/>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
@@ -619,6 +622,18 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KMenuBar</class>
+   <extends>QMenuBar</extends>
+   <header>kmenubar.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KMenu</class>
+   <extends>QMenu</extends>
+   <header>kmenu.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

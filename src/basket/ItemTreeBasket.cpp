@@ -24,6 +24,7 @@
 
 #include "../config/Configuration.h"
 #include "../config/ImageFactory.h"
+#include "../scene/SceneFactory.h"
 
 namespace Basket
 {
@@ -100,7 +101,22 @@ namespace Basket
 
     void ItemTreeBasket::load()
     {
-        m_contentScene->load( m_configFilePath );
+        m_contentScene = Scene::SceneFactory::newScene( m_configFilePath );
+
+        m_basketId = m_contentScene->id();
+
+        setText(1,m_basketId);
+        int childsSize = childCount();
+        for ( int i=0 ; i<childsSize ; ++i )
+        {
+            dynamic_cast<ItemTreeBasket*>(child(i))->load();
+        }
+    }
+
+    void ItemTreeBasket::load( const QString & type )
+    {
+        m_contentScene = Scene::SceneFactory::newScene( m_configFilePath, type );
+
         m_basketId = m_contentScene->id();
 
         setText(1,m_basketId);

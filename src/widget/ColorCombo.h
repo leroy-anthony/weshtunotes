@@ -26,6 +26,9 @@ class ColorCombo : public QComboBox
 {
 public:
     ColorCombo();
+
+protected:
+    void paintEvent( QPaintEvent * event );
 };
 
 #endif // COLORCOMBO_H

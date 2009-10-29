@@ -40,6 +40,7 @@ namespace Tag
     {
     public:
         State( NoteTag * tag );
+        ~State();
 
         void setItem( Item::NoteItem * item );
 

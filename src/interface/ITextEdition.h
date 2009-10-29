@@ -33,6 +33,8 @@ namespace Item
     {
     public:
 
+        virtual ~ITextEdition();
+
         virtual void setBold( bool checked ) = 0;
         virtual void setItalic( bool italic ) = 0;
         virtual void setAlignment( Qt::Alignment ) = 0;

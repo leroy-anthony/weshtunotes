@@ -22,6 +22,10 @@
 namespace Item
 {
 
+    IVisualItemEdition::~IVisualItemEdition()
+    {
+    }
+
     void IVisualItemEdition::saveVisualItemEdition( Config::Configuration & settings )
     {
         settings.setValue( "symbol", m_symbol );

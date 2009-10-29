@@ -19,12 +19,38 @@
 
 #include "ColorCombo.h"
 
+#include <QStylePainter>
+#include <QAbstractItemView>
+#include <QPalette>
+
 ColorCombo::ColorCombo()
 {
     QStringList colorNames = QColor::colorNames();
     for (int i = 0; i < colorNames.size(); ++i) {
-         QColor color(colorNames[i]);
-         insertItem(i, colorNames[i]);
-         setItemData(i, color, Qt::DecorationRole);
-     }
+        QColor color(colorNames[i]);
+        insertItem(i, "");
+        QPixmap pixmap(48,24);
+        pixmap.fill(color);
+        setItemData(i, pixmap, Qt::DecorationRole);
+    }
+
+    setFixedWidth(64);
+}
+
+void ColorCombo::paintEvent ( QPaintEvent * event )
+{
+    QStylePainter painter(this);
+    painter.setPen(palette().color(QPalette::Text));
+
+    // draw the combobox frame, focusrect and selected etc.
+    QStyleOptionComboBox opt;
+    initStyleOption(&opt);
+    painter.drawComplexControl(QStyle::CC_ComboBox, opt);
+
+    // draw the icon and text
+    //painter.setPen(currentIndex());
+    //QPixmap pixmap(48,24);
+   // pixmap.fill(currentText());
+   // painter.drawPixmap(4,4,44,20,pixmap);
+    painter.drawControl(QStyle::CE_ComboBoxLabel, opt);
 }

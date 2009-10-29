@@ -32,6 +32,7 @@ namespace Item
     class IStorageData
     {
     public:
+        virtual ~IStorageData();
 
         virtual void save( const QString & fileName, const QString & handleId  ) = 0;
         virtual void load( const QString & fileName ) = 0;

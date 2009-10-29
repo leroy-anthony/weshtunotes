@@ -273,12 +273,14 @@ namespace Handle
 
         if ( m_item != 0 )
         {
-            m_item->setVisibleTag(isHover);
+            m_item->setVisibleAddTag(isHover);
         }
     }
 
     void HandleItem::enterEvent( QEvent * event )
     {
+        Q_UNUSED( event );
+
         setHoverMode( true );
         setContentsMargins( m_contentMarginX, m_contentMarginY, m_contentMarginX, m_contentMarginY );
     }
@@ -316,7 +318,7 @@ namespace Handle
         {
             m_item->save(fileName,m_handleId);
         }
-        settings.setValue("color",m_defaultColor);
+        settings.setValue("color",m_defaultColor.name());
 
         settings.endGroup();
         settings.sync();
@@ -330,9 +332,11 @@ namespace Handle
     void HandleItem::load( const QString & fileName )
     {
         Config::Configuration settings( fileName );
+
         m_x = settings.value("x").toInt();
         m_y = settings.value("y").toInt();
-        setDefaultColor( settings.value("color").value<QColor>() );
+
+        setDefaultColor( QColor(settings.value("color").value<QString>()) );
     }
 
     void HandleItem::setHandleId( const QString & id )
@@ -347,7 +351,6 @@ namespace Handle
 
     void HandleItem::paintEvent( QPaintEvent * event )
     {
-        QRect r = event->rect();
         QPainter painter(this);
         painter.setBackgroundMode( Qt::OpaqueMode );
 
@@ -359,7 +362,7 @@ namespace Handle
 
         painter.setPen(p);
         painter.setBrush(b);
-        painter.drawRect( r.x(), r.y(), r.width(), r.height()-1 );
+        painter.drawRect( 0, 0, width(), height() );
     }
 
     void HandleItem::delItem2()

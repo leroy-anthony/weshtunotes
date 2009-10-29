@@ -47,16 +47,17 @@
 
 namespace Scene
 {
-    
+    QString FreeScene::type = "freescene";
+
     FreeScene::FreeScene(QWidget * parent) :
             AbstractScene(),
             m_currentGraphicsItem(0),
             m_currentAbstractItem(0),
             m_currentHandle(0),
-            m_modeItem(Nothing),
-            m_horizontalScrollBarValueView(0),
-            m_verticalScrollBarValueView(0)
+            m_modeItem(Nothing)
     {
+        m_type = FreeScene::type;
+
         setBackgroundBrush(QColor(Qt::cyan).lighter(190));
         /*
           QGraphicsScene::BspTreeIndex
@@ -76,7 +77,7 @@ namespace Scene
 
         Handle::HandleItem * handle = newHandle( pt.x(), pt.y() );
 
-        Item::AbstractItem * item = newItem( pt.x(), pt.y(), QColor(115,115,115) );
+        Item::AbstractItem * item = newItem( pt.x(), pt.y() );
 
         handle->add( item );
 
@@ -96,10 +97,9 @@ namespace Scene
         return handle;
     }
     
-    Item::AbstractItem * FreeScene::newItem( int x, int y, const QColor & color )
+    Item::AbstractItem * FreeScene::newItem( int x, int y )
     {
         Item::NoteItem * item = new Item::NoteItem();
-        //       item->setItemColor( color );
         connect( item, SIGNAL(editItem(Item::AbstractItem*)), this, SLOT(editItem(Item::AbstractItem*)));
         
         return item;
@@ -109,7 +109,7 @@ namespace Scene
     {
         Handle::HandleItem * handle = newHandle( x, y );
         
-        Item::AbstractItem * item = newItem( x, y, QColor(115,115,115) );
+        Item::AbstractItem * item = newItem( x, y );
 
         handle->add( item );
 
@@ -295,176 +295,6 @@ namespace Scene
     Handle::HandleItem * FreeScene::currentHandle()
     {
         return m_currentHandle;
-    }
-
-    void FreeScene::buildListHandleToLoad( Handle::HandleItem * h, QStringList & l )
-    {
-        if ( h->size() > 0 )
-        {
-            QList<Handle::HandleItem*> handlesChild = h->children();
-            for ( int j=0 ; j<handlesChild.size() ; ++j )
-            {
-                buildListHandleToLoad( handlesChild[j], l );
-            }
-            l << h->handleId();
-        }
-        else
-        {
-            l << h->handleId();
-        }
-    }
-
-    void FreeScene::save( const QString & id, const QString & fileName )
-    {
-        QList<Handle::HandleItem*> handles = m_handles.keys();
-
-        Config::Configuration settings( fileName );
-        settings.clear();
-        settings.sync();
-
-        settings.beginGroup("scene");
-        settings.setValue("id",id);
-        settings.beginWriteArray("items");
-        for (int i=0 ; i<handles.size() ; ++i)
-        {
-            QStringList listHandles;
-            buildListHandleToLoad( handles[i], listHandles );
-
-            settings.setArrayIndex(i);
-            if ( listHandles.size() > 0 )
-            {
-                settings.setValue("items",listHandles);
-            }
-        }
-        settings.endArray();
-        settings.endGroup();
-
-        settings.sync();
-
-        for ( int i=0 ; i<handles.size() ; ++i )
-        {
-            handles[i]->save(fileName);
-        }
-
-        saveViewOnDisk( fileName );
-    }
-
-    void FreeScene::load( const QString &  fileName )
-    {
-        Config::Configuration settings( fileName );
-
-        QMap<QString,Handle::HandleItem*> handles;
-        QMap<QString,Item::AbstractItem*> itemsToLoad;
-        QMap<Handle::HandleItem*,QSize>  handlesSizes;
-        QList<QStringList> listItem;
-
-        settings.beginGroup("scene");
-        m_id = settings.value("id").toString();
-        int size = settings.beginReadArray("items");
-        for ( int i=0 ; i<size ; ++i )
-        {
-            settings.setArrayIndex(i);
-            listItem << settings.value("items").toStringList();
-        }
-        settings.endArray();
-        settings.endGroup();
-
-        for ( int j=0 ; j<listItem.size() ; ++j )
-        {
-            QStringList items = listItem[j];
-            Handle::HandleItem * handle = 0;
-            for (int i=0 ; i<items.size() ; ++i)
-            {
-                settings.beginGroup(items[i]);
-
-                int x = settings.value("x").toInt();
-                int y = settings.value("y").toInt();
-                handle = newHandle( x, y );
-                handle->setHandleId(items[i]);
-                handles[ items[i] ] = handle;
-
-                handlesSizes[ handle ] = QSize( settings.value("width").toInt(), settings.value("height").toInt() );
-
-                QStringList itemsToAdd = settings.value("items").toStringList();
-                if ( itemsToAdd.size()>0 )
-                {
-                    for (int j = 0; j < itemsToAdd.size() ; ++j)
-                    {
-                        handle->add( handles[ itemsToAdd[j] ] );
-                    }
-                }
-                else
-                {
-                    //TODO: replace me by item->load() ???
-                    Item::AbstractItem * item = newItem( 0, 0, settings.value("color").value<QColor>() );
-                    handle->add( item );
-
-                    QString id = settings.value("data").toString();
-                    item->setItemId(id);
-                    itemsToLoad[ id ] = item;
-
-                    QStringList namesTags = settings.value("tags").toStringList();
-                    for ( int i=0 ; i<namesTags.size() ; ++i )
-                    {
-                        QStringList s = namesTags[i].split(":");
-                        dynamic_cast<Item::NoteItem*>(item)->addTag(s[0],s[1]);
-                    }
-
-                }
-                settings.endGroup();
-            }
-            addHandleToScene( handle );
-        }
-
-        for ( int j=0 ; j<itemsToLoad.keys().size() ; ++j )
-        {
-            itemsToLoad[ itemsToLoad.keys()[j] ]->load( fileName );
-        }
-
-        for ( int j=0 ; j<handlesSizes.keys().size() ; ++j )
-        {
-            handlesSizes.keys()[j]->resize( handlesSizes[ handlesSizes.keys()[j] ] );
-        }
-
-        loadViewFromDisk( fileName );
-    }
-
-    void FreeScene::saveViewOnDisk( const QString & fileName )
-    {
-        Config::Configuration settings( fileName );
-        settings.beginGroup("scene");
-        settings.setValue("transform",m_transformView);
-        settings.setValue("hscroll",m_horizontalScrollBarValueView);
-        settings.setValue("vscroll",m_verticalScrollBarValueView);
-        settings.endGroup();
-        settings.sync();
-    }
-
-    void FreeScene::loadViewFromDisk( const QString & fileName  )
-    {
-        Config::Configuration settings( fileName );
-        settings.beginGroup("scene");
-        m_transformView = settings.value("transform").value<QTransform>();
-        m_horizontalScrollBarValueView = settings.value("hscroll").toInt();
-        m_verticalScrollBarValueView   = settings.value("vscroll").toInt();
-    }
-
-    void FreeScene::storeView( CustomGraphicsView * view )
-    {
-        view->setInteractive(false);
-        m_transformView = view->transform();
-        m_horizontalScrollBarValueView = view->horizontalScrollBar()->value();
-        m_verticalScrollBarValueView = view->verticalScrollBar()->value();
-        view->setInteractive(true);
-    }
-
-    void FreeScene::restoreView( CustomGraphicsView * view  )
-    {
-        view->setInteractive(false);
-        view->setTransform(m_transformView);
-        view->horizontalScrollBar()->setValue(m_horizontalScrollBarValueView);
-        view->verticalScrollBar()->setValue(m_verticalScrollBarValueView);
-        view->setInteractive(true);
     }
 
 }

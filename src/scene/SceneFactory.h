@@ -17,36 +17,27 @@
  Boston, MA 02110-1301, USA.
  */
 
-#ifndef IVISUALITEMEDITION_H
-#define IVISUALITEMEDITION_H
+#ifndef SCENEFACTORY_H_
+#define SCENEFACTORY_H_
 
-#include <QString>
-#include <QColor>
+#include "AbstractScene.h"
 
-#include "../config/Configuration.h"
-
-namespace Item
+namespace Scene
 {
 
-    class IVisualItemEdition
+    class SceneFactory
     {
     public:
-        virtual ~IVisualItemEdition();
+        SceneFactory();
 
-        virtual void setItemColor( const QColor & color ) = 0;
+        static AbstractScene * newScene( const QString & fileName );
+        static AbstractScene * newScene( const QString & fileName, const QString & type );
 
-        void saveVisualItemEdition( Config::Configuration & settings );
-        void loadVisualItemEdition( Config::Configuration & settings );
-
-        const QString & symbol();
-        const QColor & itemColor();
-
-    protected:
-        QString m_symbol;
-        QColor m_colorItem;
+    private:
+        static AbstractScene * newSceneInterne( const QString & fileName, const QString & type );
 
     };
 
 }
 
-#endif // IVISUALITEMEDITION_H
+#endif // SCENEFACTORY_H_

@@ -36,7 +36,7 @@ namespace Item
 {
 
     CustomTextEdit::CustomTextEdit():
-            QTextBrowser()
+            KTextBrowser()
     {
         setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -111,13 +111,17 @@ namespace Item
                 if ( urls[i].scheme() == "file" )
                 {
                     QFileInfo fileInfo(urls[i].path());
-                    QFileIconProvider f;
-                    QIcon icon = f.icon(fileInfo);
+
+                    QPixmap pix;
+                    QString iconName = Config::ImageFactory::iconNameForUrl( urls[i] );
+                    Config::ImageFactory::loadMimeTypeIcon( iconName, pix );
+                    QString path = Config::ImageFactory::iconPath( iconName );
+
                     //référence l'image
-                    document()->addResource(QTextDocument::ImageResource, QUrl(f.type(fileInfo)), icon.pixmap(32,32).toImage());
+                    document()->addResource(QTextDocument::ImageResource, QUrl(path), pix);
                     QTextImageFormat imageFormat;
                     //spécifie l'image référencée
-                    imageFormat.setName(f.type(fileInfo));
+                    imageFormat.setName(path);
                     imageFormat.setAnchor(true);
                     imageFormat.setAnchorHref(urls[i].toString());
                     //ajoute l'image référencée

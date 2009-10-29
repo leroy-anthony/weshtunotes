@@ -21,123 +21,111 @@
 
 #include <QStyle>
 
+#include <KAction>
+#include <kactioncollection.h>
+#include <kfontaction.h>
+#include <kfontcombobox.h>
+
 #include "../interface/ITextEdition.h"
 #include "../interface/IVisualItemEdition.h"
 #include "../main/main_window.h"
 #include "../config/ImageFactory.h"
 #include "../widget/ColorCombo.h"
 
+
 namespace Scene
 {
-
-    ToolBarScene * ToolBarScene::m_toolBarScene = 0;
-
-    ToolBarScene * ToolBarScene::toolBarScene()
-    {
-        return m_toolBarScene;
-    }
 
     ToolBarScene::ToolBarScene( MainWindow * mainWindow ):
             m_mainWindow(mainWindow)
     {
-        m_toolBar = m_mainWindow->addToolBar(tr("Text"));
-        m_toolBar->setIconSize(QSize(24,24));
+        KAction * a = 0;
 
-        QAction * a = 0;
+        m_actionFont = new KFontAction(0);
+        QWidget * w = m_actionFont->createWidget(0);
+        connect(w, SIGNAL(currentFontChanged(const QFont &)), SLOT(setFontFamily(const QFont &)));
+        m_mainWindow->actionCollection()->addAction("fontfamily", m_actionFont);
 
-        m_comboFont = new QFontComboBox();
-        m_toolBar->addWidget(m_comboFont);
-        connect(m_comboFont, SIGNAL(currentFontChanged(const QFont &)), SLOT(setFontFamily(const QFont &)));
+        m_actionFontSize = new KFontSizeAction(0);
+        connect(m_actionFontSize, SIGNAL(fontSizeChanged(int)), SLOT(setFontPointSize(int)));
+        m_mainWindow->actionCollection()->addAction("fontsize", m_actionFontSize);
 
-        m_comboFontSize = new QComboBox();
-        m_comboFontSize->addItem( "6" );
-        m_comboFontSize->addItem( "7" );
-        m_comboFontSize->addItem( "8" );
-        m_comboFontSize->addItem( "9" );
-        m_comboFontSize->addItem( "10" );
-        m_comboFontSize->addItem( "11" );
-        m_comboFontSize->addItem( "12" );
-        m_comboFontSize->addItem( "14" );
-        m_comboFontSize->addItem( "16" );
-        m_comboFontSize->addItem( "18" );
-        m_comboFontSize->addItem( "20" );
-        m_comboFontSize->addItem( "22" );
-        m_comboFontSize->addItem( "24" );
-        m_comboFontSize->addItem( "26" );
-        m_comboFontSize->addItem( "28" );
-        m_comboFontSize->addItem( "36" );
-        m_comboFontSize->addItem( "48" );
-        m_toolBar->addWidget(m_comboFontSize);
-        connect(m_comboFontSize, SIGNAL(currentIndexChanged(const QString &)), SLOT(setFontPointSize(const QString &)));
+        m_colorText = new KColorCombo();
+        m_colorText->setFixedWidth(48);
+        a = new KAction(0);
+        a->setDefaultWidget(m_colorText);
+        connect(m_colorText, SIGNAL(activated(const QColor &)), SLOT(setTextColor(const QColor &)));
+        m_mainWindow->actionCollection()->addAction("fontcolor", a);
 
-        m_colorText = new QtColorPicker();
-        m_colorText->setStandardColors();
-        m_toolBar->addWidget(m_colorText);
-        connect(m_colorText, SIGNAL(colorChanged(const QColor &)), SLOT(setTextColor(const QColor &)));
-
-
-        a = addAction(Config::ImageFactory::icon(Config::Image::textBold),tr("bold"));
+        a = addAction(Config::ImageFactory::icon(Config::Image::textBold),tr("Bold"));
+        a->setShortcutConfigurable(true);
+        m_mainWindow->actionCollection()->addAction("bold", a);
         connect(a, SIGNAL(triggered(bool)), this, SLOT(setBold(bool)));
-        a = addAction(Config::ImageFactory::icon(Config::Image::textItalic),"italic");
+
+        a = addAction(Config::ImageFactory::icon(Config::Image::textItalic),tr("Italic"));
         connect(a, SIGNAL(triggered(bool)), this, SLOT(setItalic(bool)));
-        a = addAction(Config::ImageFactory::icon(Config::Image::textUnderline),"underLine");
+        m_mainWindow->actionCollection()->addAction("italic", a);
+
+        a = addAction(Config::ImageFactory::icon(Config::Image::textUnderline),tr("Underline"));
         connect(a, SIGNAL(triggered(bool)), this, SLOT(setFontUnderline(bool)));
-        a = addAction(Config::ImageFactory::icon(Config::Image::textStrikeOut),"strikeout");
+        m_mainWindow->actionCollection()->addAction("underline", a);
+
+        a = addAction(Config::ImageFactory::icon(Config::Image::textStrikeOut),tr("Strikeout"));
         connect(a, SIGNAL(triggered(bool)), this, SLOT(setFontStrikeOut(bool)));
+        m_mainWindow->actionCollection()->addAction("strikeout", a);
 
-        a = addAction(Config::ImageFactory::icon(Config::Image::textJustifyLeft),"alignLeft");
+        a = addAction(Config::ImageFactory::icon(Config::Image::textJustifyLeft),tr("Align Left"));
         connect(a, SIGNAL(triggered(bool)), this, SLOT(setAlignmentLeft(bool)));
-        a = addAction(Config::ImageFactory::icon(Config::Image::textJustifyCenter),"alignCenter");
+        m_mainWindow->actionCollection()->addAction("alignleft", a);
+
+        a = addAction(Config::ImageFactory::icon(Config::Image::textJustifyCenter),tr("Align Center"));
         connect(a, SIGNAL(triggered(bool)), this, SLOT(setAlignmentCenter(bool)));
-        a = addAction(Config::ImageFactory::icon(Config::Image::textJustifyRight),"alignRight");
+        m_mainWindow->actionCollection()->addAction("aligncenter", a);
+
+        a = addAction(Config::ImageFactory::icon(Config::Image::textJustifyRight),tr("Align Right"));
         connect(a, SIGNAL(triggered(bool)), this, SLOT(setAlignmentRight(bool)));
+        m_mainWindow->actionCollection()->addAction("alignright", a);
 
-        m_toolBar->addSeparator();
+        m_colorItem = new KColorCombo();
+        m_colorItem->setFixedWidth(64);
+        a = new KAction(0);
+        a->setDefaultWidget(m_colorItem);
+        connect(m_colorItem, SIGNAL(activated(const QColor &)), SLOT(setColorItem(const QColor &)));
+        m_mainWindow->actionCollection()->addAction("notecolor", a);
 
-        m_colorItem = new QtColorPicker();
-        m_colorItem->setStandardColors();
-        m_toolBar->addWidget(m_colorItem);
-        connect(m_colorItem, SIGNAL(colorChanged(const QColor &)), SLOT(setColorItem(const QColor &)));
+        KStandardAction::actualSize(mainWindow->currentView(),SLOT(resetZoom()),m_mainWindow->actionCollection());
 
-        m_toolBar->addSeparator();
+        KStandardAction::zoomIn(mainWindow->currentView(),SLOT(doubleZoom()),m_mainWindow->actionCollection());
 
-        a = addAction(Config::ImageFactory::icon(Config::Image::zoomOriginal),"zoomOriginal");
-        connect(a, SIGNAL(triggered(bool)), mainWindow->currentView(), SLOT(resetZoom()));
-        a->setCheckable( false );
+        KStandardAction::zoomOut(mainWindow->currentView(),SLOT(halfZoom()),m_mainWindow->actionCollection());
 
-        a = addAction(Config::ImageFactory::icon(Config::Image::zoomIn),"zoomIn");
-        connect(a, SIGNAL(triggered(bool)), mainWindow->currentView(), SLOT(doubleZoom()));
-        a->setCheckable( false );
+        a = KStandardAction::fitToPage(mainWindow->currentView(),SLOT(fitInViewZoom()),m_mainWindow->actionCollection());
+        a->setIcon(Config::ImageFactory::icon(Config::Image::zoomFitBest));
 
-        a = addAction(Config::ImageFactory::icon(Config::Image::zoomOut),"zoomOut");
-        connect(a, SIGNAL(triggered(bool)), mainWindow->currentView(), SLOT(halfZoom()));
-        a->setCheckable( false );
+        a = addAction("List Scene");
+        connect(a, SIGNAL(triggered(bool)), mainWindow, SLOT(layoutScene()));
+        m_mainWindow->actionCollection()->addAction(Scene::LayoutScene::type, a);
 
-        a = addAction(Config::ImageFactory::icon(Config::Image::zoomFitBest),"zoomFitBest");
-        connect(a, SIGNAL(triggered(bool)), mainWindow->currentView(), SLOT(fitInViewZoom()));
-        a->setCheckable( false );
+        a = addAction("Free Scene");
+        connect(a, SIGNAL(triggered(bool)), mainWindow, SLOT(freeScene()));
+        m_mainWindow->actionCollection()->addAction(Scene::FreeScene::type, a);
 
-        m_toolBarScene = this;
+        m_toolBar = this;
     }
 
-    QAction * ToolBarScene::addAction( const QIcon & icon, QString name )
+    KAction * ToolBarScene::addAction( const KIcon & icon, QString name )
     {
-        QAction * a = new QAction( icon, name, this );
+        KAction * a = new KAction( icon, name, this );
         a->setIcon(icon);
         a->setCheckable( true );
-
-        m_toolBar->addAction(a);
-        m_actions.insert(name,a);
 
         return a;
     }
 
-    QAction * ToolBarScene::addAction( QString name )
+    KAction * ToolBarScene::addAction( QString name )
     {
-        QAction * a = new QAction( name, this);
+        KAction * a = new KAction( name, this);
         a->setCheckable( true );
-        m_toolBar->addAction(a);
-        m_actions.insert(name,a);
 
         return a;
     }
@@ -178,6 +166,8 @@ namespace Scene
 
     void ToolBarScene::setAlignmentRight( bool checked )
     {
+        Q_UNUSED( checked );
+
         if ( currentAbstractItem() != 0 )
         {
             dynamic_cast<Item::ITextEdition*>(currentAbstractItem())->setAlignment(Qt::AlignRight);
@@ -186,6 +176,8 @@ namespace Scene
 
     void ToolBarScene::setAlignmentCenter( bool checked )
     {
+        Q_UNUSED( checked );
+
         if ( currentAbstractItem() != 0 )
         {
             dynamic_cast<Item::ITextEdition*>(currentAbstractItem())->setAlignment(Qt::AlignCenter);
@@ -194,6 +186,8 @@ namespace Scene
 
     void ToolBarScene::setAlignmentLeft( bool checked )
     {
+        Q_UNUSED( checked );
+
         if ( currentAbstractItem() != 0 )
         {
             dynamic_cast<Item::ITextEdition*>(currentAbstractItem())->setAlignment(Qt::AlignLeft);
@@ -224,11 +218,11 @@ namespace Scene
         }
     }
 
-    void ToolBarScene::setFontPointSize( const QString & size )
+    void ToolBarScene::setFontPointSize( int size )
     {
         if ( currentAbstractItem() != 0 )
         {
-            dynamic_cast<Item::ITextEdition*>(currentAbstractItem())->setFontPointSize(size.toInt());
+            dynamic_cast<Item::ITextEdition*>(currentAbstractItem())->setFontPointSize(size);
         }
     }
 
@@ -236,42 +230,49 @@ namespace Scene
     {
         if ( currentAbstractItem() != 0 )
         {
-            dynamic_cast<Item::IVisualItemEdition*>(currentAbstractItem())->setItemColor(c);
+            currentAbstractItem()->setItemColor(c);
         }
     }
 
     void ToolBarScene::currentItemChanged( Item::AbstractItem * item )
     {
         m_colorItem->blockSignals(true);
-        m_colorItem->setCurrentColor( item->color() );
+        m_colorItem->setColor( item->color() );
         m_colorItem->blockSignals(false);
     }
 
     void ToolBarScene::currentCharFormatChanged( const QTextCharFormat & f )
     {
-        QAction * a = m_actions[ "underLine" ];
+        QAction * a = m_mainWindow->actionCollection()->action( "underline" );
         a->setChecked(f.fontUnderline());
 
-        a = m_actions[ "bold" ];
+        a = m_mainWindow->actionCollection()->action( "bold" );
         a->setChecked(f.fontWeight()>50);
 
-        a = m_actions[ "italic" ];
+        a = m_mainWindow->actionCollection()->action( "italic" );
         a->setChecked(f.fontItalic());
 
-        m_comboFontSize->setCurrentIndex( m_comboFontSize->findText( QString("%1").arg(f.fontPointSize()) ) );
+        m_actionFontSize->setFontSize( f.fontPointSize() );
 
-        m_comboFont->setCurrentIndex( m_comboFont->findText(f.font().family()) );
+        m_actionFont->setFont( f.font().family() );
 
-        m_colorText->setCurrentColor(f.foreground().color());
+        m_colorText->setColor(f.foreground().color());
 
-        a = m_actions[ "strikeout" ];
+        a = m_mainWindow->actionCollection()->action( "strikeout" );
         a->setChecked(f.fontStrikeOut());
 
         if ( currentAbstractItem() != 0 )
         {
-            const QColor & c = dynamic_cast<Item::IVisualItemEdition*>(currentAbstractItem())->itemColor();
-            m_colorItem->setCurrentColor( c );
+            const QColor & c = currentAbstractItem()->itemColor();
+            m_colorItem->setColor( c );
         }
+    }
+
+    ToolBarScene * ToolBarScene::m_toolBar = 0;
+
+    ToolBarScene * ToolBarScene::toolBarScene()
+    {
+        return m_toolBar;
     }
 
 }

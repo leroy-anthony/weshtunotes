@@ -50,21 +50,19 @@ namespace Item
         m_horizontalLayout->setSizeConstraint(QLayout::SetMaximumSize);
 
         m_plainTextEdit = new CustomTextEdit();
-        m_tag = new Tag::NoteTag( this, "default" );
+        m_addTag = new Tag::AddTag( this );
 
-        m_horizontalLayout->addWidget(m_tag);
+        m_horizontalLayout->addWidget(m_addTag);
         m_horizontalLayout->addWidget(m_plainTextEdit);
-
-        setItemColor( QColor("#F7F7C8") ); //Fixme : à mettre dans préférence (du panier ?)
 
         connect( m_plainTextEdit, SIGNAL(selectionChanged()),  this, SLOT(edit()));
     }
 
     NoteItem::~NoteItem()
     {
-        delete m_tag;
+        delete m_addTag;
 
-        for ( int i=0 ; m_tags.size() ; ++i )
+        for ( int i=0 ; i<m_tags.size() ; ++i )
         {
             delete m_tags[i];
         }
@@ -142,7 +140,7 @@ namespace Item
 
         settings.beginGroup( handleId );
         settings.setValue("data",m_itemId);
-        settings.setValue("color",m_color);
+        settings.setValue("color",m_color.name());
 
         QStringList namesTags;
         for ( int i=0 ; i<m_tags.size() ; ++i )
@@ -195,20 +193,7 @@ namespace Item
         update();
     }
 
-    void NoteItem::setItemColor( const QColor & color )
-    {
-        setStyleSheet( QString("background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 %1, stop:1 %2)")
-                       .arg(color.lighter(150).name())
-                       .arg(color.name()));
-        m_plainTextEdit->setStyleSheet(styleSheet());
-        m_color = QColor(color);
-        emit colorChange();
-    }
 
-    const QColor & NoteItem::itemColor()
-    {
-        return m_color;
-    }
 
     void NoteItem::isSelected()
     {
@@ -226,6 +211,18 @@ namespace Item
         tag->apply();
     }
 
+    bool NoteItem::containTag( const QString & tagName )
+    {
+        for ( int i=0 ; i<m_tags.size() ; ++i )
+        {
+            if ( m_tags[i]->name() == tagName )
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     void NoteItem::tagApply( QAction * action )
     {

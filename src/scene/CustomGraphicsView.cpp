@@ -71,7 +71,6 @@ namespace Scene
         setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
         setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);//FullViewportUpdate);
-        setSceneRect(-100000,-100000,200000,200000);
         setViewportMargins(4,4,4,4);
 
         setAcceptDrops(true);
@@ -195,6 +194,11 @@ namespace Scene
             }
         }
         fitInView(minx,miny,maxx-minx,maxy-miny,Qt::KeepAspectRatio);
+    }
+
+    void CustomGraphicsView::resizeEvent ( QResizeEvent * event )
+    {
+        dynamic_cast<AbstractScene*>( scene() )->resize( event );
     }
 
 }

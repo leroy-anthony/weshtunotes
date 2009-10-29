@@ -60,13 +60,28 @@ namespace Item
         }
     }
 
-    void AbstractItem::setVisibleTag( bool visible )
+    void AbstractItem::setVisibleAddTag( bool visible )
     {
-        m_tag->setVisibleTag(visible);
+        m_addTag->setVisible(visible);
     }
 
     void AbstractItem::adaptSize()
     {
+    }
+
+     void AbstractItem::setItemColor( const QColor & color )
+    {
+        setStyleSheet( QString("background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 %1, stop:1 %2)")
+                       .arg(color.lighter(150).name())
+                       .arg(color.name()));
+        //m_plainTextEdit->setStyleSheet(styleSheet());
+        m_color = QColor(color);
+        emit colorChange();
+    }
+
+    const QColor & AbstractItem::itemColor()
+    {
+        return m_color;
     }
 
 }

@@ -51,12 +51,9 @@ namespace Scene
         Handle::HandleItem * addItems( int x, int y, const QString & dataFile  );
         void delItem( Handle::HandleItem * h );
 
-        void load( const QString & fileName );
         void save( const QString & id, const QString & fileName );
-        void saveViewOnDisk( const QString & fileName );
-        void loadViewFromDisk( const QString & fileName );
-        void storeView( CustomGraphicsView * view );
-        void restoreView( CustomGraphicsView * view );
+
+        static QString type;
 
     protected:
         void mousePressEvent( QGraphicsSceneMouseEvent * mouseEvent );
@@ -64,7 +61,7 @@ namespace Scene
         void removeGraphicsItemFromScene( Handle::HandleItem * handle );
         QGraphicsProxyWidget * addHandleToScene( Handle::HandleItem * handle );
         Handle::HandleItem * newHandle( int x, int y );
-        Item::AbstractItem * newItem( int x, int y, const QColor & color  );
+        Item::AbstractItem * newItem( int x, int y );
 
     private:
         QGraphicsItem * m_currentGraphicsItem;
@@ -72,16 +69,9 @@ namespace Scene
         Handle::HandleItem * m_currentHandle;
         QPointF m_mouseLocalPositionItem;
 
-        QTransform m_transformView;
-        int m_horizontalScrollBarValueView;
-        int m_verticalScrollBarValueView;
-
-        QHash<Handle::HandleItem * ,QGraphicsProxyWidget*> m_handles;
         QHash<QGraphicsProxyWidget * ,Handle::HandleItem*> m_items;
         QToolBar * m_textToolBar;
         Mode m_modeItem;
-
-        void buildListHandleToLoad( Handle::HandleItem * h, QStringList & l );
 
     private slots:
         void editItem( Item::AbstractItem * item );

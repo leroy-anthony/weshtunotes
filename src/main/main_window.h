@@ -17,17 +17,18 @@
   Boston, MA 02110-1301, USA.
 */
 
-#include <QMainWindow>
+#include <KXmlGuiWindow>
 #include <QtGui>
 #include <QList>
-#include <QToolBar>
-#include <QSystemTrayIcon>
+#include <KToolBar>
+#include <ksystemtrayicon.h>
 
 #include "ui_main_window.h"
 
 #include "../scene/ToolBarScene.h"
 #include "../scene/AbstractScene.h"
 #include "../scene/FreeScene.h"
+#include "../scene/LayoutScene.h"
 #include "../item/NoteItem.h"
 #include "../explorer/TreeExplorer.h"
 #include "../tag/TagFactory.h"
@@ -35,7 +36,7 @@
 
 using namespace std;
 
-class MainWindow : public QMainWindow, public Ui::MainWindow
+class MainWindow : public KXmlGuiWindow, public Ui::MainWindow
 {
     Q_OBJECT
 
@@ -49,14 +50,18 @@ public:
 public slots:
     void loadScene( QTreeWidgetItem * item , int column = 0 );
     void showTagFactory();
-    void iconActivated( QSystemTrayIcon::ActivationReason reason );
     void save();
+
+    void layoutScene();
+    void freeScene();
 
 private:
     void initView();
     void initToolBar();
     void initMedia();
     void initSystemTray();
+    void setupActions();
+    void loadData();
 
     Scene::AbstractScene * m_currentScene;
     Scene::ToolBarScene * m_controlerScene;
@@ -68,7 +73,7 @@ private:
     Explorer::TreeExplorer * m_treeExplorer;
     Basket::ItemTreeBasket * m_lastBasketLoad;
 
-    QSystemTrayIcon * m_trayIcon;
+    KSystemTrayIcon * m_trayIcon;
 
 };
 

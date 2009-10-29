@@ -33,6 +33,10 @@ namespace Tag
     {
     }
 
+    State::~State()
+    {
+    }
+
     void State::setBold( bool checked )
     {
         m_bold = checked;

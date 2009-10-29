@@ -64,14 +64,10 @@ namespace Tag
         void setVisibleTag( bool visible );
 
     protected:
-        void mousePressEvent( QMouseEvent * e );
         void paintEvent( QPaintEvent * event );
 
     private:
         void loadSymbol();
-        void loadTagsMenu();
-
-        QMenu m_menu;
 
         Item::NoteItem * m_noteItem;
         QList<State*> m_states;

@@ -20,13 +20,14 @@
 #ifndef CUSTOMTEXTEDIT_H
 #define CUSTOMTEXTEDIT_H
 
-#include <QTextBrowser>
+#include <ktextbrowser.h>
+
 #include <QMimeData>
 
 namespace Item
 {
 
-    class CustomTextEdit : public QTextBrowser
+    class CustomTextEdit : public KTextBrowser
     {
         Q_OBJECT
 
