@@ -55,6 +55,8 @@ namespace Item
         m_horizontalLayout->addWidget(m_addTag);
         m_horizontalLayout->addWidget(m_plainTextEdit);
 
+        m_color = QColor("#F7F7C8");
+
         connect( m_plainTextEdit, SIGNAL(selectionChanged()),  this, SLOT(edit()));
     }
 
