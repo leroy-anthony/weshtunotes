@@ -17,6 +17,8 @@
  Boston, MA 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include <KApplication>
 #include <KCmdLineArgs>
 #include <KAboutData>
@@ -40,9 +42,17 @@ int main(int argc, char *argv[])
                          "leroy.anthony@gmail.com");
 
     KCmdLineArgs::init( argc, argv, &aboutData );
+    KUniqueApplication::addCmdLineOptions();
 
-    KApplication app;
+    if (!KUniqueApplication::start())
+    {
+        std::cerr << "KWeshTuNotes is already running!\n" << std::endl;
+        return 0;
+    }
+
+    KUniqueApplication app;
     app.setOrganizationName("weshTuNotes Corp.");
+    KApplication::setQuitOnLastWindowClosed(false);
 
     if ( !KSystemTrayIcon::isSystemTrayAvailable() )
     {
@@ -50,15 +60,11 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-   // KApplication::setQuitOnLastWindowClosed(false);
-
     Config::Configuration::iniConfigration();
 
     //Démarrage de l'application
     MainWindow * main = new MainWindow( 0, argc, argv );
     main->show();
-
-   //
 
     return app.exec();
 }
