@@ -31,8 +31,8 @@
 #include "../config/ImageFactory.h"
 #include "../config/ConfigDialog.h"
 
-MainWindow::MainWindow(QWidget * parent, int argc, char *argv[]) :
-        KXmlGuiWindow(parent),
+MainWindow::MainWindow() :
+        KXmlGuiWindow(0),
         m_lastBasketLoad(0)
 {
     setupUi(this);
@@ -48,6 +48,7 @@ MainWindow::MainWindow(QWidget * parent, int argc, char *argv[]) :
     setupActions();
     initToolBar();
     initSystemTray();
+
     createGUI("data:main_ui.rc");
 
     loadData();
@@ -207,14 +208,6 @@ void MainWindow::showTagFactory()
     m_tagFactory->show();
 }
 
-void MainWindow::initSystemTray()
-{
-    m_trayIcon = new KSystemTrayIcon(this);
-    m_trayIcon->setIcon(Config::ImageFactory::icon(Config::Image::application));
-    m_trayIcon->show();
-    setWindowIcon(Config::ImageFactory::icon(Config::Image::application));
-}
-
 void MainWindow::layoutScene()
 {
     m_lastBasketLoad->scene()->setType( Scene::LayoutScene::type );
@@ -245,4 +238,38 @@ void MainWindow::freeScene()
 
     actionCollection()->action( Scene::LayoutScene::type )->setChecked(false);
     actionCollection()->action( Scene::LayoutScene::type )->setDisabled(false);
+}
+
+void MainWindow::initSystemTray()
+{
+    m_trayIcon = new KSystemTrayIcon(this);
+    m_trayIcon->setIcon(Config::ImageFactory::icon(Config::Image::application));
+    m_trayIcon->show();
+    setWindowIcon(Config::ImageFactory::icon(Config::Image::application));
+
+    connect(m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    if (m_trayIcon->isVisible())
+    {
+        hide();
+        event->ignore();
+    }
+}
+
+void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
+{
+    switch (reason)
+    {
+    case QSystemTrayIcon::Trigger:
+        setVisible(!isVisible());
+    case QSystemTrayIcon::DoubleClick:
+        break;
+    case QSystemTrayIcon::MiddleClick:
+        break;
+    default:
+        ;
+    }
 }

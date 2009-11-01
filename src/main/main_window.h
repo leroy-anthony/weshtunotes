@@ -41,7 +41,7 @@ class MainWindow : public KXmlGuiWindow, public Ui::MainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget * parent, int argc, char *argv[]);
+    MainWindow();
     ~MainWindow();
 
     Scene::AbstractScene * currentScene();
@@ -51,9 +51,14 @@ public slots:
     void loadScene( QTreeWidgetItem * item , int column = 0 );
     void showTagFactory();
     void save();
+    
+    void iconActivated( QSystemTrayIcon::ActivationReason reason );
 
     void layoutScene();
     void freeScene();
+
+protected:
+    void closeEvent(QCloseEvent *event);
 
 private:
     void initView();

@@ -22,6 +22,7 @@
 
 #include "../main/general.h"
 
+#include <kfontcombobox.h>
 #include <kcolorcombo.h>
 #include <kfontaction.h>
 #include <kfontsizeaction.h>
@@ -78,6 +79,7 @@ namespace Scene
 
         KColorCombo     * m_colorText;
         KFontSizeAction * m_actionFontSize;
+        KFontComboBox * m_fontComboBox;
         KFontAction   * m_actionFont;
 
         KColorCombo * m_colorItem;
