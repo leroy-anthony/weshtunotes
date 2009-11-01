@@ -41,10 +41,15 @@ namespace Scene
     {
         KAction * a = 0;
 
-        m_actionFont = new KFontAction(0);
-        QWidget * w = m_actionFont->createWidget(0);
-        connect(w, SIGNAL(currentFontChanged(const QFont &)), SLOT(setFontFamily(const QFont &)));
-        m_mainWindow->actionCollection()->addAction("fontfamily", m_actionFont);
+        m_fontComboBox = new KFontComboBox();
+        a = new KAction(0);
+        a->setDefaultWidget(m_fontComboBox);
+        connect(m_fontComboBox, SIGNAL(currentFontChanged(const QFont &)), SLOT(setFontFamily(const QFont &)));
+        m_mainWindow->actionCollection()->addAction("fontfamily", a);
+
+        /*m_actionFont = new KFontAction(0);
+        connect (m_actionFont, SIGNAL (triggered (const QString &)), this, SLOT (setFontFamily(const QString &)));
+        m_mainWindow->actionCollection()->addAction("fontfamily", m_actionFont);*/
 
         m_actionFontSize = new KFontSizeAction(0);
         connect(m_actionFontSize, SIGNAL(fontSizeChanged(int)), SLOT(setFontPointSize(int)));
@@ -236,13 +241,13 @@ namespace Scene
 
     void ToolBarScene::currentItemChanged( Item::AbstractItem * item )
     {
-        m_colorItem->blockSignals(true);
         m_colorItem->setColor( item->color() );
-        m_colorItem->blockSignals(false);
     }
 
     void ToolBarScene::currentCharFormatChanged( const QTextCharFormat & f )
     {
+         qDebug() << "test";
+
         QAction * a = m_mainWindow->actionCollection()->action( "underline" );
         a->setChecked(f.fontUnderline());
 
@@ -254,7 +259,8 @@ namespace Scene
 
         m_actionFontSize->setFontSize( f.fontPointSize() );
 
-        m_actionFont->setFont( f.font().family() );
+        qDebug() << "test" << f.font();
+        //m_fontComboBox->setCurrentFont( f.font() );
 
         m_colorText->setColor(f.foreground().color());
 

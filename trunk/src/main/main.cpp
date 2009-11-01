@@ -62,8 +62,7 @@ int main(int argc, char *argv[])
 
     Config::Configuration::iniConfigration();
 
-    //Démarrage de l'application
-    MainWindow * main = new MainWindow( 0, argc, argv );
+    MainWindow * main = new MainWindow();
     main->show();
 
     return app.exec();
