@@ -45,7 +45,7 @@
    <Action name="help_about_kde" />
   </Menu>
  </MenuBar>
- <ToolBar iconText="icononly" name="textToolBar" >
+ <ToolBar iconText="icontextbottom" name="textToolBar" >
   <text>Text Toolbar</text>
   <Action name="fontfamily" />
   <Action name="fontsize" />
@@ -58,11 +58,11 @@
   <Action name="aligncenter" />
   <Action name="alignright" />
  </ToolBar>
- <ToolBar iconText="icononly" name="noteToolBar" >
+ <ToolBar iconText="icontextbottom" name="noteToolBar" >
   <text>Note Toolbar</text>
   <Action name="notecolor" />
  </ToolBar>
- <ToolBar iconText="icononly" name="viewToolBar" >
+ <ToolBar iconText="icontextbottom" name="viewToolBar" >
   <text>View Toolbar</text>
   <Action name="view_actual_size" />
   <Action name="view_zoom_in" />
