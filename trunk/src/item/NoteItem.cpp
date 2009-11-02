@@ -202,6 +202,7 @@ namespace Item
         Scene::ToolBarScene * toolBar = Scene::ToolBarScene::toolBarScene();
         toolBar->currentCharFormatChanged( m_plainTextEdit->currentCharFormat() );
         toolBar->currentItemChanged( this );
+        m_plainTextEdit->ensureCursorVisible();
     }
 
     void NoteItem::addTag( const QString & tagName, const QString & tagState )
