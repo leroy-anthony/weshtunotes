@@ -87,8 +87,8 @@ namespace Handle
             m_insertIndicator = new QFrame();
             m_insertIndicator->setMinimumHeight(24);
             m_insertIndicator->setStyleSheet(QString("background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 %1, stop:1 %2)")
-                                             .arg(palette().color(QPalette::Highlight).lighter(150).name())
-                                             .arg(palette().color(QPalette::Highlight).name()));
+                                             .arg(QApplication::palette().color(QPalette::Highlight).lighter(150).name())
+                                             .arg(QApplication::palette().color(QPalette::Highlight).name()));
         }
     }
 
@@ -358,7 +358,7 @@ namespace Handle
 
         QPen p;
         p.setWidth(2);
-        p.setColor(palette().color(QPalette::Highlight));
+        p.setColor(QApplication::palette().color(QPalette::Highlight));
 
         painter.setPen(p);
         painter.setBrush(b);

@@ -22,6 +22,7 @@
 #include <QDebug>
 #include <QMouseEvent>
 #include <QLabel>
+#include <QApplication>
 
 #include "HandleItem.h"
 
@@ -54,7 +55,7 @@ namespace Handle
 
     void SizeHorHandle::setSelectionColor()
     {
-        setStyleSheet( QString("background: %1;").arg(palette().color(QPalette::Highlight).name()) );
+        setStyleSheet( QString("background: %1;").arg(QApplication::palette().color(QPalette::Highlight).name()) );
     }
 
     void SizeHorHandle::enterEvent( QEvent * event )
@@ -133,8 +134,8 @@ namespace Handle
         if ( m_isHover )
         {
             QLinearGradient gradient(0,0,0, height());
-            gradient.setColorAt(0, palette().color(QPalette::Highlight).lighter(150));
-            gradient.setColorAt(1, palette().color(QPalette::Highlight));
+            gradient.setColorAt(0, QApplication::palette().color(QPalette::Highlight).lighter(150));
+            gradient.setColorAt(1, QApplication::palette().color(QPalette::Highlight));
 
             painter.setBrush(gradient);
 
