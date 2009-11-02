@@ -20,6 +20,7 @@
 #include "TreeExplorer.h"
 
 #include <QCoreApplication>
+#include <QApplication>
 #include <QFileInfo>
 #include <QDir>
 #include <QInputDialog>
@@ -35,8 +36,8 @@ namespace Explorer
     TreeExplorer::TreeExplorer( QWidget * parent ):
             QTreeWidget(parent)
     {
-        setHeaderLabel ( tr("Paniers") );
-        setHeaderHidden ( false );
+        setHeaderLabel( tr("Paniers") );
+        setHeaderHidden( false );
     }
 
     TreeExplorer::~TreeExplorer()
