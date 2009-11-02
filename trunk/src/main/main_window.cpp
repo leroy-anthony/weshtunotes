@@ -51,6 +51,12 @@ MainWindow::MainWindow() :
 
     createGUI("data:main_ui.rc");
 
+    for ( int i=0 ; i<toolBars().size() ; i++ )
+    {
+        toolBars()[i]->setToolBarsLocked(true);
+        toolBars()[i]->setToolBarsEditable(true);
+    }
+
     loadData();
 }
 
