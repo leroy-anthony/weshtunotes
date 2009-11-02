@@ -61,7 +61,7 @@ namespace Handle
     
     void MoveHandle::setSelectionColor()
     {
-        setStyleSheet( QString("background: %1;").arg(palette().color(QPalette::Highlight).name()) );
+        setStyleSheet( QString("background: %1;").arg(QApplication::palette().color(QPalette::Highlight).name()) );
     }
     
     void MoveHandle::mouseReleaseEvent ( QMouseEvent * event )
@@ -126,7 +126,6 @@ namespace Handle
     void MoveHandle::drawHandle( QPainter & painter, HandleItem * h, int & x, int & y )
     {
         if ( h->children().size() ==0 )
-
         {
             QLinearGradient gradient( 0, y, 0,h->height()+y);
             gradient.setColorAt( 0, h->defaultColor().lighter(150) );
@@ -153,8 +152,8 @@ namespace Handle
         if (nbGrips < 2)
             nbGrips = 2;
         int yGrips             = (height() + 1 - nbGrips * 6 - 3) / 2; // +1 to avoid rounding errors, -nbGrips*6-3 the size of the grips
-        QColor darker  = palette().color(QPalette::Highlight).dark(130);
-        QColor lighter = palette().color(QPalette::Highlight).light(130);
+        QColor darker  = QApplication::palette().color(QPalette::Highlight).dark(130);
+        QColor lighter = QApplication::palette().color(QPalette::Highlight).light(130);
 
         QPen p;
         p.setWidth(1);
@@ -194,8 +193,8 @@ namespace Handle
         if ( m_isHover )
         {
             QLinearGradient gradient(0,0,0, height());
-            gradient.setColorAt(0, palette().color(QPalette::Highlight).lighter(150));
-            gradient.setColorAt(1, palette().color(QPalette::Highlight));
+            gradient.setColorAt(0, QApplication::palette().color(QPalette::Highlight).lighter(150));
+            gradient.setColorAt(1, QApplication::palette().color(QPalette::Highlight));
             painter.setBrush(gradient);
 
             painter.drawRect( 0, 0, width(), height() );
