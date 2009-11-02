@@ -20,15 +20,19 @@
 #ifndef COLORCOMBO_H
 #define COLORCOMBO_H
 
-#include <QComboBox>
+#include <kcolorcombo.h>
 
-class ColorCombo : public QComboBox
+class ColorCombo : public KColorCombo
 {
 public:
-    ColorCombo();
+    ColorCombo( const QString & textDisplay );
 
 protected:
     void paintEvent( QPaintEvent * event );
+
+private:
+    QString m_textDisplay;
+
 };
 
 #endif // COLORCOMBO_H
