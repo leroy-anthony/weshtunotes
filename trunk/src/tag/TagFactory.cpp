@@ -21,6 +21,7 @@
 
 #include "../main/general.h"
 #include "../config/ImageFactory.h"
+#include "../config/VisualAspect.h"
 #include "../tag/NoteTag.h"
 
 namespace Tag
@@ -147,7 +148,6 @@ namespace Tag
         if ( m_currentItemTag != 0 && m_currentTag != 0 )
         {
             State * state = State::newState( m_currentTag );
-
             m_currentTag->addState( state );
 
             QTreeWidgetItem * itemState = new QTreeWidgetItem( m_currentItemTag, QStringList(state->name()) );
@@ -242,15 +242,6 @@ namespace Tag
     {
         Q_UNUSED( column );
 
-        if ( m_currentState != 0 )
-        {
-            m_currentState->save();
-        }
-        else if ( m_currentTag != 0 )
-        {
-            m_currentTag->save();
-        }
-
         if ( m_itemToState.contains( item ) )
         {
             m_currentItemState = item;
@@ -272,8 +263,6 @@ namespace Tag
 
     void TagFactory::loadState( State * state )
     {
-        state->load();
-
         m_currentState = state;
         m_nameTagOrState->setText( state->name() );
         m_colorItem->setColor( QColor(state->itemColor()) );

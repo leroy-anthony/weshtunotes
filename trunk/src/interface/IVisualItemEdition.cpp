@@ -19,10 +19,16 @@
 
 #include "IVisualItemEdition.h"
 
+#include "../config/VisualAspect.h"
+
 #include <QDebug>
 
 namespace Item
 {
+    IVisualItemEdition::IVisualItemEdition():
+            m_colorItem( Config::VisualAspect::defaultColorNote )
+    {
+    }
 
     IVisualItemEdition::~IVisualItemEdition()
     {

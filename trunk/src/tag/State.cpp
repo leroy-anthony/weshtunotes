@@ -21,6 +21,7 @@
 
 #include "../main/general.h"
 #include "../config/Configuration.h"
+#include "../config/VisualAspect.h"
 #include "../tag/NoteTag.h"
 
 namespace Tag
@@ -196,6 +197,7 @@ namespace Tag
     {
         State * state = new State(tag);
         state->setName( "new state" );
+        //state->setItemColor( Config::VisualAspect::defaultColorNote );
 
         return state;
     }

@@ -33,6 +33,7 @@ namespace Item
     {
     public:
 
+        ITextEdition();
         virtual ~ITextEdition();
 
         virtual void setBold( bool checked ) = 0;

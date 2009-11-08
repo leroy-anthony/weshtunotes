@@ -21,6 +21,18 @@
 
 namespace Item
 {
+    ITextEdition::ITextEdition():
+            m_bold(false),
+            m_italic(false),
+            m_alignment(0),
+            m_underLine(false),
+            m_colorFont(Qt::black),
+            m_font("Arial"),
+            m_weight(10),
+            m_strikeOut(false)
+    {
+    }
+
     ITextEdition::~ITextEdition()
     {
     }
