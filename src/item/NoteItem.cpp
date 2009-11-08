@@ -193,8 +193,6 @@ namespace Item
         update();
     }
 
-
-
     void NoteItem::isSelected()
     {
         Scene::ToolBarScene * toolBar = Scene::ToolBarScene::toolBarScene();
@@ -227,23 +225,29 @@ namespace Item
 
     void NoteItem::tagApply( QAction * action )
     {
-        if ( action->isChecked() ) {
-            QString tagName = action->text();
+        if ( action->isChecked() )
+        {
+            QString tagName = action->data().toString();
+            qDebug() << tagName;
             Tag::NoteTag * tag = new Tag::NoteTag( this, tagName );
             m_tags << tag;
             m_horizontalLayout->insertWidget(0,tag);
             m_plainTextEdit->selectAll();
             tag->apply();
             m_plainTextEdit->selectNone();
-        } else {
+        }
+        else
+        {
             // supprimer
-            QString tagName = action->text();
+            QString tagName = action->data().toString();
             for ( int i=0 ; i<m_tags.size() ; ++i )
             {
                 if ( m_tags[i]->name() == tagName )
                 {
+                    Tag::NoteTag * tag = m_tags[i];
                     m_horizontalLayout->removeWidget(m_tags[i]);
                     m_tags.removeAt(i);
+                    delete tag;
                     break;
                 }
             }

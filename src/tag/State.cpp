@@ -182,6 +182,8 @@ namespace Tag
 
     void State::apply()
     {
+        qDebug() << "refe";
+
         setBold( m_bold );
         setItalic( m_italic );
         setAlignment( Qt::AlignLeft );

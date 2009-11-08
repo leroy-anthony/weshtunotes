@@ -63,9 +63,6 @@ namespace Item
         void setTextBackgroundColor ( const QColor & c );
         void setTextColor( const QColor & c );
 
-        //void setItemColor( const QColor & color );
-        //const QColor & itemColor();
-
         void tagApply( QAction * action );
         bool containTag( const QString & tagName );
 
