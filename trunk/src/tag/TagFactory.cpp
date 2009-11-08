@@ -51,7 +51,9 @@ namespace Tag
         m_italicText->setIcon(Config::ImageFactory::icon(Config::Image::textItalic));
         m_underlineText->setIcon(Config::ImageFactory::icon(Config::Image::textUnderline));
         m_strikeText->setIcon(Config::ImageFactory::icon(Config::Image::textStrikeOut));
+        m_delTagButton->setIcon(Config::ImageFactory::icon(Config::Image::deleteAction));
 
+        connect(m_delTagButton, SIGNAL(clicked()), this, SLOT(del()));
         connect(m_newTagButton, SIGNAL(clicked()), this, SLOT(newTag()));
         connect(m_newStateButton, SIGNAL(clicked()), this, SLOT(newState()));
         connect(m_tagsTree, SIGNAL(itemClicked(QTreeWidgetItem*, int)), this, SLOT(loadTagOrState(QTreeWidgetItem*, int)));
@@ -78,6 +80,22 @@ namespace Tag
         connect(m_iconButton, SIGNAL(iconChanged(const QString&)), this, SLOT(selectIcon(const QString&)));
     }
 
+    void TagFactory::del()
+    {
+        QTreeWidgetItem * item = m_tagsTree->currentItem();
+
+        if ( m_itemToState.contains( item ) )
+        {
+            m_itemToState.remove( item );
+        }
+        else if ( m_itemToTag.contains( item ) )
+        {
+            m_itemToTag.remove( item );
+        }
+
+        delete item;
+    }
+
     void TagFactory::selectIcon( const QString & icon )
     {
         if ( m_currentState != 0 )
@@ -98,21 +116,15 @@ namespace Tag
             QTreeWidgetItem * itemTag = new QTreeWidgetItem( m_tagsTree, QStringList(tags[i]) );
             m_itemToTag[ itemTag ] = tag;
 
-            settings.beginGroup( tags[i] );
-            QStringList states = settings.childGroups();
+            QList<State*> states = tag->states();
             for ( int j=0 ; j<states.size() ; ++j )
             {
-                State * state = new State(tag);
-                state->setName( states[j] );
-                tag->addState( state );
+                State * state = states[j];
 
-                QTreeWidgetItem * itemState = new QTreeWidgetItem( itemTag, QStringList(states[j]) );
+                QTreeWidgetItem * itemState = new QTreeWidgetItem( itemTag, QStringList(state->name()) );
                 m_itemToState[ itemState ] = state;
             }
-            settings.endGroup();
-
         }
-
     }
 
     void TagFactory::newTag()
@@ -279,6 +291,10 @@ namespace Tag
 
     void TagFactory::ok()
     {
+        Config::Configuration settings( "tags" );
+        settings.clear();
+        settings.sync();
+
         QList<NoteTag*> tags = m_itemToTag.values();
         for ( int i=0 ; i<tags.size() ; ++i )
         {
@@ -313,8 +329,6 @@ namespace Tag
     QStringList TagFactory::tagsNames()
     {
         Config::Configuration settings( "tags" );
-        QStringList tags = settings.childGroups();
-
-        return tags;
+        return settings.childGroups();
     }
 }

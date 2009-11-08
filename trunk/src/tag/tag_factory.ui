@@ -11,7 +11,10 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Tag editor</string>
+  </property>
+  <property name="sizeGripEnabled">
+   <bool>false</bool>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_3">
    <item>
@@ -69,9 +72,18 @@
          </item>
          <item>
           <widget class="QTreeWidget" name="m_tagsTree">
+           <property name="rootIsDecorated">
+            <bool>true</bool>
+           </property>
+           <property name="animated">
+            <bool>false</bool>
+           </property>
+           <property name="headerHidden">
+            <bool>false</bool>
+           </property>
            <column>
             <property name="text">
-             <string notr="true">1</string>
+             <string notr="true">Tags</string>
             </property>
            </column>
           </widget>
@@ -89,23 +101,9 @@
              <number>0</number>
             </property>
             <item>
-             <widget class="QPushButton" name="pushButton_5">
+             <widget class="QPushButton" name="m_delTagButton">
               <property name="text">
-               <string>PushButton</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="pushButton_4">
-              <property name="text">
-               <string>PushButton</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="pushButton_3">
-              <property name="text">
-               <string>PushButton</string>
+               <string>Del</string>
               </property>
              </widget>
             </item>
