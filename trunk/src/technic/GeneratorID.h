@@ -17,37 +17,26 @@
  Boston, MA 02110-1301, USA.
  */
 
-#ifndef IVISUALITEMEDITION_H
-#define IVISUALITEMEDITION_H
+#ifndef GENERATORID_H
+#define GENERATORID_H
 
 #include <QString>
-#include <QColor>
 
-#include "../config/Configuration.h"
-
-namespace Item
+namespace Technic
 {
-
-    class IVisualItemEdition
+    class GeneratorID
     {
     public:
-        virtual ~IVisualItemEdition();
+        GeneratorID( const QString & name );
 
-        virtual void setItemColor( const QColor & color ) = 0;
-        virtual void setSymbol( const QString & icon ) = 0;
-
-        void saveVisualItemEdition( Config::Configuration & settings );
-        void loadVisualItemEdition( Config::Configuration & settings );
-
-        const QString & symbol();
-        const QColor & itemColor();
+        const QString & id();
+        void setId( const QString & id );
 
     protected:
-        QString m_symbol;
-        QColor m_colorItem;
-
+        QString m_name;
+        QString m_nameId;
+        static int m_id;
     };
-
 }
 
-#endif // IVISUALITEMEDITION_H
+#endif // GENERATORID_H

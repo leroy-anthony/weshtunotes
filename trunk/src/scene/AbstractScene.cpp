@@ -66,11 +66,11 @@ namespace Scene
             {
                 buildListHandleToLoad( handlesChild[j], l );
             }
-            l << h->handleId();
+            l << h->id();
         }
         else
         {
-            l << h->handleId();
+            l << h->id();
         }
     }
 
@@ -181,7 +181,7 @@ namespace Scene
                 int x = settings.value("x").toInt();
                 int y = settings.value("y").toInt();
                 handle = newHandle( x, y );
-                handle->setHandleId(items[i]);
+                handle->setId(items[i]);
                 handles[ items[i] ] = handle;
 
                 handlesSizes[ handle ] = QSize( settings.value("width").toInt(), settings.value("height").toInt() );
@@ -202,7 +202,7 @@ namespace Scene
                     handle->add( item );
 
                     QString id = settings.value("data").toString();
-                    item->setItemId(id);
+                    item->setId(id);
                     itemsToLoad[ id ] = item;
 
                     QStringList namesTags = settings.value("tags").toStringList();

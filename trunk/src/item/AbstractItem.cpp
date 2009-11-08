@@ -20,20 +20,20 @@
 #include "AbstractItem.h"
 
 #include "../tag/NoteTag.h"
+#include "../config/VisualAspect.h"
 
 namespace Item
 {
-    int AbstractItem::m_id = 0;
 
     AbstractItem::~AbstractItem()
     {
     }
 
     AbstractItem::AbstractItem( QWidget * parent ):
-            QWidget(parent)
+            QWidget(parent),
+            GeneratorID("item")
     {
-        m_itemId = QString("item%1").arg(m_id);
-        ++m_id;
+        m_color = Config::VisualAspect::defaultColorNote;
     }
 
     const QList<QString> AbstractItem::operationInterfaces()
@@ -50,16 +50,6 @@ namespace Item
     {
     }
 
-    void AbstractItem::setItemId( const QString & id )
-    {
-        m_itemId = id;
-        QString idStr = QString(id).replace("item","");
-        if ( idStr.toInt() > m_id )
-        {
-            m_id = idStr.toInt() + 1;
-        }
-    }
-
     void AbstractItem::setVisibleAddTag( bool visible )
     {
         m_addTag->setVisible(visible);
@@ -69,12 +59,10 @@ namespace Item
     {
     }
 
-     void AbstractItem::setItemColor( const QColor & color )
+    void AbstractItem::setItemColor( const QColor & color )
     {
-        setStyleSheet( QString("background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 %1, stop:1 %2)")
-                       .arg(color.lighter(150).name())
-                       .arg(color.name()));
-        //m_plainTextEdit->setStyleSheet(styleSheet());
+        setStyleSheet( Config::VisualAspect::gradiantBackground( color ) );
+
         m_color = QColor(color);
         emit colorChange();
     }

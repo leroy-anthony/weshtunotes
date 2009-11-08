@@ -241,7 +241,6 @@ namespace Scene
             Handle::HandleItem * h = m_items[ static_cast<QGraphicsProxyWidget*>(m_currentGraphicsItem) ];
             if ( h != 0 )
             {
-                qDebug() << "bien, a un handle";
                 m_currentHandle = h->handleItemAt( mouseEvent->scenePos().x(), mouseEvent->scenePos().y() );
             }
         }
@@ -258,7 +257,6 @@ namespace Scene
         if ( m_currentHandle != 0 && m_modeItem == MoveItem )
         {
             QList<QGraphicsItem *> items = collidingItems( m_currentGraphicsItem );
-            qDebug() << items.size();
             if ( items.size() > 1 )
             {
                 int index = 0;

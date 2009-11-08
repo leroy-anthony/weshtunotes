@@ -67,7 +67,7 @@ namespace Config
     {
         if ( !m_cacheIcons.contains( iconId ) )
         {
-            m_cacheIcons[ iconId ] = KIcon(/*"icon:"+*/iconId);
+            m_cacheIcons[ iconId ] = KIcon(iconId);
         }
 
         return m_cacheIcons[ iconId ];

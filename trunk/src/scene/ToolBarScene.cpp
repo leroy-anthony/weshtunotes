@@ -43,7 +43,7 @@ namespace Scene
 
         m_fontComboBox = new KFontComboBox();
         m_fontComboBox->setToolTip("Text Font");
-        a = new KAction(0);
+        a = new KAction(this);
         a->setDefaultWidget(m_fontComboBox);
         connect(m_fontComboBox, SIGNAL(currentFontChanged(const QFont &)), SLOT(setFontFamily(const QFont &)));
         m_mainWindow->actionCollection()->addAction("fontfamily", a);
@@ -56,7 +56,7 @@ namespace Scene
         m_colorText = new KColorCombo();
         m_colorText->setFixedWidth(48);
         m_colorText->setToolTip("Text Color");
-        a = new KAction(0);
+        a = new KAction(this);
         a->setDefaultWidget(m_colorText);
         connect(m_colorText, SIGNAL(activated(const QColor &)), SLOT(setTextColor(const QColor &)));
         m_mainWindow->actionCollection()->addAction("fontcolor", a);
@@ -93,7 +93,7 @@ namespace Scene
         m_colorItem = new KColorCombo();
         m_colorItem->setFixedWidth(64);
         m_colorItem->setToolTip("Note Color");
-        a = new KAction(0);
+        a = new KAction(this);
         a->setDefaultWidget(m_colorItem);
         connect(m_colorItem, SIGNAL(activated(const QColor &)), SLOT(setColorItem(const QColor &)));
         m_mainWindow->actionCollection()->addAction("notecolor", a);

@@ -36,16 +36,17 @@
 #include <QMessageBox>
 
 #include "../config/Configuration.h"
+#include "../config/VisualAspect.h"
 
 namespace Handle
 {
 
     QWidget * HandleItem::m_insertIndicator = 0;
     int HandleItem::m_index = 0;
-    int HandleItem::m_id = 1;
 
     HandleItem::HandleItem( Scene::AbstractScene * parent, int x, int y ) :
             QWidget(0),
+            GeneratorID("handle"),
             m_scene(parent),
             m_item(0),
             m_sizeHorHandle(this),
@@ -60,8 +61,6 @@ namespace Handle
     {
         QWidget::resize(Config::Constant::defaultHandleWidth,height());
         setContentsMargins( m_contentMarginX, m_contentMarginY, m_contentMarginX, m_contentMarginY );
-        m_handleId = QString("handle%1").arg(m_id);
-        ++m_id;
 
         m_handleLayout = new QGridLayout( this );
         m_handleLayout->setContentsMargins( 0, 0, 0, 0 );
@@ -86,9 +85,7 @@ namespace Handle
         {
             m_insertIndicator = new QFrame();
             m_insertIndicator->setMinimumHeight(24);
-            m_insertIndicator->setStyleSheet(QString("background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 %1, stop:1 %2)")
-                                             .arg(QApplication::palette().color(QPalette::Highlight).lighter(150).name())
-                                             .arg(QApplication::palette().color(QPalette::Highlight).name()));
+            m_insertIndicator->setStyleSheet( Config::VisualAspect::gradiantBackground( QApplication::palette().color(QPalette::Highlight) ) );
         }
     }
 
@@ -115,9 +112,7 @@ namespace Handle
     void HandleItem::setDefaultColor( const QColor & color )
     {
         m_defaultColor = QColor(color);
-        setStyleSheet( QString("background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 %1, stop:1 %2)")
-                       .arg(m_defaultColor.lighter(150).name())
-                       .arg(m_defaultColor.name()));
+        setStyleSheet( Config::VisualAspect::gradiantBackground( m_defaultColor ) );
 
         m_moveHandle.setDefaultColor(m_defaultColor);
         m_sizeHorHandle.setDefaultColor(m_defaultColor);
@@ -263,6 +258,7 @@ namespace Handle
 
     void HandleItem::setHoverMode( bool isHover )
     {
+        m_isHover = isHover;
         m_moveHandle.setHoverMode( isHover );
         m_sizeHorHandle.setHoverMode( isHover );
 
@@ -299,12 +295,12 @@ namespace Handle
         QStringList childs;
         for ( int i=0 ; i<m_handles.size() ; ++i)
         {
-            childs << m_handles[i]->handleId();
+            childs << m_handles[i]->id();
         }
 
         Config::Configuration settings( fileName );
 
-        settings.beginGroup(m_handleId);
+        settings.beginGroup(m_nameId);
         settings.setValue("x",m_x);
         settings.setValue("y",m_y);
         settings.setValue("height",height());
@@ -316,7 +312,7 @@ namespace Handle
         }
         else
         {
-            m_item->save(fileName,m_handleId);
+            m_item->save(fileName,m_nameId);
         }
         settings.setValue("color",m_defaultColor.name());
 
@@ -339,30 +335,31 @@ namespace Handle
         setDefaultColor( QColor(settings.value("color").value<QString>()) );
     }
 
-    void HandleItem::setHandleId( const QString & id )
-    {
-        m_handleId = id;
-        QString idStr = QString(id).replace("handle","");
-        if ( idStr.toInt() > m_id )
-        {
-            m_id = idStr.toInt() + 1;
-        }
-    }
-
     void HandleItem::paintEvent( QPaintEvent * event )
     {
         QPainter painter(this);
         painter.setBackgroundMode( Qt::OpaqueMode );
 
-        QBrush b(m_defaultColor);
+        QLinearGradient gradient( 0, 0, 0, height());
+        gradient.setColorAt( 0, m_defaultColor.lighter( Config::VisualAspect::lighterIntensity ) );
+        gradient.setColorAt( 1, m_defaultColor );
+        painter.setBrush( gradient );
 
-        QPen p;
-        p.setWidth(2);
-        p.setColor(QApplication::palette().color(QPalette::Highlight));
+        if ( m_parentHandle == 0 || m_isHover )
+        {
+            QPen p(QApplication::palette().color(QPalette::Highlight));
+            p.setWidth(2);
+            painter.setPen(p);
+        }
+        else
+        {
+            QPen pen;
+            pen.setStyle(Qt::NoPen);
+            pen.setWidth(1);
+            painter.setPen(pen);
+        }
 
-        painter.setPen(p);
-        painter.setBrush(b);
-        painter.drawRect( 0, 0, width(), height() );
+        painter.drawRect( event->rect().x(), event->rect().y(), event->rect().width(), event->rect().height() );
     }
 
     void HandleItem::delItem2()
@@ -395,11 +392,6 @@ namespace Handle
     int HandleItem::contentMarginY()
     {
         return m_contentMarginY;
-    }
-
-    const QString & HandleItem::handleId()
-    {
-        return m_handleId;
     }
 
     const QColor & HandleItem::defaultColor()

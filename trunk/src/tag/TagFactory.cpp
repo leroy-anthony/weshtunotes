@@ -47,9 +47,6 @@ namespace Tag
     {
         setupUi( this );
 
-        m_colorText->setStandardColors();
-        m_colorItem->setStandardColors();
-
         m_boldText->setIcon(Config::ImageFactory::icon(Config::Image::textBold));
         m_italicText->setIcon(Config::ImageFactory::icon(Config::Image::textItalic));
         m_underlineText->setIcon(Config::ImageFactory::icon(Config::Image::textUnderline));
@@ -62,7 +59,7 @@ namespace Tag
         connect(m_nameTagOrState, SIGNAL(editingFinished()), this, SLOT(changeNameTagOrState()));
 
         connect(m_withColorBackground, SIGNAL(stateChanged(int)), this, SLOT(withColorBackground(int)));
-        connect(m_colorItem, SIGNAL(colorChanged(const QColor &)), SLOT(changeItemColor(const QColor &)));
+        connect(m_colorItem, SIGNAL(activated(const QColor &)), SLOT(changeItemColor(const QColor &)));
 
         connect(m_boldText, SIGNAL(released()), this, SLOT(changeState()));
         connect(m_italicText, SIGNAL(released()), this, SLOT(changeState()));
@@ -70,11 +67,23 @@ namespace Tag
         connect(m_strikeText, SIGNAL(released()), this, SLOT(changeState()));
 
         connect(m_fontText, SIGNAL(currentFontChanged(const QFont&)), this, SLOT(changeFontState(const QFont&)));
-        connect(m_colorText, SIGNAL(colorChanged(const QColor &)), SLOT(changeTextColor(const QColor &)));
+        connect(m_colorText, SIGNAL(activated(const QColor &)), SLOT(changeTextColor(const QColor &)));
         connect(m_sizeText, SIGNAL(currentIndexChanged(int)), this, SLOT(changeSizeFontState(int)));
+
+        connect(m_withIcon, SIGNAL(stateChanged(int)), this, SLOT(withIcon(int)));
 
         connect(m_okButton, SIGNAL(clicked()), this, SLOT(ok()));
         connect(m_quitButton, SIGNAL(clicked()), this, SLOT(quit()));
+
+        connect(m_iconButton, SIGNAL(iconChanged(const QString&)), this, SLOT(selectIcon(const QString&)));
+    }
+
+    void TagFactory::selectIcon( const QString & icon )
+    {
+        if ( m_currentState != 0 )
+        {
+            m_currentState->setSymbol( icon );
+        }
     }
 
     void TagFactory::loadTags()
@@ -169,10 +178,24 @@ namespace Tag
         if ( state == 0 )
         {
             m_colorItem->setDisabled(true);
+            m_colorItem->setColor(QColor());
         }
         else
         {
             m_colorItem->setDisabled(false);
+        }
+    }
+
+    void TagFactory::withIcon( int state )
+    {
+        if ( state == 0 )
+        {
+            m_iconButton->setDisabled(true);
+            m_iconButton->setIcon(0);
+        }
+        else
+        {
+            m_iconButton->setDisabled(false);
         }
     }
 
@@ -241,14 +264,17 @@ namespace Tag
 
         m_currentState = state;
         m_nameTagOrState->setText( state->name() );
-        m_colorItem->setCurrentColor( state->itemColor() );
+        m_colorItem->setColor( QColor(state->itemColor()) );
         m_boldText->setChecked( state->bold() );
         m_italicText->setChecked( state->italic() );
         m_fontText->setCurrentFont( state->fontFamily() );
-        m_colorText->setCurrentColor( state->textColor() );
+        m_colorText->setColor( QColor(state->textColor()) );
         m_sizeText->setCurrentIndex( m_sizeText->findText( QString("%1").arg(state->fontPointSize()) ) );
         m_strikeText->setChecked( state->fontStrikeOut() );
         m_underlineText->setChecked( state->underline() );
+        m_iconButton->setIcon( Config::ImageFactory::icon(state->symbol()) );
+        m_withIcon->setChecked( state->symbol() != QString() );
+        m_withColorBackground->setChecked( state->itemColor() != QColor() );
     }
 
     void TagFactory::ok()

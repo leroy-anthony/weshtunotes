@@ -57,6 +57,7 @@ namespace Tag
         void setFontPointSize( int weight );
 
         void setItemColor( const QColor & color );
+        void setSymbol( const QString & icon );
 
         void load( Config::Configuration & settings );
         void load();

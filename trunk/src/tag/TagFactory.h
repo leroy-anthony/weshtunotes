@@ -55,17 +55,17 @@ namespace Tag
 
         void changeNameTagOrState();
         void withColorBackground( int state );
+        void withIcon( int state );
         void changeItemColor( const QColor & color );
         void changeState();
         void changeFontState( const QFont & font );
         void changeTextColor( const QColor & color );
         void changeSizeFontState( int index );
+        void selectIcon( const QString & icon );
 
         void tagApply( QAction * action );
 
     private:
-        //static QMenu * m_menu;
-
         static TagFactory * m_instance;
 
         State * m_currentState;

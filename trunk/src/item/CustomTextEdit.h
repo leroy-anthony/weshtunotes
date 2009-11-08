@@ -35,6 +35,7 @@ namespace Item
         CustomTextEdit();
 
         void addData( const QMimeData *source );
+        void selectNone();
 
     public slots:
         void adaptSizeFromText();

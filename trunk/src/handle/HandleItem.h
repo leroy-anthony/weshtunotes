@@ -34,6 +34,7 @@
 #include "../item/NoteItem.h"
 
 #include "../scene/AbstractScene.h"
+#include "../technic/GeneratorID.h"
 
 #include "MoveHandle.h"
 #include "SizeHorHandle.h"
@@ -42,7 +43,7 @@
 namespace Handle
 {
 
-    class HandleItem : public QWidget
+    class HandleItem : public QWidget, public Technic::GeneratorID
     {
         Q_OBJECT
 
@@ -98,9 +99,6 @@ namespace Handle
         int x();
         int y();
 
-        const QString & handleId();
-        void setHandleId( const QString & id );
-
     public slots:
         void setDefaultColor();
         void delItem2();
@@ -132,6 +130,7 @@ namespace Handle
         DeleteHandle m_deleteHandle;
         HandleItem * m_parentHandle;
 
+        bool m_isHover;
 
         bool m_modeDegroupement;
 
@@ -147,10 +146,6 @@ namespace Handle
         int m_width;
 
         QColor m_defaultColor;
-
-        QString m_handleId;
-
-        static int m_id;
 
     };
 

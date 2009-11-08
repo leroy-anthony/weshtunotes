@@ -119,6 +119,11 @@ namespace Tag
         }
     }
 
+    void State::setSymbol( const QString & icon )
+    {
+        m_symbol = icon;
+    }
+
     const QString & State::name()
     {
         return m_name;
