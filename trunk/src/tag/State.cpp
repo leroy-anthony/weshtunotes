@@ -197,7 +197,6 @@ namespace Tag
     {
         State * state = new State(tag);
         state->setName( "new state" );
-        //state->setItemColor( Config::VisualAspect::defaultColorNote );
 
         return state;
     }
