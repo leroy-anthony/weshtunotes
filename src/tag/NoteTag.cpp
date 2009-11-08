@@ -46,7 +46,6 @@ namespace Tag
     {
         setFlat(true);
         setContentsMargins( 2, 2, 2, 2 );
-        setIconSize(QSize(m_sizeSymbol,m_sizeSymbol));
         load(name);
 
         setStyleSheet(QString("background-color: %1").arg(Qt::transparent));
@@ -127,8 +126,13 @@ namespace Tag
             QString symbol = m_currentState->symbol();
             if ( symbol != "" )
             {
+                setIconSize(QSize(m_sizeSymbol,m_sizeSymbol));
                 setIcon( Config::ImageFactory::icon(m_currentState->symbol()) );
                 m_visible = true;
+            }
+            else
+            {
+                setFixedSize( 0, 0 );
             }
         }
     }
@@ -181,8 +185,8 @@ namespace Tag
 
     NoteTag * NoteTag::newTag()
     {
-        NoteTag * tag = new NoteTag(0,"new tag");
-        State * state = State::newState(tag);
+        NoteTag * tag = new NoteTag( 0, "new tag" );
+        State * state = State::newState( tag );
         tag->addState( state );
         tag->setCurrentState( state->name() );
 
