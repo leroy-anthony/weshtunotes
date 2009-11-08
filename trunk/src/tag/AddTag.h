@@ -22,7 +22,8 @@
 
 #include <QPushButton>
 #include <QMouseEvent>
-#include <QMenu>
+
+#include <kmenu.h>
 
 #include "../config/ImageFactory.h"
 
@@ -46,7 +47,7 @@ namespace Tag
         void loadTagsMenu();
 
     private:
-        QMenu m_menu;
+        KMenu m_menu;
         Item::NoteItem * m_noteItem;
 
     };

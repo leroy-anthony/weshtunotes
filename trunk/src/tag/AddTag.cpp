@@ -21,6 +21,8 @@
 
 #include <QDebug>
 
+#include <kaction.h>
+
 #include "../tag/TagFactory.h"
 #include "../item/NoteItem.h"
 #include "../config/VisualAspect.h"
@@ -61,7 +63,8 @@ namespace Tag
         QStringList tags = TagFactory::tagsNames();
         for ( int i=0 ; i<tags.size() ; ++i )
         {
-            QAction * action = new QAction(0);
+            KAction * action = new KAction(0);
+            action->setData(tags[i]);
             action->setText(tags[i]);
             action->setCheckable(true);
             action->setChecked( m_noteItem->containTag(tags[i]) );

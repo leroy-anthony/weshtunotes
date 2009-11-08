@@ -210,8 +210,11 @@ namespace Tag
             m_index=0;
         }
 
-        setCurrentState( m_states[m_index]->name() );
-        m_noteItem->tagApply();
+        if ( m_states.size() > m_index )
+        {
+            setCurrentState( m_states[m_index]->name() );
+            m_noteItem->tagApply();
+        }
 
         QPushButton::mouseReleaseEvent(event);
     }
