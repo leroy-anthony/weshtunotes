@@ -52,6 +52,8 @@ namespace Tag
         void newTag();
         void newState();
         void loadTagOrState( QTreeWidgetItem * item , int column );
+        
+        void del();
 
         void changeNameTagOrState();
         void withColorBackground( int state );
