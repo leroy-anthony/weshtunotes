@@ -72,9 +72,6 @@ namespace Tag
         Item::NoteItem * m_item;
 
         QString m_name;
-        
-
-        
     };
 
 }

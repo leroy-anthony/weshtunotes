@@ -31,6 +31,7 @@ namespace Item
     class IVisualItemEdition
     {
     public:
+        IVisualItemEdition();
         virtual ~IVisualItemEdition();
 
         virtual void setItemColor( const QColor & color ) = 0;
