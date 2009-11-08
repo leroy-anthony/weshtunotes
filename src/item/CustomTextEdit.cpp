@@ -153,4 +153,11 @@ namespace Item
         QDesktopServices::openUrl(url);
     }
 
+    void CustomTextEdit::selectNone()
+    {
+        QTextCursor c( textCursor() );
+        c.clearSelection();
+        setTextCursor( c );
+    }
+
 }

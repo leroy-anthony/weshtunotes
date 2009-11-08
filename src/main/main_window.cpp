@@ -24,6 +24,7 @@
 #include <QCalendarWidget>
 #include <kactioncollection.h>
 #include <kstandardaction.h>
+#include <kicondialog.h>
 
 #include "../explorer/TreeExplorer.h"
 #include "../basket/ItemTreeBasket.h"
@@ -38,26 +39,21 @@ MainWindow::MainWindow() :
     setupUi(this);
 
     initView();
-
     initMedia();
-
 
     m_tagFactory = Tag::TagFactory::newTagFactory();
     m_tagFactory->loadTags();
+
+    KAction * a = new KAction("State",0);
+    actionCollection()->addAction( "State", a );
+    connect( a, SIGNAL(triggered(bool)), this, SLOT(showTagFactory()) );
 
     setupActions();
     initToolBar();
     initSystemTray();
 
-    createGUI("data:main_ui.rc");
-
-    for ( int i=0 ; i<toolBars().size() ; i++ )
-    {
-        toolBars()[i]->setToolBarsLocked(true);
-        toolBars()[i]->setToolBarsEditable(true);
-    }
-
     loadData();
+    createGUI("data:main_ui.rc");
 }
 
 MainWindow::~MainWindow()
@@ -113,7 +109,7 @@ void MainWindow::save()
     m_treeExplorer->saveBaskets();
     if ( m_lastBasketLoad != 0 )
     {
-        Config::Configuration::saveLastBasket( m_lastBasketLoad->basketId() );
+        Config::Configuration::saveLastBasket( m_lastBasketLoad->id() );
     }
 }
 

@@ -25,6 +25,7 @@
 #include <QApplication>
 
 #include "HandleItem.h"
+#include "../config/VisualAspect.h"
 
 namespace Handle
 {
@@ -34,7 +35,7 @@ namespace Handle
             m_handleItemRoot(parent),
             m_isHover(false)
     {
-        setFixedWidth(9);
+        setFixedWidth(Config::VisualAspect::widthHandleControl);
         setDefaultColor(parent->defaultColor());
     }
 
@@ -44,13 +45,13 @@ namespace Handle
 
     void SizeHorHandle::setDefaultColor( const QColor & c )
     {
-        setStyleSheet( QString("background: %1;").arg(c.name()) );
         m_defaultColor = QColor(c);
+        setDefaultColor();
     }
 
     void SizeHorHandle::setDefaultColor()
     {
-        setStyleSheet( QString("background: %1;").arg(m_defaultColor.name()) );
+        setStyleSheet( Config::VisualAspect::gradiantBackground( m_defaultColor ) );
     }
 
     void SizeHorHandle::setSelectionColor()
@@ -101,7 +102,7 @@ namespace Handle
         if ( h->children().size() ==0 )
         {
             QLinearGradient gradient( 0, y, 0,h->height()+y);
-            gradient.setColorAt( 0, h->defaultColor().lighter(150) );
+            gradient.setColorAt( 0, h->defaultColor().lighter( Config::VisualAspect::lighterIntensity ) );
             gradient.setColorAt( 1, h->defaultColor() );
             painter.setBrush( gradient );
             painter.drawRect( x, y, width(), h->height() );
@@ -134,7 +135,7 @@ namespace Handle
         if ( m_isHover )
         {
             QLinearGradient gradient(0,0,0, height());
-            gradient.setColorAt(0, QApplication::palette().color(QPalette::Highlight).lighter(150));
+            gradient.setColorAt(0, QApplication::palette().color(QPalette::Highlight).lighter( Config::VisualAspect::lighterIntensity ));
             gradient.setColorAt(1, QApplication::palette().color(QPalette::Highlight));
 
             painter.setBrush(gradient);
@@ -158,7 +159,7 @@ namespace Handle
             else
             {
                 QLinearGradient gradient( 0, 0, 0, height() );
-                gradient.setColorAt( 0, h->defaultColor().lighter(150) );
+                gradient.setColorAt( 0, h->defaultColor().lighter( Config::VisualAspect::lighterIntensity ) );
                 gradient.setColorAt( 1, h->defaultColor() );
                 painter.setBrush( gradient );
                 painter.drawRect( 0, 0, width(), height() );

@@ -32,7 +32,7 @@ namespace Item
         settings.setValue( "strikeOut", m_strikeOut );
         settings.setValue( "alignment", m_alignment );
         settings.setValue( "underline", m_underLine );
-        settings.setValue( "colorFont", m_colorFont );
+        settings.setValue( "colorFont", m_colorFont.name() );
         settings.setValue( "font", m_font );
         settings.setValue( "weight", m_weight );
     }
@@ -44,7 +44,7 @@ namespace Item
         m_strikeOut = settings.value( "strikeOut" ).toBool();
         m_alignment = settings.value( "alignment" ).toInt();
         m_underLine = settings.value( "underline" ).toBool();
-        m_colorFont = settings.value( "colorFont" ).value<QColor>();
+        m_colorFont = QColor( settings.value( "colorFont" ).value<QString>() );
         m_font = settings.value( "font" ).toString();
         m_weight = settings.value( "weight" ).toInt();
     }

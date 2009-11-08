@@ -55,8 +55,6 @@ namespace Item
         m_horizontalLayout->addWidget(m_addTag);
         m_horizontalLayout->addWidget(m_plainTextEdit);
 
-        m_color = QColor("#F7F7C8");
-
         connect( m_plainTextEdit, SIGNAL(selectionChanged()),  this, SLOT(edit()));
     }
 
@@ -141,7 +139,7 @@ namespace Item
         Config::Configuration settings( fileName );
 
         settings.beginGroup( handleId );
-        settings.setValue("data",m_itemId);
+        settings.setValue("data",m_nameId);
         settings.setValue("color",m_color.name());
 
         QStringList namesTags;
@@ -156,7 +154,7 @@ namespace Item
         settings.sync();
 
         QFileInfo fileInfo(settings.fileName());
-        QFile f( fileInfo.absolutePath() + QDir::separator() + m_itemId + ".html" );
+        QFile f( fileInfo.absolutePath() + QDir::separator() + m_nameId + ".html" );
         f.open(QFile::WriteOnly | QFile::Text);
         QTextStream stream(&f);
         stream << m_plainTextEdit->document()->toHtml();
@@ -170,7 +168,7 @@ namespace Item
         Config::Configuration settings( fileName );
 
         QFileInfo fileInfo(settings.fileName());
-        QFile f( fileInfo.absolutePath() + QDir::separator() + m_itemId + ".html" );
+        QFile f( fileInfo.absolutePath() + QDir::separator() + m_nameId + ".html" );
         f.open(QFile::ReadOnly | QFile::Text);
         QTextStream stream(&f);
         m_plainTextEdit->setHtml(stream.readAll());
@@ -236,7 +234,7 @@ namespace Item
             m_horizontalLayout->insertWidget(0,tag);
             m_plainTextEdit->selectAll();
             tag->apply();
-            m_plainTextEdit->undo();
+            m_plainTextEdit->selectNone();
         } else {
             // supprimer
             QString tagName = action->text();
@@ -254,8 +252,18 @@ namespace Item
             {
                 m_plainTextEdit->selectAll();
                 m_tags[i]->apply();
-                m_plainTextEdit->undo();
+                m_plainTextEdit->selectNone();
             }
+        }
+    }
+
+    void NoteItem::tagApply()
+    {
+        for ( int i=0 ; i<m_tags.size() ; ++i )
+        {
+            m_plainTextEdit->selectAll();
+            m_tags[i]->apply();
+            m_plainTextEdit->selectNone();
         }
     }
 

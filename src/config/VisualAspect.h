@@ -17,37 +17,28 @@
  Boston, MA 02110-1301, USA.
  */
 
-#ifndef IVISUALITEMEDITION_H
-#define IVISUALITEMEDITION_H
+#ifndef VISUALASPECT_H
+#define VISUALASPECT_H
 
 #include <QString>
 #include <QColor>
 
-#include "../config/Configuration.h"
-
-namespace Item
+namespace Config
 {
-
-    class IVisualItemEdition
+    class VisualAspect
     {
     public:
-        virtual ~IVisualItemEdition();
+        VisualAspect();
 
-        virtual void setItemColor( const QColor & color ) = 0;
-        virtual void setSymbol( const QString & icon ) = 0;
+        static QString gradiantBackground( const QColor & color );
 
-        void saveVisualItemEdition( Config::Configuration & settings );
-        void loadVisualItemEdition( Config::Configuration & settings );
+        static int lighterIntensity;
 
-        const QString & symbol();
-        const QColor & itemColor();
+        static int widthHandleControl;
 
-    protected:
-        QString m_symbol;
-        QColor m_colorItem;
+        static QColor defaultColorNote;
 
     };
-
 }
 
-#endif // IVISUALITEMEDITION_H
+#endif // VISUALASPECT_H

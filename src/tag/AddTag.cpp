@@ -19,23 +19,25 @@
 
 #include "AddTag.h"
 
+#include <QDebug>
+
 #include "../tag/TagFactory.h"
 #include "../item/NoteItem.h"
+#include "../config/VisualAspect.h"
 
 namespace Tag
 {
 
     AddTag::AddTag( Item::NoteItem * noteItem ):
-            QPushButton(),
+            QPushButton( noteItem ),
             m_noteItem( noteItem )
     {
         setIcon(Config::ImageFactory::icon(Config::Image::addBasket));
         setIconSize(QSize(12,12));
-        setFixedWidth(12);
-        setFixedHeight(12);
         setContentsMargins(0,0,0,0);
-        setFlat(true);
         hide();
+
+        setStyleSheet(QString("background-color: %1").arg(Qt::transparent));
     }
 
     void AddTag::mousePressEvent( QMouseEvent * e )

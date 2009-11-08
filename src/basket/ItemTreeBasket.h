@@ -30,7 +30,7 @@
 namespace Basket
 {
 
-    class ItemTreeBasket : public QTreeWidgetItem
+    class ItemTreeBasket : public QTreeWidgetItem, public Technic::GeneratorID
     {
     public:
         ItemTreeBasket( Explorer::TreeExplorer * treeExplorer, const QString & name );
@@ -49,9 +49,6 @@ namespace Basket
 
         void del();
 
-        void setBasketId( const QString & id );
-        const QString & basketId();
-
     protected:
         const QString & directory();
         const QString & name();
@@ -64,9 +61,6 @@ namespace Basket
         QString m_configFilePath;
 
         Scene::AbstractScene * m_contentScene;
-
-        QString m_basketId;
-        static int m_id;
 
     };
 

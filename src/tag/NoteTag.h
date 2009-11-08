@@ -23,7 +23,8 @@
 #include <QWidget>
 #include <QMenu>
 #include <QMouseEvent>
-#include <QLabel>
+
+#include <kpushbutton.h>
 
 #include "../tag/State.h"
 
@@ -35,12 +36,12 @@ namespace Item
 namespace Tag
 {
 
-    class NoteTag : public QLabel
+    class NoteTag : public KPushButton
     {
         Q_OBJECT
 
     public:
-        NoteTag( Item::NoteItem * noteItem = 0, const QString & name = QString("default") );
+        NoteTag( Item::NoteItem * noteItem, const QString & name = QString("default") );
         ~NoteTag();
 
         void load( const QString & name );
@@ -64,7 +65,7 @@ namespace Tag
         void setVisibleTag( bool visible );
 
     protected:
-        void paintEvent( QPaintEvent * event );
+        void mouseReleaseEvent ( QMouseEvent * event );
 
     private:
         void loadSymbol();
@@ -74,6 +75,8 @@ namespace Tag
         State * m_currentState;
 
         QString m_name;
+
+        int m_index;
 
         bool m_visible;
         int m_sizeSymbol;

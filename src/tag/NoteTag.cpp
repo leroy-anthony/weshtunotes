@@ -30,20 +30,26 @@
 #include "../main/general.h"
 #include "../tag/TagFactory.h"
 #include "../config/ImageFactory.h"
+#include "../config/VisualAspect.h"
 
 namespace Tag
 {
 
     NoteTag::NoteTag( Item::NoteItem * noteItem, const QString & name ):
-            QLabel(noteItem),
+            KPushButton(noteItem),
             m_noteItem(noteItem),
             m_currentState(0),
             m_name(name),
             m_visible(false),
-            m_sizeSymbol(32)
+            m_sizeSymbol(32),
+            m_index(0)
     {
+        setFlat(true);
         setContentsMargins( 2, 2, 2, 2 );
+        setIconSize(QSize(m_sizeSymbol,m_sizeSymbol));
         load(name);
+
+        setStyleSheet(QString("background-color: %1").arg(Qt::transparent));
     }
 
     NoteTag::~NoteTag()
@@ -121,9 +127,7 @@ namespace Tag
             QString symbol = m_currentState->symbol();
             if ( symbol != "" )
             {
-                QPixmap pix;
-                Config::ImageFactory::pixmap(m_currentState->symbol(),pix);
-                setPixmap(pix.scaled(m_sizeSymbol,m_sizeSymbol));
+                setIcon( Config::ImageFactory::icon(m_currentState->symbol()) );
                 m_visible = true;
             }
         }
@@ -150,6 +154,7 @@ namespace Tag
         if ( states.size() > 0 )
         {
             m_currentState = m_states[0];
+            m_index = 0;
         }
 
         loadSymbol();
@@ -190,14 +195,21 @@ namespace Tag
     void NoteTag::setVisibleTag( bool visible )
     {
         m_visible = visible;
+        setVisible( visible );
     }
 
-    void NoteTag::paintEvent( QPaintEvent * event )
+    void NoteTag::mouseReleaseEvent ( QMouseEvent * event )
     {
-        if ( m_visible )
+        m_index++;
+        if ( m_states.size() == m_index )
         {
-            QLabel::paintEvent( event );
+            m_index=0;
         }
+
+        setCurrentState( m_states[m_index]->name() );
+        m_noteItem->tagApply();
+
+        QPushButton::mouseReleaseEvent(event);
     }
 
 }

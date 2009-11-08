@@ -19,6 +19,8 @@
 
 #include "IVisualItemEdition.h"
 
+#include <QDebug>
+
 namespace Item
 {
 
@@ -29,13 +31,13 @@ namespace Item
     void IVisualItemEdition::saveVisualItemEdition( Config::Configuration & settings )
     {
         settings.setValue( "symbol", m_symbol );
-        settings.setValue( "colorItem", m_colorItem );
+        settings.setValue( "colorItem", m_colorItem.name() );
     }
 
     void IVisualItemEdition::loadVisualItemEdition( Config::Configuration & settings )
     {
         m_symbol = settings.value( "symbol", "" ).toString();
-        m_colorItem = settings.value( "colorItem" ).value<QColor>();
+        m_colorItem = QColor( settings.value( "colorItem" ).value<QString>() );
     }
 
     const QString & IVisualItemEdition::symbol()

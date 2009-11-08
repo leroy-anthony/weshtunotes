@@ -26,6 +26,7 @@
 
 #include "IStorageData.h"
 
+#include "../technic/GeneratorID.h"
 #include "../tag/AddTag.h"
 
 namespace Tag
@@ -36,7 +37,7 @@ namespace Tag
 namespace Item
 {
 
-    class AbstractItem :  public QWidget
+    class AbstractItem :  public QWidget, public Technic::GeneratorID
     {
         Q_OBJECT
 
@@ -45,8 +46,6 @@ namespace Item
 
         const QList<QString> operationInterfaces();
         const QColor & color();
-
-        void setItemId( const QString & id );
 
         void setVisibleAddTag( bool visible );
 
@@ -72,9 +71,6 @@ namespace Item
 
         QList<QString> m_operationInterfaces;
         QColor m_color;
-
-        QString m_itemId;
-        static int m_id;
 
         Tag::AddTag * m_addTag;
 

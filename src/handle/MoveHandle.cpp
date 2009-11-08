@@ -24,6 +24,7 @@
 #include <QObject>
 
 #include "HandleItem.h"
+#include "../config/VisualAspect.h"
 
 namespace Handle
 {
@@ -34,7 +35,7 @@ namespace Handle
             m_oldCursorY(-1),
             m_isHover(false)
     {
-        setFixedWidth(9);
+        setFixedWidth(Config::VisualAspect::widthHandleControl);
         setDefaultColor(parent->defaultColor());
     }
     
@@ -44,19 +45,13 @@ namespace Handle
     
     void MoveHandle::setDefaultColor( const QColor & c )
     {
-        //QColor c2(c);
-        //c2.setAlpha(0.6);
-        //setStyleSheet(QString("background: qlineargradient(x1:0.5, y1:0, x2:0.5, y2:1, stop:0 %1, stop:1 %2)").arg(c.name()).arg(c2.name()));
         m_defaultColor = QColor(c);
         setDefaultColor();
     }
     
     void MoveHandle::setDefaultColor()
     {
-        setStyleSheet( QString("background: %1;").arg(m_defaultColor.name()) );
-        setStyleSheet( QString("background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 %1, stop:1 %2)")
-                       .arg(m_defaultColor.lighter(150).name())
-                       .arg(m_defaultColor.name()));
+        setStyleSheet( Config::VisualAspect::gradiantBackground( m_defaultColor ) );
     }
     
     void MoveHandle::setSelectionColor()
@@ -128,7 +123,7 @@ namespace Handle
         if ( h->children().size() ==0 )
         {
             QLinearGradient gradient( 0, y, 0,h->height()+y);
-            gradient.setColorAt( 0, h->defaultColor().lighter(150) );
+            gradient.setColorAt( 0, h->defaultColor().lighter( Config::VisualAspect::lighterIntensity ) );
             gradient.setColorAt( 1, h->defaultColor() );
             painter.setBrush( gradient );
             painter.drawRect( x, y, width(), height() );
@@ -185,7 +180,7 @@ namespace Handle
     {
         QPainter painter(this);
         
-        QPen pen;//palette().color(QPalette::Highlight));
+        QPen pen;
         pen.setStyle(Qt::NoPen);
         pen.setWidth(1);
         painter.setPen(pen);
@@ -193,7 +188,7 @@ namespace Handle
         if ( m_isHover )
         {
             QLinearGradient gradient(0,0,0, height());
-            gradient.setColorAt(0, QApplication::palette().color(QPalette::Highlight).lighter(150));
+            gradient.setColorAt(0, QApplication::palette().color(QPalette::Highlight).lighter(Config::VisualAspect::lighterIntensity));
             gradient.setColorAt(1, QApplication::palette().color(QPalette::Highlight));
             painter.setBrush(gradient);
 

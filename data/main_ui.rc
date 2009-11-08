@@ -29,7 +29,7 @@
   </Menu>
   <Menu name="Configuration" >
    <text>&amp;Configuration</text>
-   <Action name="clear" />
+    <Action name="State" />
   </Menu>
   <Menu name="help" >
    <text>&amp;Help</text>

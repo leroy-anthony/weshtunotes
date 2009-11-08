@@ -21,6 +21,7 @@
 
 #include "HandleItem.h"
 #include "../config/ImageFactory.h"
+#include "../config/VisualAspect.h"
 
 namespace Handle
 {
@@ -30,9 +31,9 @@ namespace Handle
             m_handleItemRoot(parent)
     {
         setIcon(Config::ImageFactory::icon(Config::Image::exitAction));
-        setIconSize(QSize(9,9));
-        setFixedWidth(9);
-        setFixedHeight(9);
+        setIconSize(QSize(Config::VisualAspect::widthHandleControl,Config::VisualAspect::widthHandleControl));
+        setFixedWidth(Config::VisualAspect::widthHandleControl);
+        setFixedHeight(Config::VisualAspect::widthHandleControl);
         setContentsMargins(0,0,0,0);
         setDefaultColor(parent->defaultColor());
         setFlat(true);
@@ -47,19 +48,12 @@ namespace Handle
 
     void DeleteHandle::setDefaultColor()
     {
-        setStyleSheet( QString("background: %1;").arg(m_defaultColor.name()) );
+        setStyleSheet( Config::VisualAspect::gradiantBackground( m_defaultColor ) );
     }
 
     void DeleteHandle::setHoverMode( bool isHover )
     {
-        if ( isHover )
-        {
-            show();
-        }
-        else
-        {
-            hide();
-        }
+        setVisible( isHover );
     }
 
 }
