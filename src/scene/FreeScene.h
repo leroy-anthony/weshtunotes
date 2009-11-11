@@ -62,6 +62,7 @@ namespace Scene
         QGraphicsProxyWidget * addHandleToScene( Handle::HandleItem * handle );
         Handle::HandleItem * newHandle( int x, int y );
         Item::AbstractItem * newItem( int x, int y );
+        void delUselessHandleGroup( Handle::HandleItem * currentHandle  );
 
     private:
         QGraphicsItem * m_currentGraphicsItem;
