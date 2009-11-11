@@ -31,7 +31,8 @@ namespace Scene
     {
     }
 
-    AbstractScene::AbstractScene():
+    AbstractScene::AbstractScene(QWidget * parent):
+            QGraphicsScene(parent),
             m_horizontalScrollBarValueView(0),
             m_verticalScrollBarValueView(0)
     {

@@ -38,7 +38,7 @@ namespace Config
     QString Constant::dirBasket = Configuration().value(Constant::dirBasketKey,Constant::homeBaskets).toString();
 
     Configuration::Configuration():
-            QSettings( QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationName(), Constant::main )
+             QSettings( QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationName(), Constant::main )
     {
     }
 
@@ -49,10 +49,6 @@ namespace Config
 
     void Configuration::iniConfigration()
     {
-        QDir::addSearchPath( "icon", "./data/icon" ); // windows
-        QDir::addSearchPath( "icon", "/usr/share/weshtunotes/data/icon" ); // unix
-        QDir::addSearchPath( "icon", "/usr/local/share/weshtunotes/data/icon" ); // unix
-        QDir::addSearchPath( "icon", "/home/kahal/Programmation/C++/weshtunotes/data/icon" );
         QDir::addSearchPath( "data", "/home/kahal/Programmation/C++/weshtunotes/data" );
 
         QDir dir(Constant::homeData);
@@ -61,6 +57,7 @@ namespace Config
             dir.mkpath(Constant::homeData);
         }
         QDir::addSearchPath( "data", Constant::homeData );
+        QDir::addSearchPath( "icon", Constant::homeData+QDir::separator()+"icon" );
     }
 
     Configuration::~Configuration()
@@ -78,6 +75,7 @@ namespace Config
     void Configuration::saveLastBasket( const QString & name )
     {
         Configuration settings;
+        qDebug() << settings.fileName();
         settings.setValue( Constant::lastBasket, name );
         settings.sync();
     }
@@ -124,4 +122,95 @@ namespace Config
         Configuration settings(name);
         QFile::remove(settings.fileName());
     }
+
+    QString Configuration::fileName () const
+    {
+        return QSettings::fileName();
+    }
+
+    void Configuration::clear()
+    {
+        QSettings::clear();
+    }
+
+    void Configuration::beginGroup( const QString & prefix )
+    {
+        QSettings::beginGroup( prefix );
+    }
+
+    void Configuration::endGroup()
+    {
+        QSettings::endGroup();
+    }
+
+    void Configuration::setValue( const QString & key, const QVariant & value )
+    {
+        QSettings::setValue( key, value );
+    }
+
+    QVariant Configuration::value( const QString & key, const QVariant & defaultValue ) const
+    {
+        return QSettings::value( key, defaultValue );
+    }
+
+    void Configuration::remove( const QString & key )
+    {
+        QSettings::remove( key );
+    }
+
+    QStringList Configuration::childGroups() const
+    {
+        return QSettings::childGroups();
+    }
+
+    int Configuration::beginReadArray( const QString & prefix )
+    {
+        return QSettings::beginReadArray( prefix );
+    }
+
+    void Configuration::beginWriteArray( const QString & prefix )
+    {
+        QSettings::beginWriteArray( prefix );
+    }
+
+    void Configuration::setArrayIndex( int i )
+    {
+        QSettings::setArrayIndex( i );
+    }
+
+    void Configuration::endArray()
+    {
+        QSettings::endArray();
+    }
+
+    void Configuration::sync()
+    {
+        QSettings::sync();
+    }
+
+    QString Configuration::loadNote( const QString & fileName, const QString & nameId )
+    {
+        Config::Configuration settings( fileName );
+
+        QFileInfo fileInfo(settings.fileName());
+        QFile f( fileInfo.absolutePath() + QDir::separator() + nameId + ".html" );
+        f.open(QFile::ReadOnly | QFile::Text);
+
+        QTextStream stream(&f);
+        QString resultat = stream.readAll();
+        f.close();
+
+        return resultat;
+    }
+
+    void Configuration::saveNote( const QString & fileName, const QString & contentNote, const QString & nameId )
+    {
+        QFileInfo fileInfo( fileName );
+        QFile f( fileInfo.absolutePath() + QDir::separator() + nameId + ".html" );
+        f.open(QFile::WriteOnly | QFile::Text);
+        QTextStream stream(&f);
+        stream << contentNote;
+        f.close();
+    }
+
 }

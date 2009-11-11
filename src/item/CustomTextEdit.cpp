@@ -26,6 +26,7 @@
 #include <QDesktopServices>
 #include <QUrlInfo>
 #include <QFileIconProvider>
+#include <QFocusEvent>
 
 #include "../main/general.h"
 #include "../config/Configuration.h"
@@ -47,6 +48,8 @@ namespace Item
         setFixedHeight(26);
         setAcceptRichText(true);
         setTextInteractionFlags(Qt::TextBrowserInteraction|Qt::TextEditorInteraction);
+
+        setFocusPolicy( Qt::StrongFocus );
 
         setOpenExternalLinks( true );
         setOpenLinks ( false );
@@ -158,6 +161,14 @@ namespace Item
         QTextCursor c( textCursor() );
         c.clearSelection();
         setTextCursor( c );
+    }
+
+    //FIXME: cette fonction est un hack de merde pour que les notes aient toujours le focus en cas de clique.
+    //       sans cette fcontion, les notes n'étant pas dans le 1er panier chargé, n'obtienne jamais ce focus.
+    void CustomTextEdit::mousePressEvent( QMouseEvent * event )
+    {
+        KTextBrowser::mousePressEvent( event );
+        KTextBrowser::focusInEvent( new QFocusEvent( QEvent::FocusIn, Qt::MouseFocusReason ) );
     }
 
 }

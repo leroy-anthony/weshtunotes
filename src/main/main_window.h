@@ -63,7 +63,7 @@ protected:
 private:
     void initView();
     void initToolBar();
-    void initMedia();
+    void initExplorer();
     void initSystemTray();
     void setupActions();
     void loadData();

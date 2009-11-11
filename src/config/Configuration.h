@@ -40,12 +40,35 @@ namespace Config
         static int defaultHandleWidth;
     };
 
-    class Configuration : public QSettings
+    class Configuration : protected QSettings
     {
     public:
         Configuration();
         Configuration( const QString & config );
         ~Configuration();
+
+        QString fileName () const;
+
+        void clear();
+
+        void beginGroup( const QString & prefix );
+        void endGroup();
+
+        void setValue( const QString & key, const QVariant & value );
+        QVariant value ( const QString & key, const QVariant & defaultValue = QVariant() ) const;
+
+        void remove ( const QString & key );
+
+        QStringList childGroups() const;
+
+        int beginReadArray ( const QString & prefix );
+        void beginWriteArray ( const QString & prefix );
+
+        void setArrayIndex( int i );
+        void endArray();
+
+        void sync();
+
 
         static void iniConfigration();
 
@@ -57,6 +80,9 @@ namespace Config
         static QDir dir( const QString & dirConfig );
         static void removeConfigDir( const QString & dir );
         static QStringList subDirs( const QString & directory );
+
+        static QString loadNote( const QString & fileName, const QString & nameId );
+        static void saveNote( const QString & fileName, const QString & contentNote, const QString & nameId );
 
         static void deleteFile( const QString & name );
 

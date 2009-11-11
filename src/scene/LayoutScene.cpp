@@ -98,7 +98,6 @@ namespace Scene
         Handle::HandleItem * handle = newHandle( pt.x(), pt.y() );
 
         Item::AbstractItem * item = newItem( pt.x(), pt.y() );
-        //QColor(115,115,115)
 
         handle->add( item );
 
