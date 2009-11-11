@@ -223,10 +223,32 @@ namespace Scene
         QGraphicsScene::mousePressEvent ( mouseEvent );
     }
 
+    void FreeScene::delUselessHandleGroup( Handle::HandleItem * currentHandle  )
+    {
+        Handle::HandleItem * parentHandle = currentHandle->parentHandle();
+        if (  parentHandle != 0 && currentHandle->modeDegroupement() )
+        {
+            if ( parentHandle->children().size() == 1 )
+            {
+                Handle::HandleItem * child = parentHandle->child();
+                parentHandle->remove( child );
+                child->setParent(0);
+                child->setParentHandle(0);
+
+                QGraphicsProxyWidget * g = addHandleToScene( child );
+                g->setPos(parentHandle->pos());
+                removeGraphicsItemFromScene( parentHandle );
+            }
+            currentHandle->setParentHandle(0);
+        }
+    }
+
     void FreeScene::mouseReleaseEvent(QGraphicsSceneMouseEvent * mouseEvent)
     {
         if ( m_currentHandle != 0 && m_modeItem == MoveItem )
         {
+            delUselessHandleGroup( m_currentHandle  );
+
             QList<QGraphicsItem *> items = collidingItems( m_currentGraphicsItem );
             if ( items.size() > 0 )
             {
@@ -249,25 +271,6 @@ namespace Scene
 
                 removeGraphicsItemFromScene( m_currentHandle );
                 Handle::HandleItem::resetInsert();
-            }
-            else
-            {
-                Handle::HandleItem * parentHandle = m_currentHandle->parentHandle();
-                if (  parentHandle != 0 && m_currentHandle->modeDegroupement() )
-                {
-                    if ( parentHandle->children().size() == 1 )
-                    {
-                        Handle::HandleItem * child = parentHandle->child();
-                        parentHandle->remove( child );
-                        child->setParent(0);
-                        child->setParentHandle(0);
-
-                        QGraphicsProxyWidget * g = addHandleToScene( child );
-                        g->setPos(parentHandle->pos());
-                        removeGraphicsItemFromScene( parentHandle );
-                    }
-                    m_currentHandle->setParentHandle(0);
-                }
             }
 
             m_currentHandle->setModeDegroupement(false);
