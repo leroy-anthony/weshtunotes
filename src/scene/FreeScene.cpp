@@ -206,16 +206,16 @@ namespace Scene
 
     void FreeScene::mousePressEvent ( QGraphicsSceneMouseEvent * mouseEvent )
     {
+        m_currentGraphicsItem = itemAt( mouseEvent->scenePos().x(), mouseEvent->scenePos().y() );
         if ( mouseEvent->button() == Qt::LeftButton )
         {
-            m_currentGraphicsItem = itemAt( mouseEvent->scenePos().x(), mouseEvent->scenePos().y() );
             Handle::HandleItem * h = m_items[ static_cast<QGraphicsProxyWidget*>(m_currentGraphicsItem) ];
             if ( h != 0 )
             {
                 m_currentHandle = h->handleItemAt( mouseEvent->scenePos().x(), mouseEvent->scenePos().y() );
             }
         }
-        else
+        else if ( m_currentGraphicsItem == 0 )
         {
             addItems( mouseEvent->scenePos().x(), mouseEvent->scenePos().y(), "templatePardefaut" );
         }

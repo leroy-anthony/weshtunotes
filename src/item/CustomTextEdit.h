@@ -47,6 +47,7 @@ namespace Item
         void insertFromMimeData( const QMimeData *source );
 
         void mousePressEvent( QMouseEvent * event );
+        void contextMenuEvent ( QContextMenuEvent * event );
 
     };
 
