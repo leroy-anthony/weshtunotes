@@ -171,4 +171,8 @@ namespace Item
         KTextBrowser::focusInEvent( new QFocusEvent( QEvent::FocusIn, Qt::MouseFocusReason ) );
     }
 
+    void CustomTextEdit::contextMenuEvent ( QContextMenuEvent * event )
+    {
+    }
+
 }
