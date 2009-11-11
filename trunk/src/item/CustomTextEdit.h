@@ -21,8 +21,9 @@
 #define CUSTOMTEXTEDIT_H
 
 #include <ktextbrowser.h>
-
+#include <krichtextedit.h>
 #include <QMimeData>
+#include <QTextEdit>
 
 namespace Item
 {
@@ -44,6 +45,8 @@ namespace Item
     protected:
         bool canInsertFromMimeData( const QMimeData *source ) const;
         void insertFromMimeData( const QMimeData *source );
+
+        void mousePressEvent( QMouseEvent * event );
 
     };
 

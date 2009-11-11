@@ -149,31 +149,17 @@ namespace Item
         }
         settings.setValue("tags",namesTags);
 
-
         settings.endGroup();
         settings.sync();
 
-        QFileInfo fileInfo(settings.fileName());
-        QFile f( fileInfo.absolutePath() + QDir::separator() + m_nameId + ".html" );
-        f.open(QFile::WriteOnly | QFile::Text);
-        QTextStream stream(&f);
-        stream << m_plainTextEdit->document()->toHtml();
-        f.close();
+        Config::Configuration::saveNote( settings.fileName(), m_plainTextEdit->document()->toHtml(), m_nameId );
     }
 
     void NoteItem::load( const QString & fileName )
     {       
         m_plainTextEdit->blockSignals( true );
 
-        Config::Configuration settings( fileName );
-
-        QFileInfo fileInfo(settings.fileName());
-        QFile f( fileInfo.absolutePath() + QDir::separator() + m_nameId + ".html" );
-        f.open(QFile::ReadOnly | QFile::Text);
-        QTextStream stream(&f);
-        m_plainTextEdit->setHtml(stream.readAll());
-        f.close();
-
+        m_plainTextEdit->setHtml( Config::Configuration::loadNote( fileName, m_nameId ) );
         m_plainTextEdit->adaptSizeFromText();
 
         m_plainTextEdit->blockSignals( false );
@@ -191,14 +177,6 @@ namespace Item
         m_plainTextEdit->blockSignals( false );
 
         update();
-    }
-
-    void NoteItem::isSelected()
-    {
-        Scene::ToolBarScene * toolBar = Scene::ToolBarScene::toolBarScene();
-        toolBar->currentCharFormatChanged( m_plainTextEdit->currentCharFormat() );
-        toolBar->currentItemChanged( this );
-        m_plainTextEdit->ensureCursorVisible();
     }
 
     void NoteItem::addTag( const QString & tagName, const QString & tagState )

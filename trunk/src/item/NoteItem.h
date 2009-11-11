@@ -66,8 +66,6 @@ namespace Item
         void tagApply( QAction * action );
         bool containTag( const QString & tagName );
 
-        void isSelected();
-
     private:
         QHBoxLayout  * m_horizontalLayout;
         CustomTextEdit    * m_plainTextEdit;

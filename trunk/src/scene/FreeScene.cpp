@@ -50,7 +50,7 @@ namespace Scene
     QString FreeScene::type = "freescene";
 
     FreeScene::FreeScene(QWidget * parent) :
-            AbstractScene(),
+            AbstractScene(parent),
             m_currentGraphicsItem(0),
             m_currentAbstractItem(0),
             m_currentHandle(0),

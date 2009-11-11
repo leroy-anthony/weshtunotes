@@ -107,8 +107,6 @@ namespace Explorer
             insertTopLevelItem(  topLevelItemCount(), b );
         }
 
-        b->load();
-
         return b;
     }
 
@@ -163,6 +161,7 @@ namespace Explorer
         {
             expandItem(baskets[0]);
             setCurrentItem(baskets[0]);
+
             return baskets[0];
         }
 

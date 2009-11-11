@@ -39,7 +39,7 @@ MainWindow::MainWindow() :
     setupUi(this);
 
     initView();
-    initMedia();
+    initExplorer();
 
     m_tagFactory = Tag::TagFactory::newTagFactory();
     m_tagFactory->loadTags();
@@ -52,8 +52,9 @@ MainWindow::MainWindow() :
     initToolBar();
     initSystemTray();
 
-    loadData();
     createGUI("data:main_ui.rc");
+
+    loadData();
 }
 
 MainWindow::~MainWindow()
@@ -72,21 +73,6 @@ void MainWindow::loadData()
     if ( items.size() > 0 )
     {
         loadScene(items[0]);
-    }
-
-    if ( m_lastBasketLoad->scene()->type() == Scene::FreeScene::type )
-    {
-        actionCollection()->action( Scene::FreeScene::type )->setChecked(true);
-        actionCollection()->action( Scene::FreeScene::type )->setDisabled(true);
-        actionCollection()->action( Scene::LayoutScene::type )->setDisabled(false);
-        actionCollection()->action( Scene::LayoutScene::type )->setChecked(false);
-    }
-    else
-    {
-        actionCollection()->action( Scene::LayoutScene::type )->setChecked(true);
-        actionCollection()->action( Scene::FreeScene::type )->setChecked(false);
-        actionCollection()->action( Scene::LayoutScene::type )->setDisabled(true);
-        actionCollection()->action( Scene::FreeScene::type )->setDisabled(false);
     }
 }
 
@@ -125,7 +111,7 @@ void MainWindow::initView()
     m_view->show();
 }
 
-void MainWindow::initMedia()
+void MainWindow::initExplorer()
 {
     m_treeExplorer = new Explorer::TreeExplorer(this);
 
@@ -160,8 +146,7 @@ void MainWindow::initMedia()
 
     layoutDock->addWidget( m_treeExplorer );
 
-    connect(m_treeExplorer,SIGNAL(itemClicked(QTreeWidgetItem*,int)),this,SLOT(loadScene(QTreeWidgetItem*,int)));
-
+    connect(m_treeExplorer,SIGNAL(itemActivated(QTreeWidgetItem*,int)),this,SLOT(loadScene(QTreeWidgetItem*,int)));
 }
 
 void MainWindow::loadScene( QTreeWidgetItem * item , int column )
@@ -174,9 +159,17 @@ void MainWindow::loadScene( QTreeWidgetItem * item , int column )
     }
 
     m_lastBasketLoad = i;
+
+    if ( i->scene() == 0 )
+    {
+        i->load();
+    }
+
     Scene::AbstractScene * scene = i->scene();
     m_view->setScene( scene );
     i->scene()->restoreView( m_view );
+
+    m_view->update();
 
     if ( m_lastBasketLoad->scene()->type() == Scene::FreeScene::type )
     {
