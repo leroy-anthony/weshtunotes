@@ -38,7 +38,7 @@ namespace Config
     QString Image::deleteAction      = "edit-delete.png";
     QString Image::application       = "basket.png";
     QString Image::exitAction        = "application-exit.png";
-    QString Image::basket            = "im-status-message-edit.png";
+    QString Image::basket            = "folder.png";
     QString Image::zoomOriginal      = "zoom-original.png";
     QString Image::zoomIn            = "zoom-in.png";
     QString Image::zoomOut           = "zoom-out.png";
