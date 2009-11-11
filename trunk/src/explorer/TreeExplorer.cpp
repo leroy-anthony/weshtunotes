@@ -38,6 +38,7 @@ namespace Explorer
     {
         setHeaderLabel( tr("Paniers") );
         setHeaderHidden( false );
+        setIconSize(QSize(24,24));
     }
 
     TreeExplorer::~TreeExplorer()
