@@ -59,6 +59,12 @@ namespace Config
         }
         QDir::addSearchPath( "data", Constant::homeData );
         QDir::addSearchPath( "icon", Constant::homeData+QDir::separator()+"icon" );
+
+        QDir dir2(Constant::homeBaskets);
+        if ( !dir2.exists() )
+        {
+            dir2.mkpath(Constant::homeBaskets);
+        }
     }
 
     Configuration::~Configuration()

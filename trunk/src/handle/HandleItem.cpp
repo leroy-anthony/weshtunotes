@@ -431,7 +431,7 @@ namespace Handle
 
     void HandleItem::keyPressEvent ( QKeyEvent * keyEvent )
     {
-        if ( m_item != 0 )
+        if ( m_item != 0 && keyEvent->text() != QString() )
         {
             QCoreApplication::sendEvent( m_item, keyEvent );
         }
