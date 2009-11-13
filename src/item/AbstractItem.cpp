@@ -72,4 +72,9 @@ namespace Item
         return m_color;
     }
 
+    void AbstractItem::keyPressEvent ( QKeyEvent * keyEvent )
+    {
+        QWidget::keyPressEvent(keyEvent);
+    }
+
 }

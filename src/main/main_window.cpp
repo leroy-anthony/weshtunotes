@@ -74,6 +74,10 @@ void MainWindow::loadData()
     {
         loadScene(items[0]);
     }
+    else
+    {
+        m_view->setScene( new Scene::FreeScene() );
+    }
 }
 
 void MainWindow::setupActions()

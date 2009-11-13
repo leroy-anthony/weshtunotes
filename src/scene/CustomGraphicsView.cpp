@@ -198,7 +198,13 @@ namespace Scene
 
     void CustomGraphicsView::resizeEvent ( QResizeEvent * event )
     {
-        dynamic_cast<AbstractScene*>( scene() )->resize( event );
+        QGraphicsScene * s = scene();
+        if ( s != 0 )
+        {
+            dynamic_cast<AbstractScene*>( s )->resize( event );
+        }
+
+        QGraphicsView::resizeEvent( event );
     }
 
 }

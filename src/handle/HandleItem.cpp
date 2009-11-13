@@ -429,4 +429,12 @@ namespace Handle
         return m_handles;
     }
 
+    void HandleItem::keyPressEvent ( QKeyEvent * keyEvent )
+    {
+        if ( m_item != 0 )
+        {
+            QCoreApplication::sendEvent( m_item, keyEvent );
+        }
+    }
+
 }
