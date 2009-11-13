@@ -69,6 +69,8 @@ namespace Item
     protected:
         AbstractItem( QWidget * parent );
 
+        void keyPressEvent ( QKeyEvent * keyEvent );
+
         QList<QString> m_operationInterfaces;
         QColor m_color;
 

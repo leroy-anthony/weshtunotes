@@ -50,6 +50,7 @@ namespace Config
     void Configuration::iniConfigration()
     {
         QDir::addSearchPath( "data", "/home/kahal/Programmation/C++/weshtunotes/data" );
+        QDir::addSearchPath( "icon", "/home/kahal/Programmation/C++/weshtunotes/data/icon" );
 
         QDir dir(Constant::homeData);
         if ( !dir.exists() )

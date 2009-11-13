@@ -105,6 +105,7 @@ namespace Handle
 
     protected:
         void paintEvent( QPaintEvent * event );
+        void keyPressEvent ( QKeyEvent * keyEvent );
 
     signals:
         void move( Handle::HandleItem * handleItem, int x, int y );

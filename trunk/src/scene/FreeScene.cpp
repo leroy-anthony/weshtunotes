@@ -300,5 +300,13 @@ namespace Scene
         return m_currentHandle;
     }
 
+    void FreeScene::keyPressEvent ( QKeyEvent * keyEvent )
+    {
+        if ( m_currentHandle != 0 )
+        {
+            QCoreApplication::sendEvent( m_currentHandle, keyEvent );
+        }
+    }
+
 }
 

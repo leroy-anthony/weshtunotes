@@ -28,6 +28,7 @@
 #include <QFile>
 #include <QDir>
 #include <QUrl>
+#include <QCoreApplication>
 
 
 #include "../scene/ToolBarScene.h"
@@ -247,6 +248,11 @@ namespace Item
             m_tags[i]->apply();
             m_plainTextEdit->selectNone();
         }
+    }
+
+    void NoteItem::keyPressEvent ( QKeyEvent * keyEvent )
+    {
+        QCoreApplication::sendEvent( m_plainTextEdit, keyEvent );
     }
 
 }
