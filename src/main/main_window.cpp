@@ -44,12 +44,10 @@ MainWindow::MainWindow() :
     m_tagFactory = Tag::TagFactory::newTagFactory();
     m_tagFactory->loadTags();
 
-    KAction * a = new KAction("State",0);
-    actionCollection()->addAction( "State", a );
-    connect( a, SIGNAL(triggered(bool)), this, SLOT(showTagFactory()) );
-
     setupActions();
+
     initToolBar();
+
     initSystemTray();
 
     createGUI("data:main_ui.rc");
@@ -85,21 +83,25 @@ void MainWindow::setupActions()
     KStandardAction::save(this, SLOT(save()), actionCollection());
     KStandardAction::quit(qApp, SLOT(quit()), actionCollection());
     KStandardAction::paste(m_view, SLOT(paste()), actionCollection());
+
+    KAction * a = new KAction("State",0);
+    actionCollection()->addAction( "State", a );
+    connect( a, SIGNAL(triggered(bool)), m_tagFactory, SLOT(show()) );
 }
 
 void MainWindow::save()
 {
     if ( m_lastBasketLoad != 0 )
     {
-        m_view->horizontalScrollBar()->setValue(m_view->horizontalScrollBar()->value()-53); // valeur magic !!
-        m_view->verticalScrollBar()->setValue(m_view->verticalScrollBar()->value()+159); // valeur magic !!
-        m_lastBasketLoad->scene()->storeView( m_view );
+        m_view->horizontalScrollBar()->setValue(m_view->horizontalScrollBar()->value());
+        m_view->verticalScrollBar()->setValue(m_view->verticalScrollBar()->value());
+        m_lastBasketLoad->basket()->scene()->storeView( m_view );
     }
 
     m_treeExplorer->saveBaskets();
     if ( m_lastBasketLoad != 0 )
     {
-        Config::Configuration::saveLastBasket( m_lastBasketLoad->id() );
+        Config::Configuration::saveLastBasket( m_lastBasketLoad->basket()->id() );
     }
 }
 
@@ -143,7 +145,7 @@ void MainWindow::initExplorer()
 
     QToolButton * qqq = new QToolButton();
     qqq->setIcon(Config::ImageFactory::icon(Config::Image::deleteAction));
-    connect( qqq, SIGNAL(clicked()), m_treeExplorer, SLOT(delCurrentBasket()) );
+    connect( qqq, SIGNAL(clicked()), this, SLOT(delCurrentBasket()) );
     layoutButtonExplorer->addWidget(qqq);
 
     layoutButtonExplorer->addItem(new QSpacerItem(0,0,QSizePolicy::Expanding,QSizePolicy::Ignored));
@@ -153,29 +155,40 @@ void MainWindow::initExplorer()
     connect(m_treeExplorer,SIGNAL(itemActivated(QTreeWidgetItem*,int)),this,SLOT(loadScene(QTreeWidgetItem*,int)));
 }
 
+void MainWindow::delCurrentBasket()
+{
+    m_lastBasketLoad = 0;
+    m_treeExplorer->delCurrentBasket();
+    QList<QTreeWidgetItem*> items = m_treeExplorer->selectedItems();
+    if ( items.size() > 0 )
+    {
+        loadScene(items[0]);
+    }
+}
+
 void MainWindow::loadScene( QTreeWidgetItem * item , int column )
 {
     Basket::ItemTreeBasket * i = dynamic_cast<Basket::ItemTreeBasket*>(item);
 
     if ( m_lastBasketLoad != 0 )
     {
-        m_lastBasketLoad->scene()->storeView( m_view );
+        m_lastBasketLoad->basket()->scene()->storeView( m_view );
     }
 
     m_lastBasketLoad = i;
 
-    if ( i->scene() == 0 )
+    if ( i->basket()->scene() == 0 )
     {
-        i->load();
+        i->basket()->load();
     }
 
-    Scene::AbstractScene * scene = i->scene();
+    Scene::AbstractScene * scene = i->basket()->scene();
     m_view->setScene( scene );
-    i->scene()->restoreView( m_view );
+    i->basket()->scene()->restoreView( m_view );
 
     m_view->update();
 
-    if ( m_lastBasketLoad->scene()->type() == Scene::FreeScene::type )
+    if ( m_lastBasketLoad->basket()->scene()->type() == Scene::FreeScene::type )
     {
         actionCollection()->action( Scene::FreeScene::type )->setChecked(true);
         actionCollection()->action( Scene::FreeScene::type )->setDisabled(true);
@@ -202,18 +215,13 @@ Scene::CustomGraphicsView * MainWindow::currentView()
     return m_view;
 }
 
-void MainWindow::showTagFactory()
-{
-    m_tagFactory->show();
-}
-
 void MainWindow::layoutScene()
 {
-    m_lastBasketLoad->scene()->setType( Scene::LayoutScene::type );
-    m_lastBasketLoad->save();
-    m_lastBasketLoad->load();
+    m_lastBasketLoad->basket()->scene()->setType( Scene::LayoutScene::type );
+    m_lastBasketLoad->basket()->save();
+    m_lastBasketLoad->basket()->load();
 
-    m_view->setScene( m_lastBasketLoad->scene() );
+    m_view->setScene( m_lastBasketLoad->basket()->scene() );
 
     actionCollection()->action( Scene::LayoutScene::type )->setDisabled(true);
     actionCollection()->action( Scene::LayoutScene::type )->setChecked(true);
@@ -224,11 +232,11 @@ void MainWindow::layoutScene()
 
 void MainWindow::freeScene()
 {
-    m_lastBasketLoad->scene()->setType( Scene::FreeScene::type );
-    m_lastBasketLoad->save();
-    m_lastBasketLoad->load();
+    m_lastBasketLoad->basket()->scene()->setType( Scene::FreeScene::type );
+    m_lastBasketLoad->basket()->save();
+    m_lastBasketLoad->basket()->load();
 
-    m_view->setScene( m_lastBasketLoad->scene() );
+    m_view->setScene( m_lastBasketLoad->basket()->scene() );
     m_view->fitInViewZoom();
     m_view->resetZoom();
 
