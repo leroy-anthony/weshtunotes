@@ -49,9 +49,10 @@ public:
 
 public slots:
     void loadScene( QTreeWidgetItem * item , int column = 0 );
-    void showTagFactory();
     void save();
     
+    void delCurrentBasket();
+
     void iconActivated( QSystemTrayIcon::ActivationReason reason );
 
     void layoutScene();
