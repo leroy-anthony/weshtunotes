@@ -72,20 +72,27 @@ namespace Scene
     
     void FreeScene::addData( const QMimeData * data )
     {
-        QGraphicsView * view = views()[0];
-        QPointF pt = view->mapToScene( view->viewport()->width()/2-200, view->viewport()->height()/2 );
+        if ( m_currentAbstractItem == 0 )
+        {
+            QGraphicsView * view = views()[0];
+            QPointF pt = view->mapToScene( view->viewport()->width()/2-200, view->viewport()->height()/2 );
 
-        Handle::HandleItem * handle = newHandle( pt.x(), pt.y() );
+            Handle::HandleItem * handle = newHandle( pt.x(), pt.y() );
 
-        Item::AbstractItem * item = newItem( pt.x(), pt.y() );
+            Item::AbstractItem * item = newItem( pt.x(), pt.y() );
 
-        handle->add( item );
+            handle->add( item );
 
-        addHandleToScene( handle );
+            addHandleToScene( handle );
 
-        item->load( data );
+            item->load( data );
 
-        static_cast<QWidget*>(handle)->resize( item->width(), item->height() );
+            static_cast<QWidget*>(handle)->resize( item->width(), item->height() );
+        }
+        else
+        {
+            m_currentAbstractItem->insertData( data );
+        }
     }
 
     Handle::HandleItem * FreeScene::newHandle( int x, int y )
@@ -206,6 +213,7 @@ namespace Scene
 
     void FreeScene::mousePressEvent ( QGraphicsSceneMouseEvent * mouseEvent )
     {
+        m_currentAbstractItem = 0;
         m_currentGraphicsItem = itemAt( mouseEvent->scenePos().x(), mouseEvent->scenePos().y() );
         if ( mouseEvent->button() == Qt::LeftButton )
         {

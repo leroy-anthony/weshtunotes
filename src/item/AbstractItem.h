@@ -23,6 +23,7 @@
 #include <QWidget>
 #include <QString>
 #include <QList>
+#include <QMimeData>
 
 #include "IStorageData.h"
 
@@ -60,6 +61,8 @@ namespace Item
 
         bool containTag( const QString & tagName );
         const QList<Tag::NoteTag*> & tags();
+
+        virtual void insertData( const QMimeData * data );
 
     signals:
         void editItem( Item::AbstractItem * item );
