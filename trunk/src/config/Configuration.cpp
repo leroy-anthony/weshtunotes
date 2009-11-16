@@ -83,7 +83,6 @@ namespace Config
     void Configuration::saveLastBasket( const QString & name )
     {
         Configuration settings;
-        qDebug() << settings.fileName();
         settings.setValue( Constant::lastBasket, name );
         settings.sync();
     }

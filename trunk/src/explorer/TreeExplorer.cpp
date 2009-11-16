@@ -108,6 +108,8 @@ namespace Explorer
             insertTopLevelItem(  topLevelItemCount(), b );
         }
 
+        setCurrentIndex( indexFromItem( b, 0 ) );
+
         return b;
     }
 
@@ -144,7 +146,6 @@ namespace Explorer
 
         setCurrentItem( b );
 
-        qDebug() << b->basket()->configFilePath();
         QStringList l = Config::Configuration::subDirs( b->basket()->configFilePath() );
         for ( int i=0 ; i<l.size() ; ++i )
         {
