@@ -52,6 +52,8 @@ public slots:
     void save();
     
     void delCurrentBasket();
+    void addBasketToRoot();
+    void addToCurrentBasket();
 
     void iconActivated( QSystemTrayIcon::ActivationReason reason );
 

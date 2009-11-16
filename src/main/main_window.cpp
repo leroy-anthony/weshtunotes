@@ -135,12 +135,12 @@ void MainWindow::initExplorer()
 
     QToolButton * qq = new QToolButton();
     qq->setIcon(Config::ImageFactory::icon(Config::Image::newBasket));
-    connect( qq, SIGNAL(clicked()), m_treeExplorer, SLOT(addBasketToRoot()) );
+    connect( qq, SIGNAL(clicked()), this, SLOT(addBasketToRoot()) );
     layoutButtonExplorer->addWidget(qq);
 
     QToolButton * q = new QToolButton();
     q->setIcon(Config::ImageFactory::icon(Config::Image::addBasket));
-    connect( q, SIGNAL(clicked()), m_treeExplorer, SLOT(addToCurrentBasket()) );
+    connect( q, SIGNAL(clicked()), this, SLOT(addToCurrentBasket()) );
     layoutButtonExplorer->addWidget(q);
 
     QToolButton * qqq = new QToolButton();
@@ -153,6 +153,24 @@ void MainWindow::initExplorer()
     layoutDock->addWidget( m_treeExplorer );
 
     connect(m_treeExplorer,SIGNAL(itemActivated(QTreeWidgetItem*,int)),this,SLOT(loadScene(QTreeWidgetItem*,int)));
+}
+
+void MainWindow::addToCurrentBasket()
+{
+    Basket::ItemTreeBasket * item = m_treeExplorer->addToCurrentBasket();
+    if ( item != 0 )
+    {
+        loadScene( item , 0 );
+    }
+}
+
+void MainWindow::addBasketToRoot()
+{
+    Basket::ItemTreeBasket * item = m_treeExplorer->addBasketToRoot();
+    if ( item != 0 )
+    {
+        loadScene( item , 0 );
+    }
 }
 
 void MainWindow::delCurrentBasket()
