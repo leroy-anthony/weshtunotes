@@ -183,9 +183,9 @@ namespace Tag
         settings.sync();
     }
 
-    NoteTag * NoteTag::newTag()
+    NoteTag * NoteTag::newTag( const QString & name )
     {
-        NoteTag * tag = new NoteTag( 0, "new tag" );
+        NoteTag * tag = new NoteTag( 0, name );
         State * state = State::newState( tag );
         tag->addState( state );
         tag->setCurrentState( state->name() );

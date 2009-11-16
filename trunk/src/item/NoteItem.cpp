@@ -189,19 +189,6 @@ namespace Item
         tag->apply();
     }
 
-    bool NoteItem::containTag( const QString & tagName )
-    {
-        for ( int i=0 ; i<m_tags.size() ; ++i )
-        {
-            if ( m_tags[i]->name() == tagName )
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     void NoteItem::tagApply( QAction * action )
     {
         if ( action->isChecked() )

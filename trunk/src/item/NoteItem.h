@@ -64,7 +64,6 @@ namespace Item
         void setTextColor( const QColor & c );
 
         void tagApply( QAction * action );
-        bool containTag( const QString & tagName );
 
     protected:
         void keyPressEvent( QKeyEvent * keyEvent );
@@ -72,7 +71,7 @@ namespace Item
     private:
         QHBoxLayout  * m_horizontalLayout;
         CustomTextEdit    * m_plainTextEdit;
-        QList<Tag::NoteTag*> m_tags;
+
         QString m_fileName;
 
     private slots:

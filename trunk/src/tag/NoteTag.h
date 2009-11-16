@@ -60,7 +60,7 @@ namespace Tag
         const QString & currentStateName();
         void setCurrentState( const QString & stateName );
 
-        static NoteTag * newTag();
+        static NoteTag * newTag( const QString & name = QString("New tag") );
 
         void setVisibleTag( bool visible );
 

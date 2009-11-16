@@ -17,41 +17,38 @@
  Boston, MA 02110-1301, USA.
  */
 
-#ifndef ADDTAG_H
-#define ADDTAG_H
+#include "TagBasket.h"
 
-#include <QPushButton>
-#include <QMouseEvent>
+#include "../scene/AbstractScene.h"
+#include "../scene/SceneFactory.h"
+#include "../config/Configuration.h"
 
-#include <kmenu.h>
-
-#include "../config/ImageFactory.h"
-
-namespace Item
-{
-    class AbstractItem;
-}
-
-namespace Tag
+namespace Basket
 {
 
-    class AddTag : public QPushButton
+    TagBasket::TagBasket( const QString & name ):
+            AbstractBasket( name )
     {
-        Q_OBJECT
+        m_type = "tagBasket";
+    }
 
-    public:
-        AddTag( Item::AbstractItem * noteItem );
+    void TagBasket::save()
+    {
+        //TODO: remove all item from scene
+        m_contentScene->save( m_nameId, m_configFilePath );
+    }
 
-    protected:
-        void mousePressEvent( QMouseEvent * e );
-        void loadTagsMenu();
+    void TagBasket::load()
+    {
+        m_contentScene = Scene::SceneFactory::newScene( m_configFilePath );
+        //TODO: add all item to scene
 
-    private:
-        KMenu m_menu;
-        Item::AbstractItem * m_abstractItem;
+        m_nameId = m_contentScene->id();
+    }
 
-    };
+    void TagBasket::del()
+    {
+        Config::Configuration::removeConfigDir( m_configFilePath );
+    }
 
 }
-
-#endif // ADDTAG_H

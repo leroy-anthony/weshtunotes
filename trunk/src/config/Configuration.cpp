@@ -22,6 +22,7 @@
 #include <QFileInfo>
 #include <QCoreApplication>
 
+
 #include "../main/general.h"
 
 namespace Config

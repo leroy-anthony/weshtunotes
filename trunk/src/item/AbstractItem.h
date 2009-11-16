@@ -58,6 +58,9 @@ namespace Item
         void setItemColor( const QColor & color );
         const QColor & itemColor();
 
+        bool containTag( const QString & tagName );
+        const QList<Tag::NoteTag*> & tags();
+
     signals:
         void editItem( Item::AbstractItem * item );
         void sizeChange();
@@ -65,6 +68,7 @@ namespace Item
 
     public slots:
         virtual void isSelected();
+        virtual void tagApply( QAction * action ) = 0;
 
     protected:
         AbstractItem( QWidget * parent );
@@ -75,6 +79,7 @@ namespace Item
         QColor m_color;
 
         Tag::AddTag * m_addTag;
+        QList<Tag::NoteTag*> m_tags;
 
     };
 

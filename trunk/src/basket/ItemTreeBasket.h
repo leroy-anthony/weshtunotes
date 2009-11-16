@@ -25,42 +25,24 @@
 #include "../main/general.h"
 
 #include "../explorer/TreeExplorer.h"
-#include "../scene/AbstractScene.h"
+#include "AbstractBasket.h"
 
 namespace Basket
 {
 
-    class ItemTreeBasket : public QTreeWidgetItem, public Technic::GeneratorID
+    class ItemTreeBasket : public QTreeWidgetItem
     {
     public:
         ItemTreeBasket( Explorer::TreeExplorer * treeExplorer, const QString & name );
         ItemTreeBasket( Basket::ItemTreeBasket * itemTreeBasket, const QString & name );
         ~ItemTreeBasket();
 
-        void load();
-        void load( const QString & type );
-
-        void save();
-
-        const QString & configFilePath();
-
-        Scene::AbstractScene * scene();
-        void setScene( Scene::AbstractScene * scene);
-
-        void del();
-
-    protected:
-        const QString & directory();
-        const QString & name();
+        AbstractBasket * basket();
 
     private:
         void initItemTreeBasket();
 
-        QString m_directory;
-        QString m_name;
-        QString m_configFilePath;
-
-        Scene::AbstractScene * m_contentScene;
+        AbstractBasket * m_basket;
 
     };
 

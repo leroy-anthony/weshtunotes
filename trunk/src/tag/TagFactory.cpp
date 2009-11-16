@@ -19,6 +19,10 @@
 
 #include "TagFactory.h"
 
+#include <QInputDialog>
+
+#include <kmessagebox.h>
+
 #include "../main/general.h"
 #include "../config/ImageFactory.h"
 #include "../config/VisualAspect.h"
@@ -130,16 +134,26 @@ namespace Tag
 
     void TagFactory::newTag()
     {
-        Tag::NoteTag * noteTag = NoteTag::newTag();
+        bool ok;
+        QString name = QInputDialog::getText(this, tr("Tag name"),
+                                             tr("Tag name:"), QLineEdit::Normal,
+                                             "New tag", &ok);
 
-        QTreeWidgetItem * itemTag = new QTreeWidgetItem( m_tagsTree, QStringList(noteTag->name()) );
-        m_itemToTag[ itemTag ] = noteTag;
+        QList<QTreeWidgetItem*> items = m_tagsTree->findItems( name, Qt::MatchCaseSensitive | Qt::MatchRecursive );
 
-        QList<State*> states = noteTag->states();
-        for ( int i=0 ; i<states.size() ; ++i )
+        if ( ok && items.isEmpty() )
         {
-            QTreeWidgetItem * itemState = new QTreeWidgetItem( itemTag, QStringList(states[i]->name()) );
-            m_itemToState[ itemState ] = states[i];
+            Tag::NoteTag * noteTag = NoteTag::newTag( name );
+
+            QTreeWidgetItem * itemTag = new QTreeWidgetItem( m_tagsTree, QStringList(noteTag->name()) );
+            m_itemToTag[ itemTag ] = noteTag;
+
+            QList<State*> states = noteTag->states();
+            for ( int i=0 ; i<states.size() ; ++i )
+            {
+                QTreeWidgetItem * itemState = new QTreeWidgetItem( itemTag, QStringList(states[i]->name()) );
+                m_itemToState[ itemState ] = states[i];
+            }
         }
     }
 
@@ -302,12 +316,6 @@ namespace Tag
     void TagFactory::quit()
     {
         reject();
-    }
-
-    void TagFactory::showMenuTag()
-    {
-        //m_menu->popup(QCursor::pos());
-        //menu.show();
     }
 
     void TagFactory::tagApply( QAction * action )
