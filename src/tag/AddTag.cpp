@@ -24,15 +24,16 @@
 #include <kaction.h>
 
 #include "../tag/TagFactory.h"
+#include "../tag/NoteTag.h"
 #include "../item/NoteItem.h"
 #include "../config/VisualAspect.h"
 
 namespace Tag
 {
 
-    AddTag::AddTag( Item::NoteItem * noteItem ):
+    AddTag::AddTag( Item::AbstractItem * noteItem ):
             QPushButton( noteItem ),
-            m_noteItem( noteItem )
+            m_abstractItem( noteItem )
     {
         setIcon(Config::ImageFactory::icon(Config::Image::addBasket));
         setIconSize(QSize(12,12));
@@ -67,12 +68,12 @@ namespace Tag
             action->setData(tags[i]);
             action->setText(tags[i]);
             action->setCheckable(true);
-            action->setChecked( m_noteItem->containTag(tags[i]) );
+            action->setChecked( m_abstractItem->containTag(tags[i]) );
             m_menu.addAction(action);
         }
-        if ( m_noteItem != 0 )
+        if ( m_abstractItem != 0 )
         {
-            connect(&m_menu, SIGNAL(triggered(QAction*)), m_noteItem, SLOT(tagApply(QAction*)));
+            connect(&m_menu, SIGNAL(triggered(QAction*)), m_abstractItem, SLOT(tagApply(QAction*)));
         }
     }
 

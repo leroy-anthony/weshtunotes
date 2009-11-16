@@ -50,7 +50,7 @@ namespace Explorer
         Basket::ItemTreeBasket * b = dynamic_cast<Basket::ItemTreeBasket*>(currentItem());
         if ( b != 0 )
         {
-            b->del();
+            b->basket()->del();
             delete b;
         }
     }
@@ -119,7 +119,6 @@ namespace Explorer
         {
             loadBasket( masterBasket[i] );
         }
-
     }
 
     void TreeExplorer::saveBaskets()
@@ -130,7 +129,7 @@ namespace Explorer
         {
             QTreeWidgetItem * item = topLevelItem( i );
             Basket::ItemTreeBasket * b = dynamic_cast<Basket::ItemTreeBasket*>(item);
-            b->save();
+            b->basket()->save();
         }
     }
 
@@ -145,7 +144,8 @@ namespace Explorer
 
         setCurrentItem( b );
 
-        QStringList l = Config::Configuration::subDirs( b->configFilePath() );
+        qDebug() << b->basket()->configFilePath();
+        QStringList l = Config::Configuration::subDirs( b->basket()->configFilePath() );
         for ( int i=0 ; i<l.size() ; ++i )
         {
             loadBasket( b, l[i] );

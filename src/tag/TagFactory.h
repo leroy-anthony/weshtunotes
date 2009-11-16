@@ -37,10 +37,9 @@ namespace Tag
 
     public:
         static TagFactory * newTagFactory( QWidget * parent = 0 );
-        void loadTags();
-
-        static void showMenuTag();
         static QStringList tagsNames();
+
+        void loadTags();
 
     protected:
         TagFactory( QWidget * parent = 0 );

@@ -77,4 +77,22 @@ namespace Item
         QWidget::keyPressEvent(keyEvent);
     }
 
+    bool AbstractItem::containTag( const QString & tagName )
+    {
+        for ( int i=0 ; i<m_tags.size() ; ++i )
+        {
+            if ( m_tags[i]->name() == tagName )
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+     const QList<Tag::NoteTag*> & AbstractItem::tags()
+     {
+         return m_tags;
+     }
+
 }

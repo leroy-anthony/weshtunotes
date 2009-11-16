@@ -47,6 +47,10 @@ set(weshnotes_SRC
 ./src/explorer/AbstractExplorer.cpp
 ./src/explorer/TreeExplorer.cpp
 ./src/basket/ItemTreeBasket.cpp
+./src/basket/AbstractBasket.cpp
+./src/basket/Basket.cpp
+./src/basket/TagBasket.cpp
+./src/basket/BasketFactory.cpp
 ./src/config/Configuration.cpp
 ./src/config/ImageFactory.cpp
 ./src/config/ConfigDialog.cpp

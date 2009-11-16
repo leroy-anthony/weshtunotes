@@ -17,41 +17,13 @@
  Boston, MA 02110-1301, USA.
  */
 
-#ifndef ADDTAG_H
-#define ADDTAG_H
+#include "BasketFactory.h"
 
-#include <QPushButton>
-#include <QMouseEvent>
-
-#include <kmenu.h>
-
-#include "../config/ImageFactory.h"
-
-namespace Item
-{
-    class AbstractItem;
-}
-
-namespace Tag
+namespace Basket
 {
 
-    class AddTag : public QPushButton
+    BasketFactory::BasketFactory()
     {
-        Q_OBJECT
-
-    public:
-        AddTag( Item::AbstractItem * noteItem );
-
-    protected:
-        void mousePressEvent( QMouseEvent * e );
-        void loadTagsMenu();
-
-    private:
-        KMenu m_menu;
-        Item::AbstractItem * m_abstractItem;
-
-    };
+    }
 
 }
-
-#endif // ADDTAG_H

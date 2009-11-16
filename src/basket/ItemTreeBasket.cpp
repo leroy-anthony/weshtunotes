@@ -25,28 +25,24 @@
 #include "../config/Configuration.h"
 #include "../config/ImageFactory.h"
 #include "../scene/SceneFactory.h"
+#include "../basket/Basket.h"
 
 namespace Basket
 {
     ItemTreeBasket::ItemTreeBasket( Explorer::TreeExplorer * treeExplorer, const QString & name ):
             QTreeWidgetItem( treeExplorer, QStringList(name) ),
-            GeneratorID("basket"),
-            m_directory( name ),
-            m_name( name ),
-            m_configFilePath( name + QDir::separator() + name ),
-            m_contentScene(0)
+            m_basket(0)
     {
+        m_basket = new Basket( name );
+
         initItemTreeBasket();
     }
 
-    ItemTreeBasket::ItemTreeBasket( Basket::ItemTreeBasket * itemTreeBasket, const QString & name ):
+    ItemTreeBasket::ItemTreeBasket( ItemTreeBasket * itemTreeBasket, const QString & name ):
             QTreeWidgetItem( itemTreeBasket, QStringList(name) ),
-            GeneratorID("basket"),
-            m_name( name ),
-            m_contentScene(0)
+            m_basket(0)
     {
-        m_directory = itemTreeBasket->directory() + QDir::separator() + name;
-        m_configFilePath = m_directory + QDir::separator() + name;
+        m_basket = new Basket( itemTreeBasket->basket(), name );
 
         initItemTreeBasket();
     }
@@ -58,81 +54,11 @@ namespace Basket
 
     ItemTreeBasket::~ItemTreeBasket()
     {
-        delete m_contentScene;
     }
 
-    const QString & ItemTreeBasket::name()
+    AbstractBasket * ItemTreeBasket::basket()
     {
-        return m_name;
-    }
-
-    const QString & ItemTreeBasket::directory()
-    {
-        return m_directory;
-    }
-
-    const QString & ItemTreeBasket::configFilePath()
-    {
-        return m_configFilePath;
-    }
-
-    Scene::AbstractScene * ItemTreeBasket::scene()
-    {
-        return m_contentScene;
-    }
-
-    void ItemTreeBasket::setScene( Scene::AbstractScene * scene )
-    {
-        m_contentScene = scene;
-    }
-
-    void ItemTreeBasket::save()
-    {
-        m_contentScene->save( m_nameId, m_configFilePath );
-        int childsSize = childCount();
-        for ( int i=0 ; i<childsSize ; ++i )
-        {
-            dynamic_cast<ItemTreeBasket*>(child(i))->save();
-        }
-    }
-
-    void ItemTreeBasket::load()
-    {
-        m_contentScene = Scene::SceneFactory::newScene( m_configFilePath );
-
-        m_nameId = m_contentScene->id();
-
-        setText(1,m_nameId);
-        int childsSize = childCount();
-        for ( int i=0 ; i<childsSize ; ++i )
-        {
-            dynamic_cast<ItemTreeBasket*>(child(i))->load();
-        }
-    }
-
-    void ItemTreeBasket::load( const QString & type )
-    {
-        m_contentScene = Scene::SceneFactory::newScene( m_configFilePath, type );
-
-        m_nameId = m_contentScene->id();
-
-        setText(1,m_nameId);
-        int childsSize = childCount();
-        for ( int i=0 ; i<childsSize ; ++i )
-        {
-            dynamic_cast<ItemTreeBasket*>(child(i))->load();
-        }
-    }
-
-    void ItemTreeBasket::del()
-    {
-        int childSize = childCount();
-        for ( int i=0 ; i<childSize ; ++i )
-        {
-            dynamic_cast<ItemTreeBasket*>(child(i))->del();
-        }
-
-        Config::Configuration::removeConfigDir( m_configFilePath );
+        return m_basket;
     }
 
 }
