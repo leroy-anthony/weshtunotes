@@ -244,7 +244,6 @@ namespace Item
 
     void NoteItem::insertData( const QMimeData * data )
     {
-        qDebug() << " Alice Taglioni";
         m_plainTextEdit->addData( data );
     }
 
