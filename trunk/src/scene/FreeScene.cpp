@@ -140,7 +140,16 @@ namespace Scene
         g->setWidget(handle);
         addItem(g);
 
-        g->setPos(handle->x(),handle->y());
+        int x = handle->x(), y = handle->y();
+        g->setPos( x, y );
+
+        QList<QGraphicsItem*> items = collidingItems( g );
+        while ( items.size() > 0 )
+        {
+            y += items[0]->boundingRect().height();
+            g->setPos( x, y );
+            items = collidingItems( g );
+        }
 
         m_handles[handle] = g;
         m_items[g] = handle;
