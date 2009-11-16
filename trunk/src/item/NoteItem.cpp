@@ -242,4 +242,10 @@ namespace Item
         QCoreApplication::sendEvent( m_plainTextEdit, keyEvent );
     }
 
+    void NoteItem::insertData( const QMimeData * data )
+    {
+        qDebug() << " Alice Taglioni";
+        m_plainTextEdit->addData( data );
+    }
+
 }

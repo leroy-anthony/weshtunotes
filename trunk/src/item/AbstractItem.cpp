@@ -95,4 +95,8 @@ namespace Item
          return m_tags;
      }
 
+     void AbstractItem::insertData( const QMimeData * data )
+     {
+     }
+
 }

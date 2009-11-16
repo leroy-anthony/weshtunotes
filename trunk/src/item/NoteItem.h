@@ -51,6 +51,8 @@ namespace Item
         void tagApply();
 
         void adaptSize();
+
+        void insertData( const QMimeData * data );
         
     public slots:
         void setBold( bool checked );
