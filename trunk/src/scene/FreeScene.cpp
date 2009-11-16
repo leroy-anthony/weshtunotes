@@ -75,7 +75,11 @@ namespace Scene
         if ( m_currentAbstractItem == 0 )
         {
             QGraphicsView * view = views()[0];
-            QPointF pt = view->mapToScene( view->viewport()->width()/2-200, view->viewport()->height()/2 );
+
+            QPointF pt = view->mapToScene( view->viewport()->width()/2, view->viewport()->height()/2 );
+            int x = (rand() % 30 + 1)*(rand() % 2 == 0 ? -1 : 1 );
+            int y = (rand() % 30 + 1)*(rand() % 2 == 0 ? -1 : 1 );
+            pt += QPointF(x,y);
 
             Handle::HandleItem * handle = newHandle( pt.x(), pt.y() );
 
@@ -83,7 +87,7 @@ namespace Scene
 
             handle->add( item );
 
-            addHandleToScene( handle );
+            QGraphicsItem * g = addHandleToScene( handle );
 
             item->load( data );
 
@@ -140,16 +144,8 @@ namespace Scene
         g->setWidget(handle);
         addItem(g);
 
-        int x = handle->x(), y = handle->y();
-        g->setPos( x, y );
-
-        QList<QGraphicsItem*> items = collidingItems( g );
-        while ( items.size() > 0 )
-        {
-            y += items[0]->boundingRect().height();
-            g->setPos( x, y );
-            items = collidingItems( g );
-        }
+        g->setPos( handle->x(), handle->y() );
+        g->setZValue( 1 );
 
         m_handles[handle] = g;
         m_items[g] = handle;
@@ -184,14 +180,12 @@ namespace Scene
         {
             static_cast<QWidget*>(handleItem)->move(x,y);
 
+            Handle::HandleItem::resetInsert();
+
             QList<QGraphicsItem *> items = collidingItems( m_handles[handleItem] );
             if ( items.size() > 0 )
             {
                 m_items[static_cast<QGraphicsProxyWidget*>(items[0])]->insert( handleItem->geometry().topLeft(), handleItem->height() );
-            }
-            else
-            {
-                Handle::HandleItem::resetInsert();
             }
         }
         else
@@ -230,6 +224,7 @@ namespace Scene
             if ( h != 0 )
             {
                 m_currentHandle = h->handleItemAt( mouseEvent->scenePos().x(), mouseEvent->scenePos().y() );
+                m_currentGraphicsItem->setZValue( 100 );
             }
         }
         else if ( m_currentGraphicsItem == 0 )
@@ -290,8 +285,10 @@ namespace Scene
                 Handle::HandleItem::resetInsert();
             }
 
+            m_currentGraphicsItem->setZValue( 1 );
             m_currentHandle->setModeDegroupement(false);
             m_currentHandle->setHoverMode( false );
+
             if ( m_currentHandle->noteItem() != 0 )
             {
                 m_currentHandle->noteItem()->isSelected();
