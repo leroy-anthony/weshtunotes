@@ -110,6 +110,8 @@ namespace Explorer
 
         setCurrentIndex( indexFromItem( b, 0 ) );
 
+        b->basket()->load();
+
         return b;
     }
 
