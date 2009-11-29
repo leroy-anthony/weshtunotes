@@ -56,7 +56,7 @@ MainWindow::MainWindow( QWidget * parent ) :
 
     initSystemTray();
 
-    setupGUI( Default, "data:main_ui.rc" );
+    setupGUI( Default, "kweshtunotesui.rc" );
 
     loadData();
 }

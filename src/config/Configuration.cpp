@@ -41,9 +41,6 @@ namespace Config
 
     void Configuration::iniConfigration()
     {
-        QDir::addSearchPath( "data", "/home/kahal/Programmation/C++/weshtunotes/data" );
-        QDir::addSearchPath( "icon", "/home/kahal/Programmation/C++/weshtunotes/data/icon" );
-
         QDir dir(Settings::basketsStorePath().path()+QDir::separator()+"data");
         if ( !dir.exists() )
         {

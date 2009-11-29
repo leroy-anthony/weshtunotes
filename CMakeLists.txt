@@ -98,5 +98,5 @@ kde4_add_executable(kweshtunotes ${weshnotes_SRC})
 target_link_libraries( kweshtunotes ${KDE4_KDEUI_LIBS} ${KDE4_KPARTS_LIBS} ${QT_LIBRARIES} )
 
 install(TARGETS kweshtunotes DESTINATION ${BIN_INSTALL_DIR})
-install(FILES ./src/main/kweshtunotes.rc DESTINATION  ${DATA_INSTALL_DIR}/kweshtunotes)
+install(FILES ./src/main/kweshtunotesui.rc DESTINATION  ${DATA_INSTALL_DIR}/kweshtunotes)
 install(FILES kweshtunotes.desktop DESTINATION  ${XDG_APPS_INSTALL_DIR})
