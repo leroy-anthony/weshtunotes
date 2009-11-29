@@ -35,7 +35,7 @@ namespace Tag
             QPushButton( noteItem ),
             m_abstractItem( noteItem )
     {
-        setIcon(Config::ImageFactory::icon(Config::Image::addBasket));
+        setIcon(Config::ImageFactory::newInstance()->icon("list-add.png"));
         setIconSize(QSize(12,12));
         setContentsMargins(0,0,0,0);
         hide();

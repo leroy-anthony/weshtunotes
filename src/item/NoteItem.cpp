@@ -139,19 +139,15 @@ namespace Item
     {
         Config::Configuration settings( fileName );
 
-        settings.beginGroup( handleId );
-        settings.setValue("data",m_nameId);
-        settings.setValue("color",m_color.name());
+        settings.setValue(handleId,"data",m_nameId);
+        settings.setValue(handleId,"color",m_color.name());
 
         QStringList namesTags;
         for ( int i=0 ; i<m_tags.size() ; ++i )
         {
             namesTags << m_tags[i]->name()+":" + m_tags[i]->currentStateName();
         }
-        settings.setValue("tags",namesTags);
-
-        settings.endGroup();
-        settings.sync();
+        settings.setValue(handleId,"tags",namesTags);
 
         Config::Configuration::saveNote( settings.fileName(), m_plainTextEdit->document()->toHtml(), m_nameId );
     }
@@ -194,7 +190,7 @@ namespace Item
         if ( action->isChecked() )
         {
             QString tagName = action->data().toString();
-            qDebug() << tagName;
+
             Tag::NoteTag * tag = new Tag::NoteTag( this, tagName );
             m_tags << tag;
             m_horizontalLayout->insertWidget(0,tag);

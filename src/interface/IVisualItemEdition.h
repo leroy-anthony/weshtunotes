@@ -37,8 +37,8 @@ namespace Item
         virtual void setItemColor( const QColor & color ) = 0;
         virtual void setSymbol( const QString & icon ) = 0;
 
-        void saveVisualItemEdition( Config::Configuration & settings );
-        void loadVisualItemEdition( Config::Configuration & settings );
+        void saveVisualItemEdition( Config::Configuration & settings, const QString & tagName, const QString & state  );
+        void loadVisualItemEdition( Config::Configuration & settings, const QString & tagName, const QString & state  );
 
         const QString & symbol();
         const QColor & itemColor();

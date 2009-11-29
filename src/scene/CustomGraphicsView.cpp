@@ -41,8 +41,7 @@ namespace Scene
     {
         if ( QGLFormat::hasOpenGL() )
         {
-            QGLFormat format(QGL::SampleBuffers);
-            setViewport(new QGLWidget(format));
+            setViewport(new QGLWidget(QGLFormat()));
         }
         /*
       QGraphicsView::FullViewportUpdate

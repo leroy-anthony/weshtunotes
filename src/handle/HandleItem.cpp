@@ -44,7 +44,7 @@ namespace Handle
     QWidget * HandleItem::m_insertIndicator = 0;
     int HandleItem::m_index = 0;
 
-    HandleItem::HandleItem( Scene::AbstractScene * parent, int x, int y ) :
+    HandleItem::HandleItem( Scene::AbstractScene * parent, int x, int y, int width ) :
             QWidget(0),
             GeneratorID("handle"),
             m_scene(parent),
@@ -59,7 +59,7 @@ namespace Handle
             m_x(x),
             m_y(y)
     {
-        QWidget::resize(Config::Constant::defaultHandleWidth,height());
+        QWidget::resize(width, width);
         setContentsMargins( m_contentMarginX, m_contentMarginY, m_contentMarginX, m_contentMarginY );
 
         m_handleLayout = new QGridLayout( this );
@@ -202,8 +202,6 @@ namespace Handle
             size = m_contentLayout->count();
         }
 
-        //m_insertIndicator->setMaximumHeight(height);
-
         QPoint p = mapFromGlobal( pt );
 
         int choix = 0;
@@ -300,39 +298,26 @@ namespace Handle
 
         Config::Configuration settings( fileName );
 
-        settings.beginGroup(m_nameId);
-        settings.setValue("x",m_x);
-        settings.setValue("y",m_y);
-        settings.setValue("height",height());
-        settings.setValue("width",width());
+        settings.setValue(m_nameId,"x",m_x);
+        settings.setValue(m_nameId,"y",m_y);
+        settings.setValue(m_nameId,"height",height());
+        settings.setValue(m_nameId,"width",width());
 
         if ( childs.size() > 0 )
         {
-            settings.setValue("items",childs);
+            settings.setValue(m_nameId,"items",childs);
         }
         else
         {
             m_item->save(fileName,m_nameId);
         }
-        settings.setValue("color",m_defaultColor.name());
 
-        settings.endGroup();
-        settings.sync();
+        settings.setValue(m_nameId,"color",m_defaultColor.name());
 
         for ( int i=0 ; i<m_handles.size() ; i++)
         {
             m_handles[i]->save(fileName);
         }
-    }
-
-    void HandleItem::load( const QString & fileName )
-    {
-        Config::Configuration settings( fileName );
-
-        m_x = settings.value("x").toInt();
-        m_y = settings.value("y").toInt();
-
-        setDefaultColor( QColor(settings.value("color").value<QString>()) );
     }
 
     void HandleItem::paintEvent( QPaintEvent * event )

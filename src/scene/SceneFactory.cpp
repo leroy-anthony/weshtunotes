@@ -15,9 +15,9 @@ namespace Scene
     AbstractScene * SceneFactory::newScene( const QString &  fileName )
     {
         Config::Configuration settings( fileName );
-        settings.beginGroup("scene");
+        //settings.beginGroup("scene");
 
-        return newSceneInterne( fileName, settings.value("type",FreeScene::type).toString() );
+        return newSceneInterne( fileName, settings.valueGroup("scene","type",FreeScene::type) );
     }
 
     AbstractScene * SceneFactory::newScene( const QString &  fileName, const QString & type )

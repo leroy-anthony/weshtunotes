@@ -52,11 +52,11 @@ namespace Tag
     {
         setupUi( this );
 
-        m_boldText->setIcon(Config::ImageFactory::icon(Config::Image::textBold));
-        m_italicText->setIcon(Config::ImageFactory::icon(Config::Image::textItalic));
-        m_underlineText->setIcon(Config::ImageFactory::icon(Config::Image::textUnderline));
-        m_strikeText->setIcon(Config::ImageFactory::icon(Config::Image::textStrikeOut));
-        m_delTagButton->setIcon(Config::ImageFactory::icon(Config::Image::deleteAction));
+        m_boldText->setIcon(Config::ImageFactory::newInstance()->icon("format-text-bold.png"));
+        m_italicText->setIcon(Config::ImageFactory::newInstance()->icon("format-text-italic.png"));
+        m_underlineText->setIcon(Config::ImageFactory::newInstance()->icon("format-text-underline.png"));
+        m_strikeText->setIcon(Config::ImageFactory::newInstance()->icon("format-text-strikethrough.png"));
+        m_delTagButton->setIcon(Config::ImageFactory::newInstance()->icon("edit-delete.png"));
 
         connect(m_delTagButton, SIGNAL(clicked()), this, SLOT(del()));
         connect(m_newTagButton, SIGNAL(clicked()), this, SLOT(newTag()));
@@ -91,10 +91,20 @@ namespace Tag
 
         if ( m_itemToState.contains( item ) )
         {
+            State * state = m_itemToState[ item ];
+            NoteTag * tag = m_itemToTag[ item->parent() ];
+            tag->removeState( state );
+
             m_itemToState.remove( item );
         }
         else if ( m_itemToTag.contains( item ) )
         {
+            int childSize = item->childCount();
+            for ( int i=0 ; i<childSize ; ++i )
+            {
+                m_itemToState.remove( item->child(i) );
+            }
+
             m_itemToTag.remove( item );
         }
 
@@ -113,7 +123,7 @@ namespace Tag
     {
         Config::Configuration settings( "tags" );
 
-        QStringList tags = settings.childGroups();
+        QStringList tags = settings.values( "General", "tags" );
         for ( int i=0 ; i<tags.size() ; ++i )
         {
             NoteTag * tag = new NoteTag( 0, tags[i] );
@@ -121,7 +131,7 @@ namespace Tag
             QTreeWidgetItem * itemTag = new QTreeWidgetItem( m_tagsTree, QStringList(tags[i]) );
             m_itemToTag[ itemTag ] = tag;
 
-            QList<State*> states = tag->states();
+            const QList<State*> & states = tag->states();
             for ( int j=0 ; j<states.size() ; ++j )
             {
                 State * state = states[j];
@@ -287,22 +297,26 @@ namespace Tag
         m_sizeText->setCurrentIndex( m_sizeText->findText( QString("%1").arg(state->fontPointSize()) ) );
         m_strikeText->setChecked( state->fontStrikeOut() );
         m_underlineText->setChecked( state->underline() );
-        m_iconButton->setIcon( Config::ImageFactory::icon(state->symbol()) );
+        m_iconButton->setIcon( Config::ImageFactory::newInstance()->icon(state->symbol()) );
         m_withIcon->setChecked( state->symbol() != QString() );
         m_withColorBackground->setChecked( state->itemColor() != QColor() );
     }
 
     void TagFactory::ok()
     {
+        Config::Configuration::clear( "tags" );
         Config::Configuration settings( "tags" );
-        settings.clear();
-        settings.sync();
+
+        QStringList tagsName;
 
         QList<NoteTag*> tags = m_itemToTag.values();
         for ( int i=0 ; i<tags.size() ; ++i )
         {
             tags[i]->save();
+            tagsName << tags[i]->name();
         }
+
+        settings.setValue( "General", "tags", tagsName );
 
         QList<State*> states = m_itemToState.values();
         for ( int i=0 ; i<states.size() ; ++i )
@@ -320,12 +334,11 @@ namespace Tag
 
     void TagFactory::tagApply( QAction * action )
     {
-        qDebug() << action->text();
     }
 
     QStringList TagFactory::tagsNames()
     {
         Config::Configuration settings( "tags" );
-        return settings.childGroups();
+        return settings.values( "General", "tags" );
     }
 }

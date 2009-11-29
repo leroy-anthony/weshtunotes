@@ -40,9 +40,9 @@
 #include <QGraphicsView>
 #include <QScrollBar>
 
+#include "settings.h"
 #include "../handle/HandleItem.h"
 #include "../config/Configuration.h"
-
 #include "../handle/GraphicHandleItem.h"
 
 namespace Scene
@@ -81,7 +81,7 @@ namespace Scene
             int y = (rand() % 30 + 1)*(rand() % 2 == 0 ? -1 : 1 );
             pt += QPointF(x,y);
 
-            Handle::HandleItem * handle = newHandle( pt.x(), pt.y() );
+            Handle::HandleItem * handle = newHandle( pt.x(), pt.y(), Settings::widthNote() );
 
             Item::AbstractItem * item = newItem( pt.x(), pt.y() );
 
@@ -99,9 +99,9 @@ namespace Scene
         }
     }
 
-    Handle::HandleItem * FreeScene::newHandle( int x, int y )
+    Handle::HandleItem * FreeScene::newHandle( int x, int y, int w  )
     {
-        Handle::HandleItem * handle = new Handle::HandleItem( this, x, y );
+        Handle::HandleItem * handle = new Handle::HandleItem( this, x, y, w );
         connect( handle, SIGNAL(move(Handle::HandleItem*,int,int)), this, SLOT(moveItem(Handle::HandleItem*,int,int)));
         connect( handle, SIGNAL(delItem(Handle::HandleItem*)), this, SLOT(delItem(Handle::HandleItem*)));
         
@@ -118,7 +118,7 @@ namespace Scene
     
     Handle::HandleItem *  FreeScene::addItems( int x, int y, const QString & dataFile )
     {
-        Handle::HandleItem * handle = newHandle( x, y );
+        Handle::HandleItem * handle = newHandle( x, y, Settings::widthNote() );
         
         Item::AbstractItem * item = newItem( x, y );
 
@@ -269,7 +269,7 @@ namespace Scene
                 {
                     QPointF pt = static_cast<QGraphicsProxyWidget*>(items[0])->pos();
 
-                    Handle::HandleItem * handle = newHandle( pt.x(), pt.y() );
+                    Handle::HandleItem * handle = newHandle( pt.x(), pt.y(), Settings::widthNote() );
                     handle->add( handleCible );
                     handle->add( m_currentHandle );
                     addHandleToScene( handle );

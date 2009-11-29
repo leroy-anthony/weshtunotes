@@ -20,20 +20,26 @@
 #include "main_window.h"
 
 #include <QSpacerItem>
-
+#include <QtDBus/QtDBus>
 #include <QCalendarWidget>
+
 #include <kactioncollection.h>
 #include <kstandardaction.h>
 #include <kicondialog.h>
+#include <kconfigdialog.h>
+#include <kdebug.h>
 
+#include "settings.h"
 #include "../explorer/TreeExplorer.h"
 #include "../basket/ItemTreeBasket.h"
 #include "../config/Configuration.h"
 #include "../config/ImageFactory.h"
 #include "../config/ConfigDialog.h"
+#include "../config/GeneralPageDialog.h"
+#include "../config/AppareancePageDialog.h"
 
-MainWindow::MainWindow() :
-        KXmlGuiWindow(0),
+MainWindow::MainWindow( QWidget * parent ) :
+        KXmlGuiWindow( parent ),
         m_lastBasketLoad(0)
 {
     setupUi(this);
@@ -50,7 +56,7 @@ MainWindow::MainWindow() :
 
     initSystemTray();
 
-    createGUI("data:main_ui.rc");
+    setupGUI( Default, "data:main_ui.rc" );
 
     loadData();
 }
@@ -84,9 +90,11 @@ void MainWindow::setupActions()
     KStandardAction::quit(qApp, SLOT(quit()), actionCollection());
     KStandardAction::paste(m_view, SLOT(paste()), actionCollection());
 
-    KAction * a = new KAction("State",0);
-    actionCollection()->addAction( "State", a );
+    KAction * a = new KAction("Configure Tag...",0);
+    actionCollection()->addAction( "tag", a );
     connect( a, SIGNAL(triggered(bool)), m_tagFactory, SLOT(show()) );
+
+    KStandardAction::preferences(this, SLOT(showSettings()), actionCollection());
 }
 
 void MainWindow::save()
@@ -112,9 +120,41 @@ void MainWindow::initToolBar()
 
 void MainWindow::initView()
 {
+        QWidget * widget = new QWidget();
+
     m_view = new Scene::CustomGraphicsView();
+    centralwidget->layout()->setMargin(0);
     centralwidget->layout()->addWidget( m_view );
+    centralwidget->layout()->addWidget( widget );
     m_view->show();
+
+    QLayout * layoutButtonView = new QHBoxLayout( widget );
+    layoutButtonView->setMargin(0);
+    layoutButtonView->setSpacing(2);
+
+    layoutButtonView->addItem(new QSpacerItem(0,0,QSizePolicy::Expanding,QSizePolicy::Ignored));
+
+    QToolButton * q1 = new QToolButton();
+    q1->setIcon(Config::ImageFactory::newInstance()->icon("zoom-original.png"));
+    connect( q1, SIGNAL(clicked()), m_view, SLOT(resetZoom()) );
+    layoutButtonView->addWidget(q1);
+
+    QToolButton * q2 = new QToolButton();
+    q2->setIcon(Config::ImageFactory::newInstance()->icon("zoom-in.png"));
+    connect( q2, SIGNAL(clicked()), m_view, SLOT(doubleZoom()) );
+    layoutButtonView->addWidget(q2);
+
+    QToolButton * q3 = new QToolButton();
+    q3->setIcon(Config::ImageFactory::newInstance()->icon("zoom-out.png"));
+    connect( q3, SIGNAL(clicked()), m_view, SLOT(halfZoom()) );
+    layoutButtonView->addWidget(q3);
+
+    QToolButton * q4 = new QToolButton();
+    q4->setIcon(Config::ImageFactory::newInstance()->icon("zoom-fit-best.png"));
+    connect( q4, SIGNAL(clicked()), m_view, SLOT(fitInViewZoom()) );
+    layoutButtonView->addWidget(q4);
+
+    layoutButtonView->addItem(new QSpacerItem(0,0,QSizePolicy::Expanding,QSizePolicy::Ignored));
 }
 
 void MainWindow::initExplorer()
@@ -134,17 +174,17 @@ void MainWindow::initExplorer()
     layoutButtonExplorer->setSpacing(2);
 
     QToolButton * qq = new QToolButton();
-    qq->setIcon(Config::ImageFactory::icon(Config::Image::newBasket));
+    qq->setIcon(Config::ImageFactory::newInstance()->icon("document-new.png"));
     connect( qq, SIGNAL(clicked()), this, SLOT(addBasketToRoot()) );
     layoutButtonExplorer->addWidget(qq);
 
     QToolButton * q = new QToolButton();
-    q->setIcon(Config::ImageFactory::icon(Config::Image::addBasket));
+    q->setIcon(Config::ImageFactory::newInstance()->icon("list-add.png"));
     connect( q, SIGNAL(clicked()), this, SLOT(addToCurrentBasket()) );
     layoutButtonExplorer->addWidget(q);
 
     QToolButton * qqq = new QToolButton();
-    qqq->setIcon(Config::ImageFactory::icon(Config::Image::deleteAction));
+    qqq->setIcon(Config::ImageFactory::newInstance()->icon("edit-delete.png"));
     connect( qqq, SIGNAL(clicked()), this, SLOT(delCurrentBasket()) );
     layoutButtonExplorer->addWidget(qqq);
 
@@ -268,9 +308,9 @@ void MainWindow::freeScene()
 void MainWindow::initSystemTray()
 {
     m_trayIcon = new KSystemTrayIcon(this);
-    m_trayIcon->setIcon(Config::ImageFactory::icon(Config::Image::application));
+    m_trayIcon->setIcon(Config::ImageFactory::newInstance()->icon("basket.png"));
     m_trayIcon->show();
-    setWindowIcon(Config::ImageFactory::icon(Config::Image::application));
+    setWindowIcon(Config::ImageFactory::newInstance()->icon("basket.png"));
 
     connect(m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 }
@@ -297,4 +337,24 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
     default:
         ;
     }
+}
+
+void MainWindow::showSettings()
+{
+    if(KConfigDialog::showDialog("settings"))
+        return;
+
+    KConfigDialog *dialog = new KConfigDialog(this, "settings", Settings::self());
+    dialog->resize(650,400);
+    dialog->setFaceType(KPageDialog::List);
+    dialog->addPage(new Config::GeneralPageDialog(0),"General" );
+    dialog->addPage(new Config::AppareancePageDialog(0),"Appareance" );
+    dialog->show();
+
+    connect( dialog, SIGNAL(settingsChanged()), this, SLOT(updateConfiguration()) );
+}
+
+void MainWindow::updateConfiguration()
+{
+    Settings::self()->writeConfig();
 }

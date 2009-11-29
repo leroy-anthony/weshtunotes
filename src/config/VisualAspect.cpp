@@ -17,6 +17,4 @@ namespace Config
     int VisualAspect::lighterIntensity = 150;
     int VisualAspect::widthHandleControl = 9;
 
-    QColor VisualAspect::defaultColorNote = QColor("#F7F7C8");
-
 }

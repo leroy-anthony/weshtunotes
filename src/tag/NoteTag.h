@@ -55,6 +55,8 @@ namespace Tag
         void setName( const QString & name );
 
         void addState( State * state );
+        void removeState( State * state );
+
         const QList<State*> & states();
         State * currentState();
         const QString & currentStateName();

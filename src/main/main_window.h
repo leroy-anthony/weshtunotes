@@ -34,14 +34,12 @@
 #include "../tag/TagFactory.h"
 #include "../scene/CustomGraphicsView.h"
 
-using namespace std;
-
 class MainWindow : public KXmlGuiWindow, public Ui::MainWindow
 {
     Q_OBJECT
 
 public:
-    MainWindow();
+    MainWindow( QWidget * parent = 0 );
     ~MainWindow();
 
     Scene::AbstractScene * currentScene();
@@ -59,6 +57,9 @@ public slots:
 
     void layoutScene();
     void freeScene();
+
+    void showSettings();
+    void updateConfiguration();
 
 protected:
     void closeEvent(QCloseEvent *event);

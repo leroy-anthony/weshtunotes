@@ -30,7 +30,7 @@ namespace Handle
             QPushButton(parent),
             m_handleItemRoot(parent)
     {
-        setIcon(Config::ImageFactory::icon(Config::Image::exitAction));
+        setIcon(Config::ImageFactory::newInstance()->icon("application-exit.png"));
         setIconSize(QSize(Config::VisualAspect::widthHandleControl,Config::VisualAspect::widthHandleControl));
         setFixedWidth(Config::VisualAspect::widthHandleControl);
         setFixedHeight(Config::VisualAspect::widthHandleControl);

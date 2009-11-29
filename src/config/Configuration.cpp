@@ -22,29 +22,20 @@
 #include <QFileInfo>
 #include <QCoreApplication>
 
-
+#include "settings.h"
+#include "../main/general.h"
 #include "../main/general.h"
 
 namespace Config
 {
 
-    int Constant::defaultHandleWidth = 400;
-    QString Constant::main = "main";
-    QString Constant::lastBasket = "lastBasket";
-    QString Constant::dirBasketKey = "dirBasket";
-    QString Constant::dirDataKey = "data";
-    QString Constant::home = QDir::homePath()+QDir::separator()+".weshTuNotes";
-    QString Constant::homeData = QDir::homePath()+QDir::separator()+".weshTuNotes"+QDir::separator()+"data";
-    QString Constant::homeBaskets = QDir::homePath()+QDir::separator()+".weshTuNotes"+QDir::separator()+"baskets";
-    QString Constant::dirBasket = Configuration().value(Constant::dirBasketKey,Constant::homeBaskets).toString();
-
     Configuration::Configuration():
-             QSettings( QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationName(), Constant::main )
+            KConfig( "kweshtunotesrc" )
     {
     }
 
     Configuration::Configuration( const QString & config ):
-            QSettings( Constant::dirBasket+QDir::separator()+config, QSettings::IniFormat )
+            KConfig( Settings::basketsStorePath().path()+QDir::separator()+"baskets"+QDir::separator()+config )
     {
     }
 
@@ -53,18 +44,18 @@ namespace Config
         QDir::addSearchPath( "data", "/home/kahal/Programmation/C++/weshtunotes/data" );
         QDir::addSearchPath( "icon", "/home/kahal/Programmation/C++/weshtunotes/data/icon" );
 
-        QDir dir(Constant::homeData);
+        QDir dir(Settings::basketsStorePath().path()+QDir::separator()+"data");
         if ( !dir.exists() )
         {
-            dir.mkpath(Constant::homeData);
+            dir.mkpath(Settings::basketsStorePath().path()+QDir::separator()+"data");
         }
-        QDir::addSearchPath( "data", Constant::homeData );
-        QDir::addSearchPath( "icon", Constant::homeData+QDir::separator()+"icon" );
+        QDir::addSearchPath( "data", Settings::basketsStorePath().path()+QDir::separator()+"data" );
+        QDir::addSearchPath( "icon", Settings::basketsStorePath().path()+QDir::separator()+"data"+QDir::separator()+"icon" );
 
-        QDir dir2(Constant::homeBaskets);
+        QDir dir2( Settings::basketsStorePath().path()+QDir::separator()+"baskets" );
         if ( !dir2.exists() )
         {
-            dir2.mkpath(Constant::homeBaskets);
+            dir2.mkpath( Settings::basketsStorePath().path()+QDir::separator()+"baskets" );
         }
     }
 
@@ -74,7 +65,7 @@ namespace Config
 
     QStringList Configuration::masterBaskets()
     {
-        QDir dir(Constant::dirBasket);
+        QDir dir( Settings::basketsStorePath().path()+QDir::separator()+"baskets" );
         dir.setFilter( QDir::Dirs | QDir::NoDotAndDotDot );
 
         return dir.entryList();
@@ -83,14 +74,13 @@ namespace Config
     void Configuration::saveLastBasket( const QString & name )
     {
         Configuration settings;
-        settings.setValue( Constant::lastBasket, name );
-        settings.sync();
+        settings.setValue( "", "lastBasket", name );
     }
 
     QString Configuration::loadLastBasket()
     {
         Configuration settings;
-        return settings.value( Constant::lastBasket ).toString();
+        return settings.valueGroup( "", "lastBasket", "" );
     }
 
     QStringList Configuration::subDirs( const QString & directory )
@@ -132,67 +122,58 @@ namespace Config
 
     QString Configuration::fileName () const
     {
-        return QSettings::fileName();
+        return name();
     }
 
-    void Configuration::clear()
+    void Configuration::clear( const QString & fileName )
     {
-        QSettings::clear();
+        QFile f(fileName);
+        f.remove();
     }
 
-    void Configuration::beginGroup( const QString & prefix )
+    void Configuration::setValue( const QString & groupKey, const QString & key, QVariant value )
     {
-        QSettings::beginGroup( prefix );
+        KConfigGroup groupConfig = group( groupKey );
+        groupConfig.writeEntry( key, value );
+        groupConfig.sync();
     }
 
-    void Configuration::endGroup()
+    void Configuration::setValue( const QString & groupKey, const QString & subGroupKey, const QString & key, QVariant value )
     {
-        QSettings::endGroup();
+        KConfigGroup groupConfig = group( groupKey );
+        KConfigGroup subGroup = groupConfig.group( subGroupKey );
+        subGroup.writeEntry( key, value );
+        subGroup.sync();
     }
 
-    void Configuration::setValue( const QString & key, const QVariant & value )
+    QString Configuration::valueGroup( const QString & groupKey, const QString & key, QVariant defaultValue ) const
     {
-        QSettings::setValue( key, value );
+        KConfigGroup configGroup( this, groupKey );
+        return configGroup.readEntry( key, defaultValue ).toString();
     }
 
-    QVariant Configuration::value( const QString & key, const QVariant & defaultValue ) const
+    QString Configuration::valueSubGroup( const QString & groupKey, const QString & subGroupKey, const QString & key, QVariant defaultValue ) const
     {
-        return QSettings::value( key, defaultValue );
+        KConfigGroup configGroup( this, groupKey );
+        return configGroup.group(subGroupKey).readEntry( key, defaultValue ).toString();
     }
 
-    void Configuration::remove( const QString & key )
+    QStringList Configuration::values( const QString & groupKey, const QString & key ) const
     {
-        QSettings::remove( key );
+        KConfigGroup configGroup = group( groupKey );
+        return configGroup.readEntry( key, QStringList() );
     }
 
-    QStringList Configuration::childGroups() const
+    void Configuration::removeSubGroup( const QString & group, const QString & subGroup )
     {
-        return QSettings::childGroups();
+        KConfigGroup configGroup( this, group );
+        configGroup.group( subGroup ).deleteGroup();
     }
 
-    int Configuration::beginReadArray( const QString & prefix )
+    void Configuration::removeGroup( const QString & group )
     {
-        return QSettings::beginReadArray( prefix );
-    }
-
-    void Configuration::beginWriteArray( const QString & prefix )
-    {
-        QSettings::beginWriteArray( prefix );
-    }
-
-    void Configuration::setArrayIndex( int i )
-    {
-        QSettings::setArrayIndex( i );
-    }
-
-    void Configuration::endArray()
-    {
-        QSettings::endArray();
-    }
-
-    void Configuration::sync()
-    {
-        QSettings::sync();
+        KConfigGroup configGroup( this, group );
+        configGroup.deleteGroup();
     }
 
     QString Configuration::loadNote( const QString & fileName, const QString & nameId )

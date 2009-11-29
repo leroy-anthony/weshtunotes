@@ -31,7 +31,7 @@
 
 namespace Config
 {
-    class Image
+    /*class Image
     {
     public:
         static QString textBold;
@@ -52,28 +52,31 @@ namespace Config
         static QString zoomOut;
         static QString zoomFitBest;
         static QString listScene;
-    };
+    };*/
 
     class ImageFactory
     {
-
     public:
-        static const KIcon & icon( const QString & iconId );
-        static const QPixmap & pixmap( const QString & pixmapId, QPixmap & pix  );
-        static void clean();
+        static ImageFactory * newInstance();
 
-        static const QPixmap & loadMimeTypeIcon( const QString & iconName, QPixmap & pix  );
-        static QString iconPath( const QString & iconName );
-        static QString iconNameForUrl( const KUrl & url );
+        const KIcon & icon( const QString & iconId );
+        const QPixmap & pixmap( const QString & pixmapId, QPixmap & pix  );
+        void clean();
+
+        const QPixmap & loadMimeTypeIcon( const QString & iconName, QPixmap & pix  );
+        QString iconPath( const QString & iconName );
+        QString iconNameForUrl( const KUrl & url );
 
     protected:
         ImageFactory();
         ~ImageFactory();
 
     private:
-        static QMap<QString,KIcon> m_cacheIcons;
-        static KPixmapCache m_cachePixmaps;
-        static KIconLoader kIconLoader;
+        QMap<QString,KIcon> m_cacheIcons;
+        KPixmapCache m_cachePixmaps;
+        KIconLoader kIconLoader;
+
+        static ImageFactory * m_imageFactory;
 
     };
 

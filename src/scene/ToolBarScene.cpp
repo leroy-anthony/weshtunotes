@@ -61,32 +61,32 @@ namespace Scene
         connect(m_colorText, SIGNAL(activated(const QColor &)), SLOT(setTextColor(const QColor &)));
         m_mainWindow->actionCollection()->addAction("fontcolor", a);
 
-        a = addAction(Config::ImageFactory::icon(Config::Image::textBold),tr("Bold"));
+        a = addAction(Config::ImageFactory::newInstance()->icon("format-text-bold.png"),tr("Bold"));
         a->setShortcutConfigurable(true);
         m_mainWindow->actionCollection()->addAction("bold", a);
         connect(a, SIGNAL(triggered(bool)), this, SLOT(setBold(bool)));
 
-        a = addAction(Config::ImageFactory::icon(Config::Image::textItalic),tr("Italic"));
+        a = addAction(Config::ImageFactory::newInstance()->icon("format-text-italic.png"),tr("Italic"));
         connect(a, SIGNAL(triggered(bool)), this, SLOT(setItalic(bool)));
         m_mainWindow->actionCollection()->addAction("italic", a);
 
-        a = addAction(Config::ImageFactory::icon(Config::Image::textUnderline),tr("Underline"));
+        a = addAction(Config::ImageFactory::newInstance()->icon("format-text-underline.png"),tr("Underline"));
         connect(a, SIGNAL(triggered(bool)), this, SLOT(setFontUnderline(bool)));
         m_mainWindow->actionCollection()->addAction("underline", a);
 
-        a = addAction(Config::ImageFactory::icon(Config::Image::textStrikeOut),tr("Strikeout"));
+        a = addAction(Config::ImageFactory::newInstance()->icon("format-text-strikethrough.png"),tr("Strikeout"));
         connect(a, SIGNAL(triggered(bool)), this, SLOT(setFontStrikeOut(bool)));
         m_mainWindow->actionCollection()->addAction("strikeout", a);
 
-        a = addAction(Config::ImageFactory::icon(Config::Image::textJustifyLeft),tr("Align Left"));
+        a = addAction(Config::ImageFactory::newInstance()->icon("format-justify-left.png"),tr("Align Left"));
         connect(a, SIGNAL(triggered(bool)), this, SLOT(setAlignmentLeft(bool)));
         m_mainWindow->actionCollection()->addAction("alignleft", a);
 
-        a = addAction(Config::ImageFactory::icon(Config::Image::textJustifyCenter),tr("Align Center"));
+        a = addAction(Config::ImageFactory::newInstance()->icon("format-justify-center.png"),tr("Align Center"));
         connect(a, SIGNAL(triggered(bool)), this, SLOT(setAlignmentCenter(bool)));
         m_mainWindow->actionCollection()->addAction("aligncenter", a);
 
-        a = addAction(Config::ImageFactory::icon(Config::Image::textJustifyRight),tr("Align Right"));
+        a = addAction(Config::ImageFactory::newInstance()->icon("format-justify-right.png"),tr("Align Right"));
         connect(a, SIGNAL(triggered(bool)), this, SLOT(setAlignmentRight(bool)));
         m_mainWindow->actionCollection()->addAction("alignright", a);
 
@@ -105,7 +105,7 @@ namespace Scene
         KStandardAction::zoomOut(mainWindow->currentView(),SLOT(halfZoom()),m_mainWindow->actionCollection());
 
         a = KStandardAction::fitToPage(mainWindow->currentView(),SLOT(fitInViewZoom()),m_mainWindow->actionCollection());
-        a->setIcon(Config::ImageFactory::icon(Config::Image::zoomFitBest));
+        a->setIcon(Config::ImageFactory::newInstance()->icon("zoom-fit-best.png"));
 
         a = addAction("List Scene");
         connect(a, SIGNAL(triggered(bool)), mainWindow, SLOT(layoutScene()));

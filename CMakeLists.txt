@@ -9,7 +9,6 @@ include_directories( ${KDE4_INCLUDES} )
 
 SET ( QT_USE_QTSVG TRUE )
 SET ( QT_USE_QTOPENGL TRUE )
-SET ( QT_USE_QTNETWORK TRUE )
 
 INCLUDE(${QT_USE_FILE})
 ADD_DEFINITIONS( ${QT_DEFINITIONS} )
@@ -18,13 +17,16 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
 
 set(weshnotes_UI  
 ./src/main/ui_main_window.ui 
-./src/tag/tag_factory.ui)
+./src/tag/tag_factory.ui
+./src/config/GeneralSettings.ui
+./src/config/AppareanceSettings.ui)
 
 QT_WRAP_UI(weshnotes weshnotes_UI_H weshnotes_UI_SRC ${weshnotes_UI})
 
 set(weshnotes_SRC 
 ./src/main/main.cpp 
 ./src/main/main_window.cpp 
+./src/main/KWeshTuNotesApp.cpp
 ./src/widget/VerticalButton.cpp
 ./src/widget/qtcolorpicker.cpp
 ./src/widget/ColorCombo.cpp
@@ -62,6 +64,8 @@ set(weshnotes_SRC
 ./src/tag/TagFactory.cpp
 ./src/tag/AddTag.cpp
 ./src/technic/GeneratorID.cpp
+./src/config/GeneralPageDialog.cpp
+./src/config/AppareancePageDialog.cpp
 ${weshnotes_UI_H})
 
 set(weshnotes_MOC 
@@ -89,6 +93,7 @@ set(weshnotes_MOC
 ./src/tag/TagFactory.h
 ./src/tag/AddTag.h)
 
+kde4_add_kcfg_files(weshnotes_SRC ./src/config/settings.kcfgc)
 kde4_add_executable(weshTuNotes ${weshnotes_SRC})
 target_link_libraries( weshTuNotes ${KDE4_KDEUI_LIBS} ${KDE4_KPARTS_LIBS} ${QT_LIBRARIES} )
 

@@ -82,7 +82,7 @@ namespace Tag
         if ( m_name != "default" )
         {
             Config::Configuration settings("tags");
-            settings.remove( m_name );
+            settings.removeGroup( m_name );
         }
         m_name = name;
     }
@@ -90,6 +90,11 @@ namespace Tag
     void NoteTag::addState( State * state )
     {
         m_states << state;
+    }
+
+    void NoteTag::removeState( State * state )
+    {
+        m_states.removeAll( state );
     }
 
     const QList<State*> & NoteTag::states()
@@ -127,7 +132,7 @@ namespace Tag
             if ( symbol != "" )
             {
                 setIconSize(QSize(m_sizeSymbol,m_sizeSymbol));
-                setIcon( Config::ImageFactory::icon(m_currentState->symbol()) );
+                setIcon( Config::ImageFactory::newInstance()->icon(m_currentState->symbol()) );
                 m_visible = true;
             }
             else
@@ -143,15 +148,11 @@ namespace Tag
 
         m_name = name;
 
-        settings.beginGroup(m_name);
-
-        QStringList states = settings.value( "states" ).toStringList();
+        QStringList states = settings.values( m_name,"states" );
         for ( int i=0 ; i<states.size() ; ++i )
         {
             State * s = new State(this);
-            settings.beginGroup(states[i]);
-            s->load( settings );
-            settings.endGroup();
+            s->load( settings, m_name, states[i] );
             m_states << s;
         }
 
@@ -168,19 +169,13 @@ namespace Tag
     {
         Config::Configuration settings( "tags" );
 
-        settings.beginGroup(m_name);
-
         QStringList namesStates;
         for ( int i=0 ; i<m_states.size() ; ++i )
         {
             namesStates << m_states[i]->name();
         }
 
-        settings.setValue( "states", namesStates );
-
-        settings.endGroup();
-
-        settings.sync();
+        settings.setValue( m_name, "states", namesStates );
     }
 
     NoteTag * NoteTag::newTag( const QString & name )

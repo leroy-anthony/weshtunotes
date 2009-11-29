@@ -117,8 +117,7 @@ namespace Explorer
 
     void TreeExplorer::loadBaskets()
     {
-        Config::Configuration settings;
-        QStringList masterBasket = settings.masterBaskets();
+        QStringList masterBasket = Config::Configuration::masterBaskets();
         for (int i = 0; i < masterBasket.size(); ++i)
         {
             loadBasket( masterBasket[i] );

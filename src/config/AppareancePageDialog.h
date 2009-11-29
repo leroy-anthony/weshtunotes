@@ -17,27 +17,22 @@
  Boston, MA 02110-1301, USA.
  */
 
-#ifndef VISUALASPECT_H
-#define VISUALASPECT_H
+#ifndef APPAREANCEPAGEDIALOG_H
+#define APPAREANCEPAGEDIALOG_H
 
-#include <QString>
-#include <QColor>
+#include <QWidget>
+
+#include <AppareanceSettings.h>
 
 namespace Config
 {
-    class VisualAspect
+
+    class AppareancePageDialog : public QWidget, public Ui::AppareanceSettings
     {
     public:
-        VisualAspect();
-
-        static QString gradiantBackground( const QColor & color );
-
-        static int lighterIntensity;
-
-        static int widthHandleControl;
-
-
+        AppareancePageDialog( QWidget * parent );
     };
+
 }
 
-#endif // VISUALASPECT_H
+#endif // APPAREANCEPAGEDIALOG_H

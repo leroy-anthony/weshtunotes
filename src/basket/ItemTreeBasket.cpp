@@ -49,7 +49,7 @@ namespace Basket
 
     void ItemTreeBasket::initItemTreeBasket()
     {
-        setIcon( 0, Config::ImageFactory::icon(Config::Image::basket) );
+        setIcon( 0, Config::ImageFactory::newInstance()->icon("folder.png") );
     }
 
     ItemTreeBasket::~ItemTreeBasket()

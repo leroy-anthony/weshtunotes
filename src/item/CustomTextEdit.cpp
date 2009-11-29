@@ -85,7 +85,7 @@ namespace Item
             QImage image = qvariant_cast<QImage>(source->imageData());
             QTextCursor cursor = this->textCursor();
 
-            QString fileName = QDir::searchPaths( Config::Constant::dirDataKey )[0] + QDir::separator();
+            QString fileName = QDir::searchPaths( "data" )[0] + QDir::separator();
             if ( source->urls().size() > 0 )
             {
                 fileName += QUrl::toPercentEncoding(source->urls()[0].toString());
@@ -116,9 +116,9 @@ namespace Item
                     QFileInfo fileInfo(urls[i].path());
 
                     QPixmap pix;
-                    QString iconName = Config::ImageFactory::iconNameForUrl( urls[i] );
-                    Config::ImageFactory::loadMimeTypeIcon( iconName, pix );
-                    QString path = Config::ImageFactory::iconPath( iconName );
+                    QString iconName = Config::ImageFactory::newInstance()->iconNameForUrl( urls[i] );
+                    Config::ImageFactory::newInstance()->loadMimeTypeIcon( iconName, pix );
+                    QString path = Config::ImageFactory::newInstance()->iconPath( iconName );
 
                     //référence l'image
                     document()->addResource(QTextDocument::ImageResource, QUrl(path), pix);

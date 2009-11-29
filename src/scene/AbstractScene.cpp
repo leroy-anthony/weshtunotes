@@ -21,7 +21,10 @@
 
 #include <QScrollBar>
 
+#include <settings.h>
+
 #include "../config/Configuration.h"
+#include "../config/VisualAspect.h"
 #include "../handle/HandleItem.h"
 
 namespace Scene
@@ -79,28 +82,21 @@ namespace Scene
     {
         QList<Handle::HandleItem*> handles = m_handles.keys();
 
+        Config::Configuration::clear( fileName );
         Config::Configuration settings( fileName );
-        settings.clear();
-        settings.sync();
 
-        settings.beginGroup("scene");
-        settings.setValue("id",id);
-        settings.beginWriteArray("items");
+        settings.setValue("scene","id",id);
+        settings.setValue("scene","nbitems",handles.size());
         for (int i=0 ; i<handles.size() ; ++i)
         {
             QStringList listHandles;
             buildListHandleToLoad( handles[i], listHandles );
 
-            settings.setArrayIndex(i);
             if ( listHandles.size() > 0 )
             {
-                settings.setValue("items",listHandles);
+                settings.setValue("scene",QString("item%1").arg(i+1),listHandles);
             }
         }
-        settings.endArray();
-        settings.endGroup();
-
-        settings.sync();
 
         for ( int i=0 ; i<handles.size() ; ++i )
         {
@@ -131,22 +127,33 @@ namespace Scene
     void AbstractScene::saveViewOnDisk( const QString & fileName )
     {
         Config::Configuration settings( fileName );
-        settings.beginGroup("scene");
-        settings.setValue("transform",m_transformView);
-        settings.setValue("hscroll",m_horizontalScrollBarValueView);
-        settings.setValue("vscroll",m_verticalScrollBarValueView);
-        settings.setValue("type",m_type);
-        settings.endGroup();
-        settings.sync();
+
+        settings.setValue("scene","transform_m11",m_transformView.m11());
+        settings.setValue("scene","transform_m12",m_transformView.m12());
+        settings.setValue("scene","transform_m21",m_transformView.m21());
+        settings.setValue("scene","transform_m22",m_transformView.m22());
+        settings.setValue("scene","transform_dx",m_transformView.dx());
+        settings.setValue("scene","transform_dy",m_transformView.dy());
+
+        settings.setValue("scene","hscroll",m_horizontalScrollBarValueView);
+        settings.setValue("scene","vscroll",m_verticalScrollBarValueView);
+        settings.setValue("scene","type",m_type);
     }
 
     void AbstractScene::loadViewFromDisk( const QString & fileName  )
     {
         Config::Configuration settings( fileName );
-        settings.beginGroup("scene");
-        m_transformView = settings.value("transform").value<QTransform>();
-        m_horizontalScrollBarValueView = settings.value("hscroll").toInt();
-        m_verticalScrollBarValueView   = settings.value("vscroll").toInt();
+
+        m_transformView = QTransform(
+            settings.valueGroup("scene","transform_m11",1).toInt(),
+            settings.valueGroup("scene","transform_m12",0).toInt(),
+            settings.valueGroup("scene","transform_m21",0).toInt(),
+            settings.valueGroup("scene","transform_m22",1).toInt(),
+            settings.valueGroup("scene","transform_dx",0).toInt(),
+            settings.valueGroup("scene","transform_dy",0).toInt());
+
+        m_horizontalScrollBarValueView = settings.valueGroup("scene","hscroll",0).toInt();
+        m_verticalScrollBarValueView   = settings.valueGroup("scene","vscroll",0).toInt();
     }
 
     void AbstractScene::load( const QString & fileName )
@@ -155,20 +162,16 @@ namespace Scene
 
         QMap<QString,Handle::HandleItem*> handles;
         QMap<QString,Item::AbstractItem*> itemsToLoad;
-        QMap<Handle::HandleItem*,QSize>  handlesSizes;
         QList<QStringList> listItem;
 
         // récupère tous les noms des notes
-        settings.beginGroup("scene");
-        m_id = settings.value("id","1").toString();
-        int size = settings.beginReadArray("items");
-        for ( int i=0 ; i<size ; ++i )
+        m_id = settings.valueGroup("scene","id","1");
+
+        int size = settings.valueGroup("scene","nbitems",0).toInt();
+        for ( int i=1 ; i<=size ; ++i )
         {
-            settings.setArrayIndex(i);
-            listItem << settings.value("items").toStringList();
+            listItem << settings.values("scene",QString("item%1").arg(i));
         }
-        settings.endArray();
-        settings.endGroup();
 
         // pour chaque note
         for ( int j=0 ; j<listItem.size() ; ++j )
@@ -177,17 +180,13 @@ namespace Scene
             Handle::HandleItem * handle = 0;
             for (int i=0 ; i<items.size() ; ++i)
             {
-                settings.beginGroup(items[i]);
-
-                int x = settings.value("x").toInt();
-                int y = settings.value("y").toInt();
-                handle = newHandle( x, y );
+                int x = settings.valueGroup(items[i],"x",0).toInt();
+                int y = settings.valueGroup(items[i],"y",0).toInt();
+                handle = newHandle( x, y, settings.valueGroup(items[i],"width", Settings::widthNote()).toInt() );
                 handle->setId(items[i]);
                 handles[ items[i] ] = handle;
 
-                handlesSizes[ handle ] = QSize( settings.value("width").toInt(), settings.value("height").toInt() );
-
-                QStringList itemsToAdd = settings.value("items").toStringList();
+                QStringList itemsToAdd = settings.values(items[i],"items");
                 if ( itemsToAdd.size()>0 )
                 {
                     for (int j = 0; j < itemsToAdd.size() ; ++j)
@@ -199,22 +198,20 @@ namespace Scene
                 {
                     //TODO: replace me by item->load() ???
                     Item::AbstractItem * item = newItem( 0, 0 );
-                    item->setItemColor( QColor(settings.value("color").value<QString>()) );
+                    item->setItemColor( QColor(settings.valueGroup(items[i],"color", Settings::colorItem() )) );
                     handle->add( item );
 
-                    QString id = settings.value("data").toString();
+                    QString id = settings.valueGroup(items[i],"data","");
                     item->setId(id);
                     itemsToLoad[ id ] = item;
 
-                    QStringList namesTags = settings.value("tags").toStringList();
+                    QStringList namesTags = settings.values(items[i],"tags");
                     for ( int i=0 ; i<namesTags.size() ; ++i )
                     {
                         QStringList s = namesTags[i].split(":");
                         dynamic_cast<Item::NoteItem*>(item)->addTag(s[0],s[1]);
                     }
-
                 }
-                settings.endGroup();
             }
             addHandleToScene( handle );
         }
@@ -225,11 +222,6 @@ namespace Scene
             itemsToLoad[ itemsToLoad.keys()[j] ]->load( fileName );
         }
 
-        //ajuste sa taille
-        for ( int j=0 ; j<handlesSizes.keys().size() ; ++j )
-        {
-            handlesSizes.keys()[j]->resize( handlesSizes[ handlesSizes.keys()[j] ] );
-        }
 
         loadViewFromDisk( fileName );
     }
