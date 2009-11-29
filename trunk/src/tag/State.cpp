@@ -135,10 +135,7 @@ namespace Tag
         if ( m_name != "default" )
         {
             Config::Configuration settings( "tags" );
-            settings.beginGroup( m_tag->name() );
-            settings.remove( m_name );
-            settings.remove( "states" );
-            settings.sync();
+            settings.removeSubGroup( m_tag->name(), m_name );
         }
 
         m_name = name;
@@ -147,43 +144,29 @@ namespace Tag
     void State::load()
     {
         Config::Configuration settings("tags");
-        settings.beginGroup(m_tag->name());
-        settings.beginGroup(m_name);
-        load( settings );
-        settings.endGroup();
-        settings.endGroup();
+        load( settings, m_tag->name(), m_name );
     }
 
-    void State::load( Config::Configuration & settings )
+    void State::load( Config::Configuration & settings, const QString & tagName, const QString & state  )
     {
-        m_name = settings.value( "name" ).toString();
+        m_name = settings.valueSubGroup( tagName, state, "name", "" );
 
-        loadTextEdition( settings );
-        loadVisualItemEdition( settings );
+        loadTextEdition( settings, tagName, state );
+        loadVisualItemEdition( settings, tagName, state );
     }
 
     void State::save()
     {
         Config::Configuration settings( "tags" );
 
-        settings.beginGroup( m_tag->name() );
-        settings.beginGroup( m_name );
+        settings.setValue( m_tag->name(),m_name,"name", m_name );
 
-        settings.setValue( "name", m_name );
-
-        saveTextEdition( settings );
-        saveVisualItemEdition( settings );
-
-        settings.endGroup();
-        settings.endGroup();
-
-        settings.sync();
+        saveTextEdition( settings, m_tag->name(), m_name );
+        saveVisualItemEdition( settings, m_tag->name(), m_name );
     }
 
     void State::apply()
     {
-        qDebug() << "refe";
-
         setBold( m_bold );
         setItalic( m_italic );
         setAlignment( Qt::AlignLeft );

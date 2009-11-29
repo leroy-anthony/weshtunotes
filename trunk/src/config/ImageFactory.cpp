@@ -25,31 +25,20 @@
 
 namespace Config
 {
+    ImageFactory * ImageFactory::m_imageFactory = 0;
 
-    QString Image::textBold          = "format-text-bold.png";
-    QString Image::textItalic        = "format-text-italic.png";
-    QString Image::textStrikeOut     = "format-text-strikethrough.png";
-    QString Image::textUnderline     = "format-text-underline.png";
-    QString Image::textJustifyLeft   = "format-justify-left.png";
-    QString Image::textJustifyCenter = "format-justify-center.png";
-    QString Image::textJustifyRight  = "format-justify-right.png";
-    QString Image::newBasket         = "document-new.png";
-    QString Image::addBasket         = "list-add.png";
-    QString Image::deleteAction      = "edit-delete.png";
-    QString Image::application       = "basket.png";
-    QString Image::exitAction        = "application-exit.png";
-    QString Image::basket            = "folder.png";
-    QString Image::zoomOriginal      = "zoom-original.png";
-    QString Image::zoomIn            = "zoom-in.png";
-    QString Image::zoomOut           = "zoom-out.png";
-    QString Image::zoomFitBest       = "zoom-fit-best.png";
-    QString Image::listScene         = "format-list-unordered.png";
+    ImageFactory *  ImageFactory::newInstance()
+    {
+        if ( m_imageFactory == 0 )
+        {
+            m_imageFactory = new ImageFactory();
+        }
 
-    QMap<QString,KIcon> ImageFactory::m_cacheIcons;
-    KPixmapCache ImageFactory::m_cachePixmaps("myapp-pixmaps");
-    KIconLoader ImageFactory::kIconLoader;
+        return m_imageFactory;
+    }
 
-    ImageFactory::ImageFactory()
+    ImageFactory::ImageFactory():
+        m_cachePixmaps("myapp-pixmaps")
     {
     }
 

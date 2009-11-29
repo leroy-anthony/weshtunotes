@@ -22,27 +22,13 @@
 
 #include <QDir>
 #include <QSettings>
-
-
+#include <KConfig>
+#include <KConfigGroup>
 
 namespace Config
 {
 
-    class Constant
-    {
-    public:
-        static QString main;
-        static QString lastBasket;
-        static QString home;
-        static QString dirBasket;
-        static QString homeData;
-        static QString homeBaskets;
-        static QString dirBasketKey;
-        static QString dirDataKey;
-        static int defaultHandleWidth;
-    };
-
-    class Configuration : protected QSettings
+    class Configuration : protected KConfig
     {
     public:
         Configuration();
@@ -51,30 +37,23 @@ namespace Config
 
         QString fileName () const;
 
-        void clear();
+        static void clear( const QString & fileName );
 
-        void beginGroup( const QString & prefix );
-        void endGroup();
+        void setValue( const QString & group, const QString & key, QVariant value );
+        void setValue( const QString & group, const QString & subGroup, const QString & key, QVariant value );
 
-        void setValue( const QString & key, const QVariant & value );
-        QVariant value ( const QString & key, const QVariant & defaultValue = QVariant() ) const;
+        QString valueSubGroup( const QString & group, const QString & subGroup, const QString & key, QVariant defaultValue ) const;
+        QString valueGroup( const QString & group, const QString & key, QVariant defaultValue ) const;
+        QStringList values( const QString & group, const QString & key ) const;
 
-        void remove ( const QString & key );
+        void removeSubGroup( const QString & group, const QString & subGroup );
+        void removeGroup( const QString & group );
 
-        QStringList childGroups() const;
-
-        int beginReadArray ( const QString & prefix );
-        void beginWriteArray ( const QString & prefix );
-
-        void setArrayIndex( int i );
-        void endArray();
-
-        void sync();
 
 
         static void iniConfigration();
 
-        QStringList masterBaskets();
+        static QStringList masterBaskets();
         static void saveMasterBaskets( const QStringList & masterBaskets );
         static void saveLastBasket( const QString & name );
         static QString loadLastBasket();

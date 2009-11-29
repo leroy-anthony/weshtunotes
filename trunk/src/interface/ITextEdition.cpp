@@ -37,28 +37,28 @@ namespace Item
     {
     }
 
-    void ITextEdition::saveTextEdition( Config::Configuration & settings )
+    void ITextEdition::saveTextEdition( Config::Configuration & settings, const QString & group, const QString & subGroup )
     {
-        settings.setValue( "bold", m_bold );
-        settings.setValue( "italic", m_italic );
-        settings.setValue( "strikeOut", m_strikeOut );
-        settings.setValue( "alignment", m_alignment );
-        settings.setValue( "underline", m_underLine );
-        settings.setValue( "colorFont", m_colorFont.name() );
-        settings.setValue( "font", m_font );
-        settings.setValue( "weight", m_weight );
+        settings.setValue( group,subGroup,"bold", m_bold );
+        settings.setValue( group,subGroup,"italic", m_italic );
+        settings.setValue( group,subGroup,"strikeOut", m_strikeOut );
+        settings.setValue( group,subGroup,"alignment", m_alignment );
+        settings.setValue( group,subGroup,"underline", m_underLine );
+        settings.setValue( group,subGroup,"colorFont", m_colorFont.name() );
+        settings.setValue( group,subGroup,"font", m_font );
+        settings.setValue( group,subGroup,"weight", m_weight );
     }
 
-    void ITextEdition::loadTextEdition( Config::Configuration & settings )
+    void ITextEdition::loadTextEdition( Config::Configuration & settings, const QString & group, const QString & subGroup )
     {
-        m_bold = settings.value( "bold" ).toBool();
-        m_italic = settings.value( "italic" ).toBool();
-        m_strikeOut = settings.value( "strikeOut" ).toBool();
-        m_alignment = settings.value( "alignment" ).toInt();
-        m_underLine = settings.value( "underline" ).toBool();
-        m_colorFont = QColor( settings.value( "colorFont" ).value<QString>() );
-        m_font = settings.value( "font" ).toString();
-        m_weight = settings.value( "weight" ).toInt();
+        m_bold = settings.valueSubGroup( group,subGroup,"bold", QVariant(false) ).toInt();
+        m_italic = settings.valueSubGroup( group,subGroup,"italic", QVariant(false) ).toInt();
+        m_strikeOut = settings.valueSubGroup( group,subGroup,"strikeOut", QVariant(false) ).toInt();
+        m_alignment = settings.valueSubGroup( group,subGroup,"alignment", QVariant(1) ).toInt();
+        m_underLine = settings.valueSubGroup( group,subGroup,"underline", QVariant(false) ).toInt();
+        m_colorFont = QColor( settings.valueSubGroup( group,subGroup,"colorFont", "#000000" ) );
+        m_font = settings.valueSubGroup( group,subGroup,"font","Arial" );
+        m_weight = settings.valueSubGroup( group,subGroup,"weight", QVariant(1) ).toInt();
     }
 
     bool ITextEdition::bold()

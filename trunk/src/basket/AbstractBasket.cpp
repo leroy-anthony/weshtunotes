@@ -87,10 +87,7 @@ namespace Basket
     void AbstractBasket::save()
     {
         Config::Configuration settings( m_configFilePath );
-        settings.beginGroup("basket");
-        settings.setValue("type",m_type);
-        settings.endGroup();
-        settings.sync();
+        settings.setValue("basket","type",m_type);
     }
 
 }

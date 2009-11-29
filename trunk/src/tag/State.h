@@ -59,7 +59,7 @@ namespace Tag
         void setItemColor( const QColor & color );
         void setSymbol( const QString & icon );
 
-        void load( Config::Configuration & settings );
+        void load( Config::Configuration & settings, const QString & tagName, const QString & state );
         void load();
         void save();
 

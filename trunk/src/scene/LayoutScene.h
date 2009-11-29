@@ -61,7 +61,7 @@ namespace Scene
         void mouseReleaseEvent( QGraphicsSceneMouseEvent * mouseEvent);
         void removeGraphicsItemFromScene( Handle::HandleItem * handle );
         QGraphicsProxyWidget * addHandleToScene( Handle::HandleItem * handle );
-        Handle::HandleItem * newHandle( int x, int y );
+        Handle::HandleItem * newHandle( int x, int y, int w );
         Item::AbstractItem * newItem( int x, int y );
 
 

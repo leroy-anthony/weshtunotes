@@ -49,7 +49,7 @@ namespace Scene
         virtual Handle::HandleItem * currentHandle()       = 0;
 
         virtual QGraphicsProxyWidget * addHandleToScene( Handle::HandleItem * handle ) = 0;
-        virtual Handle::HandleItem * newHandle( int x, int y ) = 0;
+        virtual Handle::HandleItem * newHandle( int x, int y, int w ) = 0;
         virtual Item::AbstractItem * newItem( int x, int y ) = 0;
 
         void load( const QString & fileName );

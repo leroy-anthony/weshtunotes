@@ -22,15 +22,14 @@
 #include <KApplication>
 #include <KCmdLineArgs>
 #include <KAboutData>
-#include <kuniqueapplication.h>
+#include <KSystemTrayIcon>
 #include <kmessagebox.h>
 
-#include "main_window.h"
-#include "../config/Configuration.h"
+#include "KWeshTuNotesApp.h"
 
 int main(int argc, char *argv[])
 {
-    KAboutData aboutData("KWeshTuNotes",
+    KAboutData aboutData("kweshtunotes",
                          0,
                          ki18n("(K) Wesh ! Tu Notes ?"),
                          "0.0",
@@ -44,26 +43,12 @@ int main(int argc, char *argv[])
     KCmdLineArgs::init( argc, argv, &aboutData );
     KUniqueApplication::addCmdLineOptions();
 
-    if (!KUniqueApplication::start())
+    if (!KWeshTuNotesApp::start())
     {
         std::cerr << "KWeshTuNotes is already running!\n" << std::endl;
         return 0;
     }
 
-    KUniqueApplication app;
-    app.setOrganizationName("weshTuNotes Corp.");
-    KApplication::setQuitOnLastWindowClosed(false);
-
-    if ( !KSystemTrayIcon::isSystemTrayAvailable() )
-    {
-        KMessageBox::error(0, QObject::tr("Systray"), QObject::tr("I couldn't detect any system tray on this system."));
-        return 1;
-    }
-
-    Config::Configuration::iniConfigration();
-
-    MainWindow * main = new MainWindow();
-    main->show();
-
+    KWeshTuNotesApp app;
     return app.exec();
 }

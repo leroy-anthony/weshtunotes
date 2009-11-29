@@ -19,6 +19,7 @@
 
 #include "AbstractItem.h"
 
+#include "settings.h"
 #include "../tag/NoteTag.h"
 #include "../config/VisualAspect.h"
 
@@ -33,7 +34,7 @@ namespace Item
             QWidget(parent),
             GeneratorID("item")
     {
-        m_color = Config::VisualAspect::defaultColorNote;
+        m_color = Settings::colorItem();
     }
 
     const QList<QString> AbstractItem::operationInterfaces()

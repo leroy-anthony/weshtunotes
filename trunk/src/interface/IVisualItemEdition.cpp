@@ -19,6 +19,7 @@
 
 #include "IVisualItemEdition.h"
 
+#include "settings.h"
 #include "../config/VisualAspect.h"
 
 #include <QDebug>
@@ -26,7 +27,7 @@
 namespace Item
 {
     IVisualItemEdition::IVisualItemEdition():
-            m_colorItem( Config::VisualAspect::defaultColorNote )
+            m_colorItem( Settings::colorItem() )
     {
     }
 
@@ -34,16 +35,16 @@ namespace Item
     {
     }
 
-    void IVisualItemEdition::saveVisualItemEdition( Config::Configuration & settings )
+    void IVisualItemEdition::saveVisualItemEdition( Config::Configuration & settings, const QString & tagName, const QString & state )
     {
-        settings.setValue( "symbol", m_symbol );
-        settings.setValue( "colorItem", m_colorItem.name() );
+        settings.setValue( tagName, state, "symbol", m_symbol );
+        settings.setValue( tagName, state, "colorItem", m_colorItem.name() );
     }
 
-    void IVisualItemEdition::loadVisualItemEdition( Config::Configuration & settings )
+    void IVisualItemEdition::loadVisualItemEdition( Config::Configuration & settings, const QString & tagName, const QString & state  )
     {
-        m_symbol = settings.value( "symbol", "" ).toString();
-        m_colorItem = QColor( settings.value( "colorItem" ).value<QString>() );
+        m_symbol = settings.valueSubGroup( tagName, state, "symbol", "" );
+        m_colorItem = QColor( settings.valueSubGroup( tagName, state, "colorItem", Settings::colorItem() ) );
     }
 
     const QString & IVisualItemEdition::symbol()

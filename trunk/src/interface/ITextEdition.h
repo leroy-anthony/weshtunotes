@@ -54,8 +54,8 @@ namespace Item
         int fontPointSize();
         bool fontStrikeOut();
 
-        void saveTextEdition( Config::Configuration & settings );
-        void loadTextEdition( Config::Configuration & settings );
+        void saveTextEdition( Config::Configuration & settings, const QString & group, const QString & subGroup );
+        void loadTextEdition( Config::Configuration & settings, const QString & group, const QString & subGroup );
 
     protected:
         bool m_bold;
