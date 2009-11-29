@@ -99,3 +99,4 @@ target_link_libraries( kweshtunotes ${KDE4_KDEUI_LIBS} ${KDE4_KPARTS_LIBS} ${QT_
 
 install(TARGETS kweshtunotes DESTINATION ${BIN_INSTALL_DIR})
 install(FILES ./src/main/main_ui.rc DESTINATION  ${DATA_INSTALL_DIR}/kweshtunotes)
+install(FILES kweshtunotes.desktop DESTINATION  ${XDG_APPS_INSTALL_DIR})

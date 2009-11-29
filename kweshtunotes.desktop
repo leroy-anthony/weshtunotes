@@ -1,0 +1,10 @@
+[Desktop Entry]
+Exec=kweshtunotes
+OnlyShowIn=KDE;
+Type=Application
+Terminal=false
+Icon=kweshtunotes
+GenericName=Note
+Name=KWeshTuNotes
+X-KDE-StartupNotify=true
+X-DBUS-StartupType=Unique
