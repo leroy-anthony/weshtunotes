@@ -1,4 +1,4 @@
-PROJECT(weshTuNotes)
+PROJECT(kweshtunotes)
 
 cmake_minimum_required(VERSION 2.6)
 
@@ -94,11 +94,8 @@ set(weshnotes_MOC
 ./src/tag/AddTag.h)
 
 kde4_add_kcfg_files(weshnotes_SRC ./src/config/settings.kcfgc)
-kde4_add_executable(weshTuNotes ${weshnotes_SRC})
-target_link_libraries( weshTuNotes ${KDE4_KDEUI_LIBS} ${KDE4_KPARTS_LIBS} ${QT_LIBRARIES} )
+kde4_add_executable(kweshtunotes ${weshnotes_SRC})
+target_link_libraries( kweshtunotes ${KDE4_KDEUI_LIBS} ${KDE4_KPARTS_LIBS} ${QT_LIBRARIES} )
 
-install(TARGETS weshTuNotes DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/)
-
-FILE(GLOB_RECURSE icon data/icon/*)
-
-install(FILES ${icon} DESTINATION ${CMAKE_INSTALL_PREFIX}/share/weshtunotes/data/icon)
+install(TARGETS kweshtunotes DESTINATION ${BIN_INSTALL_DIR})
+install(FILES ./src/main/main_ui.rc DESTINATION  ${DATA_INSTALL_DIR}/kweshtunotes)
