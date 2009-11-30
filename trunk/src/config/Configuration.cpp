@@ -35,24 +35,24 @@ namespace Config
     }
 
     Configuration::Configuration( const QString & config ):
-            KConfig( Settings::basketsStorePath().path()+QDir::separator()+"baskets"+QDir::separator()+config )
+            KConfig( Settings::basketsStorePath().toLocalFile()+QDir::separator()+"baskets"+QDir::separator()+config )
     {
     }
 
     void Configuration::iniConfigration()
     {
-        QDir dir(Settings::basketsStorePath().path()+QDir::separator()+"data");
+        QDir dir(Settings::basketsStorePath().toLocalFile()+QDir::separator()+"data");
         if ( !dir.exists() )
         {
-            dir.mkpath(Settings::basketsStorePath().path()+QDir::separator()+"data");
+            dir.mkpath(Settings::basketsStorePath().toLocalFile()+QDir::separator()+"data");
         }
-        QDir::addSearchPath( "data", Settings::basketsStorePath().path()+QDir::separator()+"data" );
-        QDir::addSearchPath( "icon", Settings::basketsStorePath().path()+QDir::separator()+"data"+QDir::separator()+"icon" );
+        QDir::addSearchPath( "data", Settings::basketsStorePath().toLocalFile()+QDir::separator()+"data" );
+        QDir::addSearchPath( "icon", Settings::basketsStorePath().toLocalFile()+QDir::separator()+"data"+QDir::separator()+"icon" );
 
-        QDir dir2( Settings::basketsStorePath().path()+QDir::separator()+"baskets" );
+        QDir dir2( Settings::basketsStorePath().toLocalFile()+QDir::separator()+"baskets" );
         if ( !dir2.exists() )
         {
-            dir2.mkpath( Settings::basketsStorePath().path()+QDir::separator()+"baskets" );
+            dir2.mkpath( Settings::basketsStorePath().toLocalFile()+QDir::separator()+"baskets" );
         }
     }
 
@@ -62,7 +62,7 @@ namespace Config
 
     QStringList Configuration::masterBaskets()
     {
-        QDir dir( Settings::basketsStorePath().path()+QDir::separator()+"baskets" );
+        QDir dir( Settings::basketsStorePath().toLocalFile()+QDir::separator()+"baskets" );
         dir.setFilter( QDir::Dirs | QDir::NoDotAndDotDot );
 
         return dir.entryList();
