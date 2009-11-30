@@ -192,7 +192,7 @@ void MainWindow::initExplorer()
 
     layoutDock->addWidget( m_treeExplorer );
 
-    connect(m_treeExplorer,SIGNAL(itemActivated(QTreeWidgetItem*,int)),this,SLOT(loadScene(QTreeWidgetItem*,int)));
+    connect(m_treeExplorer,SIGNAL(itemClicked(QTreeWidgetItem*,int)),this,SLOT(loadScene(QTreeWidgetItem*,int)));
 }
 
 void MainWindow::addToCurrentBasket()
