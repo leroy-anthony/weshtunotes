@@ -416,7 +416,11 @@ namespace Handle
 
     void HandleItem::keyPressEvent ( QKeyEvent * keyEvent )
     {
-        if ( m_item != 0 && keyEvent->text() != QString() )
+        if ( m_item != 0 && ( keyEvent->text() != QString() ||
+                              keyEvent->key() == Qt::Key_Up ||
+                              keyEvent->key() == Qt::Key_Down ||
+                              keyEvent->key() == Qt::Key_Right ||
+                              keyEvent->key() == Qt::Key_Left ) )
         {
             QCoreApplication::sendEvent( m_item, keyEvent );
         }
