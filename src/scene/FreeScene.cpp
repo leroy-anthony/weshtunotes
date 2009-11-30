@@ -285,7 +285,6 @@ namespace Scene
                 Handle::HandleItem::resetInsert();
             }
 
-            m_currentGraphicsItem->setZValue( 1 );
             m_currentHandle->setModeDegroupement(false);
             m_currentHandle->setHoverMode( false );
 
