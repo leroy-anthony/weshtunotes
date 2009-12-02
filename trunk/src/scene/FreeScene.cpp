@@ -19,6 +19,8 @@
 
 #include "FreeScene.h"
 
+#include <iostream>
+
 #include <QMouseEvent>
 #include <QGraphicsWidget>
 #include <QLabel>
@@ -247,10 +249,18 @@ namespace Scene
                 child->setParent(0);
                 child->setParentHandle(0);
 
-                QGraphicsProxyWidget * g = addHandleToScene( child );
-                g->setPos(parentHandle->pos());
-                removeGraphicsItemFromScene( parentHandle );
+                if ( parentHandle->parentHandle() == 0 )
+                {
+                    QGraphicsProxyWidget * g = addHandleToScene( child );
+                    g->setPos(parentHandle->pos());
+                    removeGraphicsItemFromScene( parentHandle );
+                }
+                else
+                {
+                    parentHandle->add( child->noteItem() );
+                }
             }
+
             currentHandle->setParentHandle(0);
         }
     }
@@ -315,8 +325,10 @@ namespace Scene
 
     void FreeScene::keyPressEvent ( QKeyEvent * keyEvent )
     {
+        std::cout << "tets" << std::endl;
         if ( m_currentHandle != 0 )
         {
+
             QCoreApplication::sendEvent( m_currentHandle, keyEvent );
         }
     }
