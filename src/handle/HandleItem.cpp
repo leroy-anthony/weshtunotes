@@ -126,9 +126,9 @@ namespace Handle
             static_cast<QVBoxLayout*>(m_contentLayout)->insertWidget( m_index, h );
             h->setHoverMode( false );
             h->setParentHandle(this);
+            qDebug() << m_index;
             m_handles.insert( m_index, h );
             setDefaultColor(h->defaultColor());
-            ++m_index;
         }
     }
 
@@ -190,6 +190,7 @@ namespace Handle
 
     void HandleItem::insert( QWidget * w, int index )
     {
+        qDebug() << index;
         static_cast<QVBoxLayout*>(m_contentLayout)->insertWidget( index, w );
     }
 
