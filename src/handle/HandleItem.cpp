@@ -125,8 +125,7 @@ namespace Handle
         {
             static_cast<QVBoxLayout*>(m_contentLayout)->insertWidget( m_index, h );
             h->setHoverMode( false );
-            h->setParentHandle(this);
-            qDebug() << m_index;
+            h->setParentHandle( this );
             m_handles.insert( m_index, h );
             setDefaultColor(h->defaultColor());
         }
@@ -179,10 +178,13 @@ namespace Handle
 
     HandleItem * HandleItem::handleItemAt( int x, int y )
     {
+        QPoint pt = mapFromParent(QPoint(x,y));
         for (int i = 0; i < m_handles.size(); ++i)
         {
-            if ( m_handles[i]->geometry().contains(mapFromParent(QPoint(x,y))) )
-                return m_handles[i]->handleItemAt( x, y );
+            if ( m_handles[i]->geometry().contains(pt) )
+            {
+                return m_handles[i]->handleItemAt( pt.x(), pt.y() );
+            }
         }
 
         return this;
@@ -190,7 +192,6 @@ namespace Handle
 
     void HandleItem::insert( QWidget * w, int index )
     {
-        qDebug() << index;
         static_cast<QVBoxLayout*>(m_contentLayout)->insertWidget( index, w );
     }
 
