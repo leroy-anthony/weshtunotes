@@ -78,6 +78,8 @@ namespace Item
     {
         Scene::ToolBarScene * toolBar = Scene::ToolBarScene::toolBarScene();
         toolBar->currentItemChanged( this );
+        toolBar->currentCharFormatChanged( m_plainTextEdit->textCursor().charFormat() );
+
         emit AbstractItem::editItem((AbstractItem*)this);
     }
 
@@ -96,6 +98,11 @@ namespace Item
     void NoteItem::setAlignment( Qt::Alignment a )
     {
         m_plainTextEdit->setAlignment( a );
+    }
+
+    Qt::Alignment NoteItem::alignment()
+    {
+        return m_plainTextEdit->alignment();
     }
 
     void NoteItem::setItalic( bool italic )
@@ -235,6 +242,7 @@ namespace Item
 
     void NoteItem::keyPressEvent ( QKeyEvent * keyEvent )
     {
+        //m_plainTextEdit->keyPressEvent( keyEvent );
         QCoreApplication::sendEvent( m_plainTextEdit, keyEvent );
     }
 

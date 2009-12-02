@@ -50,7 +50,10 @@ namespace Tag
         void setBold( bool checked );
         void setItalic( bool italic );
         void setFontStrikeOut ( bool strikeOut );
+
         void setAlignment( Qt::Alignment );
+        Qt::Alignment alignment();
+
         void setFontUnderline( bool underLine );
         void setTextColor( const QColor & color );
         void setFontFamily( const QFont & font );

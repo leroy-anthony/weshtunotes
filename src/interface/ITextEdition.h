@@ -47,7 +47,7 @@ namespace Item
 
         bool bold();
         bool italic();
-        int alignment();
+        virtual Qt::Alignment alignment() = 0;
         bool underline();
         const QColor & textColor();
         const QString & fontFamily();
@@ -60,7 +60,7 @@ namespace Item
     protected:
         bool m_bold;
         bool m_italic;
-        int m_alignment;
+        Qt::Alignment m_alignment;
         bool m_underLine;
         QColor m_colorFont;
         QString m_font;

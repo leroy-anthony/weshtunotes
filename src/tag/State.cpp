@@ -61,6 +61,11 @@ namespace Tag
         m_item->setAlignment( alig );
     }
 
+    Qt::Alignment State::alignment()
+    {
+        return m_item->alignment();
+    }
+
     void State::setFontUnderline( bool underLine )
     {
         m_underLine = underLine;

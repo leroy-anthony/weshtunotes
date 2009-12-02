@@ -86,6 +86,14 @@ namespace Scene
 
         static ToolBarScene * m_toolBar;
 
+        KAction * m_strikeoutAction;
+        KAction * m_italicAction;
+        KAction * m_boldAction;
+        KAction * m_underlineAction;
+        KAction * m_alignleftAction;
+        KAction * m_aligncenterAction;
+        KAction * m_alignrightAction;
+
     };
 
 }
