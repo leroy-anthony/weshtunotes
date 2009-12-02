@@ -53,6 +53,8 @@ namespace Item
         void adaptSize();
 
         void insertData( const QMimeData * data );
+
+        Qt::Alignment alignment();
         
     public slots:
         void setBold( bool checked );

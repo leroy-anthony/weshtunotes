@@ -33,6 +33,8 @@
 #include "../widget/ColorCombo.h"
 
 
+#include <iostream>
+
 namespace Scene
 {
 
@@ -61,34 +63,33 @@ namespace Scene
         connect(m_colorText, SIGNAL(activated(const QColor &)), SLOT(setTextColor(const QColor &)));
         m_mainWindow->actionCollection()->addAction("fontcolor", a);
 
-        a = addAction(Config::ImageFactory::newInstance()->icon("format-text-bold.png"),tr("Bold"));
-        a->setShortcutConfigurable(true);
-        m_mainWindow->actionCollection()->addAction("bold", a);
-        connect(a, SIGNAL(triggered(bool)), this, SLOT(setBold(bool)));
+        m_boldAction = addAction(Config::ImageFactory::newInstance()->icon("format-text-bold.png"),tr("Bold"));
+        m_mainWindow->actionCollection()->addAction("bold", m_boldAction);
+        connect(m_boldAction, SIGNAL(triggered(bool)), this, SLOT(setBold(bool)));
 
-        a = addAction(Config::ImageFactory::newInstance()->icon("format-text-italic.png"),tr("Italic"));
-        connect(a, SIGNAL(triggered(bool)), this, SLOT(setItalic(bool)));
-        m_mainWindow->actionCollection()->addAction("italic", a);
+        m_italicAction = addAction(Config::ImageFactory::newInstance()->icon("format-text-italic.png"),tr("Italic"));
+        connect(m_italicAction, SIGNAL(triggered(bool)), this, SLOT(setItalic(bool)));
+        m_mainWindow->actionCollection()->addAction("italic", m_italicAction);
 
-        a = addAction(Config::ImageFactory::newInstance()->icon("format-text-underline.png"),tr("Underline"));
-        connect(a, SIGNAL(triggered(bool)), this, SLOT(setFontUnderline(bool)));
-        m_mainWindow->actionCollection()->addAction("underline", a);
+        m_underlineAction = addAction(Config::ImageFactory::newInstance()->icon("format-text-underline.png"),tr("Underline"));
+        connect(m_underlineAction, SIGNAL(triggered(bool)), this, SLOT(setFontUnderline(bool)));
+        m_mainWindow->actionCollection()->addAction("underline", m_underlineAction);
 
-        a = addAction(Config::ImageFactory::newInstance()->icon("format-text-strikethrough.png"),tr("Strikeout"));
-        connect(a, SIGNAL(triggered(bool)), this, SLOT(setFontStrikeOut(bool)));
-        m_mainWindow->actionCollection()->addAction("strikeout", a);
+        m_strikeoutAction = addAction(Config::ImageFactory::newInstance()->icon("format-text-strikethrough.png"),tr("Strikeout"));
+        connect(m_strikeoutAction, SIGNAL(triggered(bool)), this, SLOT(setFontStrikeOut(bool)));
+        m_mainWindow->actionCollection()->addAction("strikeout", m_strikeoutAction);
 
-        a = addAction(Config::ImageFactory::newInstance()->icon("format-justify-left.png"),tr("Align Left"));
-        connect(a, SIGNAL(triggered(bool)), this, SLOT(setAlignmentLeft(bool)));
-        m_mainWindow->actionCollection()->addAction("alignleft", a);
+        m_alignleftAction = addAction(Config::ImageFactory::newInstance()->icon("format-justify-left.png"),tr("Align Left"));
+        connect(m_alignleftAction, SIGNAL(triggered(bool)), this, SLOT(setAlignmentLeft(bool)));
+        m_mainWindow->actionCollection()->addAction("alignleft", m_alignleftAction);
 
-        a = addAction(Config::ImageFactory::newInstance()->icon("format-justify-center.png"),tr("Align Center"));
-        connect(a, SIGNAL(triggered(bool)), this, SLOT(setAlignmentCenter(bool)));
-        m_mainWindow->actionCollection()->addAction("aligncenter", a);
+        m_aligncenterAction = addAction(Config::ImageFactory::newInstance()->icon("format-justify-center.png"),tr("Align Center"));
+        connect(m_aligncenterAction, SIGNAL(triggered(bool)), this, SLOT(setAlignmentCenter(bool)));
+        m_mainWindow->actionCollection()->addAction("aligncenter", m_aligncenterAction);
 
-        a = addAction(Config::ImageFactory::newInstance()->icon("format-justify-right.png"),tr("Align Right"));
-        connect(a, SIGNAL(triggered(bool)), this, SLOT(setAlignmentRight(bool)));
-        m_mainWindow->actionCollection()->addAction("alignright", a);
+        m_alignrightAction = addAction(Config::ImageFactory::newInstance()->icon("format-justify-right.png"),tr("Align Right"));
+        connect(m_alignrightAction, SIGNAL(triggered(bool)), this, SLOT(setAlignmentRight(bool)));
+        m_mainWindow->actionCollection()->addAction("alignright", m_alignrightAction);
 
         m_colorItem = new KColorCombo();
         m_colorItem->setFixedWidth(64);
@@ -175,6 +176,9 @@ namespace Scene
 
         if ( currentAbstractItem() != 0 )
         {
+            m_aligncenterAction->setChecked(false);
+            m_alignleftAction->setChecked(false);
+
             dynamic_cast<Item::ITextEdition*>(currentAbstractItem())->setAlignment(Qt::AlignRight);
         }
     }
@@ -185,6 +189,9 @@ namespace Scene
 
         if ( currentAbstractItem() != 0 )
         {
+            m_alignrightAction->setChecked(false);
+            m_alignleftAction->setChecked(false);
+
             dynamic_cast<Item::ITextEdition*>(currentAbstractItem())->setAlignment(Qt::AlignCenter);
         }
     }
@@ -195,6 +202,9 @@ namespace Scene
 
         if ( currentAbstractItem() != 0 )
         {
+            m_alignrightAction->setChecked(false);
+            m_aligncenterAction->setChecked(false);
+
             dynamic_cast<Item::ITextEdition*>(currentAbstractItem())->setAlignment(Qt::AlignLeft);
         }
     }
@@ -242,31 +252,37 @@ namespace Scene
     void ToolBarScene::currentItemChanged( Item::AbstractItem * item )
     {
         m_colorItem->setColor( item->color() );
+
+        m_alignrightAction->setChecked(false);
+        m_aligncenterAction->setChecked(false);
+        m_alignleftAction->setChecked(false);
+
+        Qt::Alignment alignement = dynamic_cast<Item::ITextEdition*>(item)->alignment();
+
+        if ( alignement == Qt::AlignRight )
+        {
+            m_alignrightAction->setChecked(true);
+        }
+
+        if ( alignement == Qt::AlignHCenter )
+        {
+            m_aligncenterAction->setChecked(true);
+        }
+
+        if ( alignement == Qt::AlignLeft )
+        {
+            m_alignleftAction->setChecked(true);
+        }
     }
 
     void ToolBarScene::currentCharFormatChanged( const QTextCharFormat & f )
     {
-        QAction * a = m_mainWindow->actionCollection()->action( "underline" );
-        a->setChecked(f.fontUnderline());
-
-        a = m_mainWindow->actionCollection()->action( "bold" );
-        a->setChecked(f.fontWeight()>50);
-
-        a = m_mainWindow->actionCollection()->action( "italic" );
-        a->setChecked(f.fontItalic());
-
+        m_underlineAction->setChecked(f.fontUnderline());
+        m_boldAction->setChecked(f.fontWeight()>50);
+        m_italicAction->setChecked(f.fontItalic());
         m_actionFontSize->setFontSize( f.fontPointSize() );
-
         m_colorText->setColor(f.foreground().color());
-
-        a = m_mainWindow->actionCollection()->action( "strikeout" );
-        a->setChecked(f.fontStrikeOut());
-
-        if ( currentAbstractItem() != 0 )
-        {
-            const QColor & c = currentAbstractItem()->itemColor();
-            m_colorItem->setColor( c );
-        }
+        m_strikeoutAction->setChecked(f.fontStrikeOut());
     }
 
     ToolBarScene * ToolBarScene::m_toolBar = 0;
