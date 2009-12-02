@@ -19,8 +19,6 @@
 
 #include "FreeScene.h"
 
-#include <iostream>
-
 #include <QMouseEvent>
 #include <QGraphicsWidget>
 #include <QLabel>
