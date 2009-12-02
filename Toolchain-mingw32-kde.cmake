@@ -49,9 +49,9 @@ set(WITH_HSPELL OFF  CACHE BOOL "Disabled")
 set(WITH_OpenEXR OFF CACHE BOOL "Disabled")
 
 # use the binaries from native KDE4
-set(KDE4_KDECONFIG_EXECUTABLE /usr/bin/kde4-config CACHE PATH "")
-set(KDE4_KCFGC_EXECUTABLE /usr/bin/kconfig_compiler CACHE PATH "")
+set(KDE4_KDECONFIG_EXECUTABLE ${KDE4_BIN_DIR}/kde4-config CACHE PATH "")
+set(KDE4_KCFGC_EXECUTABLE ${KDE4_BIN_DIR}/kconfig_compiler CACHE PATH "")
 set(AUTOMOC4_EXECUTABLE /usr/bin/automoc4 CACHE PATH "")
-set(KDE4_MEINPROC_EXECUTABLE /usr/bin/meinproc4 CACHE PATH "")
+set(KDE4_MEINPROC_EXECUTABLE ${KDE4_BIN_DIR}/meinproc4 CACHE PATH "")
 
 
