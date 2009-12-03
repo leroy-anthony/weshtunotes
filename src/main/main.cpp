@@ -26,6 +26,7 @@
 #include <kmessagebox.h>
 
 #include "KWeshTuNotesApp.h"
+#include "../config/ImageFactory.h"
 
 int main(int argc, char *argv[])
 {
@@ -33,12 +34,19 @@ int main(int argc, char *argv[])
                          "kweshtunotes",
                          ki18n("(K) Wesh ! Tu Notes ?"),
                          "0.0",
-                         ki18n("Prise de note"),
-                         KAboutData::License_GPL,
+                         ki18n("(K)WeshTuNotes is a note-taking application, just like BasKet Note Pads."),
+                         KAboutData::License_GPL_V3,
                          ki18n("(c) 2009"),
-                         ki18n("Some text..."),
+                         ki18n("(K)WeshTuNotes allows you to write notes, copy/paste images and files to better organize them."),
                          "http://code.google.com/p/weshtunotes/",
                          "leroy.anthony@gmail.com");
+
+    aboutData.addAuthor( ki18n("Anthony Leroy"),
+                         ki18n("dev"),
+                         "leroy.anthony@gmail.com",
+                         "http://code.google.com/p/weshtunotes/" );
+
+    aboutData.setProgramIconName("basket");
 
     KCmdLineArgs::init( argc, argv, &aboutData );
     KUniqueApplication::addCmdLineOptions();
@@ -50,5 +58,6 @@ int main(int argc, char *argv[])
     }
 
     KWeshTuNotesApp app;
+
     return app.exec();
 }
