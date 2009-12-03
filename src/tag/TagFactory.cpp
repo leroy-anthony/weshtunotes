@@ -270,11 +270,17 @@ namespace Tag
         {
             m_currentItemState = item;
             loadState( m_itemToState[item] );
+
+            m_appareanceGroupBox->setEnabled( true );
+            m_fontGroupBox->setEnabled( true );
         }
         else if ( m_itemToTag.contains( item ) )
         {
             m_currentItemTag = item;
             loadTag( m_itemToTag[item] );
+
+            m_appareanceGroupBox->setEnabled( false );
+            m_fontGroupBox->setEnabled( false );
         }
     }
 
