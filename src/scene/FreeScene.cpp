@@ -246,17 +246,9 @@ namespace Scene
                 parentHandle->remove( child );
                 child->setParent(0);
                 child->setParentHandle(0);
+                parentHandle->add( child->noteItem() );
 
-                if ( parentHandle->parentHandle() == 0 )
-                {
-                    QGraphicsProxyWidget * g = addHandleToScene( child );
-                    g->setPos(parentHandle->pos());
-                    removeGraphicsItemFromScene( parentHandle );
-                }
-                else
-                {
-                    parentHandle->add( child->noteItem() );
-                }
+                delete child;
             }
 
             currentHandle->setParentHandle(0);
