@@ -42,10 +42,10 @@ namespace Basket
     void Basket::save()
     {
         m_contentScene->save( m_nameId, m_configFilePath );
-        QList<AbstractBasket*> childs = childsBasket();
-        for ( int i=0 ; i<childs.size() ; ++i )
+        QList<AbstractBasket*> children = childrenBasket();
+        for ( int i=0 ; i<children.size() ; ++i )
         {
-            childs[i]->save();
+            children[i]->save();
         }
 
         AbstractBasket::save();
@@ -57,19 +57,19 @@ namespace Basket
 
         m_nameId = m_contentScene->id();
 
-        QList<AbstractBasket*> childs = childsBasket();
-        for ( int i=0 ; i<childs.size() ; ++i )
+        QList<AbstractBasket*> children = childrenBasket();
+        for ( int i=0 ; i<children.size() ; ++i )
         {
-            childs[i]->load();
+            children[i]->load();
         }
     }
 
     void Basket::del()
     {
-        QList<AbstractBasket*> childs = childsBasket();
-        for ( int i=0 ; i<childs.size() ; ++i )
+        QList<AbstractBasket*> children = childrenBasket();
+        for ( int i=0 ; i<children.size() ; ++i )
         {
-            childs[i]->del();
+            children[i]->del();
         }
 
         Config::Configuration::removeConfigDir( m_configFilePath );
