@@ -46,12 +46,12 @@ namespace Basket
 
     void AbstractBasket::addChild( AbstractBasket * basket )
     {
-        m_childsBasket.append( basket );
+        m_childrenBasket.append( basket );
     }
 
-    QList<AbstractBasket*> & AbstractBasket::childsBasket()
+    QList<AbstractBasket*> & AbstractBasket::childrenBasket()
     {
-        return m_childsBasket;
+        return m_childrenBasket;
     }
 
     const QString & AbstractBasket::name()
