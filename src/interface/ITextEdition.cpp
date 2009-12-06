@@ -42,7 +42,7 @@ namespace Item
         settings.setValue( group,subGroup,"bold", m_bold );
         settings.setValue( group,subGroup,"italic", m_italic );
         settings.setValue( group,subGroup,"strikeOut", m_strikeOut );
-    //    settings.setValue( group,subGroup,"alignment", m_alignment );
+        settings.setValue( group,subGroup,"alignment", (int) m_alignment );
         settings.setValue( group,subGroup,"underline", m_underLine );
         settings.setValue( group,subGroup,"colorFont", m_colorFont.name() );
         settings.setValue( group,subGroup,"font", m_font );
@@ -54,7 +54,7 @@ namespace Item
         m_bold = settings.valueSubGroup( group,subGroup,"bold", QVariant(false) ).toInt();
         m_italic = settings.valueSubGroup( group,subGroup,"italic", QVariant(false) ).toInt();
         m_strikeOut = settings.valueSubGroup( group,subGroup,"strikeOut", QVariant(false) ).toInt();
-       // m_alignment = settings.valueSubGroup( group,subGroup,"alignment", QVariant(1) ).toInt();
+        //m_alignment = settings.valueSubGroup( group,subGroup,"alignment", QVariant(1) ).toInt();
         m_underLine = settings.valueSubGroup( group,subGroup,"underline", QVariant(false) ).toInt();
         m_colorFont = QColor( settings.valueSubGroup( group,subGroup,"colorFont", "#000000" ) );
         m_font = settings.valueSubGroup( group,subGroup,"font","Arial" );
