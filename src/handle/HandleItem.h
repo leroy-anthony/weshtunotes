@@ -100,7 +100,7 @@ namespace Handle
 
     public slots:
         void setDefaultColor();
-        void delItem2();
+        void questionDelItem();
 
     protected:
         void paintEvent( QPaintEvent * event );
