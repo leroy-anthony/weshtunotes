@@ -23,7 +23,6 @@
 #include <ktextbrowser.h>
 #include <krichtextedit.h>
 #include <QMimeData>
-#include <QTextEdit>
 
 namespace Item
 {
