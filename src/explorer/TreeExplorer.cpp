@@ -23,7 +23,10 @@
 #include <QApplication>
 #include <QFileInfo>
 #include <QDir>
-#include <QInputDialog>
+
+#include <KInputDialog>
+#include <KLineEdit>
+#include <KLocalizedString>
 
 #include "../scene/FreeScene.h"
 #include "../scene/LayoutScene.h"
@@ -58,9 +61,9 @@ namespace Explorer
     Basket::ItemTreeBasket * TreeExplorer::addToCurrentBasket()
     {
         bool ok;
-        QString name = QInputDialog::getText(this, tr("Basket name"),
-                                             tr("Basket name:"), QLineEdit::Normal,
-                                             "My basket", &ok);
+        QString name = KInputDialog::getText(QString("Basket name"),
+                                             QString("Basket name:"),
+                                              QString("My basket"), &ok, this);
 
         if ( ok && !name.isEmpty() )
         {
@@ -73,9 +76,11 @@ namespace Explorer
     Basket::ItemTreeBasket * TreeExplorer::addBasketToRoot()
     {
         bool ok;
-        QString name = QInputDialog::getText(this, tr("Basket name"),
-                                             tr("Basket name:"), QLineEdit::Normal,
-                                             "My basket", &ok);
+        QString name = KInputDialog::getText(QString("Basket name"),
+                                             QString("Basket name:"),
+                                             QString("My basket"),
+                                             &ok,
+                                             this);
 
         if ( ok && !name.isEmpty() )
         {
