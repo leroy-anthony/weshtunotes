@@ -33,6 +33,11 @@ namespace Handle
 #include "../item/AbstractItem.h"
 #include "../scene/CustomGraphicsView.h"
 
+namespace Handle
+{
+    class GraphicHandleItem;
+}
+
 namespace Scene
 {
 
@@ -44,7 +49,6 @@ namespace Scene
         AbstractScene(QWidget * parent = 0);
         virtual ~AbstractScene();
 
-        virtual QGraphicsItem      * currentGraphicsItem() = 0;
         virtual Item::AbstractItem * currentAbstractItem() = 0;
         virtual Handle::HandleItem * currentHandle()       = 0;
 

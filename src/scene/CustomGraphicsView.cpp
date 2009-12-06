@@ -37,7 +37,9 @@ namespace Scene
     CustomGraphicsView::CustomGraphicsView():
             QGraphicsView(),
             m_scale(1.0),
-            m_move(false)
+            m_move(false),
+            m_selection(false),
+            m_selectionItem(0)
     {
         if ( QGLFormat::hasOpenGL() )
         {
@@ -82,7 +84,27 @@ namespace Scene
     {
         if ( scene()->itemAt( mapToScene( event->posF().x(), event->posF().y() ) ) == 0 )
         {
-            m_move = true;
+            if ( event->modifiers() == Qt::ControlModifier )
+            {
+                m_selection = true;
+                if ( m_selectionItem == 0 )
+                {
+                    m_selectionItem = scene()->addPath( QPainterPath() );
+
+                    QColor colorSelection = QApplication::palette().color(QPalette::Highlight);
+                    m_selectionItem->setPen(QPen(colorSelection, 1, Qt::SolidLine, Qt::FlatCap, Qt::MiterJoin));
+                    colorSelection.setAlpha(100);
+                    m_selectionItem->setBrush(colorSelection);
+                    m_selectionItem->setZValue(100);
+                }
+                m_selectionItem->setPath( QPainterPath() );
+                m_selectionItem->show();
+            }
+            else
+            {
+                m_move = true;
+            }
+
             m_position = event->posF();
         }
         QGraphicsView::mousePressEvent(event);
@@ -91,12 +113,34 @@ namespace Scene
     void CustomGraphicsView::mouseReleaseEvent(QMouseEvent * event)
     {
         m_move = false;
+        m_selection = false;
+
+        if ( m_selectionItem != 0 )
+        {
+            m_selectionItem->hide();
+        }
+
         QGraphicsView::mouseReleaseEvent(event);
     }
 
     void CustomGraphicsView::mouseMoveEvent(QMouseEvent * event)
     {
-        if ( m_move )
+        if ( m_selection )
+        {
+            QPainterPath selectionPath;
+
+            int h = event->posF().y() - m_position.y();
+            int w = event->posF().x() - m_position.x();
+
+            QPolygonF r = mapToScene( m_position.x(), m_position.y(), w, h );
+            r << r[0];
+
+            selectionPath.addPolygon( r );
+
+            m_selectionItem->setPath( selectionPath );
+            scene()->setSelectionArea( selectionPath );
+        }
+        else if ( m_move )
         {
             double dx = (event->posF().x() - m_position.x()) / matrix().m11();
             double dy = (event->posF().y() - m_position.y()) / matrix().m22();
@@ -168,7 +212,18 @@ namespace Scene
 
     void CustomGraphicsView::fitInViewZoom()
     {
-        QList<QGraphicsItem*> itemList = items();
+        QList<QGraphicsItem*> itemList = scene()->selectedItems();
+
+        if ( itemList.isEmpty() )
+        {
+            itemList = items();
+        }
+
+        if ( itemList.isEmpty() )
+        {
+            return;
+        }
+
         double minx = 9999;
         double miny = 9999;
         double maxx = -9999;
@@ -176,23 +231,26 @@ namespace Scene
         for ( int i=0 ; i<itemList.size() ; ++i )
         {
             QGraphicsItem * item = itemList[i];
-            if ( minx > item->x() )
+            if ( item->isVisible() )
             {
-                minx = item->x();
-            }
+                if ( minx > item->x() )
+                {
+                    minx = item->x();
+                }
 
-            if ( miny > item->y() )
-            {
-                miny= item->y();
-            }
-            if ( maxx < item->x() + item->boundingRect().width() )
-            {
-                maxx = item->x() + item->boundingRect().width();
-            }
+                if ( miny > item->y() )
+                {
+                    miny= item->y();
+                }
+                if ( maxx < item->x() + item->boundingRect().width() )
+                {
+                    maxx = item->x() + item->boundingRect().width();
+                }
 
-            if ( maxy < item->y() + item->boundingRect().height() )
-            {
-                maxy= item->y() + item->boundingRect().height();
+                if ( maxy < item->y() + item->boundingRect().height() )
+                {
+                    maxy= item->y() + item->boundingRect().height();
+                }
             }
         }
         fitInView(minx,miny,maxx-minx,maxy-miny,Qt::KeepAspectRatio);
