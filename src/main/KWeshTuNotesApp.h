@@ -24,7 +24,7 @@
 
 class MainWindow;
 
-class KWeshTuNotesApp : public KApplication
+class KWeshTuNotesApp : public KUniqueApplication
 {
 public:
     KWeshTuNotesApp();
