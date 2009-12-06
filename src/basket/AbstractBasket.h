@@ -38,7 +38,7 @@ namespace Basket
         AbstractBasket( const QString & name );
 
         void addChild( AbstractBasket * basket );
-        QList<AbstractBasket*> & childsBasket();
+        QList<AbstractBasket*> & childrenBasket();
 
         virtual void save() = 0;
         virtual void load() = 0;
@@ -61,7 +61,7 @@ namespace Basket
 
         Scene::AbstractScene * m_contentScene;
 
-        QList<AbstractBasket*> m_childsBasket;
+        QList<AbstractBasket*> m_childrenBasket;
 
         QString m_type;
 
