@@ -257,19 +257,19 @@ namespace Scene
         m_aligncenterAction->setChecked(false);
         m_alignleftAction->setChecked(false);
 
-        Qt::Alignment alignement = dynamic_cast<Item::ITextEdition*>(item)->alignment();
+        Qt::Alignment alignment = dynamic_cast<Item::ITextEdition*>(item)->alignment();
 
-        if ( alignement == Qt::AlignRight )
+        if ( alignment == Qt::AlignRight )
         {
             m_alignrightAction->setChecked(true);
         }
 
-        if ( alignement == Qt::AlignHCenter )
+        if ( alignment == Qt::AlignHCenter )
         {
             m_aligncenterAction->setChecked(true);
         }
 
-        if ( alignement == Qt::AlignLeft )
+        if ( alignment == Qt::AlignLeft )
         {
             m_alignleftAction->setChecked(true);
         }
