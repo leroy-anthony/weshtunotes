@@ -51,7 +51,6 @@ namespace Scene
 
     FreeScene::FreeScene(QWidget * parent) :
             AbstractScene(parent),
-            m_currentGraphicsItem(0),
             m_currentAbstractItem(0),
             m_currentHandle(0),
             m_modeItem(Nothing)
@@ -131,7 +130,7 @@ namespace Scene
         return handle;
     }
 
-    QGraphicsProxyWidget * FreeScene::addHandleToScene( Handle::HandleItem * handle )
+    Handle::GraphicHandleItem * FreeScene::addHandleToScene( Handle::HandleItem * handle )
     {
         QGraphicsProxyWidget * w = m_handles[handle];
         if ( w != 0 )
@@ -141,6 +140,8 @@ namespace Scene
         }
 
         Handle::GraphicHandleItem * g = new Handle::GraphicHandleItem();
+        g->setFlag(QGraphicsItem::ItemIsSelectable,true);
+        g->setFlag(QGraphicsItem::ItemIsFocusable,true);
         g->setWidget(handle);
         addItem(g);
 
@@ -194,7 +195,8 @@ namespace Scene
             parentItem->remove( handleItem );
             handleItem->setParent(0);
             handleItem->setModeDegroupement(true);
-            m_currentGraphicsItem = addHandleToScene( handleItem );
+            addHandleToScene( handleItem )->setSelected(true);
+            addHandleToScene( handleItem )->setFocus();
             static_cast<QWidget*>(handleItem)->move(x,y);
         }
     }
@@ -217,17 +219,26 @@ namespace Scene
     void FreeScene::mousePressEvent ( QGraphicsSceneMouseEvent * mouseEvent )
     {
         m_currentAbstractItem = 0;
-        m_currentGraphicsItem = itemAt( mouseEvent->scenePos().x(), mouseEvent->scenePos().y() );
+        Handle::GraphicHandleItem * currentGraphicsItem = static_cast<Handle::GraphicHandleItem*>(itemAt( mouseEvent->scenePos().x(), mouseEvent->scenePos().y() ));
+
         if ( mouseEvent->button() == Qt::LeftButton )
         {
-            Handle::HandleItem * h = m_items[ static_cast<QGraphicsProxyWidget*>(m_currentGraphicsItem) ];
+            Handle::HandleItem * h = m_items[ static_cast<QGraphicsProxyWidget*>(currentGraphicsItem) ];
             if ( h != 0 )
             {
+                if ( mouseEvent->modifiers() != Qt::ControlModifier )
+                {
+                    clearSelection();
+                }
+
+                currentGraphicsItem->setSelected(true);
+                currentGraphicsItem->setFocus();
+
                 m_currentHandle = h->handleItemAt( mouseEvent->scenePos().x(), mouseEvent->scenePos().y() );
-                m_currentGraphicsItem->setZValue( 100 );
+                currentGraphicsItem->setZValue( 100 );
             }
         }
-        else if ( m_currentGraphicsItem == 0 )
+        else if ( currentGraphicsItem == 0 )
         {
             addItems( mouseEvent->scenePos().x(), mouseEvent->scenePos().y(), "templatePardefaut" );
         }
@@ -261,7 +272,9 @@ namespace Scene
         {
             delUselessHandleGroup( m_currentHandle  );
 
-            QList<QGraphicsItem *> items = collidingItems( m_currentGraphicsItem );
+            Handle::GraphicHandleItem * currentGraphicsItem = static_cast<Handle::GraphicHandleItem*>(selectedItems()[0]);
+
+            QList<QGraphicsItem *> items = collidingItems( currentGraphicsItem );
             if ( items.size() > 0 )
             {
                 Handle::HandleItem * handleCible = m_items[static_cast<QGraphicsProxyWidget*>(items[0])];
@@ -291,6 +304,7 @@ namespace Scene
             if ( m_currentHandle->noteItem() != 0 )
             {
                 m_currentHandle->noteItem()->isSelected();
+                m_currentHandle->noteItem()->setFocus();
             }
         }
 
@@ -301,11 +315,6 @@ namespace Scene
     Item::AbstractItem * FreeScene::currentAbstractItem()
     {
         return m_currentAbstractItem;
-    }
-
-    QGraphicsItem * FreeScene::currentGraphicsItem()
-    {
-        return m_currentGraphicsItem;
     }
 
     Handle::HandleItem * FreeScene::currentHandle()

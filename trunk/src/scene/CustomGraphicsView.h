@@ -51,6 +51,9 @@ namespace Scene
     private:
         double m_scale;
         bool m_move;
+        bool m_selection;
+        
+        QGraphicsPathItem * m_selectionItem;
         QPointF m_position;
 
     };

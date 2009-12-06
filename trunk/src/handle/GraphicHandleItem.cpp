@@ -19,11 +19,14 @@
 
 #include "GraphicHandleItem.h"
 
-#include "../main/general.h"
-
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
 #include <QPen>
+#include <QApplication>
+#include <QPolygon>
+
+#include "../main/general.h"
+#include "../scene/AbstractScene.h"
 
 namespace Handle
 {
@@ -43,9 +46,35 @@ namespace Handle
         r.setY(r.y()+2);
 
         painter->save();
-        painter->setOpacity(0.5);
-        painter->setBrush(Qt::gray);
-        painter->setPen(Qt::lightGray);
+
+        painter->setBrush(QApplication::palette().color(QPalette::Highlight));
+        painter->setPen(QApplication::palette().color(QPalette::Highlight));
+
+        Scene::AbstractScene * s = static_cast<Scene::AbstractScene*>(scene());
+
+        if ( option->state & QStyle::State_Selected )
+        {
+            int decal = 5;
+
+            QPolygon triangle1;
+            triangle1 << option->rect.topLeft() - QPoint(decal,decal) << option->rect.topLeft() - QPoint(0,decal) << option->rect.topLeft() - QPoint(decal,0);
+
+            QPolygon triangle2;
+            triangle2 << option->rect.topRight() + QPoint(0,-decal) << option->rect.topRight() + QPoint(decal,-decal) << option->rect.topRight() + QPoint(decal,0);
+
+            QPolygon triangle3;
+            triangle3 << option->rect.bottomLeft() - QPoint(decal,-decal) << option->rect.bottomLeft() + QPoint(0,decal) << option->rect.bottomLeft() - QPoint(decal,0);
+
+            QPolygon triangle4;
+            triangle4 << option->rect.bottomRight() + QPoint(decal,decal) << option->rect.bottomRight() + QPoint(0,decal) << option->rect.bottomRight() + QPoint(decal,0);
+
+            painter->drawPolygon(triangle1);
+            painter->drawPolygon(triangle2);
+            painter->drawPolygon(triangle3);
+            painter->drawPolygon(triangle4);
+        }
+
+        painter->setOpacity(0.3);
         painter->drawRect(r);
         painter->restore();
 

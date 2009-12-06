@@ -22,13 +22,14 @@
 
 #include "AbstractScene.h"
 
-#include "../item/NoteItem.h"
-#include "../scene/CustomGraphicsView.h"
-
 #include <QGraphicsScene>
 #include <QGraphicsProxyWidget>
 #include <QHash>
 #include <QToolBar>
+
+#include "../item/NoteItem.h"
+#include "../scene/CustomGraphicsView.h"
+#include "../handle/GraphicHandleItem.h"
 
 namespace Scene
 {
@@ -43,7 +44,6 @@ namespace Scene
 
         enum Mode { Nothing, MoveItem, ScaleXItem, ScaleYItem, ScaleXYItem };
 
-        QGraphicsItem * currentGraphicsItem();
         Item::AbstractItem * currentAbstractItem();
         Handle::HandleItem * currentHandle();
 
@@ -59,7 +59,7 @@ namespace Scene
         void mousePressEvent( QGraphicsSceneMouseEvent * mouseEvent );
         void mouseReleaseEvent( QGraphicsSceneMouseEvent * mouseEvent);
         void removeGraphicsItemFromScene( Handle::HandleItem * handle );
-        QGraphicsProxyWidget * addHandleToScene( Handle::HandleItem * handle );
+        Handle::GraphicHandleItem * addHandleToScene( Handle::HandleItem * handle );
         Handle::HandleItem * newHandle( int x, int y, int w  );
         Item::AbstractItem * newItem( int x, int y );
         void delUselessHandleGroup( Handle::HandleItem * currentHandle  );
@@ -67,7 +67,6 @@ namespace Scene
         void keyPressEvent( QKeyEvent * keyEvent );
 
     private:
-        QGraphicsItem * m_currentGraphicsItem;
         Item::AbstractItem * m_currentAbstractItem;
         Handle::HandleItem * m_currentHandle;
         QPointF m_mouseLocalPositionItem;
