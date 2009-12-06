@@ -33,7 +33,9 @@
 #include <QSizePolicy>
 #include <QApplication>
 #include <QSvgRenderer>
-#include <QMessageBox>
+
+#include <KLocalizedString>
+#include <KMessageBox>
 
 #include "../config/Configuration.h"
 #include "../config/VisualAspect.h"
@@ -79,7 +81,7 @@ namespace Handle
         h->addWidget( &m_sizeHorHandle );
         m_handleLayout->addLayout( h, 0, 2 );
 
-        connect( &m_deleteHandle, SIGNAL(pressed()), this, SLOT(delItem2()) );
+        connect( &m_deleteHandle, SIGNAL(pressed()), this, SLOT(questionDelItem()) );
 
         if ( m_insertIndicator == 0 )
         {
@@ -292,10 +294,10 @@ namespace Handle
 
     void HandleItem::save( const QString & fileName )
     {
-        QStringList childs;
+        QStringList children;
         for ( int i=0 ; i<m_handles.size() ; ++i)
         {
-            childs << m_handles[i]->id();
+            children << m_handles[i]->id();
         }
 
         Config::Configuration settings( fileName );
@@ -305,9 +307,9 @@ namespace Handle
         settings.setValue(m_nameId,"height",height());
         settings.setValue(m_nameId,"width",width());
 
-        if ( childs.size() > 0 )
+        if ( children.size() > 0 )
         {
-            settings.setValue(m_nameId,"items",childs);
+            settings.setValue(m_nameId,"items",children);
         }
         else
         {
@@ -349,13 +351,14 @@ namespace Handle
         painter.drawRect( event->rect().x(), event->rect().y(), event->rect().width(), event->rect().height() );
     }
 
-    void HandleItem::delItem2()
+    void HandleItem::questionDelItem()
     {
-        QMessageBox::StandardButton reply;
-        reply = QMessageBox::question(0, tr("Delete note"),
-                                      tr("Do you want really delete this note ?"),
-                                      QMessageBox::Yes | QMessageBox::No );
-        if (reply == QMessageBox::Yes)
+        int reply = KMessageBox::questionYesNo(0, "Do you want really delete this note ?",
+                                               "Delete note",
+                                               KStandardGuiItem::yes(),
+                                               KStandardGuiItem::no(),
+                                               "delete note");
+        if (reply == KMessageBox::Yes)
         {
             emit delItem( this );
         }
