@@ -24,7 +24,6 @@
 #include <QFrame>
 #include <QBasicTimer>
 #include <QGridLayout>
-#include <QGridLayout>
 #include <QPoint>
 #include <QGraphicsWidget>
 #include <QPainter>
@@ -98,6 +97,9 @@ namespace Handle
         int x();
         int y();
 
+        void setFileName( const QString & fileName );
+        const QString & fileName() const;
+
     public slots:
         void setDefaultColor();
         void questionDelItem();
@@ -146,6 +148,8 @@ namespace Handle
         int m_width;
 
         QColor m_defaultColor;
+
+        QString m_fileName;
 
     };
 

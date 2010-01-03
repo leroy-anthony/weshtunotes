@@ -23,12 +23,15 @@
 #include "../config/ImageFactory.h"
 #include "../config/VisualAspect.h"
 
+#include <QApplication>
+
 namespace Handle
 {
 
     DeleteHandle::DeleteHandle( HandleItem * parent ):
             QPushButton(parent),
-            m_handleItemRoot(parent)
+            m_handleItemRoot(parent),
+            m_isHover(false)
     {
         setIcon(Config::ImageFactory::newInstance()->icon("application-exit.png"));
         setIconSize(QSize(Config::VisualAspect::widthHandleControl,Config::VisualAspect::widthHandleControl));
@@ -48,12 +51,44 @@ namespace Handle
 
     void DeleteHandle::setDefaultColor()
     {
-        setStyleSheet( Config::VisualAspect::gradiantBackground( m_defaultColor ) );
+        //setStyleSheet( Config::VisualAspect::gradiantBackground( m_defaultColor ) );
     }
 
     void DeleteHandle::setHoverMode( bool isHover )
     {
         setVisible( isHover );
+        m_isHover = isHover;
+    }
+
+    void DeleteHandle::paintEvent( QPaintEvent * event )
+    {
+        Q_UNUSED( event );
+
+        QPainter painter(this);
+
+        painter.setRenderHint(QPainter::HighQualityAntialiasing,true);
+
+        QPen pen;
+        pen.setStyle(Qt::NoPen);
+        pen.setWidth(1);
+        painter.setPen(pen);
+
+        QLinearGradient gradient(0,0,0, height());
+        gradient.setColorAt(0, QColor(150,13,16).lighter(Config::VisualAspect::lighterIntensity));
+        gradient.setColorAt(1, QColor(150,13,16));
+        painter.setBrush(gradient);
+        painter.drawRect( 0, 0, width(), height() );
+
+        QPen pen2;
+        pen2.setWidth(1);
+        pen2.setColor(Qt::white);
+        pen2.setCapStyle(Qt::RoundCap);
+
+        painter.setPen(pen2);
+
+        painter.drawLine( 2, 2, width()-2, height()-2 );
+        painter.drawLine( 2, height()-2, width()-2, 2 );
+
     }
 
 }

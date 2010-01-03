@@ -108,6 +108,12 @@ namespace Scene
         a = KStandardAction::fitToPage(mainWindow->currentView(),SLOT(fitInViewZoom()),m_mainWindow->actionCollection());
         a->setIcon(Config::ImageFactory::newInstance()->icon("zoom-fit-best.png"));
 
+        a = new KAction("Delete",0);
+        a->setIcon(Config::ImageFactory::newInstance()->icon("edit-delete.png"));
+        a->setShortcut(KShortcut(Qt ::CTRL+Qt::Key_D),KAction::DefaultShortcut);
+        connect( a, SIGNAL(triggered(bool)), mainWindow->currentView(), SLOT(deleteItem()) );
+        m_mainWindow->actionCollection()->addAction("deleteItem",a);
+
         a = addAction("List Scene");
         connect(a, SIGNAL(triggered(bool)), mainWindow, SLOT(layoutScene()));
         m_mainWindow->actionCollection()->addAction(Scene::LayoutScene::type, a);

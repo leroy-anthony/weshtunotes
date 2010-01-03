@@ -19,6 +19,9 @@
 
 #include "CustomGraphicsView.h"
 
+#include <algorithm>
+#include <limits>
+
 #include <QMatrix>
 #include <QPoint>
 #include <QWheelEvent>
@@ -30,6 +33,7 @@
 
 #include "AbstractScene.h"
 #include "../main/general.h"
+#include "../handle/HandleItem.h"
 
 namespace Scene
 {
@@ -69,7 +73,7 @@ namespace Scene
         setRenderHint(QPainter::Antialiasing, false);
         setRenderHint(QPainter::TextAntialiasing, true);
         setRenderHint(QPainter::HighQualityAntialiasing, false);
-        setRenderHint(QPainter::NonCosmeticDefaultPen, true);
+        setRenderHint(QPainter::NonCosmeticDefaultPen, false);
 
         setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -87,6 +91,7 @@ namespace Scene
             if ( event->modifiers() == Qt::ControlModifier )
             {
                 m_selection = true;
+
                 if ( m_selectionItem == 0 )
                 {
                     m_selectionItem = scene()->addPath( QPainterPath() );
@@ -97,6 +102,13 @@ namespace Scene
                     m_selectionItem->setBrush(colorSelection);
                     m_selectionItem->setZValue(100);
                 }
+
+                if ( m_selectionItem->scene() != scene() )
+                {
+                    m_selectionItem->scene()->removeItem( m_selectionItem );
+                    scene()->addItem( m_selectionItem );
+                }
+
                 m_selectionItem->setPath( QPainterPath() );
                 m_selectionItem->show();
             }
@@ -129,10 +141,12 @@ namespace Scene
         {
             QPainterPath selectionPath;
 
-            int h = event->posF().y() - m_position.y();
-            int w = event->posF().x() - m_position.x();
+            int x = std::min(m_position.x(),event->posF().x());
+            int y = std::min(m_position.y(),event->posF().y());
+            int h = abs(event->posF().y() - m_position.y());
+            int w = abs(event->posF().x() - m_position.x());
 
-            QPolygonF r = mapToScene( m_position.x(), m_position.y(), w, h );
+            QPolygonF r = mapToScene( x, y, w, h );
             r << r[0];
 
             selectionPath.addPolygon( r );
@@ -184,12 +198,76 @@ namespace Scene
 
     void CustomGraphicsView::paste()
     {
-        AbstractScene * s =  dynamic_cast<AbstractScene*>( scene() );
+        if ( !m_copyHandlesItem.isEmpty() )
+        {
+            AbstractScene * s =  static_cast<AbstractScene*>( scene() );
 
-        const QClipboard * clipboard = QApplication::clipboard();
-        const QMimeData * mimeData = clipboard->mimeData();
+            QStringList filesName;
+            for ( int i=0 ; i<m_copyHandlesItem.size() ; ++i )
+            {
+                filesName << m_copyHandlesItem[i]->handleItem()->fileName();
+            }
 
-        s->addData( mimeData );
+            double minX = std::numeric_limits<double>::max();
+            double maxX = std::numeric_limits<double>::min();
+            double minY = std::numeric_limits<double>::max();
+            double maxY = std::numeric_limits<double>::min();
+            for ( int i=0 ; i<m_copyHandlesItem.size() ; ++i )
+            {
+                if ( m_copyHandlesItem[i]->x() < minX )
+                {
+                    minX = m_copyHandlesItem[i]->x();
+                }
+                if ( (m_copyHandlesItem[i]->x() + m_copyHandlesItem[i]->boundingRect().width()) > maxX )
+                {
+                    maxX = m_copyHandlesItem[i]->x() + m_copyHandlesItem[i]->boundingRect().width();
+                }
+                if ( m_copyHandlesItem[i]->rect().y() < minY )
+                {
+                    minY = m_copyHandlesItem[i]->rect().y();
+                }
+                if ( (m_copyHandlesItem[i]->rect().y() + m_copyHandlesItem[i]->rect().height()) > maxY )
+                {
+                    maxY = m_copyHandlesItem[i]->rect().y() + m_copyHandlesItem[i]->rect().height();
+                }
+            }
+
+            s->loadHandles( filesName,  mapToScene( viewport()->width()/2, viewport()->height()/2 ), abs(maxX-minX), abs(maxY-minY) );
+        }
+        else
+        {
+            AbstractScene * s =  static_cast<AbstractScene*>( scene() );
+
+            const QClipboard * clipboard = QApplication::clipboard();
+            const QMimeData * mimeData = clipboard->mimeData();
+
+            s->addData( mimeData );
+        }
+    }
+
+    void CustomGraphicsView::copy()
+    {
+        AbstractScene * s =  static_cast<AbstractScene*>( scene() );
+        s->save();
+
+        QList<QGraphicsItem*> items = s->selectedItems();
+        m_copyHandlesItem.clear();
+
+        for ( int i=0 ; i<items.size() ; ++i )
+        {
+            m_copyHandlesItem << static_cast<Handle::GraphicHandleItem*>(items[i]);
+        }
+    }
+
+    void CustomGraphicsView::deleteItem()
+    {
+        AbstractScene * s =  static_cast<AbstractScene*>( scene() );
+
+        QList<QGraphicsItem*> items = s->selectedItems();
+        for ( int i=0 ; i<items.size() ; ++i )
+        {
+            s->delItem( static_cast<Handle::GraphicHandleItem*>(items[i])->handleItem() );
+        }
     }
 
     void CustomGraphicsView::resetZoom()

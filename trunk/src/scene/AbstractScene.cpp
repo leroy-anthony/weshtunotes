@@ -61,6 +61,10 @@ namespace Scene
         return m_id;
     }
 
+    void AbstractScene::addItemToScene( Handle::GraphicHandleItem * g )
+    {
+    }
+
     void AbstractScene::buildListHandleToLoad( Handle::HandleItem * h, QStringList & l )
     {
         if ( h->size() > 0 )
@@ -78,14 +82,22 @@ namespace Scene
         }
     }
 
-    void AbstractScene::save( const QString & id, const QString & fileName )
+    void AbstractScene::save()
     {
         QList<Handle::HandleItem*> handles = m_handles.keys();
 
-        Config::Configuration::clear( fileName );
-        Config::Configuration settings( fileName );
+        Config::Configuration delSettings( m_fileName );
+        QStringList listFile = delSettings.values("scene","items");
+        for ( int i=0 ; i<listFile.size() ; ++i )
+        {
+            Config::Configuration::deleteFile(listFile[i]);
+        }
+        listFile.clear();
 
-        settings.setValue("scene","id",id);
+        Config::Configuration::clear( m_fileName );
+
+        Config::Configuration settings( m_fileName );
+        settings.setValue("scene","id",m_id);
         settings.setValue("scene","nbitems",handles.size());
         for (int i=0 ; i<handles.size() ; ++i)
         {
@@ -94,16 +106,20 @@ namespace Scene
 
             if ( listHandles.size() > 0 )
             {
-                settings.setValue("scene",QString("item%1").arg(i+1),listHandles);
+                Config::Configuration settingsHandle( m_fileName+"_"+handles[i]->id() );
+                settingsHandle.setValue("general","items",listHandles);
+                listFile << m_fileName+"_"+handles[i]->id();
             }
         }
 
+        settings.setValue("scene","items",listFile);
+
         for ( int i=0 ; i<handles.size() ; ++i )
         {
-            handles[i]->save(fileName);
+            handles[i]->save(m_fileName+"_"+handles[i]->id());
         }
 
-        saveViewOnDisk( fileName );
+        saveViewOnDisk( m_fileName );
     }
 
     void AbstractScene::storeView( CustomGraphicsView * view )
@@ -145,83 +161,102 @@ namespace Scene
         Config::Configuration settings( fileName );
 
         m_transformView = QTransform(
-            settings.valueGroup("scene","transform_m11",1).toInt(),
-            settings.valueGroup("scene","transform_m12",0).toInt(),
-            settings.valueGroup("scene","transform_m21",0).toInt(),
-            settings.valueGroup("scene","transform_m22",1).toInt(),
-            settings.valueGroup("scene","transform_dx",0).toInt(),
-            settings.valueGroup("scene","transform_dy",0).toInt());
+                settings.valueGroup("scene","transform_m11",1).toInt(),
+                settings.valueGroup("scene","transform_m12",0).toInt(),
+                settings.valueGroup("scene","transform_m21",0).toInt(),
+                settings.valueGroup("scene","transform_m22",1).toInt(),
+                settings.valueGroup("scene","transform_dx",0).toInt(),
+                settings.valueGroup("scene","transform_dy",0).toInt());
 
         m_horizontalScrollBarValueView = settings.valueGroup("scene","hscroll",0).toInt();
         m_verticalScrollBarValueView   = settings.valueGroup("scene","vscroll",0).toInt();
     }
 
-    void AbstractScene::load( const QString & fileName )
+    void AbstractScene::loadHandles( const QList<QString> & filesName, QPointF centerPt, int selectionWidth, int selectionHeigth )
     {
-        Config::Configuration settings( fileName );
+        int dx = 0;
+        int dy = 0;
 
-        QMap<QString,Handle::HandleItem*> handles;
-        QMap<QString,Item::AbstractItem*> itemsToLoad;
-        QList<QStringList> listItem;
-
-        // récupère tous les noms des notes
-        m_id = settings.valueGroup("scene","id","1");
-
-        int size = settings.valueGroup("scene","nbitems",0).toInt();
-        for ( int i=1 ; i<=size ; ++i )
+        for ( int j=0 ; j<filesName.size() ; ++j )
         {
-            listItem << settings.values("scene",QString("item%1").arg(i));
-        }
+            QString fileName = filesName[j];
 
-        // pour chaque note
-        for ( int j=0 ; j<listItem.size() ; ++j )
-        {
-            QStringList items = listItem[j];
+            QMap<QString,Item::AbstractItem*> itemsToLoad;
+            QMap<QString,Handle::HandleItem*> handles;
+
+            Config::Configuration settingsHandle( fileName );
+
+            QStringList items = settingsHandle.values("general","items");
+
             Handle::HandleItem * handle = 0;
+
             for (int i=0 ; i<items.size() ; ++i)
             {
-                int x = settings.valueGroup(items[i],"x",0).toInt();
-                int y = settings.valueGroup(items[i],"y",0).toInt();
-                handle = newHandle( x, y, settings.valueGroup(items[i],"width", Settings::widthNote()).toInt() );
-                handle->setId(items[i]);
-                handles[ items[i] ] = handle;
+                QString itemId = items[i];
 
-                QStringList itemsToAdd = settings.values(items[i],"items");
+                int x = settingsHandle.valueGroup( itemId, "x", 0 ).toInt();
+                int y = settingsHandle.valueGroup( itemId, "y", 0 ).toInt();
+
+                if ( j == 0 && centerPt != QPointF(0,0) )
+                {
+                    dx = centerPt.x()-x-selectionWidth/2;
+                    dy = centerPt.y()-y-selectionHeigth/2;
+                }
+
+                handle = newHandle( x+dx, y+dy, settingsHandle.valueGroup( itemId, "width", Settings::widthNote()).toInt() );
+                handle->setId( itemId );
+                handle->regenerateId();
+
+                handles[ itemId ] = handle;
+                handle->setFileName( fileName );
+
+                QStringList itemsToAdd = settingsHandle.values( itemId, "items" );
                 if ( itemsToAdd.size()>0 )
                 {
-                    for (int j = 0; j < itemsToAdd.size() ; ++j)
+                    for (int k = 0; k < itemsToAdd.size() ; ++k)
                     {
-                        handle->add( handles[ itemsToAdd[j] ] );
+                        handle->add( handles[ itemsToAdd[k] ] );
                     }
                 }
                 else
                 {
                     //TODO: replace me by item->load() ???
                     Item::AbstractItem * item = newItem( 0, 0 );
-                    item->setItemColor( QColor(settings.valueGroup(items[i],"color", Settings::colorItem() )) );
+                    item->setItemColor( QColor(settingsHandle.valueGroup(items[i],"color", Settings::colorItem() )) );
                     handle->add( item );
 
-                    QString id = settings.valueGroup(items[i],"data","");
-                    item->setId(id);
+                    QString id = settingsHandle.valueGroup( itemId,"data","");
+                    item->setId( id );
                     itemsToLoad[ id ] = item;
 
-                    QStringList namesTags = settings.values(items[i],"tags");
-                    for ( int i=0 ; i<namesTags.size() ; ++i )
+                    QStringList namesTags = settingsHandle.values( itemId, "tags" );
+                    for ( int k=0 ; k<namesTags.size() ; ++k )
                     {
-                        QStringList s = namesTags[i].split(":");
+                        QStringList s = namesTags[k].split(":");
                         dynamic_cast<Item::NoteItem*>(item)->addTag(s[0],s[1]);
                     }
                 }
             }
+
             addHandleToScene( handle );
-        }
 
-        //charge la note
-        for ( int j=0 ; j<itemsToLoad.keys().size() ; ++j )
-        {
-            itemsToLoad[ itemsToLoad.keys()[j] ]->load( fileName );
+            //charge la note
+            for ( int k=0 ; k<itemsToLoad.keys().size() ; ++k )
+            {
+                Item::AbstractItem * item = itemsToLoad[ itemsToLoad.keys()[k] ];
+                item->load( fileName );
+            }
         }
+    }
 
+    void AbstractScene::load( const QString & fileName )
+    {
+        Config::Configuration settings( fileName );
+
+        m_id = settings.valueGroup("scene","id","1");
+        m_fileName = fileName;
+
+        loadHandles( settings.values("scene","items") );
 
         loadViewFromDisk( fileName );
     }

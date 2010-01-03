@@ -114,6 +114,18 @@ namespace Config
     void Configuration::deleteFile( const QString & name )
     {
         Configuration settings(name);
+        QFileInfo file(settings.fileName());
+
+        QStringList items = settings.values("general","items");
+        for ( int i=0 ; i<items.size() ; ++i )
+        {
+            QString dataFileName = settings.valueGroup(items[i],"data","");
+            if( dataFileName != QString("") )
+            {
+                QFile::remove(file.absoluteDir().path()+QDir::separator()+dataFileName+".html");
+            }
+        }
+
         QFile::remove(settings.fileName());
     }
 

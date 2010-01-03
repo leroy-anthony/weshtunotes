@@ -21,6 +21,7 @@
 #define GENERATORID_H
 
 #include <QString>
+#include <QMap>
 
 namespace Technic
 {
@@ -31,11 +32,16 @@ namespace Technic
 
         const QString & id();
         void setId( const QString & id );
+        void regenerateId();
 
     protected:
         QString m_name;
         QString m_nameId;
-        static int m_id;
+
+    private:
+        void nextCacheId( const QString & m_name );
+        long cacheId( const QString & m_name );
+        static QMap<QString,long> m_cacheId;
     };
 }
 

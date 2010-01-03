@@ -33,6 +33,7 @@
 #include "../explorer/TreeExplorer.h"
 #include "../tag/TagFactory.h"
 #include "../scene/CustomGraphicsView.h"
+#include "../handle/GraphicHandleItem.h"
 
 class MainWindow : public KXmlGuiWindow, public Ui::MainWindow
 {
@@ -83,6 +84,8 @@ private:
     Basket::ItemTreeBasket * m_lastBasketLoad;
 
     KSystemTrayIcon * m_trayIcon;
+
+    Handle::GraphicHandleItem * m_copyHandleItem;
 
 };
 

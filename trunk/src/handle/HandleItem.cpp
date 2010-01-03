@@ -34,6 +34,7 @@
 #include <QApplication>
 #include <QSvgRenderer>
 
+#include <KDebug>
 #include <KLocalizedString>
 #include <KMessageBox>
 
@@ -115,7 +116,6 @@ namespace Handle
     {
         m_defaultColor = QColor(color);
         setStyleSheet( Config::VisualAspect::gradiantBackground( m_defaultColor ) );
-
         m_moveHandle.setDefaultColor(m_defaultColor);
         m_sizeHorHandle.setDefaultColor(m_defaultColor);
         m_deleteHandle.setDefaultColor(m_defaultColor);
@@ -146,7 +146,6 @@ namespace Handle
         {
             setContentsMargins( 0, 0, 0, 0 );
         }
-
     }
 
     void HandleItem::remove( HandleItem * h )
@@ -322,30 +321,25 @@ namespace Handle
         {
             m_handles[i]->save(fileName);
         }
+
+        m_fileName = fileName;
     }
 
     void HandleItem::paintEvent( QPaintEvent * event )
     {
         QPainter painter(this);
-        painter.setBackgroundMode( Qt::OpaqueMode );
 
         QLinearGradient gradient( 0, 0, 0, height());
         gradient.setColorAt( 0, m_defaultColor.lighter( Config::VisualAspect::lighterIntensity ) );
         gradient.setColorAt( 1, m_defaultColor );
-        painter.setBrush( gradient );
+        painter.setBrush( gradient);
 
         if ( m_parentHandle == 0 || m_isHover )
         {
             QPen p(QApplication::palette().color(QPalette::Highlight));
-            p.setWidth(2);
+            p.setWidth(3);
+            p.setJoinStyle(Qt::MiterJoin);
             painter.setPen(p);
-        }
-        else
-        {
-            QPen pen;
-            pen.setStyle(Qt::NoPen);
-            pen.setWidth(1);
-            painter.setPen(pen);
         }
 
         painter.drawRect( event->rect().x(), event->rect().y(), event->rect().width(), event->rect().height() );
@@ -425,10 +419,22 @@ namespace Handle
                               keyEvent->key() == Qt::Key_Up ||
                               keyEvent->key() == Qt::Key_Down ||
                               keyEvent->key() == Qt::Key_Right ||
-                              keyEvent->key() == Qt::Key_Left ) )
+                              keyEvent->key() == Qt::Key_Left ||
+                              keyEvent->key() == Qt::Key_End ||
+                              keyEvent->key() == Qt::Key_Home) )
         {
             QCoreApplication::sendEvent( m_item, keyEvent );
         }
+    }
+
+    void HandleItem::setFileName( const QString & fileName )
+    {
+        m_fileName = fileName;
+    }
+
+    const QString & HandleItem::fileName() const
+    {
+        return m_fileName;
     }
 
 }

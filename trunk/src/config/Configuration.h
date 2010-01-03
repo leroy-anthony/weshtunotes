@@ -49,8 +49,6 @@ namespace Config
         void removeSubGroup( const QString & group, const QString & subGroup );
         void removeGroup( const QString & group );
 
-
-
         static void iniConfigration();
 
         static QStringList masterBaskets();

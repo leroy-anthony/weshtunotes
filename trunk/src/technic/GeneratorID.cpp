@@ -19,31 +19,63 @@
 
 #include "GeneratorID.h"
 
+#include <QDebug>
+
 namespace Technic
 {
 
-    int GeneratorID::m_id = 0;
+    QMap<QString,long> GeneratorID::m_cacheId;
 
     GeneratorID::GeneratorID( const QString & name ):
             m_name(name)
     {
-        m_nameId = QString("item%1").arg(m_id);
-        ++m_id;
+        m_nameId = QString(m_name+"%1").arg( cacheId(m_name) );
+        nextCacheId(m_name);
     }
 
     void GeneratorID::setId( const QString & id )
     {
         m_nameId = id;
         QString idStr = QString(id).replace(m_name,"");
-        if ( idStr.toInt() > m_id )
+        if ( idStr.toInt() > cacheId(m_name) )
         {
-            m_id = idStr.toInt() + 1;
+            m_cacheId[ m_name ] = idStr.toInt();
+        }
+    }
+
+    void GeneratorID::regenerateId()
+    {
+        QString idStr = QString(m_nameId).replace(m_name,"");
+        if ( idStr.toInt() <= cacheId(m_name) )
+        {
+            m_nameId = QString(m_name+"%1").arg(cacheId(m_name));
+            nextCacheId(m_name);
         }
     }
 
     const QString & GeneratorID::id()
     {
         return m_nameId;
+    }
+
+    long GeneratorID::cacheId( const QString & m_name )
+    {
+        if ( !m_cacheId.contains(m_name) )
+        {
+            m_cacheId[ m_name ] = 0;
+        }
+
+        return m_cacheId[ m_name ];
+    }
+
+    void GeneratorID::nextCacheId( const QString & m_name )
+    {
+        if ( !m_cacheId.contains(m_name) )
+        {
+            m_cacheId[ m_name ] = 0;
+        }
+
+        ++m_cacheId[ m_name ];
     }
 
 }

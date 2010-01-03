@@ -4,14 +4,14 @@ cmake_minimum_required(VERSION 2.6)
 
 SET(CMAKE_VERBOSE_MAKEFILE ON)
 
-find_package( KDE4 REQUIRED )
-include_directories( ${KDE4_INCLUDES} )
+find_package(KDE4 REQUIRED)
+include_directories(${KDE4_INCLUDES})
 
-SET ( QT_USE_QTSVG TRUE )
-SET ( QT_USE_QTOPENGL TRUE )
+SET(QT_USE_QTSVG TRUE)
+SET(QT_USE_QTOPENGL TRUE)
 
 INCLUDE(${QT_USE_FILE})
-ADD_DEFINITIONS( ${QT_DEFINITIONS} )
+ADD_DEFINITIONS(${QT_DEFINITIONS})
 
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
 
@@ -95,7 +95,7 @@ set(weshnotes_MOC
 
 kde4_add_kcfg_files(weshnotes_SRC ./src/config/settings.kcfgc)
 kde4_add_executable(kweshtunotes ${weshnotes_SRC})
-target_link_libraries( kweshtunotes ${KDE4_KDEUI_LIBS} ${KDE4_KPARTS_LIBS} ${QT_LIBRARIES} )
+target_link_libraries(kweshtunotes ${KDE4_KDEUI_LIBS} ${KDE4_KPARTS_LIBS} ${QT_LIBRARIES} )
 
 install(TARGETS kweshtunotes DESTINATION ${BIN_INSTALL_DIR})
 install(FILES ./src/main/kweshtunotesui.rc DESTINATION  ${DATA_INSTALL_DIR}/kweshtunotes)

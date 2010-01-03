@@ -44,6 +44,7 @@ namespace Tag
 
     protected:
         void mousePressEvent( QMouseEvent * e );
+        void paintEvent( QPaintEvent * event );
         void loadTagsMenu();
 
     private:

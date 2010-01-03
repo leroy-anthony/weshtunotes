@@ -138,7 +138,7 @@ namespace Handle
             gradient.setColorAt(0, QApplication::palette().color(QPalette::Highlight).lighter( Config::VisualAspect::lighterIntensity ));
             gradient.setColorAt(1, QApplication::palette().color(QPalette::Highlight));
 
-            painter.setBrush(gradient);
+            painter.setBrush( gradient );
 
             painter.drawRect( 0, 0, width(), height() );
         }

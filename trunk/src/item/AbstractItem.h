@@ -64,6 +64,8 @@ namespace Item
 
         virtual void insertData( const QMimeData * data );
 
+        bool selected();
+
     signals:
         void editItem( Item::AbstractItem * item );
         void sizeChange();
@@ -83,6 +85,8 @@ namespace Item
 
         Tag::AddTag * m_addTag;
         QList<Tag::NoteTag*> m_tags;
+
+        bool m_selected;
 
     };
 

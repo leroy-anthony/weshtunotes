@@ -41,7 +41,7 @@ namespace Basket
 
     void Basket::save()
     {
-        m_contentScene->save( m_nameId, m_configFilePath );
+        m_contentScene->save();
         QList<AbstractBasket*> children = childrenBasket();
         for ( int i=0 ; i<children.size() ; ++i )
         {

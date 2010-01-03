@@ -22,17 +22,20 @@
 
 #include <ktextbrowser.h>
 #include <krichtextedit.h>
+
 #include <QMimeData>
+#include <QTime>
 
 namespace Item
 {
+    class NoteItem;
 
     class CustomTextEdit : public KTextBrowser
     {
         Q_OBJECT
 
     public:
-        CustomTextEdit();
+        CustomTextEdit( NoteItem * noteItem );
 
         void addData( const QMimeData *source );
         void selectNone();
@@ -47,6 +50,11 @@ namespace Item
 
         void mousePressEvent( QMouseEvent * event );
         void contextMenuEvent ( QContextMenuEvent * event );
+
+        void paintEvent( QPaintEvent * event );
+
+    private:
+        NoteItem * m_noteItem;
 
     };
 
