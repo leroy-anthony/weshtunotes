@@ -130,6 +130,19 @@ namespace Scene
         return handle;
     }
 
+    void FreeScene::addItemToScene( Handle::GraphicHandleItem * g )
+    {
+        addItem(g);
+
+        Handle::HandleItem * handle = (Handle::HandleItem *) g->widget();
+
+        g->setPos( handle->x(), handle->y() );
+        g->setZValue( 1 );
+
+        m_handles[handle] = g;
+        m_items[g] = handle;
+    }
+
     Handle::GraphicHandleItem * FreeScene::addHandleToScene( Handle::HandleItem * handle )
     {
         QGraphicsProxyWidget * w = m_handles[handle];
@@ -183,10 +196,16 @@ namespace Scene
 
             Handle::HandleItem::resetInsert();
 
-            QList<QGraphicsItem *> items = collidingItems( m_handles[handleItem] );
+            QList<QGraphicsItem*> items = collidingItems( m_handles[handleItem] );
             if ( items.size() > 0 )
             {
-                m_items[static_cast<QGraphicsProxyWidget*>(items[0])]->insert( handleItem->geometry().topLeft(), handleItem->height() );
+                for ( int i=0 ; i<items.size() ; ++i )
+                {
+                    if ( items[i]->isVisible() )
+                    {
+                        m_items[static_cast<QGraphicsProxyWidget*>(items[i])]->insert( handleItem->geometry().topLeft(), handleItem->height() );
+                    }
+                }
             }
         }
         else
@@ -196,7 +215,7 @@ namespace Scene
             handleItem->setParent(0);
             handleItem->setModeDegroupement(true);
             addHandleToScene( handleItem )->setSelected(true);
-            addHandleToScene( handleItem )->setFocus();
+
             static_cast<QWidget*>(handleItem)->move(x,y);
         }
     }
@@ -277,25 +296,28 @@ namespace Scene
             QList<QGraphicsItem *> items = collidingItems( currentGraphicsItem );
             if ( items.size() > 0 )
             {
-                Handle::HandleItem * handleCible = m_items[static_cast<QGraphicsProxyWidget*>(items[0])];
-                if ( handleCible->size() == 0 )
+                if ( items[0]->isVisible() )
                 {
-                    QPointF pt = static_cast<QGraphicsProxyWidget*>(items[0])->pos();
+                    Handle::HandleItem * handleCible = m_items[static_cast<QGraphicsProxyWidget*>(items[0])];
+                    if ( handleCible->size() == 0 )
+                    {
+                        QPointF pt = static_cast<QGraphicsProxyWidget*>(items[0])->pos();
 
-                    Handle::HandleItem * handle = newHandle( pt.x(), pt.y(), Settings::widthNote() );
-                    handle->add( handleCible );
-                    handle->add( m_currentHandle );
-                    addHandleToScene( handle );
+                        Handle::HandleItem * handle = newHandle( pt.x(), pt.y(), Settings::widthNote() );
+                        handle->add( handleCible );
+                        handle->add( m_currentHandle );
+                        addHandleToScene( handle );
 
-                    removeGraphicsItemFromScene( handleCible );
+                        removeGraphicsItemFromScene( handleCible );
+                    }
+                    else
+                    {
+                        handleCible->add( m_currentHandle );
+                    }
+
+                    removeGraphicsItemFromScene( m_currentHandle );
+                    Handle::HandleItem::resetInsert();
                 }
-                else
-                {
-                    handleCible->add( m_currentHandle );
-                }
-
-                removeGraphicsItemFromScene( m_currentHandle );
-                Handle::HandleItem::resetInsert();
             }
 
             m_currentHandle->setModeDegroupement(false);

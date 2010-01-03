@@ -35,7 +35,7 @@ namespace Basket
     void TagBasket::save()
     {
         //TODO: remove all item from scene
-        m_contentScene->save( m_nameId, m_configFilePath );
+        m_contentScene->save();
     }
 
     void TagBasket::load()

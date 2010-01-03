@@ -27,17 +27,24 @@
 #include <QUrlInfo>
 #include <QFileIconProvider>
 #include <QFocusEvent>
+#include <QPainter>
+#include <QAbstractTextDocumentLayout>
+#include <QScrollBar>
+#include <QTextLayout>
 
 #include "../main/general.h"
 #include "../config/Configuration.h"
 #include "../scene/ToolBarScene.h"
 #include "../config/ImageFactory.h"
+#include "../config/VisualAspect.h"
+#include "../item/NoteItem.h"
 
 namespace Item
 {
 
-    CustomTextEdit::CustomTextEdit():
-            KTextBrowser()
+    CustomTextEdit::CustomTextEdit( NoteItem * noteItem ):
+            KTextBrowser(),
+            m_noteItem(noteItem)
     {
         setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -148,7 +155,7 @@ namespace Item
     void CustomTextEdit::adaptSizeFromText()
     {
         int heightMax =  document()->size().toSize().height();
-        setFixedHeight( heightMax+2 );
+        setFixedHeight( heightMax-2 );
     }
 
     void CustomTextEdit::openAnchor( const QUrl & url )
@@ -173,6 +180,37 @@ namespace Item
 
     void CustomTextEdit::contextMenuEvent ( QContextMenuEvent * event )
     {
+    }
+
+    void CustomTextEdit::paintEvent( QPaintEvent * e )
+    {
+        QPainter painter(viewport());
+        painter.setRenderHint(QPainter::HighQualityAntialiasing,true);
+
+        QLinearGradient gradient( 0,0,0, height() );
+        gradient.setColorAt( 0, m_noteItem->itemColor().lighter(Config::VisualAspect::lighterIntensity) );
+        gradient.setColorAt( 1, m_noteItem->itemColor() );
+
+        painter.setBrush(gradient);
+        painter.setPen(Qt::NoPen);
+        painter.drawRect( 0, 0, width(), height() );
+
+        QAbstractTextDocumentLayout::PaintContext ctx;
+        if ( hasFocus() )
+        {
+            if (textCursor().hasSelection())
+            {
+                QAbstractTextDocumentLayout::Selection selection;
+                selection.cursor = textCursor();
+                selection.format.setBackground(palette().brush(QPalette::Highlight));
+                selection.format.setForeground(palette().brush(QPalette::HighlightedText));
+                ctx.selections.append(selection);
+            }
+
+            ctx.cursorPosition = textCursor().position();
+        }
+
+        document()->documentLayout()->draw(&painter, ctx);
     }
 
 }

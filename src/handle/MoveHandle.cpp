@@ -22,6 +22,7 @@
 #include <QMouseEvent>
 #include <QApplication>
 #include <QObject>
+#include <QRadialGradient>
 
 #include "HandleItem.h"
 #include "../config/VisualAspect.h"
@@ -35,6 +36,7 @@ namespace Handle
             m_oldCursorY(-1),
             m_isHover(false)
     {
+        setContentsMargins(0,0,0,0);
         setFixedWidth(Config::VisualAspect::widthHandleControl);
         setDefaultColor(parent->defaultColor());
     }
@@ -126,7 +128,7 @@ namespace Handle
             gradient.setColorAt( 0, h->defaultColor().lighter( Config::VisualAspect::lighterIntensity ) );
             gradient.setColorAt( 1, h->defaultColor() );
             painter.setBrush( gradient );
-            painter.drawRect( x, y, width(), height() );
+            painter.drawRect( x, y, width(), h->height() );
             y += h->height();
         }
         else
@@ -150,28 +152,24 @@ namespace Handle
         QColor darker  = QApplication::palette().color(QPalette::Highlight).dark(130);
         QColor lighter = QApplication::palette().color(QPalette::Highlight).light(130);
 
-        QPen p;
-        p.setWidth(1);
+        painter.setPen(Qt::NoPen);
 
         for (int i = 0; i < nbGrips; ++i)
         {
-            /// Dark color:
-            p.setColor(darker);
-            painter.setPen(p);
-            // Top-left point:
-            painter.drawPoint(xGrips,     yGrips);
-            painter.drawPoint(xGrips + 1, yGrips);
-            painter.drawPoint(xGrips,     yGrips + 1);
-            // Bottom-right point:
-            painter.drawPoint(xGrips + 4, yGrips + 3);
-            painter.drawPoint(xGrips + 5, yGrips + 3);
-            painter.drawPoint(xGrips + 4, yGrips + 4);
-            /// Light color:
-            p.setColor(lighter);
-            // Top-left point:
-            painter.drawPoint(xGrips + 1, yGrips + 1);
-            // Bottom-right point:
-            painter.drawPoint(xGrips + 5, yGrips + 4);
+            QRadialGradient radialGrad(QPointF(xGrips, yGrips), 2);
+            radialGrad.setColorAt(0, darker);
+            radialGrad.setColorAt(1, lighter);
+            painter.setBrush(radialGrad);
+
+            painter.drawEllipse( xGrips, yGrips, 2, 2 );
+
+            radialGrad = QRadialGradient(QPointF(xGrips + 3, yGrips + 3), 2);
+            radialGrad.setColorAt(0, darker);
+            radialGrad.setColorAt(1, lighter);
+            painter.setBrush(radialGrad);
+
+            painter.drawEllipse( xGrips + 3, yGrips + 3, 2, 2 );
+
             yGrips += 6;
         }
     }
@@ -179,18 +177,16 @@ namespace Handle
     void MoveHandle::paintEvent( QPaintEvent * event )
     {
         QPainter painter(this);
-        
-        QPen pen;
-        pen.setStyle(Qt::NoPen);
-        pen.setWidth(1);
-        painter.setPen(pen);
+
+        painter.setRenderHint(QPainter::HighQualityAntialiasing,true);
+        painter.setPen(Qt::NoPen);
 
         if ( m_isHover )
         {
             QLinearGradient gradient(0,0,0, height());
             gradient.setColorAt(0, QApplication::palette().color(QPalette::Highlight).lighter(Config::VisualAspect::lighterIntensity));
             gradient.setColorAt(1, QApplication::palette().color(QPalette::Highlight));
-            painter.setBrush(gradient);
+            painter.setBrush( gradient );
 
             painter.drawRect( 0, 0, width(), height() );
         }

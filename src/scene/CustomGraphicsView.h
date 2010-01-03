@@ -23,6 +23,8 @@
 #include <QGraphicsView>
 #include <QDragEnterEvent>
 
+#include "../handle/GraphicHandleItem.h"
+
 namespace Scene
 {
 
@@ -35,6 +37,9 @@ namespace Scene
 
     public slots:
         void paste();
+        void copy();
+
+        void deleteItem();
 
         void resetZoom();
         void doubleZoom();
@@ -55,6 +60,8 @@ namespace Scene
         
         QGraphicsPathItem * m_selectionItem;
         QPointF m_position;
+
+        QList<Handle::GraphicHandleItem*> m_copyHandlesItem;
 
     };
 

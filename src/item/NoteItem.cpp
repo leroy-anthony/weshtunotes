@@ -29,12 +29,15 @@
 #include <QDir>
 #include <QUrl>
 #include <QCoreApplication>
-
+#include <QPainter>
+#include <QApplication>
+#include <QRadialGradient>
 
 #include "../scene/ToolBarScene.h"
 #include "../config/Configuration.h"
 #include "../tag/NoteTag.h"
 #include "../config/ImageFactory.h"
+#include "../config/VisualAspect.h"
 
 namespace Item
 {
@@ -50,7 +53,8 @@ namespace Item
         m_horizontalLayout->setSpacing(0);
         m_horizontalLayout->setSizeConstraint(QLayout::SetMaximumSize);
 
-        m_plainTextEdit = new CustomTextEdit();
+        m_plainTextEdit = new CustomTextEdit( this );
+
         m_addTag = new Tag::AddTag( this );
 
         m_horizontalLayout->addWidget(m_addTag);
@@ -249,6 +253,20 @@ namespace Item
     void NoteItem::insertData( const QMimeData * data )
     {
         m_plainTextEdit->addData( data );
+    }
+
+    void NoteItem::paintEvent( QPaintEvent * event )
+    {
+        QPainter painter(this);
+
+        QLinearGradient gradient( 0, 0, 0, height() );
+        gradient.setColorAt( 0, m_color.lighter(Config::VisualAspect::lighterIntensity) );
+        gradient.setColorAt( 1, m_color );
+
+        painter.setPen( Qt::NoPen );
+        painter.setBrush( gradient );
+
+        painter.drawRect( 0, 0, width(), height() );
     }
 
 }

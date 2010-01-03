@@ -52,12 +52,14 @@ namespace Scene
         virtual Item::AbstractItem * currentAbstractItem() = 0;
         virtual Handle::HandleItem * currentHandle()       = 0;
 
+        virtual void addItemToScene( Handle::GraphicHandleItem * item );
         virtual QGraphicsProxyWidget * addHandleToScene( Handle::HandleItem * handle ) = 0;
         virtual Handle::HandleItem * newHandle( int x, int y, int w ) = 0;
         virtual Item::AbstractItem * newItem( int x, int y ) = 0;
 
+        void loadHandles( const QList<QString> & filesName, QPointF centerPt = QPointF(0,0), int selectionWidth = 0, int selectionHeigth = 0 );
         void load( const QString & fileName );
-        void save( const QString & id, const QString & fileName );
+        void save();
 
         void saveViewOnDisk( const QString & fileName );
         void loadViewFromDisk( const QString & fileName );
@@ -88,6 +90,7 @@ namespace Scene
         QHash<Handle::HandleItem * ,QGraphicsProxyWidget*> m_handles;
 
         QString m_id;
+        QString m_fileName;
 
         QString m_type;
 

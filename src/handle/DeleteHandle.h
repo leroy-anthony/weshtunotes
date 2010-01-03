@@ -39,6 +39,9 @@ namespace Handle
 
         void setHoverMode( bool isHover );
 
+    protected:
+         void paintEvent( QPaintEvent * event );
+
     signals:
         void delItem();
 
@@ -47,6 +50,7 @@ namespace Handle
 
         HandleItem * m_handleItemRoot;
 
+        bool m_isHover;
     };
 
 }

@@ -89,6 +89,7 @@ void MainWindow::setupActions()
     KStandardAction::save(this, SLOT(save()), actionCollection());
     KStandardAction::quit(qApp, SLOT(quit()), actionCollection());
     KStandardAction::paste(m_view, SLOT(paste()), actionCollection());
+    KStandardAction::copy(m_view, SLOT(copy()), actionCollection());
 
     KAction * a = new KAction("Configure Tag...",0);
     actionCollection()->addAction( "tag", a );
@@ -173,20 +174,20 @@ void MainWindow::initExplorer()
     layoutButtonExplorer->setMargin(4);
     layoutButtonExplorer->setSpacing(2);
 
-    QToolButton * qq = new QToolButton();
-    qq->setIcon(Config::ImageFactory::newInstance()->icon("document-new.png"));
-    connect( qq, SIGNAL(clicked()), this, SLOT(addBasketToRoot()) );
-    layoutButtonExplorer->addWidget(qq);
+    QToolButton * q1 = new QToolButton();
+    q1->setIcon(Config::ImageFactory::newInstance()->icon("document-new.png"));
+    connect( q1, SIGNAL(clicked()), this, SLOT(addBasketToRoot()) );
+    layoutButtonExplorer->addWidget(q1);
 
-    QToolButton * q = new QToolButton();
-    q->setIcon(Config::ImageFactory::newInstance()->icon("list-add.png"));
-    connect( q, SIGNAL(clicked()), this, SLOT(addToCurrentBasket()) );
-    layoutButtonExplorer->addWidget(q);
+    QToolButton * q2 = new QToolButton();
+    q2->setIcon(Config::ImageFactory::newInstance()->icon("list-add.png"));
+    connect( q2, SIGNAL(clicked()), this, SLOT(addToCurrentBasket()) );
+    layoutButtonExplorer->addWidget(q2);
 
-    QToolButton * qqq = new QToolButton();
-    qqq->setIcon(Config::ImageFactory::newInstance()->icon("edit-delete.png"));
-    connect( qqq, SIGNAL(clicked()), this, SLOT(delCurrentBasket()) );
-    layoutButtonExplorer->addWidget(qqq);
+    QToolButton * q3 = new QToolButton();
+    q3->setIcon(Config::ImageFactory::newInstance()->icon("edit-delete.png"));
+    connect( q3, SIGNAL(clicked()), this, SLOT(delCurrentBasket()) );
+    layoutButtonExplorer->addWidget(q3);
 
     layoutButtonExplorer->addItem(new QSpacerItem(0,0,QSizePolicy::Expanding,QSizePolicy::Ignored));
 
@@ -260,7 +261,6 @@ void MainWindow::loadScene( QTreeWidgetItem * item , int column )
         actionCollection()->action( Scene::LayoutScene::type )->setDisabled(true);
         actionCollection()->action( Scene::FreeScene::type )->setDisabled(false);
     }
-
 }
 
 Scene::AbstractScene * MainWindow::currentScene()

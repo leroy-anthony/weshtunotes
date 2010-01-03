@@ -77,4 +77,9 @@ namespace Tag
         }
     }
 
+    void AddTag::paintEvent( QPaintEvent * event )
+    {
+        QPushButton::paintEvent(event);
+    }
+
 }

@@ -27,6 +27,7 @@
 
 #include "../main/general.h"
 #include "../scene/AbstractScene.h"
+#include "HandleItem.h"
 
 namespace Handle
 {
@@ -79,6 +80,11 @@ namespace Handle
         painter->restore();
 
         QGraphicsProxyWidget::paint(painter,option,w);
+    }
+
+    HandleItem * GraphicHandleItem::handleItem()
+    {
+        return static_cast<HandleItem*>(widget());
     }
 
 }

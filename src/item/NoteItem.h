@@ -71,6 +71,7 @@ namespace Item
 
     protected:
         void keyPressEvent( QKeyEvent * keyEvent );
+        void paintEvent( QPaintEvent * event );
 
     private:
         QHBoxLayout  * m_horizontalLayout;

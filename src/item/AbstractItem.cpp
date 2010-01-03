@@ -51,6 +51,11 @@ namespace Item
     {
     }
 
+    bool AbstractItem::selected()
+    {
+        return m_selected;
+    }
+
     void AbstractItem::setVisibleAddTag( bool visible )
     {
         m_addTag->setVisible(visible);
@@ -91,13 +96,13 @@ namespace Item
         return false;
     }
 
-     const QList<Tag::NoteTag*> & AbstractItem::tags()
-     {
-         return m_tags;
-     }
+    const QList<Tag::NoteTag*> & AbstractItem::tags()
+    {
+        return m_tags;
+    }
 
-     void AbstractItem::insertData( const QMimeData * data )
-     {
-     }
+    void AbstractItem::insertData( const QMimeData * data )
+    {
+    }
 
 }
