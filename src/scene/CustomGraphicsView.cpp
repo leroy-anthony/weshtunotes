@@ -147,12 +147,15 @@ namespace Scene
             int w = abs(event->posF().x() - m_position.x());
 
             QPolygonF r = mapToScene( x, y, w, h );
-            r << r[0];
+            if ( r.size() > 0 )
+            {
+                r << r[0];
 
-            selectionPath.addPolygon( r );
+                selectionPath.addPolygon( r );
 
-            m_selectionItem->setPath( selectionPath );
-            scene()->setSelectionArea( selectionPath );
+                m_selectionItem->setPath( selectionPath );
+                scene()->setSelectionArea( selectionPath );
+            }
         }
         else if ( m_move )
         {
