@@ -88,7 +88,7 @@ namespace Scene
     {
         if ( scene()->itemAt( mapToScene( event->posF().x(), event->posF().y() ) ) == 0 )
         {
-            if ( event->modifiers() == Qt::ControlModifier )
+            if ( event->modifiers() == Qt::ControlModifier && event->button() == Qt::LeftButton )
             {
                 m_selection = true;
 
