@@ -170,14 +170,6 @@ namespace Item
         setTextCursor( c );
     }
 
-    //FIXME: cette fonction est un hack de merde pour que les notes aient toujours le focus en cas de clique.
-    //       sans cette fcontion, les notes n'étant pas dans le 1er panier chargé, n'obtienne jamais ce focus.
-    void CustomTextEdit::mousePressEvent( QMouseEvent * event )
-    {
-        KTextBrowser::mousePressEvent( event );
-        KTextBrowser::focusInEvent( new QFocusEvent( QEvent::FocusIn, Qt::MouseFocusReason ) );
-    }
-
     void CustomTextEdit::contextMenuEvent ( QContextMenuEvent * event )
     {
     }

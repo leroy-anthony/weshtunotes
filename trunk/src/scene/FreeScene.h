@@ -65,8 +65,6 @@ namespace Scene
         Item::AbstractItem * newItem( int x, int y );
         void delUselessHandleGroup( Handle::HandleItem * currentHandle  );
 
-        void keyPressEvent( QKeyEvent * keyEvent );
-
     private:
         Item::AbstractItem * m_currentAbstractItem;
         Handle::HandleItem * m_currentHandle;

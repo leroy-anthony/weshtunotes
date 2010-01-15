@@ -48,7 +48,6 @@ namespace Item
         bool canInsertFromMimeData( const QMimeData *source ) const;
         void insertFromMimeData( const QMimeData *source );
 
-        void mousePressEvent( QMouseEvent * event );
         void contextMenuEvent ( QContextMenuEvent * event );
 
         void paintEvent( QPaintEvent * event );
