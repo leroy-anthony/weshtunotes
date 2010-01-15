@@ -70,7 +70,6 @@ namespace Item
         void tagApply( QAction * action );
 
     protected:
-        void keyPressEvent( QKeyEvent * keyEvent );
         void paintEvent( QPaintEvent * event );
 
     private:

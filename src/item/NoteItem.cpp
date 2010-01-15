@@ -244,12 +244,6 @@ namespace Item
         }
     }
 
-    void NoteItem::keyPressEvent ( QKeyEvent * keyEvent )
-    {
-        //m_plainTextEdit->keyPressEvent( keyEvent );
-        QCoreApplication::sendEvent( m_plainTextEdit, keyEvent );
-    }
-
     void NoteItem::insertData( const QMimeData * data )
     {
         m_plainTextEdit->addData( data );

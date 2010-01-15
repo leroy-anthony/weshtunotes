@@ -413,20 +413,6 @@ namespace Handle
         return m_handles;
     }
 
-    void HandleItem::keyPressEvent ( QKeyEvent * keyEvent )
-    {
-        if ( m_item != 0 && ( keyEvent->text() != QString() ||
-                              keyEvent->key() == Qt::Key_Up ||
-                              keyEvent->key() == Qt::Key_Down ||
-                              keyEvent->key() == Qt::Key_Right ||
-                              keyEvent->key() == Qt::Key_Left ||
-                              keyEvent->key() == Qt::Key_End ||
-                              keyEvent->key() == Qt::Key_Home) )
-        {
-            QCoreApplication::sendEvent( m_item, keyEvent );
-        }
-    }
-
     void HandleItem::setFileName( const QString & fileName )
     {
         m_fileName = fileName;
