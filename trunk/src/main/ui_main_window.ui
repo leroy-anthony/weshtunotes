@@ -75,7 +75,7 @@
    <addaction name="menuTag"/>
    <addaction name="menuAide"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="KStatusBar" name="statusbar"/>
   <widget class="QDockWidget" name="dockFichier">
    <property name="sizePolicy">
     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -121,6 +121,11 @@
    <class>KMenu</class>
    <extends>QMenu</extends>
    <header>kmenu.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KStatusBar</class>
+   <extends>QStatusBar</extends>
+   <header>kstatusbar.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
