@@ -296,6 +296,7 @@ namespace Tag
         m_currentState = state;
         m_nameTagOrState->setText( state->name() );
         m_colorItem->setColor( QColor(state->itemColor()) );
+        qDebug() << state->name() << state->bold();
         m_boldText->setChecked( state->bold() );
         m_italicText->setChecked( state->italic() );
         m_fontText->setCurrentFont( state->fontFamily() );
@@ -306,6 +307,8 @@ namespace Tag
         m_iconButton->setIcon( Config::ImageFactory::newInstance()->icon(state->symbol()) );
         m_withIcon->setChecked( state->symbol() != QString() );
         m_withColorBackground->setChecked( state->itemColor() != QColor() );
+
+        m_withIcon->setDisabled(false);
     }
 
     void TagFactory::ok()

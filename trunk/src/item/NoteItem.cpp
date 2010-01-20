@@ -56,8 +56,10 @@ namespace Item
         m_plainTextEdit = new CustomTextEdit( this );
 
         m_addTag = new Tag::AddTag( this );
+        m_nextTag = new Tag::NextTag( this );
 
         m_horizontalLayout->addWidget(m_addTag);
+        m_horizontalLayout->addWidget(m_nextTag);
         m_horizontalLayout->addWidget(m_plainTextEdit);
 
         connect( m_plainTextEdit, SIGNAL(selectionChanged()),  this, SLOT(edit()));
@@ -66,11 +68,8 @@ namespace Item
     NoteItem::~NoteItem()
     {
         delete m_addTag;
-
-        for ( int i=0 ; i<m_tags.size() ; ++i )
-        {
-            delete m_tags[i];
-        }
+        delete m_nextTag;
+        delete m_tag;
     }
 
     void NoteItem::adaptSize()
@@ -152,13 +151,7 @@ namespace Item
 
         settings.setValue(handleId,"data",m_nameId);
         settings.setValue(handleId,"color",m_color.name());
-
-        QStringList namesTags;
-        for ( int i=0 ; i<m_tags.size() ; ++i )
-        {
-            namesTags << m_tags[i]->name()+":" + m_tags[i]->currentStateName();
-        }
-        settings.setValue(handleId,"tags",namesTags);
+        settings.setValue(handleId,"tag",m_tag->name()+":" + m_tag->currentStateName());
 
         Config::Configuration::saveNote( settings.fileName(), m_plainTextEdit->document()->toHtml(), m_nameId );
     }
@@ -189,11 +182,10 @@ namespace Item
 
     void NoteItem::addTag( const QString & tagName, const QString & tagState )
     {
-        Tag::NoteTag * tag = new Tag::NoteTag( this, tagName );
-        tag->setCurrentState( tagState );
-        m_tags << tag;
-        m_horizontalLayout->insertWidget(0,tag);
-        tag->apply();
+        m_tag = new Tag::NoteTag( this, tagName );
+        m_tag->setCurrentState( tagState );
+        m_horizontalLayout->insertWidget(0,m_tag);
+        m_tag->apply();
     }
 
     void NoteItem::tagApply( QAction * action )
@@ -202,46 +194,32 @@ namespace Item
         {
             QString tagName = action->data().toString();
 
-            Tag::NoteTag * tag = new Tag::NoteTag( this, tagName );
-            m_tags << tag;
-            m_horizontalLayout->insertWidget(0,tag);
+            if ( m_tag != 0 )
+            {
+                delete m_tag;
+            }
+
+            m_tag = new Tag::NoteTag( this, tagName );
+            m_horizontalLayout->insertWidget(0,m_tag);
             m_plainTextEdit->selectAll();
-            tag->apply();
+            m_tag->apply();
             m_plainTextEdit->selectNone();
         }
         else
         {
             // supprimer
-            QString tagName = action->data().toString();
-            for ( int i=0 ; i<m_tags.size() ; ++i )
-            {
-                if ( m_tags[i]->name() == tagName )
-                {
-                    Tag::NoteTag * tag = m_tags[i];
-                    m_horizontalLayout->removeWidget(m_tags[i]);
-                    m_tags.removeAt(i);
-                    delete tag;
-                    break;
-                }
-            }
-            load( m_fileName );
-            for ( int i=0 ; i<m_tags.size() ; ++i )
-            {
-                m_plainTextEdit->selectAll();
-                m_tags[i]->apply();
-                m_plainTextEdit->selectNone();
-            }
+            m_horizontalLayout->removeWidget(m_tag);
+            delete m_tag;
+            m_tag = 0;
         }
     }
 
     void NoteItem::tagApply()
     {
-        for ( int i=0 ; i<m_tags.size() ; ++i )
-        {
-            m_plainTextEdit->selectAll();
-            m_tags[i]->apply();
-            m_plainTextEdit->selectNone();
-        }
+        m_plainTextEdit->selectAll();
+        m_tag->apply();
+        m_plainTextEdit->selectNone();
+
     }
 
     void NoteItem::insertData( const QMimeData * data )

@@ -78,6 +78,8 @@ namespace Scene
         virtual void moveItem( Handle::HandleItem * handleItem, int x, int y ) = 0;
         virtual void resize( QResizeEvent * event );
 
+        void showMessageStatus();
+
     protected:
         void buildListHandleToLoad( Handle::HandleItem * h, QStringList & l );
         bool canInsertFromMimeData( const QMimeData *source ) const;

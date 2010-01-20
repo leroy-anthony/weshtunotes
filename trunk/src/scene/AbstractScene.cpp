@@ -26,6 +26,7 @@
 #include "../config/Configuration.h"
 #include "../config/VisualAspect.h"
 #include "../handle/HandleItem.h"
+#include "../main/MainWindow.h"
 
 namespace Scene
 {
@@ -40,6 +41,21 @@ namespace Scene
             m_verticalScrollBarValueView(0)
     {
         setSceneRect(-100000,-100000,200000,200000);
+
+        connect( this, SIGNAL(selectionChanged()), this, SLOT(showMessageStatus()) );
+    }
+
+    void AbstractScene::showMessageStatus()
+    {
+        int size = selectedItems().size();
+        if ( size > 0 )
+        {
+            MainWindow::showMessage( QString("%1 selected item(s)").arg(size), 0 );
+        }
+        else
+        {
+            MainWindow::showMessage( "", 0 );
+        }
     }
 
     const QString & AbstractScene::type()
@@ -229,7 +245,7 @@ namespace Scene
                     item->setId( id );
                     itemsToLoad[ id ] = item;
 
-                    QStringList namesTags = settingsHandle.values( itemId, "tags" );
+                    QStringList namesTags = settingsHandle.values( itemId, "tag" );
                     for ( int k=0 ; k<namesTags.size() ; ++k )
                     {
                         QStringList s = namesTags[k].split(":");

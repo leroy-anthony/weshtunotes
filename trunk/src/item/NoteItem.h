@@ -73,8 +73,8 @@ namespace Item
         void paintEvent( QPaintEvent * event );
 
     private:
-        QHBoxLayout  * m_horizontalLayout;
-        CustomTextEdit    * m_plainTextEdit;
+        QHBoxLayout * m_horizontalLayout;
+        CustomTextEdit * m_plainTextEdit;
 
         QString m_fileName;
 

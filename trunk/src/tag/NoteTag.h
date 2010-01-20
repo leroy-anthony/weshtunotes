@@ -66,6 +66,9 @@ namespace Tag
 
         void setVisibleTag( bool visible );
 
+    public slots:
+        void nextState();
+
     protected:
         void mouseReleaseEvent ( QMouseEvent * event );
 
