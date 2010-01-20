@@ -46,7 +46,6 @@ namespace Item
     public:
         virtual ~AbstractItem();
 
-        const QList<QString> operationInterfaces();
         const QColor & color();
 
         void setVisibleAddTag( bool visible );
@@ -81,7 +80,6 @@ namespace Item
 
         void keyPressEvent ( QKeyEvent * keyEvent );
 
-        QList<QString> m_operationInterfaces;
         QColor m_color;
 
         Tag::AddTag * m_addTag;

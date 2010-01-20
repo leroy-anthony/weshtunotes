@@ -133,7 +133,7 @@ namespace Handle
         }
         else
         {
-            QList<HandleItem*> handles = h->children();
+            const QList<HandleItem*> & handles = h->children();
             for ( int i=0 ; i<handles.size() ; ++i )
             {
                 drawHandle(painter,handles[i],x,y);
@@ -193,7 +193,7 @@ namespace Handle
         else
         {
             HandleItem * h = dynamic_cast<HandleItem*>(parentWidget());
-            QList<HandleItem*> handles = h->children();
+            const QList<HandleItem*> & handles = h->children();
 
             int x = 0;
             int y = 0;

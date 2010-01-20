@@ -37,7 +37,7 @@ namespace Item
     public:
         CustomTextEdit( NoteItem * noteItem );
 
-        void addData( const QMimeData *source );
+        void addData( const QMimeData * source );
         void selectNone();
 
     public slots:
@@ -45,8 +45,8 @@ namespace Item
         void openAnchor( const QUrl & url );
 
     protected:
-        bool canInsertFromMimeData( const QMimeData *source ) const;
-        void insertFromMimeData( const QMimeData *source );
+        bool canInsertFromMimeData( const QMimeData * source ) const;
+        void insertFromMimeData( const QMimeData * source );
 
         void contextMenuEvent ( QContextMenuEvent * event );
 

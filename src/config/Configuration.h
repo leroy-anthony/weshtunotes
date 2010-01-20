@@ -63,7 +63,7 @@ namespace Config
         static QString loadNote( const QString & fileName, const QString & nameId );
         static void saveNote( const QString & fileName, const QString & contentNote, const QString & nameId );
 
-        static void deleteFile( const QString & name );
+        static void deleteNoteFile( const QString & name );
 
     };
 

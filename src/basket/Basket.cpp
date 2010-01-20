@@ -42,7 +42,7 @@ namespace Basket
     void Basket::save()
     {
         m_contentScene->save();
-        QList<AbstractBasket*> children = childrenBasket();
+        QList<AbstractBasket*> & children = childrenBasket();
         for ( int i=0 ; i<children.size() ; ++i )
         {
             children[i]->save();
@@ -57,7 +57,7 @@ namespace Basket
 
         m_nameId = m_contentScene->id();
 
-        QList<AbstractBasket*> children = childrenBasket();
+        QList<AbstractBasket*> & children = childrenBasket();
         for ( int i=0 ; i<children.size() ; ++i )
         {
             children[i]->load();
@@ -66,7 +66,7 @@ namespace Basket
 
     void Basket::del()
     {
-        QList<AbstractBasket*> children = childrenBasket();
+        QList<AbstractBasket*> & children = childrenBasket();
         for ( int i=0 ; i<children.size() ; ++i )
         {
             children[i]->del();

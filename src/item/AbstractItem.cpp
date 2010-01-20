@@ -40,11 +40,6 @@ namespace Item
         m_color = Settings::colorItem();
     }
 
-    const QList<QString> AbstractItem::operationInterfaces()
-    {
-        return m_operationInterfaces;
-    }
-
     const QColor & AbstractItem::color()
     {
         return m_color;
