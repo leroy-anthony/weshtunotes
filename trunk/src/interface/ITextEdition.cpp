@@ -51,11 +51,11 @@ namespace Item
 
     void ITextEdition::loadTextEdition( Config::Configuration & settings, const QString & group, const QString & subGroup )
     {
-        m_bold = settings.valueSubGroup( group,subGroup,"bold", QVariant(false) ).toInt();
-        m_italic = settings.valueSubGroup( group,subGroup,"italic", QVariant(false) ).toInt();
-        m_strikeOut = settings.valueSubGroup( group,subGroup,"strikeOut", QVariant(false) ).toInt();
-        //m_alignment = settings.valueSubGroup( group,subGroup,"alignment", QVariant(1) ).toInt();
-        m_underLine = settings.valueSubGroup( group,subGroup,"underline", QVariant(false) ).toInt();
+        m_bold = settings.valueSubGroup( group,subGroup,"bold", QVariant(false) ) == QString("true");
+        m_italic = settings.valueSubGroup( group,subGroup,"italic", QVariant(false) ) == QString("true");
+        m_strikeOut = settings.valueSubGroup( group,subGroup,"strikeOut", QVariant(false) ) == QString("true");
+        //FIXME: m_alignment = settings.valueSubGroup( group,subGroup,"alignment", QVariant(1) ).toInt();
+        m_underLine = settings.valueSubGroup( group,subGroup,"underline", QVariant(false) ) == QString("true");
         m_colorFont = QColor( settings.valueSubGroup( group,subGroup,"colorFont", "#000000" ) );
         m_font = settings.valueSubGroup( group,subGroup,"font","Arial" );
         m_weight = settings.valueSubGroup( group,subGroup,"weight", QVariant(1) ).toInt();
