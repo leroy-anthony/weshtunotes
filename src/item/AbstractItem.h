@@ -29,6 +29,7 @@
 
 #include "../technic/GeneratorID.h"
 #include "../tag/AddTag.h"
+#include "../tag/NextTag.h"
 
 namespace Tag
 {
@@ -60,7 +61,7 @@ namespace Item
         const QColor & itemColor();
 
         bool containTag( const QString & tagName );
-        const QList<Tag::NoteTag*> & tags();
+        Tag::NoteTag * tag();
 
         virtual void insertData( const QMimeData * data );
 
@@ -84,7 +85,8 @@ namespace Item
         QColor m_color;
 
         Tag::AddTag * m_addTag;
-        QList<Tag::NoteTag*> m_tags;
+        Tag::NextTag * m_nextTag;
+        Tag::NoteTag * m_tag;
 
         bool m_selected;
 

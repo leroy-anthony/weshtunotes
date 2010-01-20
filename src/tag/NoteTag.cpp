@@ -128,12 +128,13 @@ namespace Tag
     {        
         if ( m_name != "default" && m_currentState != 0 )
         {
-            QString symbol = m_currentState->symbol();
+            const QString & symbol = m_currentState->symbol();
             if ( symbol != "" )
             {
+                setFixedSize(QSize(m_sizeSymbol,m_sizeSymbol));
                 setIconSize(QSize(m_sizeSymbol,m_sizeSymbol));
                 setIcon( Config::ImageFactory::newInstance()->icon(m_currentState->symbol()) );
-                m_visible = true;
+                setVisibleTag( true );
             }
             else
             {
@@ -162,7 +163,10 @@ namespace Tag
             m_index = 0;
         }
 
-        loadSymbol();
+        if ( m_noteItem != 0 )
+        {
+            loadSymbol();
+        }
     }
 
     void NoteTag::save()
@@ -197,19 +201,28 @@ namespace Tag
         setVisible( visible );
     }
 
-    void NoteTag::mouseReleaseEvent ( QMouseEvent * event )
+    void NoteTag::nextState()
     {
-        m_index++;
-        if ( m_states.size() == m_index )
+        int index = ++m_index;
+        if ( m_states.size() == index )
         {
-            m_index=0;
+            index = 0;
         }
+
+        load( m_name );
+
+        m_index = index;
 
         if ( m_states.size() > m_index )
         {
             setCurrentState( m_states[m_index]->name() );
             m_noteItem->tagApply();
         }
+    }
+
+    void NoteTag::mouseReleaseEvent( QMouseEvent * event )
+    {
+        nextState();
 
         QPushButton::mouseReleaseEvent(event);
     }

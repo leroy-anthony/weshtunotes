@@ -32,7 +32,10 @@ namespace Item
 
     AbstractItem::AbstractItem( QWidget * parent ):
             QWidget(parent),
-            GeneratorID("item")
+            GeneratorID("item"),
+            m_tag(0),
+            m_nextTag(0),
+            m_addTag(0)
     {
         m_color = Settings::colorItem();
     }
@@ -59,6 +62,10 @@ namespace Item
     void AbstractItem::setVisibleAddTag( bool visible )
     {
         m_addTag->setVisible(visible);
+        if ( m_tag != 0 )
+        {
+            m_nextTag->setVisible(visible);
+        }
     }
 
     void AbstractItem::adaptSize()
@@ -85,20 +92,17 @@ namespace Item
 
     bool AbstractItem::containTag( const QString & tagName )
     {
-        for ( int i=0 ; i<m_tags.size() ; ++i )
+        if ( m_tag != 0 )
         {
-            if ( m_tags[i]->name() == tagName )
-            {
-                return true;
-            }
+            return m_tag->name() == tagName;
         }
 
         return false;
     }
 
-    const QList<Tag::NoteTag*> & AbstractItem::tags()
+    Tag::NoteTag * AbstractItem::tag()
     {
-        return m_tags;
+        return m_tag;
     }
 
     void AbstractItem::insertData( const QMimeData * data )

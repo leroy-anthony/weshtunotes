@@ -28,7 +28,7 @@
 
 #include "../interface/ITextEdition.h"
 #include "../interface/IVisualItemEdition.h"
-#include "../main/main_window.h"
+#include "../main/MainWindow.h"
 #include "../config/ImageFactory.h"
 #include "../widget/ColorCombo.h"
 

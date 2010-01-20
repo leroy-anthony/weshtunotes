@@ -33,6 +33,7 @@
 
 #include "AbstractScene.h"
 #include "../main/general.h"
+#include "../main/MainWindow.h"
 #include "../handle/HandleItem.h"
 
 namespace Scene

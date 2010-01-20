@@ -25,7 +25,7 @@ QT_WRAP_UI(weshnotes weshnotes_UI_H weshnotes_UI_SRC ${weshnotes_UI})
 
 set(weshnotes_SRC 
 ./src/main/main.cpp 
-./src/main/main_window.cpp 
+./src/main/MainWindow.cpp 
 ./src/main/KWeshTuNotesApp.cpp
 ./src/widget/VerticalButton.cpp
 ./src/widget/qtcolorpicker.cpp
@@ -63,6 +63,7 @@ set(weshnotes_SRC
 ./src/tag/State.cpp
 ./src/tag/TagFactory.cpp
 ./src/tag/AddTag.cpp
+./src/tag/NextTag.cpp
 ./src/technic/GeneratorID.cpp
 ./src/config/GeneralPageDialog.cpp
 ./src/config/AppareancePageDialog.cpp
