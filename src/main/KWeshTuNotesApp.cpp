@@ -19,7 +19,7 @@
 
 #include "KWeshTuNotesApp.h"
 
-#include "main_window.h"
+#include "MainWindow.h"
 #include "../config/Configuration.h"
 
 KWeshTuNotesApp::KWeshTuNotesApp():
