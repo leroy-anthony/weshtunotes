@@ -158,7 +158,7 @@ namespace Tag
             QTreeWidgetItem * itemTag = new QTreeWidgetItem( m_tagsTree, QStringList(noteTag->name()) );
             m_itemToTag[ itemTag ] = noteTag;
 
-            QList<State*> states = noteTag->states();
+            const QList<State*> & states = noteTag->states();
             for ( int i=0 ; i<states.size() ; ++i )
             {
                 QTreeWidgetItem * itemState = new QTreeWidgetItem( itemTag, QStringList(states[i]->name()) );
@@ -296,7 +296,6 @@ namespace Tag
         m_currentState = state;
         m_nameTagOrState->setText( state->name() );
         m_colorItem->setColor( QColor(state->itemColor()) );
-        qDebug() << state->name() << state->bold();
         m_boldText->setChecked( state->bold() );
         m_italicText->setChecked( state->italic() );
         m_fontText->setCurrentFont( state->fontFamily() );
@@ -313,8 +312,8 @@ namespace Tag
 
     void TagFactory::ok()
     {
-        Config::Configuration::clear( "tags" );
         Config::Configuration settings( "tags" );
+        Config::Configuration::clear( settings.fileName() );
 
         QStringList tagsName;
 

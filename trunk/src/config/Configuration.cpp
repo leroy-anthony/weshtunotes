@@ -111,7 +111,7 @@ namespace Config
         dir.rmdir(dir.absolutePath());
     }
 
-    void Configuration::deleteFile( const QString & name )
+    void Configuration::deleteNoteFile( const QString & name )
     {
         Configuration settings(name);
         QFileInfo file(settings.fileName());

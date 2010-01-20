@@ -85,7 +85,7 @@ namespace Scene
     {
         if ( h->size() > 0 )
         {
-            QList<Handle::HandleItem*> handlesChild = h->children();
+            const QList<Handle::HandleItem*> & handlesChild = h->children();
             for ( int j=0 ; j<handlesChild.size() ; ++j )
             {
                 buildListHandleToLoad( handlesChild[j], l );
@@ -106,7 +106,7 @@ namespace Scene
         QStringList listFile = delSettings.values("scene","items");
         for ( int i=0 ; i<listFile.size() ; ++i )
         {
-            Config::Configuration::deleteFile(listFile[i]);
+            Config::Configuration::deleteNoteFile(listFile[i]);
         }
         listFile.clear();
 
