@@ -151,7 +151,11 @@ namespace Item
 
         settings.setValue(handleId,"data",m_nameId);
         settings.setValue(handleId,"color",m_color.name());
-        settings.setValue(handleId,"tag",m_tag->name()+":" + m_tag->currentStateName());
+
+        if ( m_tag != 0 )
+        {
+            settings.setValue(handleId,"tag",m_tag->name()+":" + m_tag->currentStateName());
+        }
 
         Config::Configuration::saveNote( settings.fileName(), m_plainTextEdit->document()->toHtml(), m_nameId );
     }
