@@ -38,6 +38,7 @@ namespace Tag
         NextTag( Item::AbstractItem * noteItem );
 
     protected:
+        void enterEvent( QEvent * event );
         void mousePressEvent( QMouseEvent * e );
         void paintEvent( QPaintEvent * event );
 

@@ -20,6 +20,7 @@
 #include "AddTag.h"
 
 #include <QDebug>
+#include <QPainter>
 
 #include <kaction.h>
 
@@ -35,8 +36,7 @@ namespace Tag
             QPushButton( noteItem ),
             m_abstractItem( noteItem )
     {
-        setIcon(Config::ImageFactory::newInstance()->icon("list-add.png"));
-        setIconSize(QSize(12,12));
+        setFixedSize(18,12);
         setContentsMargins(0,0,0,0);
         hide();
 
@@ -77,9 +77,54 @@ namespace Tag
         }
     }
 
+    void AddTag::enterEvent( QEvent * event )
+    {
+        Q_UNUSED( event );
+
+        setCursor(Qt::PointingHandCursor);
+    }
+
     void AddTag::paintEvent( QPaintEvent * event )
     {
-        QPushButton::paintEvent(event);
+        QPainter painter(this);
+
+        painter.setRenderHint(QPainter::HighQualityAntialiasing,true);
+
+        QPen p(QApplication::palette().color(QPalette::Highlight));
+        p.setWidth(1);
+        painter.setPen(p);
+
+        QLinearGradient gradient(0,0,0, height());
+        gradient.setColorAt(0, QApplication::palette().color(QPalette::Highlight).lighter(Config::VisualAspect::lighterIntensity));
+        gradient.setColorAt(1, QApplication::palette().color(QPalette::Highlight));
+        painter.setBrush( gradient );
+
+        float dx = (width()-height())/2.0;
+
+        float h1 = (height()-1)/3.0;
+        float h2 = 2.0*(height()-1)/3.0;
+        float h3 = height()-1;
+
+        float w1 = (height()-1)/3.0 + dx ;
+        float w2 = 2.0*(height()-1)/3.0 + dx;
+        float w3 = height()-1 + dx;
+
+        QPainterPath roundRectPath;
+        roundRectPath.moveTo(dx, h1);
+        roundRectPath.lineTo(w1, h1);
+        roundRectPath.lineTo(w1,  0);
+        roundRectPath.lineTo(w2,  0);
+        roundRectPath.lineTo(w2, h1);
+        roundRectPath.lineTo(w3, h1);
+        roundRectPath.lineTo(w3, h2);
+        roundRectPath.lineTo(w2, h2);
+        roundRectPath.lineTo(w2, h3);
+        roundRectPath.lineTo(w1, h3);
+        roundRectPath.lineTo(w1, h2);
+        roundRectPath.lineTo(dx, h2);
+        roundRectPath.closeSubpath();
+
+        painter.drawPath(roundRectPath);
     }
 
 }
