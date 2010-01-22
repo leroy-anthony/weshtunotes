@@ -150,9 +150,8 @@ namespace Scene
             QPolygonF r = mapToScene( x, y, w, h );
             if ( r.size() > 0 )
             {
-                r << r[0];
-
                 selectionPath.addPolygon( r );
+                selectionPath.closeSubpath();
 
                 m_selectionItem->setPath( selectionPath );
                 scene()->setSelectionArea( selectionPath );
