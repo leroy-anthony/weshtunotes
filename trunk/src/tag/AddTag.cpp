@@ -36,7 +36,7 @@ namespace Tag
             QPushButton( noteItem ),
             m_abstractItem( noteItem )
     {
-        setFixedSize(18,12);
+        setFixedSize(16,13);
         setContentsMargins(0,0,0,0);
         hide();
 
@@ -88,8 +88,6 @@ namespace Tag
     {
         QPainter painter(this);
 
-        painter.setRenderHint(QPainter::HighQualityAntialiasing,true);
-
         QPen p(QApplication::palette().color(QPalette::Highlight));
         p.setWidth(1);
         painter.setPen(p);
@@ -99,32 +97,35 @@ namespace Tag
         gradient.setColorAt(1, QApplication::palette().color(QPalette::Highlight));
         painter.setBrush( gradient );
 
-        float dx = (width()-height())/2.0;
+        float h = height()-2;
+        float dx = 2;
 
-        float h1 = (height()-1)/3.0;
-        float h2 = 2.0*(height()-1)/3.0;
-        float h3 = height()-1;
+        float h1 = h/3.0 + 1;
+        float h2 = 2.0*h/3.0 + 1;
+        float h3 = h;
 
-        float w1 = (height()-1)/3.0 + dx ;
-        float w2 = 2.0*(height()-1)/3.0 + dx;
-        float w3 = height()-1 + dx;
+        float w1 = h/3.0 + 1;
+        float w2 = 2.0*h/3.0 + 1;
+        float w3 = h;
 
         QPainterPath roundRectPath;
-        roundRectPath.moveTo(dx, h1);
-        roundRectPath.lineTo(w1, h1);
-        roundRectPath.lineTo(w1,  0);
-        roundRectPath.lineTo(w2,  0);
-        roundRectPath.lineTo(w2, h1);
-        roundRectPath.lineTo(w3, h1);
-        roundRectPath.lineTo(w3, h2);
-        roundRectPath.lineTo(w2, h2);
-        roundRectPath.lineTo(w2, h3);
-        roundRectPath.lineTo(w1, h3);
-        roundRectPath.lineTo(w1, h2);
-        roundRectPath.lineTo(dx, h2);
+        roundRectPath.moveTo( dx, h1 );
+        roundRectPath.lineTo( w1, h1 );
+        roundRectPath.lineTo( w1, dx );
+        roundRectPath.lineTo( w2, dx );
+        roundRectPath.lineTo( w2, h1 );
+        roundRectPath.lineTo( w3, h1 );
+        roundRectPath.lineTo( w3, h2 );
+        roundRectPath.lineTo( w2, h2 );
+        roundRectPath.lineTo( w2, h3 );
+        roundRectPath.lineTo( w1, h3 );
+        roundRectPath.lineTo( w1, h2 );
+        roundRectPath.lineTo( dx, h2 );
         roundRectPath.closeSubpath();
 
         painter.drawPath(roundRectPath);
+
+
     }
 
 }

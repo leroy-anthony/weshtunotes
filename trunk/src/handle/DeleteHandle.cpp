@@ -33,8 +33,6 @@ namespace Handle
             m_handleItemRoot(parent),
             m_isHover(false)
     {
-        setIcon(Config::ImageFactory::newInstance()->icon("application-exit.png"));
-        setIconSize(QSize(Config::VisualAspect::widthHandleControl,Config::VisualAspect::widthHandleControl));
         setFixedWidth(Config::VisualAspect::widthHandleControl);
         setFixedHeight(Config::VisualAspect::widthHandleControl);
         setContentsMargins(0,0,0,0);
@@ -65,8 +63,6 @@ namespace Handle
         Q_UNUSED( event );
 
         QPainter painter(this);
-
-        painter.setRenderHint(QPainter::HighQualityAntialiasing,true);
 
         QPen pen;
         pen.setStyle(Qt::NoPen);

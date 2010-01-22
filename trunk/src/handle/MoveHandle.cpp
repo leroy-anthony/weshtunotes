@@ -177,8 +177,6 @@ namespace Handle
     void MoveHandle::paintEvent( QPaintEvent * event )
     {
         QPainter painter(this);
-
-        painter.setRenderHint(QPainter::HighQualityAntialiasing,true);
         painter.setPen(Qt::NoPen);
 
         if ( m_isHover )
