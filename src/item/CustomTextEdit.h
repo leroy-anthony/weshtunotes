@@ -50,8 +50,6 @@ namespace Item
 
         void contextMenuEvent ( QContextMenuEvent * event );
 
-        void paintEvent( QPaintEvent * event );
-
     private:
         NoteItem * m_noteItem;
 

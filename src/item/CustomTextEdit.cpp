@@ -174,35 +174,4 @@ namespace Item
     {
     }
 
-    void CustomTextEdit::paintEvent( QPaintEvent * e )
-    {
-        QPainter painter(viewport());
-        painter.setRenderHint(QPainter::HighQualityAntialiasing,true);
-
-        QLinearGradient gradient( 0,0,0, height() );
-        gradient.setColorAt( 0, m_noteItem->itemColor().lighter(Config::VisualAspect::lighterIntensity) );
-        gradient.setColorAt( 1, m_noteItem->itemColor() );
-
-        painter.setBrush(gradient);
-        painter.setPen(Qt::NoPen);
-        painter.drawRect( 0, 0, width(), height() );
-
-        QAbstractTextDocumentLayout::PaintContext ctx;
-        if ( hasFocus() )
-        {
-            if (textCursor().hasSelection())
-            {
-                QAbstractTextDocumentLayout::Selection selection;
-                selection.cursor = textCursor();
-                selection.format.setBackground(palette().brush(QPalette::Highlight));
-                selection.format.setForeground(palette().brush(QPalette::HighlightedText));
-                ctx.selections.append(selection);
-            }
-
-            ctx.cursorPosition = textCursor().position();
-        }
-
-        document()->documentLayout()->draw(&painter, ctx);
-    }
-
 }

@@ -48,7 +48,7 @@ namespace Scene
     {
         if ( QGLFormat::hasOpenGL() )
         {
-            setViewport(new QGLWidget(QGLFormat()));
+            setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
         }
         /*
       QGraphicsView::FullViewportUpdate
@@ -57,7 +57,7 @@ namespace Scene
       QGraphicsView::BoundingRectViewportUpdate
       QGraphicsView::NoViewportUpdate
       */
-        setViewportUpdateMode( QGraphicsView::FullViewportUpdate );
+        setViewportUpdateMode( QGraphicsView::SmartViewportUpdate );
         /*
       QGraphicsView::CacheNone
       QGraphicsView::CacheBackground
@@ -72,8 +72,8 @@ namespace Scene
 
         setRenderHint(QPainter::SmoothPixmapTransform, true);
         setRenderHint(QPainter::Antialiasing, false);
-        setRenderHint(QPainter::TextAntialiasing, true);
-        setRenderHint(QPainter::HighQualityAntialiasing, false);
+        setRenderHint(QPainter::TextAntialiasing, false);
+        setRenderHint(QPainter::HighQualityAntialiasing, true);
         setRenderHint(QPainter::NonCosmeticDefaultPen, false);
 
         setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
