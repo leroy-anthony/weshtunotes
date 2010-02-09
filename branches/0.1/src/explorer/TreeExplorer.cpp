@@ -1,0 +1,179 @@
+/*
+ Copyright (c) 2009 LEROY Anthony <leroy.anthony@gmail.com>
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Library General Public
+ License as published by the Free Software Foundation; either
+ version 3 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Library General Public License for more details.
+
+ You should have received a copy of the GNU Library General Public License
+ along with this library; see the file COPYING.LIB.  If not, write to
+ the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ Boston, MA 02110-1301, USA.
+ */
+
+#include "TreeExplorer.h"
+
+#include <QCoreApplication>
+#include <QApplication>
+#include <QFileInfo>
+#include <QDir>
+
+#include <KInputDialog>
+#include <KLineEdit>
+#include <KLocalizedString>
+
+#include "../scene/FreeScene.h"
+#include "../scene/LayoutScene.h"
+#include "../basket/ItemTreeBasket.h"
+#include "../config/Configuration.h"
+
+namespace Explorer
+{
+
+    TreeExplorer::TreeExplorer( QWidget * parent ):
+            QTreeWidget(parent)
+    {
+        setHeaderLabel( tr("Paniers") );
+        setHeaderHidden( false );
+        setIconSize(QSize(24,24));
+    }
+
+    TreeExplorer::~TreeExplorer()
+    {
+    }
+
+    void TreeExplorer::delCurrentBasket()
+    {
+        Basket::ItemTreeBasket * b = dynamic_cast<Basket::ItemTreeBasket*>(currentItem());
+        if ( b != 0 )
+        {
+            b->basket()->del();
+            delete b;
+        }
+    }
+
+    Basket::ItemTreeBasket * TreeExplorer::addToCurrentBasket()
+    {
+        bool ok;
+        QString name = KInputDialog::getText(QString("Basket name"),
+                                             QString("Basket name:"),
+                                              QString("My basket"), &ok, this);
+
+        if ( ok && !name.isEmpty() )
+        {
+            return addBasket( dynamic_cast<Basket::ItemTreeBasket*>(currentItem()), name );
+        }
+
+        return 0;
+    }
+
+    Basket::ItemTreeBasket * TreeExplorer::addBasketToRoot()
+    {
+        bool ok;
+        QString name = KInputDialog::getText(QString("Basket name"),
+                                             QString("Basket name:"),
+                                             QString("My basket"),
+                                             &ok,
+                                             this);
+
+        if ( ok && !name.isEmpty() )
+        {
+            return addBasket( 0, name );
+        }
+
+        return 0;
+    }
+
+    Basket::ItemTreeBasket * TreeExplorer::addBasket( Basket::ItemTreeBasket * parent, const QString & name )
+    {
+        Basket::ItemTreeBasket * b = 0;
+        
+        QList<QTreeWidgetItem*> items = findItems( name, Qt::MatchCaseSensitive | Qt::MatchRecursive );
+        if ( parent != 0 )
+        {
+            if (  items.size()>0 && items[0]->parent() == parent )
+            {
+                return 0;
+            }
+            b = new Basket::ItemTreeBasket( parent, name );
+        }
+        else
+        {
+            if (  items.size()>0 && items[0]->parent() == 0 )
+            {
+                return 0;
+            }
+            b = new Basket::ItemTreeBasket( this, name );
+            insertTopLevelItem(  topLevelItemCount(), b );
+        }
+
+        setCurrentIndex( indexFromItem( b, 0 ) );
+
+        b->basket()->load();
+
+        return b;
+    }
+
+    void TreeExplorer::loadBaskets()
+    {
+        QStringList masterBasket = Config::Configuration::masterBaskets();
+        for (int i = 0; i < masterBasket.size(); ++i)
+        {
+            loadBasket( masterBasket[i] );
+        }
+    }
+
+    void TreeExplorer::saveBaskets()
+    {
+        QStringList masterBasket;
+        int masterBasketCount = topLevelItemCount();
+        for ( int i=0 ; i<masterBasketCount ; ++i )
+        {
+            QTreeWidgetItem * item = topLevelItem( i );
+            Basket::ItemTreeBasket * b = dynamic_cast<Basket::ItemTreeBasket*>(item);
+            b->basket()->save();
+        }
+    }
+
+    void TreeExplorer::loadBasket( const QString & name )
+    {
+        loadBasket( 0, name );
+    }
+
+    void TreeExplorer::loadBasket( Basket::ItemTreeBasket * parent, const QString & name )
+    {
+        Basket::ItemTreeBasket * b = addBasket( parent, name );
+
+        setCurrentItem( b );
+
+        QStringList l = Config::Configuration::subDirs( b->basket()->configFilePath() );
+        for ( int i=0 ; i<l.size() ; ++i )
+        {
+            loadBasket( b, l[i] );
+        }
+    }
+
+    QTreeWidgetItem * TreeExplorer::loadFromConfigCurrentBasket()
+    {
+        setColumnCount(2);
+        QString currentBasket = Config::Configuration::loadLastBasket();
+        QList<QTreeWidgetItem*> baskets = findItems( currentBasket, Qt::MatchFixedString | Qt::MatchRecursive, 1 );
+        setColumnCount(1);
+        if ( baskets.size() > 0 )
+        {
+            expandItem(baskets[0]);
+            setCurrentItem(baskets[0]);
+
+            return baskets[0];
+        }
+
+        return 0;
+    }
+
+}
