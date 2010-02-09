@@ -30,6 +30,7 @@
 #include <QApplication>
 #include <QGLWidget>
 #include <QGraphicsItem>
+#include <limits>
 
 #include "AbstractScene.h"
 #include "../main/general.h"
@@ -305,10 +306,11 @@ namespace Scene
             return;
         }
 
-        double minx = 9999;
-        double miny = 9999;
-        double maxx = -9999;
-        double maxy = -9999;
+        double minx = std::numeric_limits<double>::infinity();
+        double miny = std::numeric_limits<double>::infinity();
+        double maxx = - std::numeric_limits<double>::infinity();
+        double maxy = - std::numeric_limits<double>::infinity();
+
         for ( int i=0 ; i<itemList.size() ; ++i )
         {
             QGraphicsItem * item = itemList[i];
@@ -334,6 +336,7 @@ namespace Scene
                 }
             }
         }
+
         fitInView(minx,miny,maxx-minx,maxy-miny,Qt::KeepAspectRatio);
     }
 
