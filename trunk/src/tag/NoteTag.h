@@ -25,6 +25,7 @@
 #include <QMouseEvent>
 
 #include <kpushbutton.h>
+#include <Nepomuk/Tag>
 
 #include "../tag/State.h"
 
@@ -50,6 +51,8 @@ namespace Tag
         Item::NoteItem * noteItem();
 
         void apply();
+
+        const Nepomuk::Tag * nepomukTag();
 
         const QString & name();
         void setName( const QString & name );
@@ -85,6 +88,9 @@ namespace Tag
 
         bool m_visible;
         int m_sizeSymbol;
+
+        Nepomuk::Tag * m_nepomukTag;
+
     };
 
 }

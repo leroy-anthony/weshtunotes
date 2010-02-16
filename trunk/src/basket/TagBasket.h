@@ -24,15 +24,23 @@
 
 namespace Basket
 {
+    class AbstractBasket;
 
     class TagBasket : public AbstractBasket
     {
     public:
-        TagBasket( const QString & name );
+        TagBasket( AbstractBasket * basket, const QString & name, const QMap<QString,QString> & options );
+        TagBasket( const QString & name, const QMap<QString,QString> & options );
 
         void load();
         void save();
         void del();
+
+    private:
+        void initTagBasket( const QMap<QString,QString> & options );
+
+        QString m_tagName;
+
     };
 
 }

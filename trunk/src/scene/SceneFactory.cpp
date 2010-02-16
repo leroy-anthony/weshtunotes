@@ -60,8 +60,6 @@ namespace Scene
             scene = new LayoutScene();
         }
 
-        scene->load( fileName );
-
         return scene;
     }
 

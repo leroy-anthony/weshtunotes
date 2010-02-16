@@ -38,6 +38,7 @@
 #include "../tag/NoteTag.h"
 #include "../config/ImageFactory.h"
 #include "../config/VisualAspect.h"
+#include "settings.h"
 
 namespace Item
 {
@@ -132,7 +133,10 @@ namespace Item
 
     void NoteItem::setFontPointSize( int weight )
     {
-        m_plainTextEdit->setFontPointSize( weight );
+        if ( weight > 0 )
+        {
+            m_plainTextEdit->setFontPointSize( weight );
+        }
     }
 
     void NoteItem::setTextBackgroundColor ( const QColor & c )
@@ -155,6 +159,12 @@ namespace Item
         if ( m_tag != 0 )
         {
             settings.setValue(handleId,"tag",m_tag->name()+":" + m_tag->currentStateName());
+
+            addNoteToNepomuk();
+        }
+        else
+        {
+            settings.removeValue(handleId,"tag");
         }
 
         Config::Configuration::saveNote( settings.fileName(), m_plainTextEdit->document()->toHtml(), m_nameId );
@@ -186,6 +196,8 @@ namespace Item
 
     void NoteItem::addTag( const QString & tagName, const QString & tagState )
     {
+        removeNoteFromNepomuk();
+
         m_tag = new Tag::NoteTag( this, tagName );
         m_tag->setCurrentState( tagState );
         m_horizontalLayout->insertWidget(0,m_tag);
@@ -196,25 +208,21 @@ namespace Item
     {
         if ( action->isChecked() )
         {
-            QString tagName = action->data().toString();
+            removeNoteFromNepomuk();
 
-            if ( m_tag != 0 )
-            {
-                delete m_tag;
-            }
-
-            m_tag = new Tag::NoteTag( this, tagName );
+            m_tag = new Tag::NoteTag( this, action->data().toString() );
             m_horizontalLayout->insertWidget(0,m_tag);
             m_plainTextEdit->selectAll();
             m_tag->apply();
             m_plainTextEdit->selectNone();
+
+            addNoteToNepomuk();
         }
         else
         {
             // supprimer
             m_horizontalLayout->removeWidget(m_tag);
-            delete m_tag;
-            m_tag = 0;
+            removeNoteFromNepomuk();
         }
     }
 
@@ -223,7 +231,6 @@ namespace Item
         m_plainTextEdit->selectAll();
         m_tag->apply();
         m_plainTextEdit->selectNone();
-
     }
 
     void NoteItem::insertData( const QMimeData * data )
@@ -243,6 +250,24 @@ namespace Item
         painter.setBrush( gradient );
 
         painter.drawRect( 0, 0, width(), height() );
+    }
+
+    void NoteItem::removeNoteFromNepomuk()
+    {
+        if ( m_tag != 0 )
+        {
+            delete m_tag;
+            m_tag = 0;
+
+            Nepomuk::Resource file( Settings::basketsStorePath().toLocalFile()+QDir::separator()+"baskets"+QDir::separator()+m_fileName );
+            file.remove();
+        }
+    }
+
+    void NoteItem::addNoteToNepomuk()
+    {
+        Nepomuk::Resource file( Settings::basketsStorePath().toLocalFile()+QDir::separator()+"baskets"+QDir::separator()+m_fileName );
+        file.addTag( *m_tag->nepomukTag() );
     }
 
 }

@@ -42,11 +42,15 @@ namespace Tag
             m_name(name),
             m_visible(false),
             m_sizeSymbol(32),
-            m_index(0)
+            m_index(0),
+            m_nepomukTag(0)
     {
         setFlat(true);
         setContentsMargins( 2, 2, 2, 2 );
         load(name);
+
+        m_nepomukTag = new Nepomuk::Tag("KWeshTuNotes::"+name);
+        m_nepomukTag->setLabel( name );
 
         setStyleSheet(QString("background-color: %1").arg(Qt::transparent));
     }
@@ -225,6 +229,11 @@ namespace Tag
         nextState();
 
         QPushButton::mouseReleaseEvent(event);
+    }
+
+    const Nepomuk::Tag * NoteTag::nepomukTag()
+    {
+        return m_nepomukTag;
     }
 
 }

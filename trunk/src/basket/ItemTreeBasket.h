@@ -22,10 +22,15 @@
 
 #include <QTreeWidgetItem>
 
-#include "../main/general.h"
+#include <KIcon>
 
-#include "../explorer/TreeExplorer.h"
-#include "AbstractBasket.h"
+#include "../main/general.h"
+#include "../basket/AbstractBasket.h"
+
+namespace Explorer
+{
+    class TreeExplorer;
+}
 
 namespace Basket
 {
@@ -33,11 +38,16 @@ namespace Basket
     class ItemTreeBasket : public QTreeWidgetItem
     {
     public:
-        ItemTreeBasket( Explorer::TreeExplorer * treeExplorer, const QString & name );
-        ItemTreeBasket( Basket::ItemTreeBasket * itemTreeBasket, const QString & name );
+        ItemTreeBasket( ItemTreeBasket * itemTreeBasket,
+                        const QString & name,
+                        const QMap<QString,QString> & options = QMap<QString,QString>(),
+                        const QString & type = QString("") );
+
         ~ItemTreeBasket();
 
         AbstractBasket * basket();
+
+        void setIcon( const QString & icon );
 
     private:
         void initItemTreeBasket();

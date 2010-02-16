@@ -124,8 +124,6 @@ namespace Tag
         roundRectPath.closeSubpath();
 
         painter.drawPath(roundRectPath);
-
-
     }
 
 }

@@ -19,11 +19,112 @@
 
 #include "BasketFactory.h"
 
+#include "../basket/Basket.h"
+#include "../basket/TagBasket.h"
+#include "../basket/AbstractBasket.h"
+#include "../config/Configuration.h"
+
+#include <QDebug>
+
 namespace Basket
 {
 
+    const char * BasketFactory::m_types[] = { "basket" , "tag_basket" };
+    const char * BasketFactory::m_labels[] = { "Basket" , "Tag Basket" };
+
     BasketFactory::BasketFactory()
     {
+    }
+
+    AbstractBasket * BasketFactory::newBasket( AbstractBasket * parent,
+                                               const QString & fileName,
+                                               const QMap<QString,QString> & options,
+                                               const QString & type )
+    {
+        if ( type == QString("") )
+        {
+            Config::Configuration settings( parent->directory() + QDir::separator() + fileName );
+            return newBasketInterne( parent, fileName, options, settings.valueGroup("basket","type","basket") );
+        }
+
+        return newBasketInterne( parent, fileName, options, type );
+    }
+
+    AbstractBasket * BasketFactory::newBasket( const QString & fileName,
+                                               const QMap<QString,QString> & options,
+                                               const QString & type )
+    {
+        if ( type == QString("") )
+        {
+            Config::Configuration settings( fileName + QDir::separator() + fileName );
+            return newBasketInterne( fileName, options, settings.valueGroup("basket","type","basket") );
+        }
+
+        return newBasketInterne( fileName, options, type );
+    }
+
+    AbstractBasket * BasketFactory::newBasketInterne( const QString & fileName,
+                                                      const QMap<QString,QString> & options,
+                                                      const QString & type )
+    {
+        AbstractBasket * basket = 0;
+
+        if ( type == m_types[ BASKET ] )
+        {
+            basket = new Basket( fileName );
+        }
+        else if ( type == m_types[ TAG_BASKET ] )
+        {
+            basket = new TagBasket( fileName, options );
+        }
+        else
+        {
+            basket = new Basket( fileName );
+        }
+
+        return basket;
+    }
+
+    AbstractBasket * BasketFactory::newBasketInterne( AbstractBasket * parent,
+                                                      const QString & fileName,
+                                                      const QMap<QString,QString> & options,
+                                                      const QString & type )
+    {
+        AbstractBasket * basket = 0;
+
+        if ( type == m_types[ BASKET ] )
+        {
+            basket = new Basket( parent, fileName );
+        }
+
+        if ( type == m_types[ TAG_BASKET ] )
+        {
+            basket = new TagBasket( parent, fileName, options );
+        }
+
+        return basket;
+    }
+
+    QStringList BasketFactory::types()
+    {
+        QStringList types;
+
+        for ( int i=0 ; i<MAX ; ++i )
+        {
+            types << QString(m_types[i]);
+        }
+
+        return types;
+    }
+
+    const char * BasketFactory::type( int type )
+    {
+        return m_types[ type ];
+    }
+
+    const char * BasketFactory::label( int type )
+    {
+        return m_labels[ type ];
     }
 
 }

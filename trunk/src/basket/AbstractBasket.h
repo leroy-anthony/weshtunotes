@@ -23,6 +23,7 @@
 #include <QList>
 
 #include "../technic/GeneratorID.h"
+
 namespace Scene
 {
     class AbstractScene;
@@ -44,6 +45,7 @@ namespace Basket
         virtual void load() = 0;
         virtual void del()  = 0;
 
+        const QString & directory();
         const QString & configFilePath();
 
         Scene::AbstractScene * scene();
@@ -51,8 +53,10 @@ namespace Basket
 
         const QString & type();
 
+        const QString & icon();
+        void setIcon( const QString & icon );
+
     protected:
-        const QString & directory();
         const QString & name();
 
         QString m_directory;
@@ -64,6 +68,7 @@ namespace Basket
         QList<AbstractBasket*> m_childrenBasket;
 
         QString m_type;
+        QString m_icon;
 
     };
 

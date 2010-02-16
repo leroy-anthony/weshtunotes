@@ -24,10 +24,10 @@
 #include <QFileInfo>
 #include <QDir>
 
-#include <KInputDialog>
 #include <KLineEdit>
 #include <KLocalizedString>
 
+#include "../basket/NewBasketDialog.h"
 #include "../scene/FreeScene.h"
 #include "../scene/LayoutScene.h"
 #include "../basket/ItemTreeBasket.h"
@@ -60,62 +60,54 @@ namespace Explorer
 
     Basket::ItemTreeBasket * TreeExplorer::addToCurrentBasket()
     {
-        bool ok;
-        QString name = KInputDialog::getText(QString("Basket name"),
-                                             QString("Basket name:"),
-                                              QString("My basket"), &ok, this);
-
-        if ( ok && !name.isEmpty() )
-        {
-            return addBasket( dynamic_cast<Basket::ItemTreeBasket*>(currentItem()), name );
-        }
-
-        return 0;
+        return Basket::NewBasketDialog::getNewBasket( this, dynamic_cast<Basket::ItemTreeBasket*>(currentItem()) );
     }
 
     Basket::ItemTreeBasket * TreeExplorer::addBasketToRoot()
     {
-        bool ok;
-        QString name = KInputDialog::getText(QString("Basket name"),
-                                             QString("Basket name:"),
-                                             QString("My basket"),
-                                             &ok,
-                                             this);
+        Basket::ItemTreeBasket * b = Basket::NewBasketDialog::getNewBasket( this, 0 );
+        insertTopLevelItem(  topLevelItemCount(), b );
 
-        if ( ok && !name.isEmpty() )
+        return b;
+    }
+
+    bool TreeExplorer::findBasket( Basket::ItemTreeBasket * parent, const QString & name )
+    {
+        QList<QTreeWidgetItem*> items = findItems( name, Qt::MatchCaseSensitive | Qt::MatchRecursive );
+
+        if (  items.size()>0 && items[0]->parent() == parent )
         {
-            return addBasket( 0, name );
+            return true;
         }
 
-        return 0;
+        return false;
     }
 
     Basket::ItemTreeBasket * TreeExplorer::addBasket( Basket::ItemTreeBasket * parent, const QString & name )
     {
         Basket::ItemTreeBasket * b = 0;
-        
-        QList<QTreeWidgetItem*> items = findItems( name, Qt::MatchCaseSensitive | Qt::MatchRecursive );
-        if ( parent != 0 )
+
+        if ( !findBasket( parent, name ) )
         {
-            if (  items.size()>0 && items[0]->parent() == parent )
+            if ( parent == 0 )
             {
-                return 0;
+                b = new Basket::ItemTreeBasket( parent, name );
+                insertTopLevelItem(  topLevelItemCount(), b );
             }
-            b = new Basket::ItemTreeBasket( parent, name );
+            else
+            {
+                b = new Basket::ItemTreeBasket( parent, name );
+            }
         }
         else
         {
-            if (  items.size()>0 && items[0]->parent() == 0 )
-            {
-                return 0;
-            }
-            b = new Basket::ItemTreeBasket( this, name );
-            insertTopLevelItem(  topLevelItemCount(), b );
+            return 0;
         }
 
         setCurrentIndex( indexFromItem( b, 0 ) );
 
         b->basket()->load();
+        b->setIcon( b->basket()->icon() );
 
         return b;
     }

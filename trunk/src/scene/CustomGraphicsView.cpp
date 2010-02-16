@@ -236,7 +236,7 @@ namespace Scene
                 }
             }
 
-            s->loadHandles( filesName,  mapToScene( viewport()->width()/2, viewport()->height()/2 ), abs(maxX-minX), abs(maxY-minY) );
+            s->loadHandles( filesName, mapToScene( viewport()->width()/2, viewport()->height()/2 ), abs(maxX-minX), abs(maxY-minY) );
         }
         else
         {

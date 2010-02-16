@@ -20,13 +20,48 @@
 #ifndef BASKETFACTORY_H_
 #define BASKETFACTORY_H_
 
+#include <QStringList>
+#include <QMap>
+
 namespace Basket
 {
+    class AbstractBasket;
 
     class BasketFactory
     {
     public:
+        enum Type { BASKET, TAG_BASKET, MAX };
+
+        static AbstractBasket * newBasket( AbstractBasket * parent,
+                                           const QString & fileName,
+                                           const QMap<QString,QString> & options,
+                                           const QString & type = QString("") );
+
+        static AbstractBasket * newBasket( const QString & fileName,
+                                           const QMap<QString,QString> & options,
+                                           const QString & type = QString("") );
+
+        static const char * type( int type );
+        static const char * label( int type );
+
+        static QStringList types();
+
+    protected:
         BasketFactory();
+
+    private:
+        static AbstractBasket * newBasketInterne( AbstractBasket * parent,
+                                                  const QString &  fileName,
+                                                  const QMap<QString,QString> & options,
+                                                  const QString & type );
+
+        static AbstractBasket * newBasketInterne( const QString &  fileName,
+                                                  const QMap<QString,QString> & options,
+                                                  const QString & type );
+
+        static const char * m_types[];
+        static const char * m_labels[];
+
     };
 
 }
