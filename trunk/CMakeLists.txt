@@ -33,9 +33,6 @@ set(weshnotes_SRC
 ./src/main/main.cpp 
 ./src/main/MainWindow.cpp 
 ./src/main/KWeshTuNotesApp.cpp
-./src/widget/VerticalButton.cpp
-./src/widget/qtcolorpicker.cpp
-./src/widget/ColorCombo.cpp
 ./src/scene/AbstractScene.cpp 
 ./src/scene/FreeScene.cpp
 ./src/scene/LayoutScene.cpp
@@ -78,8 +75,6 @@ ${weshnotes_UI_H})
 
 set(weshnotes_MOC 
 ./src/main/main_window.h
-./src/widget/VerticalButton.h 
-./src/widget/qtcolorpicker.h 
 ./src/scene/AbstractScene.h 
 ./src/scene/FreeScene.h
 ./src/scene/LayoutScene.h
