@@ -22,9 +22,7 @@
 
 #include <QUrl>
 #include <QDir>
-#include <QUrlInfo>
 #include <QDesktopServices>
-#include <QUrlInfo>
 #include <QFileIconProvider>
 #include <QFocusEvent>
 #include <QPainter>
