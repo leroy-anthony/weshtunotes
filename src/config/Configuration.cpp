@@ -22,6 +22,8 @@
 #include <QFileInfo>
 #include <QCoreApplication>
 
+#include <Nepomuk/Resource>
+
 #include "settings.h"
 #include "../main/general.h"
 #include "../main/general.h"
@@ -138,6 +140,9 @@ namespace Config
     {
         QFile f(fileName);
         f.remove();
+
+        Nepomuk::Resource fileRes(fileName);
+        fileRes.remove();
     }
 
     void Configuration::setValue( const QString & groupKey, const QString & key, QVariant value )
@@ -159,6 +164,12 @@ namespace Config
     {
         KConfigGroup configGroup( this, groupKey );
         return configGroup.readEntry( key, defaultValue ).toString();
+    }
+
+    void Configuration::removeValue( const QString & groupKey, const QString & key )
+    {
+        KConfigGroup configGroup( this, groupKey );
+        return configGroup.deleteEntry( key );
     }
 
     QString Configuration::valueSubGroup( const QString & groupKey, const QString & subGroupKey, const QString & key, QVariant defaultValue ) const

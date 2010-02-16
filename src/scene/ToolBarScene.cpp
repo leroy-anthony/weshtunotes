@@ -19,6 +19,8 @@
 
 #include "ToolBarScene.h"
 
+#include <iostream>
+
 #include <QStyle>
 
 #include <KAction>
@@ -31,9 +33,6 @@
 #include "../main/MainWindow.h"
 #include "../config/ImageFactory.h"
 #include "../widget/ColorCombo.h"
-
-
-#include <iostream>
 
 namespace Scene
 {
@@ -286,9 +285,13 @@ namespace Scene
         m_underlineAction->setChecked(f.fontUnderline());
         m_boldAction->setChecked(f.fontWeight()>50);
         m_italicAction->setChecked(f.fontItalic());
-        m_actionFontSize->setFontSize( f.fontPointSize() );
         m_colorText->setColor(f.foreground().color());
         m_strikeoutAction->setChecked(f.fontStrikeOut());
+
+        if ( f.fontPointSize() > 0 )
+        {
+            m_actionFontSize->setFontSize( f.fontPointSize() );
+        }
     }
 
     ToolBarScene * ToolBarScene::m_toolBar = 0;

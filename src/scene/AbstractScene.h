@@ -57,7 +57,7 @@ namespace Scene
         virtual Handle::HandleItem * newHandle( int x, int y, int w ) = 0;
         virtual Item::AbstractItem * newItem( int x, int y ) = 0;
 
-        void loadHandles( const QList<QString> & filesName, QPointF centerPt = QPointF(0,0), int selectionWidth = 0, int selectionHeigth = 0 );
+        void loadHandles( const QList<QString> & filesName, QPointF centerPt = QPointF(0,0), int selectionWidth = 0, int selectionHeigth = 0, bool newHandles = false );
         void load( const QString & fileName );
         void save();
 

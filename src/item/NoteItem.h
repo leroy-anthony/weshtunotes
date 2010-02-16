@@ -50,6 +50,9 @@ namespace Item
         void addTag( const QString & tagName, const QString & tagState );
         void tagApply();
 
+        void removeNoteFromNepomuk();
+        void addNoteToNepomuk();
+
         void adaptSize();
 
         void insertData( const QMimeData * data );

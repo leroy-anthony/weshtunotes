@@ -20,6 +20,7 @@
 #include "AbstractBasket.h"
 
 #include <QDir>
+#include <QDebug>
 
 #include "../config/Configuration.h"
 
@@ -84,10 +85,28 @@ namespace Basket
         return m_type;
     }
 
+    const QString & AbstractBasket::icon()
+    {
+        return m_icon;
+    }
+
+    void AbstractBasket::setIcon( const QString & icon )
+    {
+        m_icon = icon;
+    }
+
     void AbstractBasket::save()
     {
         Config::Configuration settings( m_configFilePath );
-        settings.setValue("basket","type",m_type);
+        settings.setValue( "basket", "type", m_type );
+        settings.setValue( "basket", "icon", m_icon );
+    }
+
+    void AbstractBasket::load()
+    {
+        Config::Configuration settings( m_configFilePath );
+        m_type = settings.valueGroup( "basket", "type", "basket" );
+        m_icon = settings.valueGroup( "basket", "icon", "folder" );
     }
 
 }

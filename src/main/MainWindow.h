@@ -68,6 +68,9 @@ public slots:
 protected:
     void closeEvent(QCloseEvent *event);
 
+signals:
+    void loadScene();
+
 private:
     void initView();
     void initStatusBar();
@@ -91,6 +94,14 @@ private:
     KSystemTrayIcon * m_trayIcon;
 
     Handle::GraphicHandleItem * m_copyHandleItem;
+
+
+    // States
+    QStateMachine * states;
+    QState * normalState;
+    QState * centerState;
+    QParallelAnimationGroup * group;
+
 
 };
 

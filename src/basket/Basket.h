@@ -35,6 +35,9 @@ namespace Basket
         void save();
         void del();
 
+    private:
+        void initBasket();
+
     };
 
 }

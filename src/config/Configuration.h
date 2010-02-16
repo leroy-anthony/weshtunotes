@@ -46,6 +46,7 @@ namespace Config
         QString valueGroup( const QString & group, const QString & key, QVariant defaultValue ) const;
         QStringList values( const QString & group, const QString & key ) const;
 
+        void removeValue( const QString & groupKey, const QString & key );
         void removeSubGroup( const QString & group, const QString & subGroup );
         void removeGroup( const QString & group );
 

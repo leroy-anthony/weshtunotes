@@ -26,30 +26,40 @@
 #include "../config/ImageFactory.h"
 #include "../scene/SceneFactory.h"
 #include "../basket/Basket.h"
+#include "../basket/BasketFactory.h"
+#include "../explorer/TreeExplorer.h"
 
 namespace Basket
 {
-    ItemTreeBasket::ItemTreeBasket( Explorer::TreeExplorer * treeExplorer, const QString & name ):
-            QTreeWidgetItem( treeExplorer, QStringList(name) ),
-            m_basket(0)
-    {
-        m_basket = new Basket( name );
 
-        initItemTreeBasket();
-    }
-
-    ItemTreeBasket::ItemTreeBasket( ItemTreeBasket * itemTreeBasket, const QString & name ):
-            QTreeWidgetItem( itemTreeBasket, QStringList(name) ),
-            m_basket(0)
+    ItemTreeBasket::ItemTreeBasket( ItemTreeBasket * itemTreeBasket,
+                                    const QString & name,
+                                    const QMap<QString,QString> & options,
+                                    const QString & type ):
+        QTreeWidgetItem( itemTreeBasket, QStringList(name) ),
+        m_basket(0)
     {
-        m_basket = new Basket( itemTreeBasket->basket(), name );
+        if ( itemTreeBasket != 0 )
+        {
+            m_basket = BasketFactory::newBasket( itemTreeBasket->basket(), name, options, type );
+        }
+        else
+        {
+            m_basket = BasketFactory::newBasket( name, options, type );
+        }
 
         initItemTreeBasket();
     }
 
     void ItemTreeBasket::initItemTreeBasket()
     {
-        setIcon( 0, Config::ImageFactory::newInstance()->icon("folder.png") );
+        QTreeWidgetItem::setIcon( 0, Config::ImageFactory::newInstance()->icon( m_basket->icon() ) );
+    }
+
+    void ItemTreeBasket::setIcon( const QString & icon )
+    {
+        QTreeWidgetItem::setIcon( 0, KIcon(icon) );
+        m_basket->setIcon( icon );
     }
 
     ItemTreeBasket::~ItemTreeBasket()

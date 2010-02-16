@@ -23,7 +23,7 @@
 #include "../config/Configuration.h"
 
 KWeshTuNotesApp::KWeshTuNotesApp():
-        KUniqueApplication(),
+        KApplication(),
         m_mainWindow( 0 )
 {
     setQuitOnLastWindowClosed ( false );

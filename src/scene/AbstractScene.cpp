@@ -102,19 +102,18 @@ namespace Scene
     {
         QList<Handle::HandleItem*> handles = m_handles.keys();
 
+        // on récupère les notes présentes lors de la dernière sauvegarde
         Config::Configuration delSettings( m_fileName );
-        QStringList listFile = delSettings.values("scene","items");
-        for ( int i=0 ; i<listFile.size() ; ++i )
-        {
-            Config::Configuration::deleteNoteFile(listFile[i]);
-        }
-        listFile.clear();
+        QStringList listLastFile = delSettings.values("scene","items");
 
+        //efface l'ancien configuration du panier
         Config::Configuration::clear( m_fileName );
 
         Config::Configuration settings( m_fileName );
         settings.setValue("scene","id",m_id);
         settings.setValue("scene","nbitems",handles.size());
+
+        QStringList listFile;
         for (int i=0 ; i<handles.size() ; ++i)
         {
             QStringList listHandles;
@@ -124,8 +123,22 @@ namespace Scene
             {
                 Config::Configuration settingsHandle( m_fileName+"_"+handles[i]->id() );
                 settingsHandle.setValue("general","items",listHandles);
-                listFile << m_fileName+"_"+handles[i]->id();
+
+                QString fileName( m_fileName+"_"+handles[i]->id() );
+                listFile << fileName;
+
+                //mémorise la liste des notes qui ne sont plus présentes et que l'on doit supprimer
+                if ( listLastFile.contains( fileName ) )
+                {
+                    listLastFile.removeOne( fileName );
+                }
             }
+        }
+
+        //efface les notes qui ne sont plus dans la scene
+        for ( int i=0 ; i<listLastFile.size() ; ++i )
+        {
+            Config::Configuration::deleteNoteFile(listLastFile[i]);
         }
 
         settings.setValue("scene","items",listFile);
@@ -158,18 +171,23 @@ namespace Scene
 
     void AbstractScene::saveViewOnDisk( const QString & fileName )
     {
-        Config::Configuration settings( fileName );
+        if ( views().size() > 0 )
+        {
+            storeView( (CustomGraphicsView*) views()[0] );
 
-        settings.setValue("scene","transform_m11",m_transformView.m11());
-        settings.setValue("scene","transform_m12",m_transformView.m12());
-        settings.setValue("scene","transform_m21",m_transformView.m21());
-        settings.setValue("scene","transform_m22",m_transformView.m22());
-        settings.setValue("scene","transform_dx",m_transformView.dx());
-        settings.setValue("scene","transform_dy",m_transformView.dy());
+            Config::Configuration settings( fileName );
 
-        settings.setValue("scene","hscroll",m_horizontalScrollBarValueView);
-        settings.setValue("scene","vscroll",m_verticalScrollBarValueView);
-        settings.setValue("scene","type",m_type);
+            settings.setValue("scene","transform_m11",m_transformView.m11());
+            settings.setValue("scene","transform_m12",m_transformView.m12());
+            settings.setValue("scene","transform_m21",m_transformView.m21());
+            settings.setValue("scene","transform_m22",m_transformView.m22());
+            settings.setValue("scene","transform_dx",m_transformView.dx());
+            settings.setValue("scene","transform_dy",m_transformView.dy());
+
+            settings.setValue("scene","hscroll",m_horizontalScrollBarValueView);
+            settings.setValue("scene","vscroll",m_verticalScrollBarValueView);
+            settings.setValue("scene","type",m_type);
+        }
     }
 
     void AbstractScene::loadViewFromDisk( const QString & fileName  )
@@ -186,9 +204,14 @@ namespace Scene
 
         m_horizontalScrollBarValueView = settings.valueGroup("scene","hscroll",0).toInt();
         m_verticalScrollBarValueView   = settings.valueGroup("scene","vscroll",0).toInt();
+
+        if ( views().size() > 0 )
+        {
+            restoreView( (CustomGraphicsView*) views()[0] );
+        }
     }
 
-    void AbstractScene::loadHandles( const QList<QString> & filesName, QPointF centerPt, int selectionWidth, int selectionHeigth )
+    void AbstractScene::loadHandles( const QList<QString> & filesName, QPointF centerPt, int selectionWidth, int selectionHeigth, bool newHandles )
     {
         int dx = 0;
         int dy = 0;
@@ -221,7 +244,11 @@ namespace Scene
 
                 handle = newHandle( x+dx, y+dy, settingsHandle.valueGroup( itemId, "width", Settings::widthNote()).toInt() );
                 handle->setId( itemId );
-                handle->regenerateId();
+
+                if ( newHandles )
+                {
+                    handle->regenerateId();
+                }
 
                 handles[ itemId ] = handle;
                 handle->setFileName( fileName );

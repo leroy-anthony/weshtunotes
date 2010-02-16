@@ -21,6 +21,19 @@
 
 #include "../scene/SceneFactory.h"
 #include "../config/Configuration.h"
+#include "../basket/BasketFactory.h"
+#include "settings.h"
+
+#include <Nepomuk/Tag>
+#include <Nepomuk/Query/Query>
+#include <Nepomuk/Query/ResourceTerm>
+#include <Nepomuk/Query/ComparisonTerm>
+#include <Soprano/Vocabulary/NAO>
+#include <Soprano/Model>
+#include <Soprano/QueryResultIterator>
+#include <Nepomuk/Resource>
+#include <Nepomuk/Variant>
+#include <Nepomuk/ResourceManager>
 
 #include <QDebug>
 
@@ -30,18 +43,27 @@ namespace Basket
     Basket::Basket( AbstractBasket * basketParent, const QString & name ):
             AbstractBasket( basketParent, name )
     {
-        m_type = "basket";
+        initBasket();
     }
 
     Basket::Basket( const QString & name ):
             AbstractBasket( name )
     {
-        m_type = "basket";
+        initBasket();
+    }
+
+    void Basket::initBasket()
+    {
+        m_type = BasketFactory::type(BasketFactory::BASKET);
+
+        m_contentScene = Scene::SceneFactory::newScene( m_configFilePath );
+        m_nameId = m_contentScene->id();
     }
 
     void Basket::save()
     {
         m_contentScene->save();
+
         QList<AbstractBasket*> & children = childrenBasket();
         for ( int i=0 ; i<children.size() ; ++i )
         {
@@ -53,8 +75,10 @@ namespace Basket
 
     void Basket::load()
     {
-        m_contentScene = Scene::SceneFactory::newScene( m_configFilePath );
+        delete m_contentScene;
 
+        m_contentScene = Scene::SceneFactory::newScene( m_configFilePath );
+        m_contentScene->load( m_configFilePath );
         m_nameId = m_contentScene->id();
 
         QList<AbstractBasket*> & children = childrenBasket();
@@ -62,6 +86,8 @@ namespace Basket
         {
             children[i]->load();
         }
+
+        AbstractBasket::load();
     }
 
     void Basket::del()

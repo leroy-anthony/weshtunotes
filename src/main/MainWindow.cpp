@@ -22,6 +22,7 @@
 #include <QSpacerItem>
 #include <QtDBus/QtDBus>
 #include <QCalendarWidget>
+#include <QState>
 
 #include <kactioncollection.h>
 #include <kstandardaction.h>
@@ -29,6 +30,9 @@
 #include <kconfigdialog.h>
 #include <kdebug.h>
 #include <kstatusbar.h>
+#include <KDirModel>
+#include <KDirLister>
+#include <KFileMetaInfo>
 
 #include "settings.h"
 #include "../explorer/TreeExplorer.h"
@@ -43,7 +47,11 @@ KStatusBar * MainWindow::m_statusBar = 0;
 
 MainWindow::MainWindow( QWidget * parent ) :
         KXmlGuiWindow( parent ),
-        m_lastBasketLoad(0)
+        m_lastBasketLoad(0),
+        states(0),
+        normalState(0),
+        centerState(0),
+        group(0)
 {
     setupUi(this);
 
@@ -62,6 +70,7 @@ MainWindow::MainWindow( QWidget * parent ) :
     setupGUI( Default, "kweshtunotesui.rc" );
 
     loadData();
+
 }
 
 MainWindow::~MainWindow()
@@ -113,6 +122,7 @@ void MainWindow::save()
     }
 
     m_treeExplorer->saveBaskets();
+
     if ( m_lastBasketLoad != 0 )
     {
         Config::Configuration::saveLastBasket( m_lastBasketLoad->basket()->id() );
@@ -231,6 +241,7 @@ void MainWindow::addToCurrentBasket()
     Basket::ItemTreeBasket * item = m_treeExplorer->addToCurrentBasket();
     if ( item != 0 )
     {
+        item->basket()->save();
         loadScene( item , 0 );
     }
 }
@@ -240,6 +251,7 @@ void MainWindow::addBasketToRoot()
     Basket::ItemTreeBasket * item = m_treeExplorer->addBasketToRoot();
     if ( item != 0 )
     {
+        item->basket()->save();
         loadScene( item , 0 );
     }
 }
@@ -261,15 +273,12 @@ void MainWindow::loadScene( QTreeWidgetItem * item , int column )
 
     if ( m_lastBasketLoad != 0 )
     {
-        m_lastBasketLoad->basket()->scene()->storeView( m_view );
+        m_lastBasketLoad->basket()->save();
     }
 
     m_lastBasketLoad = i;
 
-    if ( i->basket()->scene() == 0 )
-    {
-        i->basket()->load();
-    }
+    i->basket()->load();
 
     Scene::AbstractScene * scene = i->basket()->scene();
     m_view->setScene( scene );

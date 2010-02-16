@@ -22,6 +22,7 @@
 
 #include <QTreeWidget>
 
+#include "../explorer/AbstractExplorer.h"
 
 namespace Basket
 {
@@ -31,7 +32,7 @@ namespace Basket
 namespace Explorer
 {
 
-    class TreeExplorer : public QTreeWidget
+    class TreeExplorer : public QTreeWidget, public AbstractExplorer
     {
         Q_OBJECT
 
@@ -40,6 +41,8 @@ namespace Explorer
         virtual ~TreeExplorer();
 
         QTreeWidgetItem * loadFromConfigCurrentBasket();
+
+        bool findBasket( Basket::ItemTreeBasket * parent, const QString & name );
 
     public slots:
         void delCurrentBasket();

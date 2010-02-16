@@ -20,6 +20,10 @@
 #ifndef ABSTRACTEXPLORER_H_
 #define ABSTRACTEXPLORER_H_
 
+#include <QString>
+
+#include "../basket/ItemTreeBasket.h"
+
 namespace Explorer
 {
 
@@ -27,6 +31,9 @@ namespace Explorer
     {
     public:
         virtual ~AbstractExplorer();
+
+        virtual bool findBasket( Basket::ItemTreeBasket * parent, const QString & name ) = 0;
+
     protected:
         AbstractExplorer();
     };
