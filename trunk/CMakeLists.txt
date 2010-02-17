@@ -8,10 +8,10 @@ find_package(KDE4 REQUIRED)
 include_directories(${KDE4_INCLUDES})
 
 find_package(Nepomuk REQUIRED)
+find_package(Soprano REQUIRED)
+
 include_directories(${NEPOMUK_INCLUDES})
-
-include_directories(${Soprano_INCLUDE_DIRS})
-
+include_directories(${SOPRANO_INCLUDE_DIRS})
 
 SET(QT_USE_QTSVG TRUE)
 SET(QT_USE_QTOPENGL TRUE)
@@ -98,7 +98,7 @@ set(weshnotes_MOC
 
 kde4_add_kcfg_files(weshnotes_SRC ./src/config/settings.kcfgc)
 kde4_add_executable(kweshtunotes ${weshnotes_SRC})
-target_link_libraries(kweshtunotes ${KDE4_KDEUI_LIBS} ${KDE4_KPARTS_LIBS} ${QT_LIBRARIES} ${Soprano_LIBRARIES} ${NEPOMUK_QUERY_LIBRARIES} ${NEPOMUK_LIBRARIES} )
+target_link_libraries(kweshtunotes ${KDE4_KDEUI_LIBS} ${KDE4_KPARTS_LIBS} ${QT_LIBRARIES} ${SOPRANO_LIBRARIES} ${NEPOMUK_QUERY_LIBRARIES} ${NEPOMUK_LIBRARIES} )
 
 install(TARGETS kweshtunotes DESTINATION ${BIN_INSTALL_DIR})
 install(FILES ./src/main/kweshtunotesui.rc DESTINATION  ${DATA_INSTALL_DIR}/kweshtunotes)
