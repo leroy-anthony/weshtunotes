@@ -84,9 +84,7 @@ namespace Tag
 
         connect(m_withIcon, SIGNAL(stateChanged(int)), this, SLOT(withIcon(int)));
 
-        //connect(m_okButton, SIGNAL(clicked()), this, SLOT(ok()));
         connect( this, SIGNAL( okClicked() ), this, SLOT( ok() ) );
-        //connect(m_quitButton, SIGNAL(clicked()), this, SLOT(quit()));
 
         connect(m_iconButton, SIGNAL(iconChanged(const QString&)), this, SLOT(selectIcon(const QString&)));
     }
