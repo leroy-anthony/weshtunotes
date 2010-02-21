@@ -44,13 +44,18 @@ namespace Tag
     }
 
     TagFactory::TagFactory( QWidget * parent ):
-            QDialog(parent, Qt::Dialog),
+            KDialog(parent, Qt::Dialog),
             m_currentState(0),
             m_currentTag(0),
             m_currentItemState(0),
             m_currentItemTag(0)
     {
-        setupUi( this );
+        setCaption( "Create Tag" );
+        setModal(true);
+
+        QWidget * main = new QWidget( this );
+        setupUi( main );
+        setMainWidget( main );
 
         m_boldText->setIcon(Config::ImageFactory::newInstance()->icon("format-text-bold.png"));
         m_italicText->setIcon(Config::ImageFactory::newInstance()->icon("format-text-italic.png"));
@@ -79,8 +84,9 @@ namespace Tag
 
         connect(m_withIcon, SIGNAL(stateChanged(int)), this, SLOT(withIcon(int)));
 
-        connect(m_okButton, SIGNAL(clicked()), this, SLOT(ok()));
-        connect(m_quitButton, SIGNAL(clicked()), this, SLOT(quit()));
+        //connect(m_okButton, SIGNAL(clicked()), this, SLOT(ok()));
+        connect( this, SIGNAL( okClicked() ), this, SLOT( ok() ) );
+        //connect(m_quitButton, SIGNAL(clicked()), this, SLOT(quit()));
 
         connect(m_iconButton, SIGNAL(iconChanged(const QString&)), this, SLOT(selectIcon(const QString&)));
     }
@@ -333,11 +339,6 @@ namespace Tag
         }
 
         accept();
-    }
-
-    void TagFactory::quit()
-    {
-        reject();
     }
 
     void TagFactory::tagApply( QAction * action )

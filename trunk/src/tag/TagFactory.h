@@ -23,15 +23,16 @@
 #include "tag_factory.h"
 
 #include <QMap>
-#include <QDialog>
 #include <QMenu>
+
+#include "kdialog.h"
 
 namespace Tag
 {
     class State;
     class NoteTag;
 
-    class TagFactory : public QDialog, public Ui::TagFactory
+    class TagFactory : public KDialog, public Ui::TagFactory
     {
         Q_OBJECT
 
@@ -46,7 +47,6 @@ namespace Tag
 
     public slots:
         void ok();
-        void quit();
 
         void newTag();
         void newState();
