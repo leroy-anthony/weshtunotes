@@ -23,11 +23,11 @@
 #include <QMap>
 #include <QPixmap>
 
-#include <kurl.h>
+#include <KUrl>
 #include <KIcon>
-#include <kiconloader.h>
+#include <KIconLoader>
 #include <kiconcache.h>
-#include <kpixmapcache.h>
+#include <KPixmapCache>
 
 namespace Config
 {

@@ -23,6 +23,7 @@
 #include <QApplication>
 #include <QObject>
 #include <QRadialGradient>
+#include <QPainter>
 
 #include "HandleItem.h"
 #include "../config/VisualAspect.h"

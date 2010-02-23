@@ -22,14 +22,17 @@
 
 #include "AbstractScene.h"
 
-#include <QGraphicsScene>
-#include <QGraphicsProxyWidget>
 #include <QHash>
-#include <QToolBar>
 
 #include "../item/NoteItem.h"
-#include "../scene/CustomGraphicsView.h"
-#include "../handle/GraphicHandleItem.h"
+
+class QGraphicsProxyWidget;
+class QToolBar;
+
+namespace Handle
+{
+    class GraphicHandleItem;
+}
 
 namespace Scene
 {

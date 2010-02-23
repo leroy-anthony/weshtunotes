@@ -20,11 +20,9 @@
 #ifndef CUSTOMTEXTEDIT_H
 #define CUSTOMTEXTEDIT_H
 
-#include <ktextbrowser.h>
-#include <krichtextedit.h>
+#include <KTextBrowser>
 
-#include <QMimeData>
-#include <QTime>
+class QMimeData;
 
 namespace Item
 {

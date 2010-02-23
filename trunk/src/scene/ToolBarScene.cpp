@@ -23,16 +23,19 @@
 
 #include <QStyle>
 
+#include <KFontSizeAction>
 #include <KAction>
-#include <kactioncollection.h>
-#include <kfontaction.h>
-#include <kfontcombobox.h>
+#include <KActionCollection>
+#include <KFontAction>
+#include <KFontComboBox>
 
 #include "../interface/ITextEdition.h"
 #include "../interface/IVisualItemEdition.h"
 #include "../main/MainWindow.h"
 #include "../config/ImageFactory.h"
 #include "../widget/ColorCombo.h"
+#include "../scene/FreeScene.h"
+#include "../scene/LayoutScene.h"
 
 namespace Scene
 {

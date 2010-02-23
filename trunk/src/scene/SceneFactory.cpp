@@ -19,10 +19,10 @@
 
 #include "SceneFactory.h"
 
+#include <QDebug>
+
 #include "FreeScene.h"
 #include "LayoutScene.h"
-
-#include <QDebug>
 
 namespace Scene
 {

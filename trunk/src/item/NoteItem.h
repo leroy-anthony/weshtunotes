@@ -20,12 +20,12 @@
 #ifndef NOTEITEM_H_
 #define NOTEITEM_H_
 
-#include <QHBoxLayout>
-
 #include "CustomTextEdit.h"
 #include "AbstractItem.h"
 #include "../interface/ITextEdition.h"
 #include "../interface/IVisualItemEdition.h"
+
+class QHBoxLayout;
 
 namespace Tag
 {

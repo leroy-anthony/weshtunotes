@@ -22,9 +22,6 @@
 
 #include "AbstractScene.h"
 
-#include "../item/NoteItem.h"
-#include "../scene/CustomGraphicsView.h"
-
 #include <QGraphicsScene>
 #include <QGraphicsProxyWidget>
 #include <QHash>

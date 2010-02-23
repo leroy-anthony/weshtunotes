@@ -22,19 +22,21 @@
 #include <QSpacerItem>
 #include <QtDBus/QtDBus>
 #include <QCalendarWidget>
-#include <QState>
+#include <QScrollBar>
 
-#include <kactioncollection.h>
-#include <kstandardaction.h>
-#include <kicondialog.h>
-#include <kconfigdialog.h>
-#include <kdebug.h>
-#include <kstatusbar.h>
+#include <KActionCollection>
+#include <KStandardAction>
+#include <KIconDialog>
+#include <KConfigDialog>
+#include <KStatusBar>
 #include <KDirModel>
 #include <KDirLister>
 #include <KFileMetaInfo>
+#include <KSystemTrayIcon>
+#include <KAction>
 
 #include "settings.h"
+#include "../tag/TagFactory.h"
 #include "../explorer/TreeExplorer.h"
 #include "../basket/ItemTreeBasket.h"
 #include "../config/Configuration.h"
@@ -42,16 +44,16 @@
 #include "../config/ConfigDialog.h"
 #include "../config/GeneralPageDialog.h"
 #include "../config/AppareancePageDialog.h"
+#include "../scene/CustomGraphicsView.h"
+#include "../scene/FreeScene.h"
+#include "../scene/LayoutScene.h"
+#include "../scene/ToolBarScene.h"
 
 KStatusBar * MainWindow::m_statusBar = 0;
 
 MainWindow::MainWindow( QWidget * parent ) :
         KXmlGuiWindow( parent ),
-        m_lastBasketLoad(0),
-        states(0),
-        normalState(0),
-        centerState(0),
-        group(0)
+        m_lastBasketLoad(0)
 {
     setupUi(this);
 

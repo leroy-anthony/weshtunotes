@@ -23,7 +23,7 @@
 #include <KCmdLineArgs>
 #include <KAboutData>
 #include <KSystemTrayIcon>
-#include <kmessagebox.h>
+#include <KMessageBox>
 
 #include "KWeshTuNotesApp.h"
 #include "../config/ImageFactory.h"
@@ -49,13 +49,13 @@ int main(int argc, char *argv[])
     aboutData.setProgramIconName("basket");
 
     KCmdLineArgs::init( argc, argv, &aboutData );
-    KUniqueApplication::addCmdLineOptions();
+    /*KUniqueApplication::addCmdLineOptions();
 
     if (!KWeshTuNotesApp::start())
     {
         std::cerr << "KWeshTuNotes is already running!\n" << std::endl;
         return 0;
-    }
+    }*/
 
     KWeshTuNotesApp app;
 

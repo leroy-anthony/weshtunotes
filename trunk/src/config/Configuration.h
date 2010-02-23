@@ -22,6 +22,7 @@
 
 #include <QDir>
 #include <QSettings>
+
 #include <KConfig>
 #include <KConfigGroup>
 

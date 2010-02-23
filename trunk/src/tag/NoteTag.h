@@ -20,14 +20,12 @@
 #ifndef NOTETAG_H
 #define NOTETAG_H
 
-#include <QWidget>
-#include <QMenu>
-#include <QMouseEvent>
-
-#include <kpushbutton.h>
+#include <KPushButton>
 #include <Nepomuk/Tag>
 
 #include "../tag/State.h"
+
+class QMouseEvent;
 
 namespace Item
 {

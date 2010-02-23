@@ -22,6 +22,7 @@
 #include <QDebug>
 #include <QMouseEvent>
 #include <QLabel>
+#include <QPainter>
 #include <QApplication>
 
 #include "HandleItem.h"

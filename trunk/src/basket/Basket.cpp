@@ -24,19 +24,6 @@
 #include "../basket/BasketFactory.h"
 #include "settings.h"
 
-#include <Nepomuk/Tag>
-#include <Nepomuk/Query/Query>
-#include <Nepomuk/Query/ResourceTerm>
-#include <Nepomuk/Query/ComparisonTerm>
-#include <Soprano/Vocabulary/NAO>
-#include <Soprano/Model>
-#include <Soprano/QueryResultIterator>
-#include <Nepomuk/Resource>
-#include <Nepomuk/Variant>
-#include <Nepomuk/ResourceManager>
-
-#include <QDebug>
-
 namespace Basket
 {
 

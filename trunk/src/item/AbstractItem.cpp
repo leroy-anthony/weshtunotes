@@ -21,6 +21,8 @@
 
 #include "settings.h"
 #include "../tag/NoteTag.h"
+#include "../tag/AddTag.h"
+#include "../tag/NextTag.h"
 #include "../config/VisualAspect.h"
 
 namespace Item

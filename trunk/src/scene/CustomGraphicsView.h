@@ -21,7 +21,6 @@
 #define CUSTOMGRAPHICSVIEW_H
 
 #include <QGraphicsView>
-#include <QDragEnterEvent>
 
 #include "../handle/GraphicHandleItem.h"
 
