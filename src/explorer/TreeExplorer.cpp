@@ -42,6 +42,8 @@ namespace Explorer
         setHeaderLabel( tr("Paniers") );
         setHeaderHidden( false );
         setIconSize(QSize(24,24));
+
+        setColumnCount(3);
     }
 
     TreeExplorer::~TreeExplorer()
@@ -83,6 +85,11 @@ namespace Explorer
         return false;
     }
 
+    Basket::ItemTreeBasket * TreeExplorer::rootItem()
+    {
+        return static_cast<Basket::ItemTreeBasket*>(QTreeWidget::invisibleRootItem());
+    }
+
     Basket::ItemTreeBasket * TreeExplorer::addBasket( Basket::ItemTreeBasket * parent, const QString & name )
     {
         Basket::ItemTreeBasket * b = 0;
@@ -91,12 +98,12 @@ namespace Explorer
         {
             if ( parent == 0 )
             {
-                b = new Basket::ItemTreeBasket( parent, name );
+                b = new Basket::ItemTreeBasket( parent, name, 0 );
                 insertTopLevelItem(  topLevelItemCount(), b );
             }
             else
             {
-                b = new Basket::ItemTreeBasket( parent, name );
+                b = new Basket::ItemTreeBasket( parent, name, 0 );
             }
         }
         else
@@ -108,6 +115,7 @@ namespace Explorer
 
         b->basket()->load();
         b->setIcon( b->basket()->icon() );
+        b->setData( 1, Qt::DisplayRole, b->basket()->order() );
 
         return b;
     }
@@ -119,6 +127,8 @@ namespace Explorer
         {
             loadBasket( masterBasket[i] );
         }
+
+        sortByColumn( 1, Qt::AscendingOrder );
     }
 
     void TreeExplorer::saveBaskets()

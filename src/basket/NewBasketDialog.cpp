@@ -107,7 +107,20 @@ namespace Basket
                 options["tagName"] = m_basketTagCombo->currentText();
             }
 
-            ItemTreeBasket * item = new ItemTreeBasket( m_parent, name, options, type );
+            ItemTreeBasket * parent = m_parent;
+            if ( parent == 0 )
+            {
+                parent = m_basketExplorer->rootItem();
+            }
+
+            ItemTreeBasket * brother = static_cast<ItemTreeBasket*>( parent->child(parent->childCount()-1) );
+            int order = 0;
+            if ( brother != 0 )
+            {
+                order = brother->basket()->order()+1;
+            }
+
+            ItemTreeBasket * item = new ItemTreeBasket( m_parent, name, order, options, type );
             item->setIcon( m_iconButton->icon() );
 
             return item;
