@@ -24,8 +24,6 @@
 #include "../basket/AbstractBasket.h"
 #include "../config/Configuration.h"
 
-#include <QDebug>
-
 namespace Basket
 {
 

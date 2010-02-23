@@ -20,7 +20,7 @@
 #ifndef ITEXTEDITION_H
 #define ITEXTEDITION_H
 
-#include <Qt>
+
 #include <QColor>
 #include <QFont>
 

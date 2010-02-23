@@ -20,21 +20,17 @@
 #ifndef ABSTRACTSCENE_H_
 #define ABSTRACTSCENE_H_
 
-namespace Handle
-{
-    class HandleItem;
-}
-
 #include <QGraphicsScene>
 #include <QList>
-#include <QAction>
-#include <QMimeData>
 
 #include "../item/AbstractItem.h"
 #include "../scene/CustomGraphicsView.h"
 
+class QMimeData;
+
 namespace Handle
 {
+    class HandleItem;
     class GraphicHandleItem;
 }
 

@@ -23,16 +23,17 @@
 #include <QWidget>
 #include <QString>
 #include <QList>
-#include <QMimeData>
 
 #include "IStorageData.h"
 
 #include "../technic/GeneratorID.h"
-#include "../tag/AddTag.h"
-#include "../tag/NextTag.h"
+
+class QMimeData;
 
 namespace Tag
 {
+    class NextTag;
+    class AddTag;
     class NoteTag;
 }
 

@@ -17,23 +17,45 @@
   Boston, MA 02110-1301, USA.
 */
 
+#include <QSystemTrayIcon>
+
 #include <KXmlGuiWindow>
-#include <QtGui>
-#include <QList>
-#include <KToolBar>
-#include <ksystemtrayicon.h>
 
 #include "ui_main_window.h"
-
-#include "../scene/ToolBarScene.h"
-#include "../scene/AbstractScene.h"
-#include "../scene/FreeScene.h"
-#include "../scene/LayoutScene.h"
-#include "../item/NoteItem.h"
-#include "../explorer/TreeExplorer.h"
-#include "../tag/TagFactory.h"
-#include "../scene/CustomGraphicsView.h"
 #include "../handle/GraphicHandleItem.h"
+
+class QTreeWidgetItem;
+
+class KSystemTrayIcon;
+
+namespace Basket
+{
+    class ItemTreeBasket;
+}
+
+namespace Handle
+{
+    class GraphicHandleItem;
+}
+
+namespace Scene
+{
+    class CustomGraphicsView;
+    class ToolBarScene;
+    class AbstractScene;
+}
+
+namespace Explorer
+{
+    class TreeExplorer;
+}
+
+namespace Tag
+{
+    class TagFactory;
+}
+
+
 
 class MainWindow : public KXmlGuiWindow, public Ui::MainWindow
 {
@@ -94,14 +116,6 @@ private:
     KSystemTrayIcon * m_trayIcon;
 
     Handle::GraphicHandleItem * m_copyHandleItem;
-
-
-    // States
-    QStateMachine * states;
-    QState * normalState;
-    QState * centerState;
-    QParallelAnimationGroup * group;
-
 
 };
 

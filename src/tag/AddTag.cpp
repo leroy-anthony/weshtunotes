@@ -22,7 +22,7 @@
 #include <QDebug>
 #include <QPainter>
 
-#include <kaction.h>
+#include <KAction>
 
 #include "../tag/TagFactory.h"
 #include "../tag/NoteTag.h"

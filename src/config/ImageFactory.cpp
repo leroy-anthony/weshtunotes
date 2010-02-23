@@ -19,9 +19,9 @@
 
 #include "ImageFactory.h"
 
-#include "../main/general.h"
+#include <KMimeType>
 
-#include "kmimetype.h"
+#include "../main/general.h"
 
 namespace Config
 {

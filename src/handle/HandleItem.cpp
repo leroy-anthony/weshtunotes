@@ -40,6 +40,7 @@
 
 #include "../config/Configuration.h"
 #include "../config/VisualAspect.h"
+#include "../item/AbstractItem.h"
 
 namespace Handle
 {

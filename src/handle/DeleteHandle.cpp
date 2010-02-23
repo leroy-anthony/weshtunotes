@@ -19,11 +19,13 @@
 
 #include "DeleteHandle.h"
 
+#include <QApplication>
+#include <QPainter>
+#include <QPen>
+
 #include "HandleItem.h"
 #include "../config/ImageFactory.h"
 #include "../config/VisualAspect.h"
-
-#include <QApplication>
 
 namespace Handle
 {

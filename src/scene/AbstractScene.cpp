@@ -27,6 +27,7 @@
 #include "../config/VisualAspect.h"
 #include "../handle/HandleItem.h"
 #include "../main/MainWindow.h"
+#include "../item/NoteItem.h"
 
 namespace Scene
 {
@@ -276,7 +277,7 @@ namespace Scene
                     for ( int k=0 ; k<namesTags.size() ; ++k )
                     {
                         QStringList s = namesTags[k].split(":");
-                        dynamic_cast<Item::NoteItem*>(item)->addTag(s[0],s[1]);
+                        dynamic_cast<Item::NoteItem*>(item)->addTag(s[0],s[1]); //fixme: pourquoi pas abstractitem
                     }
                 }
             }

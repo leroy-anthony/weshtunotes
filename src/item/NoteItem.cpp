@@ -32,10 +32,13 @@
 #include <QPainter>
 #include <QApplication>
 #include <QRadialGradient>
+#include <QHBoxLayout>
 
 #include "../scene/ToolBarScene.h"
 #include "../config/Configuration.h"
 #include "../tag/NoteTag.h"
+#include "../tag/AddTag.h"
+#include "../tag/NextTag.h"
 #include "../config/ImageFactory.h"
 #include "../config/VisualAspect.h"
 #include "settings.h"

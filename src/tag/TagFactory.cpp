@@ -21,7 +21,7 @@
 
 #include <QInputDialog>
 
-#include <kmessagebox.h>
+#include <KMessageBox>
 
 #include "../main/general.h"
 #include "../config/ImageFactory.h"

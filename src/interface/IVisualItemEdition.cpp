@@ -22,8 +22,6 @@
 #include "settings.h"
 #include "../config/VisualAspect.h"
 
-#include <QDebug>
-
 namespace Item
 {
     IVisualItemEdition::IVisualItemEdition():

@@ -22,18 +22,17 @@
 
 #include "../main/general.h"
 
-#include <kfontcombobox.h>
-#include <kcolorcombo.h>
-#include <kfontaction.h>
-#include <kfontsizeaction.h>
-#include <KAction>
-#include <KToolBar>
-#include <kactioncollection.h>
-
 #include <QObject>
 #include <QTextCharFormat>
 #include <QComboBox>
 
+#include <KIcon>
+
+class KFontComboBox;
+class KColorCombo;
+class KFontAction;
+class KFontSizeAction;
+class KAction;
 class MainWindow;
 
 namespace Item

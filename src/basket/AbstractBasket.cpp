@@ -20,7 +20,6 @@
 #include "AbstractBasket.h"
 
 #include <QDir>
-#include <QDebug>
 
 #include "../config/Configuration.h"
 

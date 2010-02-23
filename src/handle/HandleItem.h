@@ -20,24 +20,25 @@
 #ifndef HANDLEITEM_H_
 #define HANDLEITEM_H_
 
-#include <QWidget>
-#include <QFrame>
-#include <QBasicTimer>
-#include <QGridLayout>
 #include <QPoint>
-#include <QGraphicsWidget>
-#include <QPainter>
-#include <QStyleOption>
-#include <QSvgWidget>
 
-#include "../item/NoteItem.h"
-
-#include "../scene/AbstractScene.h"
 #include "../technic/GeneratorID.h"
-
 #include "MoveHandle.h"
 #include "SizeHorHandle.h"
 #include "DeleteHandle.h"
+
+class QGridLayout;
+class QWidget;
+
+namespace Scene
+{
+    class AbstractScene;
+}
+
+namespace Item
+{
+    class AbstractItem;
+}
 
 namespace Handle
 {

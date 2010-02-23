@@ -45,6 +45,7 @@
 #include "../handle/HandleItem.h"
 #include "../config/Configuration.h"
 #include "../handle/GraphicHandleItem.h"
+#include "../item/NoteItem.h"
 
 namespace Scene
 {
