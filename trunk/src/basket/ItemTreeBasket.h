@@ -40,6 +40,7 @@ namespace Basket
     public:
         ItemTreeBasket( ItemTreeBasket * itemTreeBasket,
                         const QString & name,
+                        int order,
                         const QMap<QString,QString> & options = QMap<QString,QString>(),
                         const QString & type = QString("") );
 

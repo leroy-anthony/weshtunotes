@@ -38,11 +38,13 @@ namespace Explorer
 
     public:
         TreeExplorer( QWidget * parent );
-        virtual ~TreeExplorer();
+        ~TreeExplorer();
 
         QTreeWidgetItem * loadFromConfigCurrentBasket();
 
         bool findBasket( Basket::ItemTreeBasket * parent, const QString & name );
+        Basket::ItemTreeBasket * rootItem();
+
 
     public slots:
         void delCurrentBasket();

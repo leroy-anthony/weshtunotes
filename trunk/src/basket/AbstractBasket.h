@@ -56,6 +56,9 @@ namespace Basket
         const QString & icon();
         void setIcon( const QString & icon );
 
+        int order();
+        void setOrder( int order );
+
     protected:
         const QString & name();
 
@@ -69,6 +72,7 @@ namespace Basket
 
         QString m_type;
         QString m_icon;
+        int     m_order;
 
     };
 

@@ -28,7 +28,8 @@ namespace Basket
     AbstractBasket::AbstractBasket( const QString & name ):
             GeneratorID("basket"),
             m_name( name ),
-            m_contentScene(0)
+            m_contentScene(0),
+            m_order(0)
     {
         m_directory = name;
         m_configFilePath = m_directory + QDir::separator() + name;
@@ -37,7 +38,8 @@ namespace Basket
     AbstractBasket::AbstractBasket( AbstractBasket * basketParent, const QString & name ):
             GeneratorID("basket"),
             m_name( name ),
-            m_contentScene(0)
+            m_contentScene(0),
+            m_order(0)
     {
         basketParent->addChild( this );
         m_directory = basketParent->directory() + QDir::separator() + name;
@@ -99,6 +101,7 @@ namespace Basket
         Config::Configuration settings( m_configFilePath );
         settings.setValue( "basket", "type", m_type );
         settings.setValue( "basket", "icon", m_icon );
+        settings.setValue( "basket", "order", m_order );
     }
 
     void AbstractBasket::load()
@@ -106,6 +109,17 @@ namespace Basket
         Config::Configuration settings( m_configFilePath );
         m_type = settings.valueGroup( "basket", "type", "basket" );
         m_icon = settings.valueGroup( "basket", "icon", "folder" );
+        m_order = settings.valueGroup( "basket", "order", 0 ).toInt();
+    }
+
+    int AbstractBasket::order()
+    {
+        return m_order;
+    }
+
+    void AbstractBasket::setOrder( int order )
+    {
+        m_order = order;
     }
 
 }

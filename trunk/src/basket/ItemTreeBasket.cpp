@@ -34,6 +34,7 @@ namespace Basket
 
     ItemTreeBasket::ItemTreeBasket( ItemTreeBasket * itemTreeBasket,
                                     const QString & name,
+                                    int order,
                                     const QMap<QString,QString> & options,
                                     const QString & type ):
         QTreeWidgetItem( itemTreeBasket, QStringList(name) ),
@@ -47,6 +48,8 @@ namespace Basket
         {
             m_basket = BasketFactory::newBasket( name, options, type );
         }
+
+        m_basket->setOrder( order );
 
         initItemTreeBasket();
     }
