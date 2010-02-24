@@ -27,18 +27,21 @@ template <typename T, typename U> class QMap;
 namespace Basket
 {
     class AbstractBasket;
+    class ItemTreeBasket;
 
     class BasketFactory
     {
     public:
         enum Type { BASKET, TAG_BASKET, MAX };
 
-        static AbstractBasket * newBasket( AbstractBasket * parent,
+        static AbstractBasket * newBasket( ItemTreeBasket * itemTreeBasket,
+                                           AbstractBasket * parent,
                                            const QString & fileName,
                                            const QMap<QString,QString> & options,
                                            const QString & type = QString("") );
 
-        static AbstractBasket * newBasket( const QString & fileName,
+        static AbstractBasket * newBasket( ItemTreeBasket * itemTreeBasket,
+                                           const QString & fileName,
                                            const QMap<QString,QString> & options,
                                            const QString & type = QString("") );
 
@@ -51,12 +54,14 @@ namespace Basket
         BasketFactory();
 
     private:
-        static AbstractBasket * newBasketInterne( AbstractBasket * parent,
+        static AbstractBasket * newBasketInterne( ItemTreeBasket * itemTreeBasket,
+                                                  AbstractBasket * parent,
                                                   const QString &  fileName,
                                                   const QMap<QString,QString> & options,
                                                   const QString & type );
 
-        static AbstractBasket * newBasketInterne( const QString &  fileName,
+        static AbstractBasket * newBasketInterne( ItemTreeBasket * itemTreeBasket,
+                                                  const QString &  fileName,
                                                   const QMap<QString,QString> & options,
                                                   const QString & type );
 

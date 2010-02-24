@@ -42,11 +42,11 @@ namespace Basket
     {
         if ( itemTreeBasket != 0 )
         {
-            m_basket = BasketFactory::newBasket( itemTreeBasket->basket(), name, options, type );
+            m_basket = BasketFactory::newBasket( this, itemTreeBasket->basket(), name, options, type );
         }
         else
         {
-            m_basket = BasketFactory::newBasket( name, options, type );
+            m_basket = BasketFactory::newBasket( this, name, options, type );
         }
 
         m_basket->setOrder( order );
@@ -62,7 +62,6 @@ namespace Basket
     void ItemTreeBasket::setIcon( const QString & icon )
     {
         QTreeWidgetItem::setIcon( 0, KIcon(icon) );
-        m_basket->setIcon( icon );
     }
 
     ItemTreeBasket::~ItemTreeBasket()

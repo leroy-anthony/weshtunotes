@@ -22,12 +22,14 @@
 #include <QDir>
 
 #include "../config/Configuration.h"
+#include "../basket/ItemTreeBasket.h"
 
 namespace Basket
 {
-    AbstractBasket::AbstractBasket( const QString & name ):
+    AbstractBasket::AbstractBasket( ItemTreeBasket * itemTreeBasket, const QString & name ):
             GeneratorID("basket"),
             m_name( name ),
+            m_itemTreeBasket(itemTreeBasket),
             m_contentScene(0),
             m_order(0)
     {
@@ -35,9 +37,10 @@ namespace Basket
         m_configFilePath = m_directory + QDir::separator() + name;
     }
 
-    AbstractBasket::AbstractBasket( AbstractBasket * basketParent, const QString & name ):
+    AbstractBasket::AbstractBasket( ItemTreeBasket * itemTreeBasket, AbstractBasket * basketParent, const QString & name ):
             GeneratorID("basket"),
             m_name( name ),
+            m_itemTreeBasket(itemTreeBasket),
             m_contentScene(0),
             m_order(0)
     {
@@ -114,6 +117,10 @@ namespace Basket
         m_type = settings.valueGroup( "basket", "type", "basket" );
         m_icon = settings.valueGroup( "basket", "icon", "folder" );
         m_order = settings.valueGroup( "basket", "order", 0 ).toInt();
+
+        m_itemTreeBasket->setIcon( m_icon );
+        m_itemTreeBasket->setData( 1, Qt::DisplayRole, m_order );
+        m_itemTreeBasket->setData( 0, Qt::DisplayRole, m_name );
     }
 
     int AbstractBasket::order()

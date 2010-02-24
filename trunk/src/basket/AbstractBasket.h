@@ -31,12 +31,13 @@ namespace Scene
 
 namespace Basket
 {
+    class ItemTreeBasket;
 
     class AbstractBasket : public Technic::GeneratorID
     {
     public:
-        AbstractBasket( AbstractBasket * basket, const QString & name );
-        AbstractBasket( const QString & name );
+        AbstractBasket( ItemTreeBasket * itemTreeBasket, AbstractBasket * basket, const QString & name );
+        AbstractBasket( ItemTreeBasket * itemTreeBasket, const QString & name );
 
         virtual ~AbstractBasket();
 
@@ -67,6 +68,8 @@ namespace Basket
         QString m_directory;
         QString m_name;
         QString m_configFilePath;
+
+        ItemTreeBasket * m_itemTreeBasket;
 
         Scene::AbstractScene * m_contentScene;
 

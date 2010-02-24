@@ -38,22 +38,25 @@
 #include "../config/Configuration.h"
 #include "../basket/AbstractBasket.h"
 #include "../basket/BasketFactory.h"
+#include "../basket/ItemTreeBasket.h"
 
 namespace Basket
 {
     
-    TagBasket::TagBasket( AbstractBasket * basket,
+    TagBasket::TagBasket( ItemTreeBasket * itemTreeBasket,
+                          AbstractBasket * basket,
                           const QString & name,
                           const QMap<QString,QString> & options ):
-            AbstractBasket( basket, name ),
+            AbstractBasket( itemTreeBasket, basket, name ),
             m_tagName( "" )
     {
         initTagBasket( options );
     }
     
-    TagBasket::TagBasket( const QString & name,
+    TagBasket::TagBasket( ItemTreeBasket * itemTreeBasket,
+                          const QString & name,
                           const QMap<QString,QString> & options ):
-            AbstractBasket( name ),
+            AbstractBasket( itemTreeBasket, name ),
             m_tagName( "" )
     {
         initTagBasket( options );
@@ -81,6 +84,8 @@ namespace Basket
     
     void TagBasket::load()
     {
+        AbstractBasket::load();
+
         delete m_contentScene;
         m_contentScene = Scene::SceneFactory::newScene( m_configFilePath );
 
@@ -128,7 +133,8 @@ namespace Basket
             children[i]->load();
         }
 
-        AbstractBasket::load();
+        m_itemTreeBasket->setData( 0, Qt::DisplayRole, QString(m_name+" (TAG: "+m_tagName+")") );
+
     }
     
     void TagBasket::del()

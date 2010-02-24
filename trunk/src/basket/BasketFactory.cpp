@@ -36,7 +36,8 @@ namespace Basket
     {
     }
 
-    AbstractBasket * BasketFactory::newBasket( AbstractBasket * parent,
+    AbstractBasket * BasketFactory::newBasket( ItemTreeBasket * itemTreeBasket,
+                                               AbstractBasket * parent,
                                                const QString & fileName,
                                                const QMap<QString,QString> & options,
                                                const QString & type )
@@ -44,48 +45,27 @@ namespace Basket
         if ( type == QString("") )
         {
             Config::Configuration settings( parent->directory() + QDir::separator() + fileName );
-            return newBasketInterne( parent, fileName, options, settings.valueGroup("basket","type","basket") );
+            return newBasketInterne( itemTreeBasket, parent, fileName, options, settings.valueGroup("basket","type","basket") );
         }
 
-        return newBasketInterne( parent, fileName, options, type );
+        return newBasketInterne( itemTreeBasket, parent, fileName, options, type );
     }
 
-    AbstractBasket * BasketFactory::newBasket( const QString & fileName,
+    AbstractBasket * BasketFactory::newBasket( ItemTreeBasket * itemTreeBasket,
+                                               const QString & fileName,
                                                const QMap<QString,QString> & options,
                                                const QString & type )
     {
         if ( type == QString("") )
         {
             Config::Configuration settings( fileName + QDir::separator() + fileName );
-            return newBasketInterne( fileName, options, settings.valueGroup("basket","type","basket") );
+            return newBasketInterne( itemTreeBasket, fileName, options, settings.valueGroup("basket","type","basket") );
         }
 
-        return newBasketInterne( fileName, options, type );
+        return newBasketInterne( itemTreeBasket, fileName, options, type );
     }
 
-    AbstractBasket * BasketFactory::newBasketInterne( const QString & fileName,
-                                                      const QMap<QString,QString> & options,
-                                                      const QString & type )
-    {
-        AbstractBasket * basket = 0;
-
-        if ( type == m_types[ BASKET ] )
-        {
-            basket = new Basket( fileName );
-        }
-        else if ( type == m_types[ TAG_BASKET ] )
-        {
-            basket = new TagBasket( fileName, options );
-        }
-        else
-        {
-            basket = new Basket( fileName );
-        }
-
-        return basket;
-    }
-
-    AbstractBasket * BasketFactory::newBasketInterne( AbstractBasket * parent,
+    AbstractBasket * BasketFactory::newBasketInterne( ItemTreeBasket * itemTreeBasket,
                                                       const QString & fileName,
                                                       const QMap<QString,QString> & options,
                                                       const QString & type )
@@ -94,12 +74,36 @@ namespace Basket
 
         if ( type == m_types[ BASKET ] )
         {
-            basket = new Basket( parent, fileName );
+            basket = new Basket( itemTreeBasket, fileName );
+        }
+        else if ( type == m_types[ TAG_BASKET ] )
+        {
+            basket = new TagBasket( itemTreeBasket, fileName, options );
+        }
+        else
+        {
+            basket = new Basket( itemTreeBasket, fileName );
+        }
+
+        return basket;
+    }
+
+    AbstractBasket * BasketFactory::newBasketInterne( ItemTreeBasket * itemTreeBasket,
+                                                      AbstractBasket * parent,
+                                                      const QString & fileName,
+                                                      const QMap<QString,QString> & options,
+                                                      const QString & type )
+    {
+        AbstractBasket * basket = 0;
+
+        if ( type == m_types[ BASKET ] )
+        {
+            basket = new Basket( itemTreeBasket, parent, fileName );
         }
 
         if ( type == m_types[ TAG_BASKET ] )
         {
-            basket = new TagBasket( parent, fileName, options );
+            basket = new TagBasket( itemTreeBasket, parent, fileName, options );
         }
 
         return basket;

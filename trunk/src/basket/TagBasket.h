@@ -29,8 +29,8 @@ namespace Basket
     class TagBasket : public AbstractBasket
     {
     public:
-        TagBasket( AbstractBasket * basket, const QString & name, const QMap<QString,QString> & options );
-        TagBasket( const QString & name, const QMap<QString,QString> & options );
+        TagBasket( ItemTreeBasket * itemTreeBasket, AbstractBasket * basket, const QString & name, const QMap<QString,QString> & options );
+        TagBasket( ItemTreeBasket * itemTreeBasket, const QString & name, const QMap<QString,QString> & options );
 
         void load();
         void save();

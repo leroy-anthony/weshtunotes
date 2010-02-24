@@ -24,12 +24,13 @@
 
 namespace Basket
 {
+    class ItemTreeBasket;
 
     class Basket : public AbstractBasket
     {
     public:
-        Basket( AbstractBasket * basket, const QString & name );
-        Basket( const QString & name );
+        Basket( ItemTreeBasket * itemTreeBasket, AbstractBasket * basket, const QString & name );
+        Basket( ItemTreeBasket * itemTreeBasket, const QString & name );
 
         void load();
         void save();
