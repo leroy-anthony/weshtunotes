@@ -339,10 +339,6 @@ namespace Tag
         accept();
     }
 
-    void TagFactory::tagApply( QAction * action )
-    {
-    }
-
     QStringList TagFactory::tagsNames()
     {
         Config::Configuration settings( "tags" );

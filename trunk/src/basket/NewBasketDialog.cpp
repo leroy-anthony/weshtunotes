@@ -26,6 +26,7 @@
 #include <QMap>
 
 #include <KIconButton>
+#include <KComboBox>
 
 #include "../basket/BasketFactory.h"
 #include "../tag/TagFactory.h"

@@ -51,8 +51,6 @@ namespace Handle
         painter->setBrush(QApplication::palette().color(QPalette::Highlight));
         painter->setPen(QApplication::palette().color(QPalette::Highlight));
 
-        Scene::AbstractScene * s = static_cast<Scene::AbstractScene*>(scene());
-
         if ( option->state & QStyle::State_Selected )
         {
             int decal = 5;

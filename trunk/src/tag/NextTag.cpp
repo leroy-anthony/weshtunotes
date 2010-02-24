@@ -81,7 +81,6 @@ namespace Tag
         float h3 = height()-1;
 
         float w1 = (height()-1)/3.0 + dx ;
-        float w2 = 2.0*(height()-1)/3.0 + dx;
         float w3 = height()-1;
 
         QPainterPath roundRectPath;

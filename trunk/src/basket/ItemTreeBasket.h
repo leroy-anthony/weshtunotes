@@ -22,8 +22,6 @@
 
 #include <QTreeWidgetItem>
 
-#include <KIcon>
-
 #include "../main/general.h"
 #include "../basket/AbstractBasket.h"
 

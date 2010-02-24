@@ -20,10 +20,9 @@
 #ifndef ABSTRACTEXPLORER_H_
 #define ABSTRACTEXPLORER_H_
 
-#include <QString>
-#include <QList>
-
 #include "../basket/ItemTreeBasket.h"
+
+class QString;
 
 namespace Explorer
 {

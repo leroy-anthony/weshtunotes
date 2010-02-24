@@ -19,6 +19,8 @@
 
 #include "VisualAspect.h"
 
+#include <QColor>
+
 namespace Config
 {
 

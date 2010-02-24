@@ -35,9 +35,9 @@ namespace Item
     AbstractItem::AbstractItem( QWidget * parent ):
             QWidget(parent),
             GeneratorID("item"),
-            m_tag(0),
+            m_addTag(0),
             m_nextTag(0),
-            m_addTag(0)
+            m_tag(0)
     {
         m_color = Settings::colorItem();
     }

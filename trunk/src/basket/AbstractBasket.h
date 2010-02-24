@@ -38,6 +38,8 @@ namespace Basket
         AbstractBasket( AbstractBasket * basket, const QString & name );
         AbstractBasket( const QString & name );
 
+        virtual ~AbstractBasket();
+
         void addChild( AbstractBasket * basket );
         QList<AbstractBasket*> & childrenBasket();
 

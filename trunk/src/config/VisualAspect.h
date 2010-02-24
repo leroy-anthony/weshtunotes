@@ -21,7 +21,8 @@
 #define VISUALASPECT_H
 
 #include <QString>
-#include <QColor>
+
+class QColor;
 
 namespace Config
 {

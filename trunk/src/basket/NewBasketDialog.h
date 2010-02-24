@@ -21,11 +21,12 @@
 #define NEWBASKETDIALOG_H
 
 #include <KDialog>
-#include <KIconButton>
-#include <KComboBox>
 
 #include "../basket/ItemTreeBasket.h"
 #include "../explorer/AbstractExplorer.h"
+
+class KComboBox;
+class KIconButton;
 
 namespace Basket
 {

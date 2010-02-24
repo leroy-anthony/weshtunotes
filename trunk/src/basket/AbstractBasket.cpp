@@ -46,6 +46,10 @@ namespace Basket
         m_configFilePath = m_directory + QDir::separator() + name;
     }
 
+    AbstractBasket::~AbstractBasket()
+    {
+    }
+
     void AbstractBasket::addChild( AbstractBasket * basket )
     {
         m_childrenBasket.append( basket );

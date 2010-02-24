@@ -21,7 +21,8 @@
 #define BASKETFACTORY_H_
 
 #include <QStringList>
-#include <QMap>
+
+template <typename T, typename U> class QMap;
 
 namespace Basket
 {

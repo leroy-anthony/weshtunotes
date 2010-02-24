@@ -19,6 +19,8 @@
 
 #include "BasketFactory.h"
 
+#include <QMap>
+
 #include "../basket/Basket.h"
 #include "../basket/TagBasket.h"
 #include "../basket/AbstractBasket.h"

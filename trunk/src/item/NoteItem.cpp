@@ -34,6 +34,8 @@
 #include <QRadialGradient>
 #include <QHBoxLayout>
 
+#include <Nepomuk/Resource>
+
 #include "../scene/ToolBarScene.h"
 #include "../config/Configuration.h"
 #include "../tag/NoteTag.h"

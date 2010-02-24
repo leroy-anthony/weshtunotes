@@ -23,16 +23,18 @@
 #include "../main/general.h"
 
 #include <QObject>
-#include <QTextCharFormat>
-#include <QComboBox>
 
-#include <KIcon>
+class QTextCharFormat;
+class QColor;
+class QFont;
 
 class KFontComboBox;
 class KColorCombo;
 class KFontAction;
 class KFontSizeAction;
 class KAction;
+class KIcon;
+
 class MainWindow;
 
 namespace Item
