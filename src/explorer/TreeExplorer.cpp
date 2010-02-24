@@ -28,9 +28,10 @@
 #include <KLocalizedString>
 
 #include "../basket/NewBasketDialog.h"
+#include "../basket/ItemTreeBasket.h"
+#include "../basket/BasketFactory.h"
 #include "../scene/FreeScene.h"
 #include "../scene/LayoutScene.h"
-#include "../basket/ItemTreeBasket.h"
 #include "../config/Configuration.h"
 
 namespace Explorer
@@ -42,7 +43,6 @@ namespace Explorer
         setHeaderLabel( tr("Paniers") );
         setHeaderHidden( false );
         setIconSize(QSize(24,24));
-
         setColumnCount(3);
     }
 
@@ -114,8 +114,6 @@ namespace Explorer
         setCurrentIndex( indexFromItem( b, 0 ) );
 
         b->basket()->load();
-        b->setIcon( b->basket()->icon() );
-        b->setData( 1, Qt::DisplayRole, b->basket()->order() );
 
         return b;
     }
@@ -177,5 +175,6 @@ namespace Explorer
 
         return 0;
     }
+
 
 }

@@ -22,19 +22,20 @@
 #include "../scene/SceneFactory.h"
 #include "../config/Configuration.h"
 #include "../basket/BasketFactory.h"
+#include "../basket/ItemTreeBasket.h"
 #include "settings.h"
 
 namespace Basket
 {
 
-    Basket::Basket( AbstractBasket * basketParent, const QString & name ):
-            AbstractBasket( basketParent, name )
+    Basket::Basket( ItemTreeBasket * itemTreeBasket, AbstractBasket * basketParent, const QString & name ):
+            AbstractBasket( itemTreeBasket, basketParent, name )
     {
         initBasket();
     }
 
-    Basket::Basket( const QString & name ):
-            AbstractBasket( name )
+    Basket::Basket( ItemTreeBasket * itemTreeBasket, const QString & name ):
+            AbstractBasket( itemTreeBasket, name )
     {
         initBasket();
     }
@@ -62,6 +63,8 @@ namespace Basket
 
     void Basket::load()
     {
+        AbstractBasket::load();
+
         delete m_contentScene;
 
         m_contentScene = Scene::SceneFactory::newScene( m_configFilePath );
@@ -73,8 +76,6 @@ namespace Basket
         {
             children[i]->load();
         }
-
-        AbstractBasket::load();
     }
 
     void Basket::del()
