@@ -20,10 +20,6 @@
 #ifndef STATE_H
 #define STATE_H
 
-#include <QWidget>
-#include <QMenu>
-#include <QMouseEvent>
-
 #include "../interface/ITextEdition.h"
 #include "../item/NoteItem.h"
 #include "../config/Configuration.h"

@@ -21,10 +21,8 @@
 #define CONFIGURATION_H_
 
 #include <QDir>
-#include <QSettings>
 
 #include <KConfig>
-#include <KConfigGroup>
 
 namespace Config
 {

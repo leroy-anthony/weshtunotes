@@ -19,6 +19,10 @@
 
 #include "ITextEdition.h"
 
+#include <QFont>
+
+#include "../config/Configuration.h"
+
 namespace Item
 {
     ITextEdition::ITextEdition():

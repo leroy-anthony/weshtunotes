@@ -22,7 +22,6 @@
 
 #include "AbstractScene.h"
 
-#include <QGraphicsScene>
 #include <QGraphicsProxyWidget>
 #include <QHash>
 #include <QToolBar>

@@ -20,8 +20,6 @@
 #ifndef HANDLEITEM_H_
 #define HANDLEITEM_H_
 
-#include <QPoint>
-
 #include "../technic/GeneratorID.h"
 #include "MoveHandle.h"
 #include "SizeHorHandle.h"
@@ -29,6 +27,7 @@
 
 class QGridLayout;
 class QWidget;
+class QPoint;
 
 namespace Scene
 {
@@ -68,7 +67,7 @@ namespace Handle
         HandleItem * handleItemAt( int x, int y );
 
         void insert( QWidget * w, int index );
-        void insert( QPoint  pt, int height );
+        void insert( QPoint pt, int height );
 
         static void resetInsert();
 

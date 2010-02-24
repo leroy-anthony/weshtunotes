@@ -26,9 +26,12 @@
 #include <QFileIconProvider>
 #include <QFocusEvent>
 #include <QPainter>
+#include <QTime>
 #include <QAbstractTextDocumentLayout>
 #include <QScrollBar>
 #include <QTextLayout>
+
+#include <KUrl>
 
 #include "../main/general.h"
 #include "../config/Configuration.h"

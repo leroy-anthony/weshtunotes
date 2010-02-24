@@ -21,11 +21,11 @@
 #define ABSTRACTSCENE_H_
 
 #include <QGraphicsScene>
-#include <QList>
 
 #include "../item/AbstractItem.h"
 #include "../scene/CustomGraphicsView.h"
 
+template <typename T> class QList;
 class QMimeData;
 
 namespace Handle

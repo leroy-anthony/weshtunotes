@@ -34,7 +34,7 @@ namespace Scene
         static AbstractScene * newScene( const QString & fileName, const QString & type );
 
     private:
-        static AbstractScene * newSceneInterne( const QString & fileName, const QString & type );
+        static AbstractScene * newSceneInterne( const QString & type );
 
     };
 

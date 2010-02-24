@@ -20,11 +20,15 @@
 #ifndef ITEXTEDITION_H
 #define ITEXTEDITION_H
 
-
 #include <QColor>
-#include <QFont>
 
-#include "../config/Configuration.h"
+class QFont;
+
+namespace Config
+{
+    class Configuration;
+}
+
 
 namespace Item
 {

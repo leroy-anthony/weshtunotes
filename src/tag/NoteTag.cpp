@@ -26,6 +26,8 @@
 #include <QtSvg>
 #include <QWidgetAction>
 
+#include <Nepomuk/Tag>
+
 #include "../item/NoteItem.h"
 #include "../main/general.h"
 #include "../tag/TagFactory.h"
@@ -40,9 +42,9 @@ namespace Tag
             m_noteItem(noteItem),
             m_currentState(0),
             m_name(name),
+            m_index(0),
             m_visible(false),
             m_sizeSymbol(32),
-            m_index(0),
             m_nepomukTag(0)
     {
         setFlat(true);

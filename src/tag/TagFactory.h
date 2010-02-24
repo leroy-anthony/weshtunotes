@@ -23,7 +23,6 @@
 #include "tag_factory.h"
 
 #include <QMap>
-#include <QMenu>
 
 #include "kdialog.h"
 
@@ -63,8 +62,6 @@ namespace Tag
         void changeTextColor( const QColor & color );
         void changeSizeFontState( int index );
         void selectIcon( const QString & icon );
-
-        void tagApply( QAction * action );
 
     private:
         static TagFactory * m_instance;

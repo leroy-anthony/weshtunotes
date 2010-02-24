@@ -86,8 +86,6 @@ namespace Scene
 
             handle->add( item );
 
-            QGraphicsItem * g = addHandleToScene( handle );
-
             item->load( data );
 
             static_cast<QWidget*>(handle)->resize( item->width(), item->height() );

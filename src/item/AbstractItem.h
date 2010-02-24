@@ -21,13 +21,11 @@
 #define ABSTRACTITEM_H_
 
 #include <QWidget>
-#include <QString>
-#include <QList>
 
 #include "IStorageData.h"
-
 #include "../technic/GeneratorID.h"
 
+class QString;
 class QMimeData;
 
 namespace Tag
@@ -83,7 +81,7 @@ namespace Item
 
         QColor m_color;
 
-        Tag::AddTag * m_addTag;
+        Tag::AddTag  * m_addTag;
         Tag::NextTag * m_nextTag;
         Tag::NoteTag * m_tag;
 

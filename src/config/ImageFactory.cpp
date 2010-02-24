@@ -20,6 +20,7 @@
 #include "ImageFactory.h"
 
 #include <KMimeType>
+#include <KUrl>
 
 #include "../main/general.h"
 
