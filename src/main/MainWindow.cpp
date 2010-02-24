@@ -171,28 +171,34 @@ void MainWindow::initView()
     layoutButtonView->addItem(new QSpacerItem(0,0,QSizePolicy::Expanding,QSizePolicy::Ignored));
 
     QToolButton * q1 = new QToolButton();
-    q1->setIcon(Config::ImageFactory::newInstance()->icon("zoom-original.png"));
+    q1->setIcon(Config::ImageFactory::newInstance()->icon("zoom-original"));
     q1->setToolTip("Zoom 1:1");
     connect( q1, SIGNAL(clicked()), m_view, SLOT(resetZoom()) );
     layoutButtonView->addWidget(q1);
 
     QToolButton * q2 = new QToolButton();
-    q2->setIcon(Config::ImageFactory::newInstance()->icon("zoom-in.png"));
+    q2->setIcon(Config::ImageFactory::newInstance()->icon("zoom-in"));
     q2->setToolTip("Zoom in");
     connect( q2, SIGNAL(clicked()), m_view, SLOT(doubleZoom()) );
     layoutButtonView->addWidget(q2);
 
     QToolButton * q3 = new QToolButton();
-    q3->setIcon(Config::ImageFactory::newInstance()->icon("zoom-out.png"));
+    q3->setIcon(Config::ImageFactory::newInstance()->icon("zoom-out"));
     q3->setToolTip("Zoom out");
     connect( q3, SIGNAL(clicked()), m_view, SLOT(halfZoom()) );
     layoutButtonView->addWidget(q3);
 
     QToolButton * q4 = new QToolButton();
-    q4->setIcon(Config::ImageFactory::newInstance()->icon("zoom-fit-best.png"));
+    q4->setIcon(Config::ImageFactory::newInstance()->icon("zoom-fit-best"));
     q4->setToolTip("Zoom fit");
     connect( q4, SIGNAL(clicked()), m_view, SLOT(fitInViewZoom()) );
     layoutButtonView->addWidget(q4);
+
+    QToolButton * q5 = new QToolButton();
+    q5->setIcon(Config::ImageFactory::newInstance()->icon("shapes"));
+    q5->setToolTip("Zoom fit");
+    connect( q5, SIGNAL(clicked()), m_view, SLOT(centerZoom()) );
+    layoutButtonView->addWidget(q5);
 
     layoutButtonView->addItem(new QSpacerItem(0,0,QSizePolicy::Expanding,QSizePolicy::Ignored));
 }
@@ -214,19 +220,19 @@ void MainWindow::initExplorer()
     layoutButtonExplorer->setSpacing(2);
 
     QToolButton * q1 = new QToolButton();
-    q1->setIcon(Config::ImageFactory::newInstance()->icon("document-new.png"));
+    q1->setIcon(Config::ImageFactory::newInstance()->icon("document-new"));
     q1->setToolTip("New root basket");
     connect( q1, SIGNAL(clicked()), this, SLOT(addBasketToRoot()) );
     layoutButtonExplorer->addWidget(q1);
 
     QToolButton * q2 = new QToolButton();
-    q2->setIcon(Config::ImageFactory::newInstance()->icon("list-add.png"));
+    q2->setIcon(Config::ImageFactory::newInstance()->icon("list-add"));
     q2->setToolTip("Add basket");
     connect( q2, SIGNAL(clicked()), this, SLOT(addToCurrentBasket()) );
     layoutButtonExplorer->addWidget(q2);
 
     QToolButton * q3 = new QToolButton();
-    q3->setIcon(Config::ImageFactory::newInstance()->icon("edit-delete.png"));
+    q3->setIcon(Config::ImageFactory::newInstance()->icon("edit-delete"));
     q3->setToolTip("Delete basket");
     connect( q3, SIGNAL(clicked()), this, SLOT(delCurrentBasket()) );
     layoutButtonExplorer->addWidget(q3);

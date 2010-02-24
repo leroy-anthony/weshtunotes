@@ -292,6 +292,12 @@ namespace Scene
         scale(0.5,0.5);
     }
 
+    void CustomGraphicsView::centerZoom()
+    {
+        fitInViewZoom();
+        resetZoom();
+    }
+
     void CustomGraphicsView::fitInViewZoom()
     {
         QList<QGraphicsItem*> itemList = scene()->selectedItems();
