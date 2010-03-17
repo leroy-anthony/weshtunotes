@@ -61,6 +61,11 @@ namespace Basket
 
     void ItemTreeBasket::setIcon( const QString & icon )
     {
+        if ( m_basket != 0 )
+        {
+            m_basket->setIcon( icon );
+        }
+
         QTreeWidgetItem::setIcon( 0, KIcon(icon) );
     }
 
