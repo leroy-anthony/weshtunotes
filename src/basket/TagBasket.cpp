@@ -39,6 +39,7 @@
 #include "../basket/AbstractBasket.h"
 #include "../basket/BasketFactory.h"
 #include "../basket/ItemTreeBasket.h"
+#include "../database/AssociationManager.h"
 
 namespace Basket
 {
@@ -79,6 +80,8 @@ namespace Basket
         Config::Configuration settings( m_configFilePath );
         settings.setValue( "basket", "tag_name", m_tagName );
 
+        m_contentScene->save();
+        
         AbstractBasket::save();
     }
     
@@ -88,6 +91,8 @@ namespace Basket
 
         delete m_contentScene;
         m_contentScene = Scene::SceneFactory::newScene( m_configFilePath );
+        m_contentScene->load( m_configFilePath );
+        m_contentScene->setReadOnly(true);
 
         Config::Configuration settings( m_configFilePath );
         m_tagName = settings.valueGroup("basket","tag_name","T");
@@ -124,22 +129,14 @@ namespace Basket
                 resource.remove();
             }
         }
-        
-        m_nameId = m_contentScene->id();
-        
-        QList<AbstractBasket*> & children = childrenBasket();
-        for ( int i=0 ; i<children.size() ; ++i )
-        {
-            children[i]->load();
-        }
 
         m_itemTreeBasket->setData( 0, Qt::DisplayRole, QString(m_name+" (TAG: "+m_tagName+")") );
-
     }
     
     void TagBasket::del()
     {
         Config::Configuration::removeConfigDir( m_configFilePath );
+        Database::AssociationManager::removeAssociationNotes( m_contentScene->id() );
     }
     
 }

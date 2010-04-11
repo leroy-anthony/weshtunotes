@@ -22,5 +22,9 @@
       <min>50</min>
       <max>1000</max>
     </entry>
+    <entry name="textItem" type="String">
+      <label>Default note's text.</label>
+      <default>&lt;br&gt;</default>
+    </entry>
   </group>
 </kcfg> 

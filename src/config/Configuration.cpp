@@ -73,13 +73,13 @@ namespace Config
     void Configuration::saveLastBasket( const QString & name )
     {
         Configuration settings;
-        settings.setValue( "", "lastBasket", name );
+        settings.setValue( "config", "lastBasket", name );
     }
 
     QString Configuration::loadLastBasket()
     {
         Configuration settings;
-        return settings.valueGroup( "", "lastBasket", "" );
+        return settings.valueGroup( "config", "lastBasket", "" );
     }
 
     QStringList Configuration::subDirs( const QString & directory )

@@ -28,6 +28,7 @@
 #include "../handle/HandleItem.h"
 #include "../main/MainWindow.h"
 #include "../item/NoteItem.h"
+#include "../database/AssociationManager.h"
 
 namespace Scene
 {
@@ -38,8 +39,11 @@ namespace Scene
 
     AbstractScene::AbstractScene(QWidget * parent):
             QGraphicsScene(parent),
+            GeneratorID("scene"),
             m_horizontalScrollBarValueView(0),
-            m_verticalScrollBarValueView(0)
+            m_verticalScrollBarValueView(0),
+            m_readOnly(false),
+            m_lastCibleHandle(0)
     {
         setSceneRect(-100000,-100000,200000,200000);
 
@@ -73,30 +77,19 @@ namespace Scene
     {
     }
 
-    const QString & AbstractScene::id()
-    {
-        return m_id;
-    }
-
     void AbstractScene::addItemToScene( Handle::GraphicHandleItem * g )
     {
     }
 
     void AbstractScene::buildListHandleToLoad( Handle::HandleItem * h, QStringList & l )
     {
-        if ( h->size() > 0 )
+        const QList<Handle::HandleItem*> & handlesChild = h->children();
+        for ( int j=0 ; j<handlesChild.size() ; ++j )
         {
-            const QList<Handle::HandleItem*> & handlesChild = h->children();
-            for ( int j=0 ; j<handlesChild.size() ; ++j )
-            {
-                buildListHandleToLoad( handlesChild[j], l );
-            }
-            l << h->id();
+            buildListHandleToLoad( handlesChild[j], l );
         }
-        else
-        {
-            l << h->id();
-        }
+
+        l << h->id();
     }
 
     void AbstractScene::save()
@@ -104,52 +97,45 @@ namespace Scene
         QList<Handle::HandleItem*> handles = m_handles.keys();
 
         // on récupère les notes présentes lors de la dernière sauvegarde
-        Config::Configuration delSettings( m_fileName );
-        QStringList listLastFile = delSettings.values("scene","items");
+        Config::Configuration delSettings( m_directoryScene );
+
+        QStringList listLastFile = Database::AssociationManager::abstractNotes( GeneratorID::id() );
 
         //efface l'ancien configuration du panier
-        Config::Configuration::clear( m_fileName );
+        Config::Configuration::clear( m_directoryScene );
 
-        Config::Configuration settings( m_fileName );
-        settings.setValue("scene","id",m_id);
-        settings.setValue("scene","nbitems",handles.size());
+        Config::Configuration settings( m_directoryScene );
+        settings.setValue("scene","id",GeneratorID::id());
 
-        QStringList listFile;
         for (int i=0 ; i<handles.size() ; ++i)
         {
             QStringList listHandles;
             buildListHandleToLoad( handles[i], listHandles );
 
+            Config::Configuration settingsHandle( handles[i]->configFile() );
+            settingsHandle.setValue("general","items",listHandles);
+
             if ( listHandles.size() > 0 )
             {
-                Config::Configuration settingsHandle( m_fileName+"_"+handles[i]->id() );
-                settingsHandle.setValue("general","items",listHandles);
+                QString fileName( handles[i]->configFile() );
 
-                QString fileName( m_fileName+"_"+handles[i]->id() );
-                listFile << fileName;
+                Database::AssociationManager::addNote( GeneratorID::id(), fileName, handles[i]->x(), handles[i]->y() );
 
-                //mémorise la liste des notes qui ne sont plus présentes et que l'on doit supprimer
-                if ( listLastFile.contains( fileName ) )
-                {
-                    listLastFile.removeOne( fileName );
-                }
+                listLastFile.removeOne( fileName );
             }
         }
 
-        //efface les notes qui ne sont plus dans la scene
         for ( int i=0 ; i<listLastFile.size() ; ++i )
         {
-            Config::Configuration::deleteNoteFile(listLastFile[i]);
+            Database::AssociationManager::removeNote( GeneratorID::id(), listLastFile[i] );
         }
-
-        settings.setValue("scene","items",listFile);
 
         for ( int i=0 ; i<handles.size() ; ++i )
         {
-            handles[i]->save(m_fileName+"_"+handles[i]->id());
+            handles[i]->save();
         }
 
-        saveViewOnDisk( m_fileName );
+        saveViewOnDisk( m_directoryScene );
     }
 
     void AbstractScene::storeView( CustomGraphicsView * view )
@@ -234,8 +220,9 @@ namespace Scene
             {
                 QString itemId = items[i];
 
-                int x = settingsHandle.valueGroup( itemId, "x", 0 ).toInt();
-                int y = settingsHandle.valueGroup( itemId, "y", 0 ).toInt();
+                QPoint point = Database::AssociationManager::positionAbstractNotes( GeneratorID::id(), fileName );
+                int x = point.x();
+                int y = point.y();
 
                 if ( j == 0 && centerPt != QPointF(0,0) )
                 {
@@ -246,18 +233,18 @@ namespace Scene
                 handle = newHandle( x+dx, y+dy, settingsHandle.valueGroup( itemId, "width", Settings::widthNote()).toInt() );
                 handle->setId( itemId );
 
+                //for copy/paste
                 if ( newHandles )
                 {
                     handle->regenerateId();
                 }
 
                 handles[ itemId ] = handle;
-                handle->setFileName( fileName );
 
                 QStringList itemsToAdd = settingsHandle.values( itemId, "items" );
                 if ( itemsToAdd.size()>0 )
-                {
-                    for (int k = 0; k < itemsToAdd.size() ; ++k)
+                {                    
+                    for (int k = 0 ; k <itemsToAdd.size() ; ++k)
                     {
                         handle->add( handles[ itemsToAdd[k] ] );
                     }
@@ -297,16 +284,29 @@ namespace Scene
     {
         Config::Configuration settings( fileName );
 
-        m_id = settings.valueGroup("scene","id","1");
-        m_fileName = fileName;
-
-        loadHandles( settings.values("scene","items") );
+        setId( settings.valueGroup("scene","id",GeneratorID::id()) );
+        m_directoryScene = fileName;
 
         loadViewFromDisk( fileName );
     }
 
     void AbstractScene::resize( QResizeEvent * event )
     {
+    }
+
+    bool AbstractScene::readOnly()
+    {
+        return m_readOnly;
+    }
+
+    void AbstractScene::setReadOnly( bool readOnly )
+    {
+        m_readOnly = readOnly;
+    }
+
+    const QString & AbstractScene::directoryScene()
+    {
+        return m_directoryScene;
     }
 
 }

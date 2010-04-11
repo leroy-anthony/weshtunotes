@@ -53,7 +53,7 @@ namespace Technic
         }
     }
 
-    const QString & GeneratorID::id()
+    const QString & GeneratorID::id() const
     {
         return m_nameId;
     }

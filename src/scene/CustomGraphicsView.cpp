@@ -209,7 +209,7 @@ namespace Scene
             QStringList filesName;
             for ( int i=0 ; i<m_copyHandlesItem.size() ; ++i )
             {
-                filesName << m_copyHandlesItem[i]->handleItem()->fileName();
+                filesName << m_copyHandlesItem[i]->handleItem()->configFile();
             }
 
             double minX = std::numeric_limits<double>::max();

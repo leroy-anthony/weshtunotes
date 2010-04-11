@@ -109,6 +109,7 @@ namespace Basket
         settings.setValue( "basket", "type", m_type );
         settings.setValue( "basket", "icon", m_icon );
         settings.setValue( "basket", "order", m_order );
+        settings.setValue( "basket", "id", GeneratorID::id() );
     }
 
     void AbstractBasket::load()
@@ -117,6 +118,7 @@ namespace Basket
         m_type = settings.valueGroup( "basket", "type", "basket" );
         m_icon = settings.valueGroup( "basket", "icon", "folder" );
         m_order = settings.valueGroup( "basket", "order", 0 ).toInt();
+        setId( settings.valueGroup( "basket", "id", GeneratorID::id() ) );
 
         m_itemTreeBasket->setIcon( m_icon );
         m_itemTreeBasket->setData( 1, Qt::DisplayRole, m_order );

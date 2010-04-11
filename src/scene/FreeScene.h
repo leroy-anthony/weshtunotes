@@ -52,7 +52,7 @@ namespace Scene
 
         void addItemToScene( Handle::GraphicHandleItem * item );
         void addData( const QMimeData * data );
-        Handle::HandleItem * addItems( int x, int y, const QString & dataFile  );
+        Handle::HandleItem * addItems( int x, int y );
         void delItem( Handle::HandleItem * h );
 
         void save( const QString & id, const QString & fileName );
