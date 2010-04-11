@@ -129,6 +129,7 @@ namespace Explorer
         sortByColumn( 1, Qt::AscendingOrder );
     }
 
+    //fixme : only root basket are saved.
     void TreeExplorer::saveBaskets()
     {
         QStringList masterBasket;
@@ -161,9 +162,10 @@ namespace Explorer
 
     QTreeWidgetItem * TreeExplorer::loadFromConfigCurrentBasket()
     {
-        setColumnCount(2);
+        setColumnCount(3);
         QString currentBasket = Config::Configuration::loadLastBasket();
-        QList<QTreeWidgetItem*> baskets = findItems( currentBasket, Qt::MatchFixedString | Qt::MatchRecursive, 1 );
+        QList<QTreeWidgetItem*> baskets = findItems( currentBasket, Qt::MatchFixedString | Qt::MatchRecursive, 2 );
+
         setColumnCount(1);
         if ( baskets.size() > 0 )
         {

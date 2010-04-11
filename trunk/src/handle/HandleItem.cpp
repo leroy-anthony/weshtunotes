@@ -41,12 +41,10 @@
 #include "../config/Configuration.h"
 #include "../config/VisualAspect.h"
 #include "../item/AbstractItem.h"
+#include "../scene/AbstractScene.h"
 
 namespace Handle
 {
-
-    QWidget * HandleItem::m_insertIndicator = 0;
-    int HandleItem::m_index = 0;
 
     HandleItem::HandleItem( Scene::AbstractScene * parent, int x, int y, int width ) :
             QWidget(0),
@@ -61,7 +59,8 @@ namespace Handle
             m_contentMarginX(1),
             m_contentMarginY(1),
             m_x(x),
-            m_y(y)
+            m_y(y),
+            m_index(-1)
     {
         QWidget::resize(width, width);
         setContentsMargins( m_contentMarginX, m_contentMarginY, m_contentMarginX, m_contentMarginY );
@@ -71,7 +70,7 @@ namespace Handle
         m_handleLayout->setSpacing( 0 );
         m_handleLayout->setSizeConstraint(QLayout::SetMaximumSize);
 
-        m_handleLayout->addWidget( &m_moveHandle, 0, 0 );//, 2, 1, 0 );
+        m_handleLayout->addWidget( &m_moveHandle, 0, 0 );
 
         m_contentLayout = new QVBoxLayout();
         m_contentLayout->setContentsMargins( 0, 0, 0, 0 );
@@ -85,12 +84,10 @@ namespace Handle
 
         connect( &m_deleteHandle, SIGNAL(pressed()), this, SLOT(questionDelItem()) );
 
-        if ( m_insertIndicator == 0 )
-        {
-            m_insertIndicator = new QFrame();
-            m_insertIndicator->setMinimumHeight(24);
-            m_insertIndicator->setStyleSheet( Config::VisualAspect::gradiantBackground( QApplication::palette().color(QPalette::Highlight) ) );
-        }
+        m_insertIndicator = new QFrame();
+        m_insertIndicator->setMinimumHeight(24);
+        m_insertIndicator->setStyleSheet( Config::VisualAspect::gradiantBackground( QApplication::palette().color(QPalette::Highlight) ) );
+        m_insertIndicator->setVisible(false);
     }
 
     HandleItem::~HandleItem()
@@ -126,11 +123,23 @@ namespace Handle
     {
         if ( h != 0 )
         {
-            static_cast<QVBoxLayout*>(m_contentLayout)->insertWidget( m_index, h );
             h->setHoverMode( false );
             h->setParentHandle( this );
-            m_handles.insert( m_index, h );
+
+            if ( m_index >= 0 && m_index<=m_handles.size() )
+            {
+                m_handles.insert( m_index, h );
+                static_cast<QVBoxLayout*>(m_contentLayout)->insertWidget( m_index, h );
+            }
+            else
+            {
+                m_handles << h;
+                static_cast<QVBoxLayout*>(m_contentLayout)->insertWidget( m_contentLayout->count(), h );
+            }
+
             setDefaultColor(h->defaultColor());
+
+            m_insertIndicator->setVisible(false);
         }
     }
 
@@ -192,11 +201,6 @@ namespace Handle
         return this;
     }
 
-    void HandleItem::insert( QWidget * w, int index )
-    {
-        static_cast<QVBoxLayout*>(m_contentLayout)->insertWidget( index, w );
-    }
-
     void HandleItem::insert( QPoint  pt, int height )
     {
         int size = m_contentLayout->count();
@@ -233,7 +237,9 @@ namespace Handle
         }
 
         m_index = choix;
-        insert( m_insertIndicator, choix );
+
+        static_cast<QVBoxLayout*>(m_contentLayout)->insertWidget( choix, m_insertIndicator );
+
         m_insertIndicator->setVisible(true);
     }
 
@@ -291,8 +297,8 @@ namespace Handle
             setContentsMargins( 0, 0, 0, 0 );
         }
     }
-
-    void HandleItem::save( const QString & fileName )
+    
+    void HandleItem::save()
     {
         QStringList children;
         for ( int i=0 ; i<m_handles.size() ; ++i)
@@ -300,30 +306,28 @@ namespace Handle
             children << m_handles[i]->id();
         }
 
-        Config::Configuration settings( fileName );
+        QString configFileHandle = configFile();
 
-        settings.setValue(m_nameId,"x",m_x);
-        settings.setValue(m_nameId,"y",m_y);
-        settings.setValue(m_nameId,"height",height());
-        settings.setValue(m_nameId,"width",width());
+        Config::Configuration settings( configFileHandle );
+
+        settings.setValue(GeneratorID::id(),"height",height());
+        settings.setValue(GeneratorID::id(),"width",width());
 
         if ( children.size() > 0 )
         {
-            settings.setValue(m_nameId,"items",children);
+            settings.setValue(GeneratorID::id(),"items",children);
         }
         else
         {
-            m_item->save(fileName,m_nameId);
+            m_item->save(configFileHandle,GeneratorID::id());
         }
 
-        settings.setValue(m_nameId,"color",m_defaultColor.name());
+        settings.setValue(GeneratorID::id(),"color",m_defaultColor.name());
 
         for ( int i=0 ; i<m_handles.size() ; i++)
         {
-            m_handles[i]->save(fileName);
+            m_handles[i]->save();
         }
-
-        m_fileName = fileName;
     }
 
     void HandleItem::paintEvent( QPaintEvent * event )
@@ -414,14 +418,14 @@ namespace Handle
         return m_handles;
     }
 
-    void HandleItem::setFileName( const QString & fileName )
+    QString HandleItem::configFile() const
     {
-        m_fileName = fileName;
-    }
+        if ( m_parentHandle != 0 )
+        {
+            return m_parentHandle->configFile();
+        }
 
-    const QString & HandleItem::fileName() const
-    {
-        return m_fileName;
+        return "../items/"+GeneratorID::id();
     }
 
 }

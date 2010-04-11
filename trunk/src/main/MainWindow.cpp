@@ -48,6 +48,7 @@
 #include "../scene/FreeScene.h"
 #include "../scene/LayoutScene.h"
 #include "../scene/ToolBarScene.h"
+#include "../database/AssociationManager.h"
 
 KStatusBar * MainWindow::m_statusBar = 0;
 
@@ -71,8 +72,9 @@ MainWindow::MainWindow( QWidget * parent ) :
 
     setupGUI( Default, "kweshtunotesui.rc" );
 
-    loadData();
+    Database::AssociationManager::connectDB();
 
+    loadData();
 }
 
 MainWindow::~MainWindow()
@@ -118,15 +120,8 @@ void MainWindow::save()
 
     if ( m_lastBasketLoad != 0 )
     {
-        m_view->horizontalScrollBar()->setValue(m_view->horizontalScrollBar()->value());
-        m_view->verticalScrollBar()->setValue(m_view->verticalScrollBar()->value());
-        m_lastBasketLoad->basket()->scene()->storeView( m_view );
-    }
+        m_lastBasketLoad->basket()->save();
 
-    m_treeExplorer->saveBaskets();
-
-    if ( m_lastBasketLoad != 0 )
-    {
         Config::Configuration::saveLastBasket( m_lastBasketLoad->basket()->id() );
     }
 }

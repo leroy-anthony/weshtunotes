@@ -66,10 +66,9 @@ namespace Handle
 
         HandleItem * handleItemAt( int x, int y );
 
-        void insert( QWidget * w, int index );
         void insert( QPoint pt, int height );
 
-        static void resetInsert();
+        void resetInsert();
 
         void setParentHandle(  HandleItem *  h );
         HandleItem * parentHandle();
@@ -89,7 +88,7 @@ namespace Handle
         const QColor & defaultColor();
         void setDefaultColor( const QColor & color );
 
-        void save( const QString & fileName );
+        void save();
 
         int contentMarginX();
         int contentMarginY();
@@ -97,8 +96,7 @@ namespace Handle
         int x();
         int y();
 
-        void setFileName( const QString & fileName );
-        const QString & fileName() const;
+        QString configFile() const;
 
     public slots:
         void setDefaultColor();
@@ -135,8 +133,8 @@ namespace Handle
 
         bool m_modeDegroupement;
 
-        static int m_index;
-        static QWidget * m_insertIndicator;
+        int m_index;
+        QWidget * m_insertIndicator;
 
         int m_contentMarginX;
         int m_contentMarginY;
@@ -147,8 +145,6 @@ namespace Handle
         int m_width;
 
         QColor m_defaultColor;
-
-        QString m_fileName;
 
     };
 

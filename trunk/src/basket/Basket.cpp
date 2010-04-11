@@ -23,6 +23,7 @@
 #include "../config/Configuration.h"
 #include "../basket/BasketFactory.h"
 #include "../basket/ItemTreeBasket.h"
+#include "../database/AssociationManager.h"
 #include "settings.h"
 
 namespace Basket
@@ -45,18 +46,11 @@ namespace Basket
         m_type = BasketFactory::type(BasketFactory::BASKET);
 
         m_contentScene = Scene::SceneFactory::newScene( m_configFilePath );
-        m_nameId = m_contentScene->id();
     }
 
     void Basket::save()
     {
         m_contentScene->save();
-
-        QList<AbstractBasket*> & children = childrenBasket();
-        for ( int i=0 ; i<children.size() ; ++i )
-        {
-            children[i]->save();
-        }
 
         AbstractBasket::save();
     }
@@ -69,13 +63,10 @@ namespace Basket
 
         m_contentScene = Scene::SceneFactory::newScene( m_configFilePath );
         m_contentScene->load( m_configFilePath );
-        m_nameId = m_contentScene->id();
 
-        QList<AbstractBasket*> & children = childrenBasket();
-        for ( int i=0 ; i<children.size() ; ++i )
-        {
-            children[i]->load();
-        }
+        Config::Configuration settings( m_configFilePath );
+
+        m_contentScene->loadHandles( Database::AssociationManager::abstractNotes( m_contentScene->id() ) );
     }
 
     void Basket::del()
@@ -86,6 +77,7 @@ namespace Basket
             children[i]->del();
         }
 
+        Database::AssociationManager::removeNotes( m_contentScene->id() );
         Config::Configuration::removeConfigDir( m_configFilePath );
     }
 

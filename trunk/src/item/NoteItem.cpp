@@ -158,7 +158,7 @@ namespace Item
     {
         Config::Configuration settings( fileName );
 
-        settings.setValue(handleId,"data",m_nameId);
+        settings.setValue(handleId,"data",GeneratorID::id());
         settings.setValue(handleId,"color",m_color.name());
 
         if ( m_tag != 0 )
@@ -172,14 +172,14 @@ namespace Item
             settings.removeValue(handleId,"tag");
         }
 
-        Config::Configuration::saveNote( settings.fileName(), m_plainTextEdit->document()->toHtml(), m_nameId );
+        Config::Configuration::saveNote( settings.fileName(), m_plainTextEdit->document()->toHtml(), GeneratorID::id() );
     }
 
     void NoteItem::load( const QString & fileName )
     {       
         m_plainTextEdit->blockSignals( true );
 
-        m_plainTextEdit->setHtml( Config::Configuration::loadNote( fileName, m_nameId ) );
+        m_plainTextEdit->setHtml( Config::Configuration::loadNote( fileName, GeneratorID::id() ) );
         m_plainTextEdit->adaptSizeFromText();
 
         m_plainTextEdit->blockSignals( false );

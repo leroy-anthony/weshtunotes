@@ -30,11 +30,11 @@ namespace Technic
     public:
         GeneratorID( const QString & name );
 
-        const QString & id();
+        const QString & id() const;
         void setId( const QString & id );
         void regenerateId();
 
-    protected:
+    private:
         QString m_name;
         QString m_nameId;
 

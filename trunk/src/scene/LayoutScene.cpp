@@ -284,7 +284,7 @@ namespace Scene
                 }
 
                 removeGraphicsItemFromScene( m_currentHandle );
-                Handle::HandleItem::resetInsert();
+                //Handle::HandleItem::resetInsert();
             }
             else
             {

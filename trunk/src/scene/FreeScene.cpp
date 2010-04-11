@@ -113,7 +113,7 @@ namespace Scene
         return item;
     }
     
-    Handle::HandleItem *  FreeScene::addItems( int x, int y, const QString & dataFile )
+    Handle::HandleItem *  FreeScene::addItems( int x, int y )
     {
         Handle::HandleItem * handle = newHandle( x, y, Settings::widthNote() );
         
@@ -123,7 +123,9 @@ namespace Scene
 
         addHandleToScene( handle );
 
-        item->load( dataFile );
+        QMimeData data;
+        data.setHtml(Settings::textItem());
+        item->insertData( &data );
 
         return handle;
     }
@@ -181,7 +183,6 @@ namespace Scene
     void FreeScene::editItem( Item::AbstractItem * item )
     {
         m_currentAbstractItem = item;
-        // récupère les interfaces pour les opérations et désactive/active les boutons
     }
 
     void FreeScene::moveItem( Handle::HandleItem * handleItem, int x, int y )
@@ -192,7 +193,11 @@ namespace Scene
         {
             static_cast<QWidget*>(handleItem)->move(x,y);
 
-            Handle::HandleItem::resetInsert();
+            //Handle::HandleItem::resetInsert();
+            if ( m_lastCibleHandle )
+            {
+                m_lastCibleHandle->resetInsert();
+            }
 
             QList<QGraphicsItem*> items = collidingItems( m_handles[handleItem] );
             if ( items.size() > 0 )
@@ -201,7 +206,8 @@ namespace Scene
                 {
                     if ( items[i]->isVisible() )
                     {
-                        m_items[static_cast<QGraphicsProxyWidget*>(items[i])]->insert( handleItem->geometry().topLeft(), handleItem->height() );
+                        m_lastCibleHandle = m_items[static_cast<QGraphicsProxyWidget*>(items[i])];
+                        m_lastCibleHandle->insert( handleItem->geometry().topLeft(), handleItem->height() );
                     }
                 }
             }
@@ -257,7 +263,10 @@ namespace Scene
         }
         else if ( currentGraphicsItem == 0 )
         {
-            addItems( mouseEvent->scenePos().x(), mouseEvent->scenePos().y(), "templatePardefaut" );
+            if ( !m_readOnly )
+            {
+                addItems( mouseEvent->scenePos().x(), mouseEvent->scenePos().y() );
+            }
         }
 
         QGraphicsScene::mousePressEvent ( mouseEvent );
@@ -296,6 +305,11 @@ namespace Scene
             {
                 if ( items[0]->isVisible() )
                 {
+                    if ( m_lastCibleHandle )
+                    {
+                        m_lastCibleHandle->resetInsert();
+                    }
+
                     Handle::HandleItem * handleCible = m_items[static_cast<QGraphicsProxyWidget*>(items[0])];
                     if ( handleCible->size() == 0 )
                     {
@@ -314,7 +328,6 @@ namespace Scene
                     }
 
                     removeGraphicsItemFromScene( m_currentHandle );
-                    Handle::HandleItem::resetInsert();
                 }
             }
 

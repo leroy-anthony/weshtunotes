@@ -37,7 +37,7 @@ namespace Handle
 namespace Scene
 {
 
-    class AbstractScene : public QGraphicsScene
+    class AbstractScene : public QGraphicsScene, public Technic::GeneratorID
     {
         Q_OBJECT
 
@@ -64,10 +64,13 @@ namespace Scene
 
         virtual void addData( const QMimeData * data );
 
-        const QString & id();
-
         const QString & type();
         void setType( const QString & type );
+
+        bool readOnly();
+        void setReadOnly( bool readOnly );
+
+        const QString & directoryScene();
 
     public slots:
         virtual void delItem( Handle::HandleItem * h ) = 0;
@@ -86,11 +89,13 @@ namespace Scene
         int m_verticalScrollBarValueView;
 
         QHash<Handle::HandleItem * ,QGraphicsProxyWidget*> m_handles;
+        Handle::HandleItem * m_lastCibleHandle;
 
-        QString m_id;
-        QString m_fileName;
+        QString m_directoryScene;
 
         QString m_type;
+
+        bool m_readOnly;
 
     };
 
