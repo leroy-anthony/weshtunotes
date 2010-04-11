@@ -15,6 +15,7 @@ include_directories(${SOPRANO_INCLUDE_DIRS})
 
 SET(QT_USE_QTSVG TRUE)
 SET(QT_USE_QTOPENGL TRUE)
+SET(QT_USE_QTSQL TRUE)
 
 INCLUDE(${QT_USE_FILE})
 ADD_DEFINITIONS(${QT_DEFINITIONS})
@@ -69,6 +70,7 @@ set(weshnotes_SRC
 ./src/tag/AddTag.cpp
 ./src/tag/NextTag.cpp
 ./src/technic/GeneratorID.cpp
+./src/database/AssociationManager.cpp
 ./src/config/GeneralPageDialog.cpp
 ./src/config/AppareancePageDialog.cpp
 ${weshnotes_UI_H})
