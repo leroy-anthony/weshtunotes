@@ -5,7 +5,7 @@ SET(CMAKE_SYSTEM_NAME Windows)
 SET(CMAKE_C_COMPILER i486-mingw32-gcc)
 SET(CMAKE_CXX_COMPILER i486-mingw32-g++)
 
-set(KDE_PREFIX    "/home/kahal/.wine/drive_c/Program\ Files/kde")
+set(KDE_PREFIX    "/home/kahal/.wine/drive_c/Program\ Files/KDE")
 set(QT_INSTALL_DIR ${KDE_PREFIX})
 set(KDE4_INSTALL_DIR ${KDE_PREFIX})
 
@@ -29,6 +29,7 @@ SET(QT_QT_INCLUDE_DIR ${KDE_PREFIX}/include/)
 SET(QT_QTGUI_INCLUDE_DIR ${KDE_PREFIX}/include/QtGui)
 SET(QT_QTOPENGL_INCLUDE_DIR ${KDE_PREFIX}/include/QtOpenGL)
 SET(QT_QTSVG_INCLUDE_DIR ${KDE_PREFIX}/include/QtSvg)
+SET(QT_QTSQL_INCLUDE_DIR ${KDE_PREFIX}/include/QtSql)
 
 set(QT_LIBRARY_DIR  ${KDE_PREFIX}/lib)
 set(QT_QTCORE_LIBRARY   ${KDE_PREFIX}/lib/libQtCore4.a)
