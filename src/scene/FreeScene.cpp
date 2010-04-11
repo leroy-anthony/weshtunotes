@@ -86,9 +86,9 @@ namespace Scene
 
             handle->add( item );
 
-            item->load( data );
+            addHandleToScene( handle );
 
-            static_cast<QWidget*>(handle)->resize( item->width(), item->height() );
+            item->load( data );
         }
         else
         {
