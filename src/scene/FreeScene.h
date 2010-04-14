@@ -62,11 +62,12 @@ namespace Scene
     protected:
         void mousePressEvent( QGraphicsSceneMouseEvent * mouseEvent );
         void mouseReleaseEvent( QGraphicsSceneMouseEvent * mouseEvent);
-        void removeGraphicsItemFromScene( Handle::HandleItem * handle );
+        void removeGraphicsItemFromScene( Handle::HandleItem * handle, bool animated );
         Handle::GraphicHandleItem * addHandleToScene( Handle::HandleItem * handle );
         Handle::HandleItem * newHandle( int x, int y, int w  );
         Item::AbstractItem * newItem( int x, int y );
         void delUselessHandleGroup( Handle::HandleItem * currentHandle  );
+        void deleteGraphicsItemFromScene( QGraphicsProxyWidget * g );
 
     private:
         Item::AbstractItem * m_currentAbstractItem;
@@ -77,11 +78,12 @@ namespace Scene
         QToolBar * m_textToolBar;
         Mode m_modeItem;
 
-    private slots:
-        void editItem( Item::AbstractItem * item );
-
     public slots:
         void moveItem( Handle::HandleItem * handleItem, int x, int y );
+
+    private slots:
+        void editItem( Item::AbstractItem * item );
+        void deleteGraphicsItemFromSceneAnimated();
 
     };
 

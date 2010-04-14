@@ -44,11 +44,13 @@
 #include "../config/ConfigDialog.h"
 #include "../config/GeneralPageDialog.h"
 #include "../config/AppareancePageDialog.h"
+#include "../config/AnimationPageDialog.h"
 #include "../scene/CustomGraphicsView.h"
 #include "../scene/FreeScene.h"
 #include "../scene/LayoutScene.h"
 #include "../scene/ToolBarScene.h"
 #include "../database/AssociationManager.h"
+#include "../animation/AnimationManager.h"
 
 KStatusBar * MainWindow::m_statusBar = 0;
 
@@ -196,6 +198,8 @@ void MainWindow::initView()
     layoutButtonView->addWidget(q5);
 
     layoutButtonView->addItem(new QSpacerItem(0,0,QSizePolicy::Expanding,QSizePolicy::Ignored));
+
+    Animation::AnimationManager::initAnimation(m_view);
 }
 
 void MainWindow::initExplorer()
@@ -286,6 +290,8 @@ void MainWindow::loadScene( QTreeWidgetItem * item , int column )
     Scene::AbstractScene * scene = i->basket()->scene();
     m_view->setScene( scene );
     i->basket()->scene()->restoreView( m_view );
+
+    Animation::AnimationManager::startLoad( i->basket()->scene()->items() );
 
     m_view->update();
 
@@ -391,6 +397,7 @@ void MainWindow::showSettings()
     dialog->setFaceType(KPageDialog::List);
     dialog->addPage(new Config::GeneralPageDialog(0),"General" );
     dialog->addPage(new Config::AppareancePageDialog(0),"Appareance note" );
+    dialog->addPage(new Config::AnimationPageDialog(0),"Animation" );
     dialog->show();
 
     connect( dialog, SIGNAL(settingsChanged()), this, SLOT(updateConfiguration()) );

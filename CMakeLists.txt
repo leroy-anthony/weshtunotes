@@ -26,6 +26,7 @@ set(weshnotes_UI
 ./src/main/ui_main_window.ui 
 ./src/tag/tag_factory.ui
 ./src/config/GeneralSettings.ui
+./src/config/AnimationSettings.ui
 ./src/config/AppareanceSettings.ui)
 
 QT_WRAP_UI(weshnotes weshnotes_UI_H weshnotes_UI_SRC ${weshnotes_UI})
@@ -73,6 +74,8 @@ set(weshnotes_SRC
 ./src/database/AssociationManager.cpp
 ./src/config/GeneralPageDialog.cpp
 ./src/config/AppareancePageDialog.cpp
+./src/config/AnimationPageDialog.cpp
+./src/animation/AnimationManager.cpp
 ${weshnotes_UI_H})
 
 set(weshnotes_MOC 
