@@ -13,18 +13,40 @@
   </group>
   <group name="visual">
     <entry name="colorItem" type="Color">
-      <label>Default note's color.</label>
+      <label>Note's color.</label>
       <default>#F7F7C8</default>
     </entry>
     <entry name="widthNote" type="Int">
-      <label>Default note's width.</label>
+      <label>Note's width.</label>
       <default>300</default>
       <min>50</min>
       <max>1000</max>
     </entry>
     <entry name="textItem" type="String">
-      <label>Default note's text.</label>
+      <label>Note's text.</label>
       <default>&lt;br&gt;</default>
+    </entry>
+  </group>
+  <group name="animation">
+    <entry name="loadDuration" type="Int">
+      <label>Loading duration.</label>
+      <default>2000</default>
+    </entry>
+    <entry name="createDuration" type="Int">
+      <label>Creating duration.</label>
+      <default>2000</default>
+    </entry>
+    <entry name="deleteDuration" type="Int">
+      <label>Deleting duration.</label>
+      <default>2000</default>
+    </entry>
+    <entry name="deleteType" type="String">
+      <label>Deleting duration.</label>
+      <default>opacity</default>
+      <values>
+	<value>opacity</value>
+	<value>scale</value>
+      </values>
     </entry>
   </group>
 </kcfg> 

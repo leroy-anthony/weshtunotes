@@ -39,11 +39,13 @@
 #include <QGraphicsSvgItem>
 #include <QGraphicsView>
 #include <QScrollBar>
+#include <QPropertyAnimation>
 
 #include "settings.h"
 #include "../handle/HandleItem.h"
 #include "../config/Configuration.h"
 #include "../handle/GraphicHandleItem.h"
+#include "../animation/AnimationManager.h"
 
 namespace Scene
 {
@@ -121,11 +123,13 @@ namespace Scene
 
         handle->add( item );
 
-        addHandleToScene( handle );
+        Handle::GraphicHandleItem  * g = addHandleToScene( handle );
 
         QMimeData data;
         data.setHtml(Settings::textItem());
         item->insertData( &data );
+
+        Animation::AnimationManager::startCreate( g );
 
         return handle;
     }
@@ -167,19 +171,6 @@ namespace Scene
         return g;
     }
 
-    void FreeScene::removeGraphicsItemFromScene( Handle::HandleItem * handle )
-    {
-        QGraphicsProxyWidget * g = m_handles[ handle ];
-        if ( g != 0 )
-        {
-            removeItem(g);
-            g->setWidget(0);
-            m_handles.remove( handle );
-            m_items.remove( g );
-            delete g;
-        }
-    }
-
     void FreeScene::editItem( Item::AbstractItem * item )
     {
         m_currentAbstractItem = item;
@@ -213,7 +204,7 @@ namespace Scene
             }
         }
         else
-        {    
+        {
             Handle::HandleItem * parentItem = handleItem->parentHandle();
             parentItem->remove( handleItem );
             handleItem->setParent(0);
@@ -222,21 +213,6 @@ namespace Scene
 
             static_cast<QWidget*>(handleItem)->move(x,y);
         }
-    }
-
-    void FreeScene::delItem( Handle::HandleItem * handleItem )
-    {
-        //TODO: supprimer les noteItem
-        Handle::HandleItem * parentItem = handleItem->parentHandle();
-        if ( parentItem != 0 )
-        {
-            parentItem->remove( handleItem );
-        }
-        else
-        {
-            removeGraphicsItemFromScene( handleItem );
-        }
-        handleItem->setParent(0);
     }
 
     void FreeScene::mousePressEvent ( QGraphicsSceneMouseEvent * mouseEvent )
@@ -272,26 +248,6 @@ namespace Scene
         QGraphicsScene::mousePressEvent ( mouseEvent );
     }
 
-    void FreeScene::delUselessHandleGroup( Handle::HandleItem * currentHandle  )
-    {
-        Handle::HandleItem * parentHandle = currentHandle->parentHandle();
-        if (  parentHandle != 0 && currentHandle->modeDegroupement() )
-        {
-            if ( parentHandle->children().size() == 1 )
-            {
-                Handle::HandleItem * child = parentHandle->child();
-                parentHandle->remove( child );
-                child->setParent(0);
-                child->setParentHandle(0);
-                parentHandle->add( child->noteItem() );
-
-                delete child;
-            }
-
-            currentHandle->setParentHandle(0);
-        }
-    }
-
     void FreeScene::mouseReleaseEvent(QGraphicsSceneMouseEvent * mouseEvent)
     {
         if ( m_currentHandle != 0 && m_modeItem == MoveItem )
@@ -320,14 +276,14 @@ namespace Scene
                         handle->add( m_currentHandle );
                         addHandleToScene( handle );
 
-                        removeGraphicsItemFromScene( handleCible );
+                        removeGraphicsItemFromScene( handleCible, false );
                     }
                     else
                     {
                         handleCible->add( m_currentHandle );
                     }
 
-                    removeGraphicsItemFromScene( m_currentHandle );
+                    removeGraphicsItemFromScene( m_currentHandle, false );
                 }
             }
 
@@ -353,6 +309,84 @@ namespace Scene
     Handle::HandleItem * FreeScene::currentHandle()
     {
         return m_currentHandle;
+    }
+
+    void FreeScene::removeGraphicsItemFromScene( Handle::HandleItem * handle, bool animated )
+    {
+        QGraphicsProxyWidget * g = m_handles[ handle ];
+        if ( g != 0 )
+        {
+            if ( animated )
+            {
+                QAbstractAnimation * animation = Animation::AnimationManager::startDelete( g );
+                connect(animation, SIGNAL(finished()), this, SLOT(deleteGraphicsItemFromSceneAnimated()));
+            }
+            else
+            {
+                deleteGraphicsItemFromScene( g );
+            }
+
+            m_handles.remove( handle );
+        }
+    }
+
+    void FreeScene::deleteGraphicsItemFromScene( QGraphicsProxyWidget * g )
+    {
+        removeItem(g);
+
+        m_items.remove(g);
+
+        g->setWidget(0);
+        g->deleteLater();
+    }
+
+    void FreeScene::deleteGraphicsItemFromSceneAnimated()
+    {
+        QPropertyAnimation * animation = qobject_cast<QPropertyAnimation*>(sender());
+        if (!animation)
+        {
+            return;
+        }
+
+        deleteGraphicsItemFromScene( static_cast<QGraphicsProxyWidget*>(animation->targetObject()) );
+
+        animation->deleteLater();
+    }
+
+    void FreeScene::delUselessHandleGroup( Handle::HandleItem * currentHandle  )
+    {
+        Handle::HandleItem * parentHandle = currentHandle->parentHandle();
+        if (  parentHandle != 0 && currentHandle->modeDegroupement() )
+        {
+            if ( parentHandle->children().size() == 1 )
+            {
+                Handle::HandleItem * child = parentHandle->child();
+                parentHandle->remove( child );
+                child->setParent(0);
+                child->setParentHandle(0);
+                parentHandle->add( child->noteItem() );
+
+                child->deleteLater();
+            }
+
+            currentHandle->setParentHandle(0);
+        }
+    }
+
+    void FreeScene::delItem( Handle::HandleItem * handleItem )
+    {
+        //TODO: supprimer les noteItem
+        Handle::HandleItem * parentItem = handleItem->parentHandle();
+        if ( parentItem != 0 )
+        {
+            parentItem->remove( handleItem );
+        }
+        else
+        {
+            removeGraphicsItemFromScene( handleItem, true );
+        }
+
+        handleItem->setParent(0);
     }
 
 }

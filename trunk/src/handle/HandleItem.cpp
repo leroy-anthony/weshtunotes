@@ -398,7 +398,7 @@ namespace Handle
         return (m_scene != 0);
     }
 
-    Item::AbstractItem *  HandleItem::noteItem()
+    Item::AbstractItem * HandleItem::noteItem()
     {
         return m_item;
     }
