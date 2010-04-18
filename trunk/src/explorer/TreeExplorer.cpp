@@ -33,17 +33,21 @@
 #include "../scene/FreeScene.h"
 #include "../scene/LayoutScene.h"
 #include "../config/Configuration.h"
+#include "../basket/ItemTreeBasket.h"
 
 namespace Explorer
 {
 
     TreeExplorer::TreeExplorer( QWidget * parent ):
-            QTreeWidget(parent)
+            QTreeWidget(parent),
+            m_currentDragItem(0)
     {
         setHeaderLabel( tr("Paniers") );
         setHeaderHidden( false );
         setIconSize(QSize(24,24));
         setColumnCount(3);
+
+        setDragDropMode( QAbstractItemView::InternalMove );
     }
 
     TreeExplorer::~TreeExplorer()
@@ -178,5 +182,28 @@ namespace Explorer
         return 0;
     }
 
+    void TreeExplorer::dropEvent ( QDropEvent * event )
+    {
+        QTreeWidget::dropEvent( event );
 
+        if ( m_currentDragItem != 0 )
+        {
+            Basket::AbstractBasket * b = 0;
+            if ( m_currentDragItem->parent() != 0 )
+            {
+                b = static_cast<Basket::ItemTreeBasket*>(m_currentDragItem->parent())->basket();
+            }
+
+            m_currentDragItem->basket()->moveTo( b );
+        }
+
+        m_currentDragItem = 0;
+    }
+
+    void TreeExplorer::startDrag( Qt::DropActions supportedActions )
+    {
+        m_currentDragItem = static_cast<Basket::ItemTreeBasket*>(currentItem());
+
+        QTreeWidget::startDrag( supportedActions );
+    }
 }

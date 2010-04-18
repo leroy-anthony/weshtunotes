@@ -309,4 +309,9 @@ namespace Scene
         return m_directoryScene;
     }
 
+    void AbstractScene::setDirectoryScene( const QString & directory )
+    {
+        m_directoryScene = directory;
+    }
+
 }

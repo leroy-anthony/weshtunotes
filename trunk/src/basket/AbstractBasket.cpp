@@ -23,6 +23,7 @@
 
 #include "../config/Configuration.h"
 #include "../basket/ItemTreeBasket.h"
+#include "../scene/AbstractScene.h"
 
 namespace Basket
 {
@@ -133,6 +134,37 @@ namespace Basket
     void AbstractBasket::setOrder( int order )
     {
         m_order = order;
+    }
+
+    void AbstractBasket::moveTo( AbstractBasket * basket )
+    {
+        const QString basketsStorePath = Config::Configuration::basketsStorePath();
+        const QString oldBasketName = m_directory;
+
+        QString dest = "";
+        if ( basket != 0 )
+        {
+            dest = basket->directory();
+        }
+
+        m_directory = dest + QDir::separator() + m_name;
+
+        QDir newBasket( basketsStorePath + QDir::separator() + dest );
+        if ( newBasket.mkdir( basketsStorePath + QDir::separator() + m_directory ) )
+        {
+            QFile newBasketConfig( basketsStorePath + QDir::separator() + m_configFilePath);
+            if ( newBasketConfig.copy( basketsStorePath + QDir::separator() + m_directory + QDir::separator() + m_name) )
+            {
+                QFile oldBasketConfig( basketsStorePath + QDir::separator() + m_configFilePath );
+                oldBasketConfig.remove();
+
+                QDir oldBasket( basketsStorePath );
+                oldBasket.rmdir( oldBasketName );
+
+                m_configFilePath = m_directory + QDir::separator() + m_name;
+                scene()->setDirectoryScene( m_configFilePath );
+            }
+        }
     }
 
 }
