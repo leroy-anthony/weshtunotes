@@ -51,6 +51,7 @@ namespace Config
 
         static void iniConfigration();
 
+        static QString basketsStorePath();
         static QStringList masterBaskets();
         static void saveMasterBaskets( const QStringList & masterBaskets );
         static void saveLastBasket( const QString & name );

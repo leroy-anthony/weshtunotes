@@ -70,6 +70,7 @@ namespace Scene
         bool readOnly();
         void setReadOnly( bool readOnly );
 
+        void setDirectoryScene( const QString & directory );
         const QString & directoryScene();
 
     public slots:

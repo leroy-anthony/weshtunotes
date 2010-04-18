@@ -54,10 +54,16 @@ namespace Explorer
         void loadBaskets();
         void loadBasket( const QString & name );
         void saveBaskets();
-
+    
+    protected:
+        void dropEvent ( QDropEvent * event );
+        void startDrag( Qt::DropActions supportedActions );
+        
     private:
         Basket::ItemTreeBasket * addBasket( Basket::ItemTreeBasket * parent, const QString & name );
         void loadBasket( Basket::ItemTreeBasket * parent, const QString & name );
+
+        Basket::ItemTreeBasket * m_currentDragItem;
 
     };
 

@@ -48,6 +48,7 @@ namespace Basket
         virtual void load() = 0;
         virtual void del()  = 0;
 
+        void moveTo( AbstractBasket * basket );
         const QString & directory();
         const QString & configFilePath();
 

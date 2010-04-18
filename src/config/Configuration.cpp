@@ -62,9 +62,14 @@ namespace Config
     {
     }
 
+    QString Configuration::basketsStorePath()
+    {
+        return Settings::basketsStorePath().toLocalFile()+QDir::separator()+"baskets";
+    }
+
     QStringList Configuration::masterBaskets()
     {
-        QDir dir( Settings::basketsStorePath().toLocalFile()+QDir::separator()+"baskets" );
+        QDir dir( basketsStorePath() );
         dir.setFilter( QDir::Dirs | QDir::NoDotAndDotDot );
 
         return dir.entryList();
