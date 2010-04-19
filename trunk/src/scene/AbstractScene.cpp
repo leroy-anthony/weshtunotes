@@ -28,7 +28,7 @@
 #include "../handle/HandleItem.h"
 #include "../main/MainWindow.h"
 #include "../item/NoteItem.h"
-#include "../database/AssociationManager.h"
+#include "../data/AssociationManager.h"
 
 namespace Scene
 {
@@ -99,7 +99,7 @@ namespace Scene
         // on récupère les notes présentes lors de la dernière sauvegarde
         Config::Configuration delSettings( m_directoryScene );
 
-        QStringList listLastFile = Database::AssociationManager::abstractNotes( GeneratorID::id() );
+        QStringList listLastFile = Data::AssociationManager::abstractNotes( GeneratorID::id() );
 
         //efface l'ancien configuration du panier
         Config::Configuration::clear( m_directoryScene );
@@ -119,7 +119,7 @@ namespace Scene
             {
                 QString fileName( handles[i]->configFile() );
 
-                Database::AssociationManager::addNote( GeneratorID::id(), fileName, handles[i]->x(), handles[i]->y() );
+                Data::AssociationManager::addNote( GeneratorID::id(), fileName, handles[i]->x(), handles[i]->y() );
 
                 listLastFile.removeOne( fileName );
             }
@@ -127,7 +127,7 @@ namespace Scene
 
         for ( int i=0 ; i<listLastFile.size() ; ++i )
         {
-            Database::AssociationManager::removeNote( GeneratorID::id(), listLastFile[i] );
+            Data::AssociationManager::removeNote( GeneratorID::id(), listLastFile[i] );
         }
 
         for ( int i=0 ; i<handles.size() ; ++i )
@@ -220,7 +220,7 @@ namespace Scene
             {
                 QString itemId = items[i];
 
-                QPoint point = Database::AssociationManager::positionAbstractNotes( GeneratorID::id(), fileName );
+                QPoint point = Data::AssociationManager::positionAbstractNotes( GeneratorID::id(), fileName );
                 int x = point.x();
                 int y = point.y();
 
