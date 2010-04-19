@@ -71,7 +71,7 @@ set(weshnotes_SRC
 ./src/tag/AddTag.cpp
 ./src/tag/NextTag.cpp
 ./src/technic/GeneratorID.cpp
-./src/database/AssociationManager.cpp
+./src/data/AssociationManager.cpp
 ./src/config/GeneralPageDialog.cpp
 ./src/config/AppareancePageDialog.cpp
 ./src/config/AnimationPageDialog.cpp
