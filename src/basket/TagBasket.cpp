@@ -39,7 +39,7 @@
 #include "../basket/AbstractBasket.h"
 #include "../basket/BasketFactory.h"
 #include "../basket/ItemTreeBasket.h"
-#include "../database/AssociationManager.h"
+#include "../data/AssociationManager.h"
 
 namespace Basket
 {
@@ -136,7 +136,7 @@ namespace Basket
     void TagBasket::del()
     {
         Config::Configuration::removeConfigDir( m_configFilePath );
-        Database::AssociationManager::removeAssociationNotes( m_contentScene->id() );
+        Data::AssociationManager::removeAssociationNotes( m_contentScene->id() );
     }
     
 }

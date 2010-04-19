@@ -49,7 +49,7 @@
 #include "../scene/FreeScene.h"
 #include "../scene/LayoutScene.h"
 #include "../scene/ToolBarScene.h"
-#include "../database/AssociationManager.h"
+#include "../data/AssociationManager.h"
 #include "../animation/AnimationManager.h"
 
 KStatusBar * MainWindow::m_statusBar = 0;
@@ -74,7 +74,7 @@ MainWindow::MainWindow( QWidget * parent ) :
 
     setupGUI( Default, "kweshtunotesui.rc" );
 
-    Database::AssociationManager::connectDB();
+    Data::AssociationManager::connectDB();
 
     loadData();
 }
