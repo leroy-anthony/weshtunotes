@@ -1,30 +1,31 @@
 /*
- Copyright (c) 2009 LEROY Anthony <leroy.anthony@gmail.com>
+    Copyright (c) 2009 LEROY Anthony <leroy.anthony@gmail.com>
 
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Library General Public
- License as published by the Free Software Foundation; either
- version 3 of the License, or (at your option) any later version.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Library General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
- You should have received a copy of the GNU Library General Public License
- along with this library; see the file COPYING.LIB.  If not, write to
- the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- Boston, MA 02110-1301, USA.
- */
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+*/
 #include "BasketFactory.h"
 
 #include <QMap>
+
+#include <KDebug>
 
 #include "../basket/Basket.h"
 #include "../basket/TagBasket.h"
 #include "../basket/AbstractBasket.h"
 #include "../config/Configuration.h"
+#include "../data/DataManager.h"
 
 namespace Basket
 {
@@ -38,35 +39,35 @@ namespace Basket
 
     AbstractBasket * BasketFactory::newBasket( ItemTreeBasket * itemTreeBasket,
                                                AbstractBasket * parent,
-                                               const QString & fileName,
+                                               const QString & id,
                                                const QMap<QString,QString> & options,
                                                const QString & type )
     {
         if ( type == QString("") )
         {
-            Config::Configuration settings( parent->directory() + QDir::separator() + fileName );
-            return newBasketInterne( itemTreeBasket, parent, fileName, options, settings.valueGroup("basket","type","basket") );
+            Data::DataManager settings( Data::DataManager::configFileBasket( id ) );
+            return newBasketInterne( itemTreeBasket, parent, id, options, settings.valueGroup("basket","type","basket") );
         }
 
-        return newBasketInterne( itemTreeBasket, parent, fileName, options, type );
+        return newBasketInterne( itemTreeBasket, parent, id, options, type );
     }
 
     AbstractBasket * BasketFactory::newBasket( ItemTreeBasket * itemTreeBasket,
-                                               const QString & fileName,
+                                               const QString & id,
                                                const QMap<QString,QString> & options,
                                                const QString & type )
     {
         if ( type == QString("") )
         {
-            Config::Configuration settings( fileName + QDir::separator() + fileName );
-            return newBasketInterne( itemTreeBasket, fileName, options, settings.valueGroup("basket","type","basket") );
+            Data::DataManager settings( Data::DataManager::configFileBasket( id ) );
+            return newBasketInterne( itemTreeBasket, id, options, settings.valueGroup("basket","type","basket") );
         }
 
-        return newBasketInterne( itemTreeBasket, fileName, options, type );
+        return newBasketInterne( itemTreeBasket, id, options, type );
     }
 
     AbstractBasket * BasketFactory::newBasketInterne( ItemTreeBasket * itemTreeBasket,
-                                                      const QString & fileName,
+                                                      const QString & id,
                                                       const QMap<QString,QString> & options,
                                                       const QString & type )
     {
@@ -74,15 +75,15 @@ namespace Basket
 
         if ( type == m_types[ BASKET ] )
         {
-            basket = new Basket( itemTreeBasket, fileName );
+            basket = new Basket( itemTreeBasket, id );
         }
         else if ( type == m_types[ TAG_BASKET ] )
         {
-            basket = new TagBasket( itemTreeBasket, fileName, options );
+            basket = new TagBasket( itemTreeBasket, id, options );
         }
         else
         {
-            basket = new Basket( itemTreeBasket, fileName );
+            basket = new Basket( itemTreeBasket, id );
         }
 
         return basket;
@@ -90,7 +91,7 @@ namespace Basket
 
     AbstractBasket * BasketFactory::newBasketInterne( ItemTreeBasket * itemTreeBasket,
                                                       AbstractBasket * parent,
-                                                      const QString & fileName,
+                                                      const QString & id,
                                                       const QMap<QString,QString> & options,
                                                       const QString & type )
     {
@@ -98,12 +99,12 @@ namespace Basket
 
         if ( type == m_types[ BASKET ] )
         {
-            basket = new Basket( itemTreeBasket, parent, fileName );
+            basket = new Basket( itemTreeBasket, parent, id );
         }
 
         if ( type == m_types[ TAG_BASKET ] )
         {
-            basket = new TagBasket( itemTreeBasket, parent, fileName, options );
+            basket = new TagBasket( itemTreeBasket, parent, id, options );
         }
 
         return basket;

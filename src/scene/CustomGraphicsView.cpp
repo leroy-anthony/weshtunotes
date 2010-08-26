@@ -1,21 +1,5 @@
 /*
- Copyright (c) 2009 LEROY Anthony <leroy.anthony@gmail.com>
-
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Library General Public
- License as published by the Free Software Foundation; either
- version 3 of the License, or (at your option) any later version.
-
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Library General Public License for more details.
-
- You should have received a copy of the GNU Library General Public License
- along with this library; see the file COPYING.LIB.  If not, write to
- the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- Boston, MA 02110-1301, USA.
- */
+*/
 
 #include "CustomGraphicsView.h"
 
@@ -45,7 +29,8 @@ namespace Scene
             m_scale(1.0),
             m_move(false),
             m_selection(false),
-            m_selectionItem(0)
+            m_selectionItem(0),
+            m_indexItem(0)
     {
         if ( QGLFormat::hasOpenGL() )
         {
@@ -72,16 +57,17 @@ namespace Scene
         //m_view->setOptimizationFlags( QGraphicsView::DontClipPainter );
 
         setRenderHint(QPainter::SmoothPixmapTransform, true);
-        setRenderHint(QPainter::Antialiasing, false);
-        setRenderHint(QPainter::TextAntialiasing, false);
+        setRenderHint(QPainter::Antialiasing, true);
+        setRenderHint(QPainter::TextAntialiasing, true);
         setRenderHint(QPainter::HighQualityAntialiasing, true);
-        setRenderHint(QPainter::NonCosmeticDefaultPen, false);
+        setRenderHint(QPainter::NonCosmeticDefaultPen, true);
 
         setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
         setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);//FullViewportUpdate);
-        setViewportMargins(4,4,4,4);
+        setViewportMargins(5,5,5,5);
+
 
         setAcceptDrops(true);
     }
@@ -355,6 +341,60 @@ namespace Scene
         }
 
         QGraphicsView::resizeEvent( event );
+    }
+
+    void CustomGraphicsView::nextItem()
+    {
+        prevOrNextItem( true );
+    }
+
+    void CustomGraphicsView::prevItem()
+    {
+        prevOrNextItem( false );
+    }
+
+    void CustomGraphicsView::prevOrNextItem( bool next )
+    {
+        QList<QGraphicsItem*> itemList = items();
+
+        for ( int i=0 ; i<itemList.size() ; ++i )
+        {
+            if ( !itemList[i]->isVisible() )
+            {
+                itemList.removeAt(i);
+                break;
+            }
+        }
+
+        if ( itemList.isEmpty() )
+        {
+            return;
+        }
+
+        if ( m_indexItem < 0 )
+        {
+            m_indexItem = itemList.size()-1;
+        }
+
+        if ( m_indexItem >= itemList.size() )
+        {
+            m_indexItem = 0;
+        }
+
+        QGraphicsItem * item = itemList[m_indexItem];
+
+        if ( next )
+        {
+            ++m_indexItem;
+        }
+        else
+        {
+            --m_indexItem;
+        }
+
+        scene()->clearSelection();
+        item->setSelected(true);
+        centerZoom();
     }
 
 }

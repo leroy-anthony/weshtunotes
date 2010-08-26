@@ -19,35 +19,56 @@
 
 #include "AbstractBasket.h"
 
-#include <QDir>
+#include <KDebug>
+#include <kpassworddialog.h>
+#include <KWallet/Wallet>
+#include <KCmdLineArgs>
+#include <KAboutData>
+#include <KApplication>
 
 #include "../config/Configuration.h"
 #include "../basket/ItemTreeBasket.h"
 #include "../scene/AbstractScene.h"
+#include "../data/DataManager.h"
+#include "../main/MainWindow.h"
+#include "../synchro/GoogleDocsConnection.h"
+#include "../synchro/AbstractConnection.h"
+#include "../synchro/SynchroManager.h"
 
 namespace Basket
 {
-    AbstractBasket::AbstractBasket( ItemTreeBasket * itemTreeBasket, const QString & name ):
+    AbstractBasket::AbstractBasket( ItemTreeBasket * itemTreeBasket, const QString & id ):
             GeneratorID("basket"),
-            m_name( name ),
+            m_name( "<unkown>" ),
             m_itemTreeBasket(itemTreeBasket),
             m_contentScene(0),
             m_order(0)
     {
-        m_directory = name;
-        m_configFilePath = m_directory + QDir::separator() + name;
+        initConfigFile(id);
     }
 
-    AbstractBasket::AbstractBasket( ItemTreeBasket * itemTreeBasket, AbstractBasket * basketParent, const QString & name ):
+    AbstractBasket::AbstractBasket( ItemTreeBasket * itemTreeBasket, AbstractBasket * basketParent, const QString & id ):
             GeneratorID("basket"),
-            m_name( name ),
+            m_name( "<unkown>" ),
             m_itemTreeBasket(itemTreeBasket),
             m_contentScene(0),
             m_order(0)
     {
         basketParent->addChild( this );
-        m_directory = basketParent->directory() + QDir::separator() + name;
-        m_configFilePath = m_directory + QDir::separator() + name;
+
+        initConfigFile(id);
+    }
+
+    void AbstractBasket::initConfigFile( const QString & id )
+    {
+        if ( id != "" )
+        {
+            m_configFile = Data::DataManager::configFileBasket( id );
+        }
+        else
+        {
+            m_configFile = Data::DataManager::configFileBasket( GeneratorID::id() );
+        }
     }
 
     AbstractBasket::~AbstractBasket()
@@ -69,14 +90,9 @@ namespace Basket
         return m_name;
     }
 
-    const QString & AbstractBasket::directory()
+    void AbstractBasket::setName( const QString & name )
     {
-        return m_directory;
-    }
-
-    const QString & AbstractBasket::configFilePath()
-    {
-        return m_configFilePath;
+        m_name = name;
     }
 
     Scene::AbstractScene * AbstractBasket::scene()
@@ -106,19 +122,25 @@ namespace Basket
 
     void AbstractBasket::save()
     {
-        Config::Configuration settings( m_configFilePath );
-        settings.setValue( "basket", "type", m_type );
-        settings.setValue( "basket", "icon", m_icon );
+        Data::DataManager settings( m_configFile );
+        settings.setValue( "basket", "type",  m_type );
+        settings.setValue( "basket", "icon",  m_icon );
         settings.setValue( "basket", "order", m_order );
-        settings.setValue( "basket", "id", GeneratorID::id() );
+        settings.setValue( "basket", "id",    GeneratorID::id() );
+        settings.setValue( "basket", "name",  m_name );
+        settings.setValue( "basket", "color", m_backgroundColor );
+
     }
 
     void AbstractBasket::load()
     {
-        Config::Configuration settings( m_configFilePath );
+        Data::DataManager settings( m_configFile );
         m_type = settings.valueGroup( "basket", "type", "basket" );
         m_icon = settings.valueGroup( "basket", "icon", "folder" );
+        m_name = settings.valueGroup( "basket", "name", "<unknow>" );
         m_order = settings.valueGroup( "basket", "order", 0 ).toInt();
+        m_backgroundColor = settings.valueGroup( "basket", "color", Settings::colorBasket().name() );
+
         setId( settings.valueGroup( "basket", "id", GeneratorID::id() ) );
 
         m_itemTreeBasket->setIcon( m_icon );
@@ -136,35 +158,33 @@ namespace Basket
         m_order = order;
     }
 
-    void AbstractBasket::moveTo( AbstractBasket * basket )
+    const QString & AbstractBasket::configFile()
     {
-        const QString basketsStorePath = Config::Configuration::basketsStorePath();
-        const QString oldBasketName = m_directory;
+        return m_configFile;
+    }
 
-        QString dest = "";
-        if ( basket != 0 )
-        {
-            dest = basket->directory();
-        }
+    void AbstractBasket::commitGoogle()
+    {
+        Synchro::SynchroManager<Synchro::GoogleDocsConnection> sync;
+        sync.commit( m_configFile );
+    }
 
-        m_directory = dest + QDir::separator() + m_name;
+    void AbstractBasket::updateGoogle()
+    {
+        Synchro::SynchroManager<Synchro::GoogleDocsConnection> sync;
+        sync.update( m_configFile );
+        load();
+        MainWindow::reloadView();
+    }
 
-        QDir newBasket( basketsStorePath + QDir::separator() + dest );
-        if ( newBasket.mkdir( basketsStorePath + QDir::separator() + m_directory ) )
-        {
-            QFile newBasketConfig( basketsStorePath + QDir::separator() + m_configFilePath);
-            if ( newBasketConfig.copy( basketsStorePath + QDir::separator() + m_directory + QDir::separator() + m_name) )
-            {
-                QFile oldBasketConfig( basketsStorePath + QDir::separator() + m_configFilePath );
-                oldBasketConfig.remove();
+    const QString & AbstractBasket::backgroundColor()
+    {
+        return m_backgroundColor;
+    }
 
-                QDir oldBasket( basketsStorePath );
-                oldBasket.rmdir( oldBasketName );
-
-                m_configFilePath = m_directory + QDir::separator() + m_name;
-                scene()->setDirectoryScene( m_configFilePath );
-            }
-        }
+    void AbstractBasket::setBackgroundColor( const QString & color )
+    {
+        m_backgroundColor = color;
     }
 
 }
