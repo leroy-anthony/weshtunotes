@@ -1,21 +1,20 @@
 /*
- Copyright (c) 2009 LEROY Anthony <leroy.anthony@gmail.com>
- 
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Library General Public
- License as published by the Free Software Foundation; either
- version 3 of the License, or (at your option) any later version.
- 
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Library General Public License for more details.
- 
- You should have received a copy of the GNU Library General Public License
- along with this library; see the file COPYING.LIB.  If not, write to
- the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- Boston, MA 02110-1301, USA.
- */
+    Copyright (c) 2009 LEROY Anthony <leroy.anthony@gmail.com>
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
 
 #include "TagBasket.h"
 
@@ -40,25 +39,26 @@
 #include "../basket/BasketFactory.h"
 #include "../basket/ItemTreeBasket.h"
 #include "../data/AssociationManager.h"
+#include "../data/DataManager.h"
 
 namespace Basket
 {
     
     TagBasket::TagBasket( ItemTreeBasket * itemTreeBasket,
                           AbstractBasket * basket,
-                          const QString & name,
+                          const QString & id,
                           const QMap<QString,QString> & options ):
-            AbstractBasket( itemTreeBasket, basket, name ),
-            m_tagName( "" )
+    AbstractBasket( itemTreeBasket, basket, id ),
+    m_tagName( "" )
     {
         initTagBasket( options );
     }
     
     TagBasket::TagBasket( ItemTreeBasket * itemTreeBasket,
-                          const QString & name,
+                          const QString & id,
                           const QMap<QString,QString> & options ):
-            AbstractBasket( itemTreeBasket, name ),
-            m_tagName( "" )
+    AbstractBasket( itemTreeBasket, id ),
+    m_tagName( "" )
     {
         initTagBasket( options );
     }
@@ -67,7 +67,7 @@ namespace Basket
     {
         m_type = BasketFactory::type(BasketFactory::TAG_BASKET);
 
-        m_contentScene = Scene::SceneFactory::newScene( m_configFilePath );
+        m_contentScene = Scene::SceneFactory::newScene( m_configFile );
 
         if ( options.contains("tagName") )
         {
@@ -77,7 +77,7 @@ namespace Basket
     
     void TagBasket::save()
     {
-        Config::Configuration settings( m_configFilePath );
+        Data::DataManager settings( m_configFile );
         settings.setValue( "basket", "tag_name", m_tagName );
 
         m_contentScene->save();
@@ -90,11 +90,11 @@ namespace Basket
         AbstractBasket::load();
 
         delete m_contentScene;
-        m_contentScene = Scene::SceneFactory::newScene( m_configFilePath );
-        m_contentScene->load( m_configFilePath );
+        m_contentScene = Scene::SceneFactory::newScene( m_configFile );
+        m_contentScene->load( m_configFile );
         m_contentScene->setReadOnly(true);
-
-        Config::Configuration settings( m_configFilePath );
+	
+        Data::DataManager settings( m_configFile );
         m_tagName = settings.valueGroup("basket","tag_name","T");
         
         Nepomuk::Tag tag( "KWeshTuNotes::" + m_tagName );
@@ -114,9 +114,9 @@ namespace Basket
         while( it.next() )
         {
             QUrl url = Nepomuk::Resource( it.binding( "r" ).uri() ).property( QUrl("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#url") ).toUrl();
-            
+ 
             QList<QString> liste;
-            liste << url.toLocalFile().replace(Settings::basketsStorePath().toLocalFile()+QDir::separator()+"baskets"+QDir::separator(),"");
+            liste << url.toLocalFile().replace(Settings::basketsStorePath().toLocalFile()+QDir::separator(),"");
 
             if ( QFile::exists( url.toLocalFile() ) )
             {
@@ -135,7 +135,7 @@ namespace Basket
     
     void TagBasket::del()
     {
-        Config::Configuration::removeConfigDir( m_configFilePath );
+        Data::DataManager::removeBasket( m_configFile );
         Data::AssociationManager::removeAssociationNotes( m_contentScene->id() );
     }
     

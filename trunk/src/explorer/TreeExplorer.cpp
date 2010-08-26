@@ -1,21 +1,20 @@
 /*
- Copyright (c) 2009 LEROY Anthony <leroy.anthony@gmail.com>
+    Copyright (c) 2009 LEROY Anthony <leroy.anthony@gmail.com>
 
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Library General Public
- License as published by the Free Software Foundation; either
- version 3 of the License, or (at your option) any later version.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Library General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
- You should have received a copy of the GNU Library General Public License
- along with this library; see the file COPYING.LIB.  If not, write to
- the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- Boston, MA 02110-1301, USA.
- */
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
 
 #include "TreeExplorer.h"
 
@@ -23,31 +22,37 @@
 #include <QApplication>
 #include <QFileInfo>
 #include <QDir>
+#include <QMenu>
 
 #include <KLineEdit>
 #include <KLocalizedString>
 
 #include "../basket/NewBasketDialog.h"
+#include "../basket/PropertiesBasketDialog.h"
 #include "../basket/ItemTreeBasket.h"
 #include "../basket/BasketFactory.h"
 #include "../scene/FreeScene.h"
 #include "../scene/LayoutScene.h"
 #include "../config/Configuration.h"
+#include "../config/ImageFactory.h"
 #include "../basket/ItemTreeBasket.h"
 
 namespace Explorer
 {
 
     TreeExplorer::TreeExplorer( QWidget * parent ):
-            QTreeWidget(parent),
-            m_currentDragItem(0)
+            QTreeWidget(parent)
     {
-        setHeaderLabel( tr("Paniers") );
+        setHeaderLabel( tr("My baskets") );
         setHeaderHidden( false );
         setIconSize(QSize(24,24));
         setColumnCount(3);
 
         setDragDropMode( QAbstractItemView::InternalMove );
+
+        setContextMenuPolicy(Qt::CustomContextMenu);
+
+        connect( this, SIGNAL(customContextMenuRequested( const QPoint & )), this, SLOT(showMenuContext( const QPoint & )) );
     }
 
     TreeExplorer::~TreeExplorer()
@@ -61,20 +66,40 @@ namespace Explorer
         {
             b->basket()->del();
             delete b;
+
+            saveBaskets();
         }
+
+        emit delCurrentBasketRequest();
     }
 
     Basket::ItemTreeBasket * TreeExplorer::addToCurrentBasket()
     {
-        return Basket::NewBasketDialog::getNewBasket( this, dynamic_cast<Basket::ItemTreeBasket*>(currentItem()) );
+        Basket::ItemTreeBasket * item = Basket::NewBasketDialog::getNewBasket( this, dynamic_cast<Basket::ItemTreeBasket*>(currentItem()) );
+
+        emit addToCurrentBasketRequest( item );
+
+        return item;
     }
 
     Basket::ItemTreeBasket * TreeExplorer::addBasketToRoot()
     {
-        Basket::ItemTreeBasket * b = Basket::NewBasketDialog::getNewBasket( this, 0 );
-        insertTopLevelItem(  topLevelItemCount(), b );
+        Basket::ItemTreeBasket * item = Basket::NewBasketDialog::getNewBasket( this, 0 );
+        insertTopLevelItem(  topLevelItemCount(), item );
 
-        return b;
+        emit addToCurrentBasketRequest( item );
+
+        return item;
+    }
+
+    void TreeExplorer::showPropertiesBasket()
+    {
+        Basket::ItemTreeBasket * b = dynamic_cast<Basket::ItemTreeBasket*>(currentItem());
+        if ( b != 0 )
+        {
+            Basket::PropertiesBasketDialog prop(this, b);
+            prop.exec();
+        }
     }
 
     bool TreeExplorer::findBasket( Basket::ItemTreeBasket * parent, const QString & name )
@@ -94,25 +119,48 @@ namespace Explorer
         return static_cast<Basket::ItemTreeBasket*>(QTreeWidget::invisibleRootItem());
     }
 
-    Basket::ItemTreeBasket * TreeExplorer::addBasket( Basket::ItemTreeBasket * parent, const QString & name )
+    void TreeExplorer::saveBaskets( QTreeWidgetItem * b )
     {
-        Basket::ItemTreeBasket * b = 0;
+        QStringList childBasket;
 
-        if ( !findBasket( parent, name ) )
+        int childSize = b->childCount();
+        for ( int i=0 ; i<childSize ; ++i )
         {
-            if ( parent == 0 )
-            {
-                b = new Basket::ItemTreeBasket( parent, name, 0 );
-                insertTopLevelItem(  topLevelItemCount(), b );
-            }
-            else
-            {
-                b = new Basket::ItemTreeBasket( parent, name, 0 );
-            }
+            Basket::ItemTreeBasket * child = static_cast<Basket::ItemTreeBasket*>(b->child(i));
+
+            childBasket += child->basket()->id();
+
+            saveBaskets( child );
+        }
+
+        if ( b != invisibleRootItem ()  )
+        {
+            Data::DataManager::addBasket(static_cast<Basket::ItemTreeBasket*>(b)->basket()->id(),childBasket);
         }
         else
         {
-            return 0;
+            Data::DataManager::addMasterBasket(childBasket);
+        }
+    }
+
+    void TreeExplorer::saveBaskets()
+    {
+        Data::DataManager::removeBaskets();
+        saveBaskets( invisibleRootItem() );
+    }
+
+    Basket::ItemTreeBasket * TreeExplorer::addBasket( Basket::ItemTreeBasket * parent, const QString & id )
+    {
+        Basket::ItemTreeBasket * b = 0;
+
+        if ( parent == 0 )
+        {
+            b = new Basket::ItemTreeBasket( parent, id, 0 );
+            insertTopLevelItem(  topLevelItemCount(), b );
+        }
+        else
+        {
+            b = new Basket::ItemTreeBasket( parent, id, 0 );
         }
 
         setCurrentIndex( indexFromItem( b, 0 ) );
@@ -124,40 +172,28 @@ namespace Explorer
 
     void TreeExplorer::loadBaskets()
     {
-        QStringList masterBasket = Config::Configuration::masterBaskets();
+        QStringList masterBasket = Data::DataManager::masterBaskets();
         for (int i = 0; i < masterBasket.size(); ++i)
         {
+            Data::DataManager settings( Data::DataManager::configFileBasket( masterBasket[i] ) );
             loadBasket( masterBasket[i] );
         }
 
         sortByColumn( 1, Qt::AscendingOrder );
     }
 
-    //fixme : only root basket are saved.
-    void TreeExplorer::saveBaskets()
+    void TreeExplorer::loadBasket( const QString & id )
     {
-        QStringList masterBasket;
-        int masterBasketCount = topLevelItemCount();
-        for ( int i=0 ; i<masterBasketCount ; ++i )
-        {
-            QTreeWidgetItem * item = topLevelItem( i );
-            Basket::ItemTreeBasket * b = dynamic_cast<Basket::ItemTreeBasket*>(item);
-            b->basket()->save();
-        }
+        loadBasket( 0, id );
     }
 
-    void TreeExplorer::loadBasket( const QString & name )
+    void TreeExplorer::loadBasket( Basket::ItemTreeBasket * parent, const QString & id )
     {
-        loadBasket( 0, name );
-    }
-
-    void TreeExplorer::loadBasket( Basket::ItemTreeBasket * parent, const QString & name )
-    {
-        Basket::ItemTreeBasket * b = addBasket( parent, name );
+        Basket::ItemTreeBasket * b = addBasket( parent, id );
 
         setCurrentItem( b );
 
-        QStringList l = Config::Configuration::subDirs( b->basket()->configFilePath() );
+        QStringList l = Data::DataManager::subBaskets( id );
         for ( int i=0 ; i<l.size() ; ++i )
         {
             loadBasket( b, l[i] );
@@ -167,7 +203,7 @@ namespace Explorer
     QTreeWidgetItem * TreeExplorer::loadFromConfigCurrentBasket()
     {
         setColumnCount(3);
-        QString currentBasket = Config::Configuration::loadLastBasket();
+        QString currentBasket = Data::DataManager::loadLastBasket();
         QList<QTreeWidgetItem*> baskets = findItems( currentBasket, Qt::MatchFixedString | Qt::MatchRecursive, 2 );
 
         setColumnCount(1);
@@ -186,24 +222,53 @@ namespace Explorer
     {
         QTreeWidget::dropEvent( event );
 
-        if ( m_currentDragItem != 0 )
-        {
-            Basket::AbstractBasket * b = 0;
-            if ( m_currentDragItem->parent() != 0 )
-            {
-                b = static_cast<Basket::ItemTreeBasket*>(m_currentDragItem->parent())->basket();
-            }
-
-            m_currentDragItem->basket()->moveTo( b );
-        }
-
-        m_currentDragItem = 0;
+        saveBaskets();
     }
 
     void TreeExplorer::startDrag( Qt::DropActions supportedActions )
     {
-        m_currentDragItem = static_cast<Basket::ItemTreeBasket*>(currentItem());
-
         QTreeWidget::startDrag( supportedActions );
+    }
+
+    void TreeExplorer::showMenuContext( const QPoint & point )
+    {
+        QTreeWidgetItem * item = 0 ;
+        item = this->itemAt(point);
+
+        if ( item != 0 )
+        {
+            Basket::ItemTreeBasket * basketItem = static_cast<Basket::ItemTreeBasket*>(item);
+
+            QMenu menu(this);
+
+            QAction * addAction = new QAction(tr("Add basket"), this);
+            menu.addAction(addAction);
+            connect(addAction, SIGNAL(triggered()), this, SLOT(addToCurrentBasket()));
+            addAction->setIcon(Config::ImageFactory::newInstance()->icon("list-add"));
+
+            QAction * deleteAction = new QAction(tr("Delete"), this);
+            menu.addAction(deleteAction);
+            connect(deleteAction, SIGNAL(triggered()), this, SLOT(delCurrentBasket()));
+            deleteAction->setIcon(Config::ImageFactory::newInstance()->icon("edit-delete"));
+
+            menu.addSeparator();
+
+            /*QAction * newAct = new QAction(tr("Commit to google"), this);
+            menu.addAction(newAct);
+            connect(newAct, SIGNAL(triggered()), basketItem->basket(), SLOT(commitGoogle()));
+
+            QAction * newAct2 = new QAction(tr("Update from google"), this);
+            menu.addAction(newAct2);
+            connect(newAct2, SIGNAL(triggered()), basketItem->basket(), SLOT(updateGoogle()));
+
+            menu.addSeparator();*/
+
+            QAction * propertyAction = new QAction(tr("Properties"), this);
+            menu.addAction(propertyAction);
+            connect(propertyAction, SIGNAL(triggered()), this, SLOT(showPropertiesBasket()));
+
+            menu.exec(mapToGlobal(point));
+
+        }
     }
 }

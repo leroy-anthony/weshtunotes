@@ -1,21 +1,20 @@
 /*
- Copyright (c) 2009 LEROY Anthony <leroy.anthony@gmail.com>
- 
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Library General Public
- License as published by the Free Software Foundation; either
- version 3 of the License, or (at your option) any later version.
- 
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Library General Public License for more details.
- 
- You should have received a copy of the GNU Library General Public License
- along with this library; see the file COPYING.LIB.  If not, write to
- the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- Boston, MA 02110-1301, USA.
- */
+    Copyright (c) 2009 LEROY Anthony <leroy.anthony@gmail.com>
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
 
 #include "FreeScene.h"
 
@@ -40,6 +39,7 @@
 #include <QGraphicsView>
 #include <QScrollBar>
 #include <QPropertyAnimation>
+#include <QAnimationGroup>
 
 #include "settings.h"
 #include "../handle/HandleItem.h"
@@ -158,8 +158,9 @@ namespace Scene
 
         Handle::GraphicHandleItem * g = new Handle::GraphicHandleItem();
         g->setFlag(QGraphicsItem::ItemIsSelectable,true);
-        g->setFlag(QGraphicsItem::ItemIsFocusable,true);
+        g->setFlag(QGraphicsItem::ItemIsFocusable,false);
         g->setWidget(handle);
+
         addItem(g);
 
         g->setPos( handle->x(), handle->y() );
@@ -185,7 +186,7 @@ namespace Scene
             static_cast<QWidget*>(handleItem)->move(x,y);
 
             //Handle::HandleItem::resetInsert();
-            if ( m_lastCibleHandle )
+            if ( m_lastCibleHandle != 0 )
             {
                 m_lastCibleHandle->resetInsert();
             }
@@ -206,6 +207,7 @@ namespace Scene
         else
         {
             Handle::HandleItem * parentItem = handleItem->parentHandle();
+
             parentItem->remove( handleItem );
             handleItem->setParent(0);
             handleItem->setModeDegroupement(true);
@@ -290,14 +292,15 @@ namespace Scene
             m_currentHandle->setModeDegroupement(false);
             m_currentHandle->setHoverMode( false );
 
-            if ( m_currentHandle->noteItem() != 0 )
+            if ( m_currentHandle->abstractItem() != 0 )
             {
-                m_currentHandle->noteItem()->isSelected();
-                m_currentHandle->noteItem()->setFocus();
+                m_currentHandle->abstractItem()->isSelected();
+                m_currentHandle->abstractItem()->setFocus();
             }
         }
 
         m_modeItem = Nothing;
+
         QGraphicsScene::mouseReleaseEvent ( mouseEvent );
     }
 
@@ -332,25 +335,28 @@ namespace Scene
 
     void FreeScene::deleteGraphicsItemFromScene( QGraphicsProxyWidget * g )
     {
+        g->clearFocus();
+
         removeItem(g);
 
         m_items.remove(g);
 
         g->setWidget(0);
-        g->deleteLater();
+
+        //FIXME: Qt bug, pb focus, bug 6544, mark as fixed but not.
+        //g->deleteLater();
     }
 
     void FreeScene::deleteGraphicsItemFromSceneAnimated()
     {
-        QPropertyAnimation * animation = qobject_cast<QPropertyAnimation*>(sender());
-        if (!animation)
+        QAnimationGroup * animationGroup = static_cast<QAnimationGroup*>(sender());
+        if ( animationGroup != 0 && animationGroup->animationCount() > 0 )
         {
-            return;
+            QPropertyAnimation * animation = static_cast<QPropertyAnimation*>(animationGroup->animationAt(0));
+            deleteGraphicsItemFromScene( static_cast<QGraphicsProxyWidget*>(animation->targetObject()) );
+
+            animationGroup->deleteLater();
         }
-
-        deleteGraphicsItemFromScene( static_cast<QGraphicsProxyWidget*>(animation->targetObject()) );
-
-        animation->deleteLater();
     }
 
     void FreeScene::delUselessHandleGroup( Handle::HandleItem * currentHandle  )
@@ -364,9 +370,11 @@ namespace Scene
                 parentHandle->remove( child );
                 child->setParent(0);
                 child->setParentHandle(0);
-                parentHandle->add( child->noteItem() );
+                child->clearFocus();
+                parentHandle->add( child->abstractItem() );
 
-                child->deleteLater();
+                //FIXME: Qt bug, pb focus, bug 6544, mark as fixed but not.
+                //child->deleteLater();
             }
 
             currentHandle->setParentHandle(0);

@@ -1,56 +1,69 @@
 /*
- Copyright (c) 2009 LEROY Anthony <leroy.anthony@gmail.com>
+    Copyright (c) 2009 LEROY Anthony <leroy.anthony@gmail.com>
 
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Library General Public
- License as published by the Free Software Foundation; either
- version 3 of the License, or (at your option) any later version.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Library General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
- You should have received a copy of the GNU Library General Public License
- along with this library; see the file COPYING.LIB.  If not, write to
- the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- Boston, MA 02110-1301, USA.
- */
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
 
 #include "GeneratorID.h"
 
 #include <QDebug>
+#include <cstdlib>
 
 namespace Technic
 {
 
-    QMap<QString,long> GeneratorID::m_cacheId;
+    QMap< QString, QSet<QString> > GeneratorID::m_cacheId;
+    int GeneratorID::m_sizeKey = 32;
 
     GeneratorID::GeneratorID( const QString & name ):
             m_name(name)
     {
-        m_nameId = QString(m_name+"%1").arg( cacheId(m_name) );
-        nextCacheId(m_name);
+        m_nameId = QString(m_name+"%1").arg( newId() );
+    }
+
+    QString GeneratorID::newId()
+    {
+        QString alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        QString id = "";
+        int nb = 0;
+
+        while ( ((id == "") || m_cacheId[m_name].contains(id)) && nb < 15 )
+        {
+            id = "";
+            for (int i = 0; i < m_sizeKey; ++i)
+            {
+                id += alphabet[std::rand() % alphabet.size()];
+            }
+            ++nb;
+        }
+
+        m_cacheId[m_name] += (id);
+
+        return id;
     }
 
     void GeneratorID::setId( const QString & id )
     {
         m_nameId = id;
         QString idStr = QString(id).replace(m_name,"");
-        if ( idStr.toInt() > cacheId(m_name) )
-        {
-            m_cacheId[ m_name ] = idStr.toInt();
-        }
+        m_cacheId[m_name] += idStr;
     }
 
     void GeneratorID::regenerateId()
     {
-        QString idStr = QString(m_nameId).replace(m_name,"");
-        if ( idStr.toInt() <= cacheId(m_name) )
-        {
-            m_nameId = QString(m_name+"%1").arg(cacheId(m_name));
-            nextCacheId(m_name);
-        }
+        m_nameId = QString(m_name+"%1").arg( newId() );
     }
 
     const QString & GeneratorID::id() const
@@ -58,24 +71,6 @@ namespace Technic
         return m_nameId;
     }
 
-    long GeneratorID::cacheId( const QString & m_name )
-    {
-        if ( !m_cacheId.contains(m_name) )
-        {
-            m_cacheId[ m_name ] = 0;
-        }
 
-        return m_cacheId[ m_name ];
-    }
-
-    void GeneratorID::nextCacheId( const QString & m_name )
-    {
-        if ( !m_cacheId.contains(m_name) )
-        {
-            m_cacheId[ m_name ] = 0;
-        }
-
-        ++m_cacheId[ m_name ];
-    }
 
 }

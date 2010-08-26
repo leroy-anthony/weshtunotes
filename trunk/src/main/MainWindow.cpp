@@ -1,21 +1,20 @@
 /*
- Copyright (c) 2009 LEROY Anthony <leroy.anthony@gmail.com>
- 
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Library General Public
- License as published by the Free Software Foundation; either
- version 3 of the License, or (at your option) any later version.
- 
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Library General Public License for more details.
- 
- You should have received a copy of the GNU Library General Public License
- along with this library; see the file COPYING.LIB.  If not, write to
- the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- Boston, MA 02110-1301, USA.
- */
+    Copyright (c) 2009 LEROY Anthony <leroy.anthony@gmail.com>
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
 
 #include "MainWindow.h"
 
@@ -34,6 +33,7 @@
 #include <KFileMetaInfo>
 #include <KSystemTrayIcon>
 #include <KAction>
+#include <KTreeWidgetSearchLine>
 
 #include "settings.h"
 #include "../tag/TagFactory.h"
@@ -50,21 +50,28 @@
 #include "../scene/LayoutScene.h"
 #include "../scene/ToolBarScene.h"
 #include "../data/AssociationManager.h"
+#include "../data/ExportDataToXml.h"
+#include "../data/ImportDataFromXml.h"
 #include "../animation/AnimationManager.h"
 
 KStatusBar * MainWindow::m_statusBar = 0;
 
+Scene::CustomGraphicsView * MainWindow::m_view = 0;
+
+Basket::ItemTreeBasket * MainWindow::m_lastBasketLoad = 0;
+
 MainWindow::MainWindow( QWidget * parent ) :
-        KXmlGuiWindow( parent ),
-        m_lastBasketLoad(0)
+        KXmlGuiWindow( parent )
 {
     setupUi(this);
 
+    Data::DataManager::iniConfigration();
     initView();
     initExplorer();
 
     m_tagFactory = Tag::TagFactory::newTagFactory();
     m_tagFactory->loadTags();
+
 
     setupActions();
 
@@ -74,9 +81,10 @@ MainWindow::MainWindow( QWidget * parent ) :
 
     setupGUI( Default, "kweshtunotesui.rc" );
 
-    Data::AssociationManager::connectDB();
-
     loadData();
+    
+    //Data::ExportDataToXml::exportToFile( m_treeExplorer->rootItem(), "/tmp/baskets.xml" );
+    //Data::ImportDataFromXml::importFromFile( "/tmp/baskets.xml" );
 }
 
 MainWindow::~MainWindow()
@@ -199,6 +207,20 @@ void MainWindow::initView()
 
     layoutButtonView->addItem(new QSpacerItem(0,0,QSizePolicy::Expanding,QSizePolicy::Ignored));
 
+    QToolButton * q6 = new QToolButton();
+    q6->setIcon(Config::ImageFactory::newInstance()->icon("go-previous"));
+    q6->setToolTip("Zoom fit");
+    connect( q6, SIGNAL(clicked()), m_view, SLOT(prevItem()) );
+    layoutButtonView->addWidget(q6);
+
+    QToolButton * q7 = new QToolButton();
+    q7->setIcon(Config::ImageFactory::newInstance()->icon("go-next"));
+    q7->setToolTip("Zoom fit");
+    connect( q7, SIGNAL(clicked()), m_view, SLOT(nextItem()) );
+    layoutButtonView->addWidget(q7);
+
+    layoutButtonView->addItem(new QSpacerItem(0,0,QSizePolicy::Expanding,QSizePolicy::Ignored));
+
     Animation::AnimationManager::initAnimation(m_view);
 }
 
@@ -208,54 +230,43 @@ void MainWindow::initExplorer()
 
     // creation du layout du dock
     QLayout * layoutDock = new QVBoxLayout( dockWidgetContents );
-    layoutDock->setMargin(4);
+    layoutDock->setMargin(2);
     layoutDock->setSpacing(0);
 
     QWidget * widget = new QWidget();
-    dockFichier->setTitleBarWidget(widget);
+    dockFichier->setTitleBarWidget( widget );
+    dockFichier->titleBarWidget()->setContentsMargins(6,4,0,0);
 
     QLayout * layoutButtonExplorer = new QHBoxLayout( widget );
-    layoutButtonExplorer->setMargin(4);
-    layoutButtonExplorer->setSpacing(2);
+    layoutButtonExplorer->setMargin(0);
+    layoutButtonExplorer->setSpacing(0);
 
     QToolButton * q1 = new QToolButton();
-    q1->setIcon(Config::ImageFactory::newInstance()->icon("document-new"));
+    q1->setIcon(Config::ImageFactory::newInstance()->icon("folder-new"));
     q1->setToolTip("New root basket");
-    connect( q1, SIGNAL(clicked()), this, SLOT(addBasketToRoot()) );
+    connect( q1, SIGNAL(clicked()), m_treeExplorer, SLOT(addBasketToRoot()) );
     layoutButtonExplorer->addWidget(q1);
-
-    QToolButton * q2 = new QToolButton();
-    q2->setIcon(Config::ImageFactory::newInstance()->icon("list-add"));
-    q2->setToolTip("Add basket");
-    connect( q2, SIGNAL(clicked()), this, SLOT(addToCurrentBasket()) );
-    layoutButtonExplorer->addWidget(q2);
 
     QToolButton * q3 = new QToolButton();
     q3->setIcon(Config::ImageFactory::newInstance()->icon("edit-delete"));
     q3->setToolTip("Delete basket");
-    connect( q3, SIGNAL(clicked()), this, SLOT(delCurrentBasket()) );
+    connect( q3, SIGNAL(clicked()), m_treeExplorer, SLOT(delCurrentBasket()) );
     layoutButtonExplorer->addWidget(q3);
 
-    layoutButtonExplorer->addItem(new QSpacerItem(0,0,QSizePolicy::Expanding,QSizePolicy::Ignored));
+    KTreeWidgetSearchLine * lineEdit = new KTreeWidgetSearchLine();
+    lineEdit->addTreeWidget(m_treeExplorer);
+    layoutButtonExplorer->addWidget(lineEdit);
 
     layoutDock->addWidget( m_treeExplorer );
 
-    connect(m_treeExplorer,SIGNAL(itemClicked(QTreeWidgetItem*,int)),this,SLOT(loadScene(QTreeWidgetItem*,int)));
+    connect( m_treeExplorer, SIGNAL(itemClicked(QTreeWidgetItem*,int)),                   this, SLOT(loadScene(QTreeWidgetItem*,int)) );
+    connect( m_treeExplorer, SIGNAL(delCurrentBasketRequest()),                           this, SLOT(delCurrentBasket()) );
+    connect( m_treeExplorer, SIGNAL(addToCurrentBasketRequest(Basket::ItemTreeBasket *)), this, SLOT(addBasket(Basket::ItemTreeBasket *)) );
+
 }
 
-void MainWindow::addToCurrentBasket()
+void MainWindow::addBasket( Basket::ItemTreeBasket * item )
 {
-    Basket::ItemTreeBasket * item = m_treeExplorer->addToCurrentBasket();
-    if ( item != 0 )
-    {
-        item->basket()->save();
-        loadScene( item , 0 );
-    }
-}
-
-void MainWindow::addBasketToRoot()
-{
-    Basket::ItemTreeBasket * item = m_treeExplorer->addBasketToRoot();
     if ( item != 0 )
     {
         item->basket()->save();
@@ -266,13 +277,32 @@ void MainWindow::addBasketToRoot()
 void MainWindow::delCurrentBasket()
 {
     m_lastBasketLoad = 0;
-    m_treeExplorer->delCurrentBasket();
     QList<QTreeWidgetItem*> items = m_treeExplorer->selectedItems();
     if ( items.size() > 0 )
     {
         loadScene(items[0]);
     }
+    else
+    {
+        m_view->setScene( new Scene::FreeScene() );
+        m_view->setDisabled(true);
+    }
 }
+
+
+void MainWindow::reloadView()
+{
+    if ( m_lastBasketLoad != 0 )
+    {
+        Scene::AbstractScene * scene = m_lastBasketLoad->basket()->scene();
+        m_view->setScene( scene );
+        m_view->setEnabled( true );
+        scene->restoreView( m_view );
+
+        showMessage( QString("%1 item(s) loaded").arg(scene->handles().size()), 1000 );
+    }
+}
+
 
 void MainWindow::loadScene( QTreeWidgetItem * item , int column )
 {
@@ -287,28 +317,11 @@ void MainWindow::loadScene( QTreeWidgetItem * item , int column )
 
     i->basket()->load();
 
-    Scene::AbstractScene * scene = i->basket()->scene();
-    m_view->setScene( scene );
-    i->basket()->scene()->restoreView( m_view );
+    reloadView();
 
     Animation::AnimationManager::startLoad( i->basket()->scene()->items() );
 
     m_view->update();
-
-    if ( m_lastBasketLoad->basket()->scene()->type() == Scene::FreeScene::type )
-    {
-        actionCollection()->action( Scene::FreeScene::type )->setChecked(true);
-        actionCollection()->action( Scene::FreeScene::type )->setDisabled(true);
-        actionCollection()->action( Scene::LayoutScene::type )->setDisabled(false);
-        actionCollection()->action( Scene::LayoutScene::type )->setChecked(false);
-    }
-    else
-    {
-        actionCollection()->action( Scene::LayoutScene::type )->setChecked(true);
-        actionCollection()->action( Scene::FreeScene::type )->setChecked(false);
-        actionCollection()->action( Scene::LayoutScene::type )->setDisabled(true);
-        actionCollection()->action( Scene::FreeScene::type )->setDisabled(false);
-    }
 }
 
 Scene::AbstractScene * MainWindow::currentScene()
@@ -319,38 +332,6 @@ Scene::AbstractScene * MainWindow::currentScene()
 Scene::CustomGraphicsView * MainWindow::currentView()
 {
     return m_view;
-}
-
-void MainWindow::layoutScene()
-{
-    m_lastBasketLoad->basket()->scene()->setType( Scene::LayoutScene::type );
-    m_lastBasketLoad->basket()->save();
-    m_lastBasketLoad->basket()->load();
-
-    m_view->setScene( m_lastBasketLoad->basket()->scene() );
-
-    actionCollection()->action( Scene::LayoutScene::type )->setDisabled(true);
-    actionCollection()->action( Scene::LayoutScene::type )->setChecked(true);
-
-    actionCollection()->action( Scene::FreeScene::type )->setChecked(false);
-    actionCollection()->action( Scene::FreeScene::type )->setDisabled(false);
-}
-
-void MainWindow::freeScene()
-{
-    m_lastBasketLoad->basket()->scene()->setType( Scene::FreeScene::type );
-    m_lastBasketLoad->basket()->save();
-    m_lastBasketLoad->basket()->load();
-
-    m_view->setScene( m_lastBasketLoad->basket()->scene() );
-    m_view->fitInViewZoom();
-    m_view->resetZoom();
-
-    actionCollection()->action( Scene::FreeScene::type )->setDisabled(true);
-    actionCollection()->action( Scene::FreeScene::type )->setChecked(true);
-
-    actionCollection()->action( Scene::LayoutScene::type )->setChecked(false);
-    actionCollection()->action( Scene::LayoutScene::type )->setDisabled(false);
 }
 
 void MainWindow::initSystemTray()
@@ -376,14 +357,14 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 {
     switch (reason)
     {
-        case QSystemTrayIcon::DoubleClick:
-        case QSystemTrayIcon::Trigger:
-            m_trayIcon->toggleActive();
-            break;
-        case QSystemTrayIcon::MiddleClick:
-            break;
-        default:
-            ;
+    case QSystemTrayIcon::DoubleClick:
+    case QSystemTrayIcon::Trigger:
+        m_trayIcon->toggleActive();
+        break;
+    case QSystemTrayIcon::MiddleClick:
+        break;
+    default:
+        ;
     }
 }
 
@@ -395,9 +376,9 @@ void MainWindow::showSettings()
     KConfigDialog *dialog = new KConfigDialog(this, "settings", Settings::self());
     dialog->resize(650,400);
     dialog->setFaceType(KPageDialog::List);
-    dialog->addPage(new Config::GeneralPageDialog(0),"General" );
-    dialog->addPage(new Config::AppareancePageDialog(0),"Appareance note" );
-    dialog->addPage(new Config::AnimationPageDialog(0),"Animation" );
+    dialog->addPage(new Config::GeneralPageDialog(dialog), "General", "system-run" );
+    dialog->addPage(new Config::AppareancePageDialog(dialog), "Appareance note", "preferences-desktop-color" );
+    dialog->addPage(new Config::AnimationPageDialog(dialog), "Animation", "preferences-desktop-launch-feedback" );
     dialog->show();
 
     connect( dialog, SIGNAL(settingsChanged()), this, SLOT(updateConfiguration()) );

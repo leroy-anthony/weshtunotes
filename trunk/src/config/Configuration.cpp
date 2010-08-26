@@ -1,21 +1,20 @@
 /*
- Copyright (c) 2009 LEROY Anthony <leroy.anthony@gmail.com>
+    Copyright (c) 2009 LEROY Anthony <leroy.anthony@gmail.com>
 
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Library General Public
- License as published by the Free Software Foundation; either
- version 3 of the License, or (at your option) any later version.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Library General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
- You should have received a copy of the GNU Library General Public License
- along with this library; see the file COPYING.LIB.  If not, write to
- the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- Boston, MA 02110-1301, USA.
- */
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
 
 #include "Configuration.h"
 
@@ -25,7 +24,6 @@
 #include <Nepomuk/Resource>
 
 #include "settings.h"
-#include "../main/general.h"
 #include "../main/general.h"
 
 namespace Config
@@ -41,38 +39,8 @@ namespace Config
     {
     }
 
-    void Configuration::iniConfigration()
-    {
-        QDir dir(Settings::basketsStorePath().toLocalFile()+QDir::separator()+"data");
-        if ( !dir.exists() )
-        {
-            dir.mkpath(Settings::basketsStorePath().toLocalFile()+QDir::separator()+"data");
-        }
-        QDir::addSearchPath( "data", Settings::basketsStorePath().toLocalFile()+QDir::separator()+"data" );
-        QDir::addSearchPath( "icon", Settings::basketsStorePath().toLocalFile()+QDir::separator()+"data"+QDir::separator()+"icon" );
-
-        QDir dir2( Settings::basketsStorePath().toLocalFile()+QDir::separator()+"baskets" );
-        if ( !dir2.exists() )
-        {
-            dir2.mkpath( Settings::basketsStorePath().toLocalFile()+QDir::separator()+"baskets" );
-        }
-    }
-
     Configuration::~Configuration()
     {
-    }
-
-    QString Configuration::basketsStorePath()
-    {
-        return Settings::basketsStorePath().toLocalFile()+QDir::separator()+"baskets";
-    }
-
-    QStringList Configuration::masterBaskets()
-    {
-        QDir dir( basketsStorePath() );
-        dir.setFilter( QDir::Dirs | QDir::NoDotAndDotDot );
-
-        return dir.entryList();
     }
 
     void Configuration::saveLastBasket( const QString & name )
@@ -85,69 +53,6 @@ namespace Config
     {
         Configuration settings;
         return settings.valueGroup( "config", "lastBasket", "" );
-    }
-
-    QStringList Configuration::subDirs( const QString & directory )
-    {
-        QDir dir = Config::Configuration::dir( directory );
-        dir.setFilter( QDir::Dirs | QDir::NoDotAndDotDot );
-
-        return dir.entryList();
-    }
-
-    QDir Configuration::dir( const QString & dirConfig )
-    {
-        Configuration s( dirConfig );
-        QFileInfo fileInfo(s.fileName());
-        QDir dir = fileInfo.absoluteDir();
-
-        return dir;
-    }
-
-    void Configuration::removeConfigDir( const QString & directory )
-    {
-        QDir dir = Config::Configuration::dir( directory );
-        dir.setFilter(QDir::Files);
-
-        QStringList files = dir.entryList();
-        for ( int i=0 ; i<files.size() ; ++i )
-        {
-            dir.remove( files[i] );
-        }
-
-        dir.rmdir(dir.absolutePath());
-    }
-
-    void Configuration::deleteNoteFile( const QString & name )
-    {
-        Configuration settings(name);
-        QFileInfo file(settings.fileName());
-
-        QStringList items = settings.values("general","items");
-        for ( int i=0 ; i<items.size() ; ++i )
-        {
-            QString dataFileName = settings.valueGroup(items[i],"data","");
-            if( dataFileName != QString("") )
-            {
-                QFile::remove(file.absoluteDir().path()+QDir::separator()+dataFileName+".html");
-            }
-        }
-
-        QFile::remove(settings.fileName());
-    }
-
-    QString Configuration::fileName () const
-    {
-        return name();
-    }
-
-    void Configuration::clear( const QString & fileName )
-    {
-        QFile f(fileName);
-        f.remove();
-
-        Nepomuk::Resource fileRes(fileName);
-        fileRes.remove();
     }
 
     void Configuration::setValue( const QString & groupKey, const QString & key, QVariant value )
@@ -199,31 +104,6 @@ namespace Config
     {
         KConfigGroup configGroup( this, group );
         configGroup.deleteGroup();
-    }
-
-    QString Configuration::loadNote( const QString & fileName, const QString & nameId )
-    {
-        Config::Configuration settings( fileName );
-
-        QFileInfo fileInfo(settings.fileName());
-        QFile f( fileInfo.absolutePath() + QDir::separator() + nameId + ".html" );
-        f.open(QFile::ReadOnly | QFile::Text);
-
-        QTextStream stream(&f);
-        QString resultat = stream.readAll();
-        f.close();
-
-        return resultat;
-    }
-
-    void Configuration::saveNote( const QString & fileName, const QString & contentNote, const QString & nameId )
-    {
-        QFileInfo fileInfo( fileName );
-        QFile f( fileInfo.absolutePath() + QDir::separator() + nameId + ".html" );
-        f.open(QFile::WriteOnly | QFile::Text);
-        QTextStream stream(&f);
-        stream << contentNote;
-        f.close();
     }
 
 }

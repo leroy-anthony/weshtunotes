@@ -13,18 +13,26 @@
   </group>
   <group name="visual">
     <entry name="colorItem" type="Color">
-      <label>Note's color.</label>
+      <label>Color note.</label>
       <default>#F7F7C8</default>
     </entry>
     <entry name="widthNote" type="Int">
-      <label>Note's width.</label>
+      <label>Width note.</label>
       <default>300</default>
       <min>50</min>
       <max>1000</max>
     </entry>
     <entry name="textItem" type="String">
-      <label>Note's text.</label>
+      <label>Text note.</label>
       <default>&lt;br&gt;</default>
+    </entry>
+    <entry name="colorBasket" type="Color">
+      <label>Color Basket.</label>
+      <default>#F7F7C8</default>
+    </entry>
+    <entry name="iconBasket" type="String">
+      <label>Icon basket.</label>
+      <default>folder</default>
     </entry>
   </group>
   <group name="animation">

@@ -1,21 +1,20 @@
 /*
- Copyright (c) 2009 LEROY Anthony <leroy.anthony@gmail.com>
+    Copyright (c) 2009 LEROY Anthony <leroy.anthony@gmail.com>
 
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Library General Public
- License as published by the Free Software Foundation; either
- version 3 of the License, or (at your option) any later version.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Library General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
- You should have received a copy of the GNU Library General Public License
- along with this library; see the file COPYING.LIB.  If not, write to
- the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- Boston, MA 02110-1301, USA.
- */
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
 
 #include "NoteTag.h"
 
@@ -87,7 +86,7 @@ namespace Tag
     {
         if ( m_name != "default" )
         {
-            Config::Configuration settings("tags");
+            Data::DataManager settings("tags");
             settings.removeGroup( m_name );
         }
         m_name = name;
@@ -151,7 +150,7 @@ namespace Tag
 
     void NoteTag::load( const QString & name )
     {
-        Config::Configuration settings("tags");
+        Data::DataManager settings("tags");
 
         m_name = name;
 
@@ -177,7 +176,7 @@ namespace Tag
 
     void NoteTag::save()
     {
-        Config::Configuration settings( "tags" );
+        Data::DataManager settings( "tags" );
 
         QStringList namesStates;
         for ( int i=0 ; i<m_states.size() ; ++i )

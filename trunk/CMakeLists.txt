@@ -7,12 +7,6 @@ SET(CMAKE_VERBOSE_MAKEFILE ON)
 find_package(KDE4 REQUIRED)
 include_directories(${KDE4_INCLUDES})
 
-find_package(Nepomuk REQUIRED)
-find_package(Soprano REQUIRED)
-
-include_directories(${NEPOMUK_INCLUDES})
-include_directories(${SOPRANO_INCLUDE_DIRS})
-
 SET(QT_USE_QTSVG TRUE)
 SET(QT_USE_QTOPENGL TRUE)
 SET(QT_USE_QTSQL TRUE)
@@ -21,6 +15,12 @@ INCLUDE(${QT_USE_FILE})
 ADD_DEFINITIONS(${QT_DEFINITIONS})
 
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
+
+find_package(Nepomuk REQUIRED)
+find_package(Soprano REQUIRED)
+
+include_directories(${NEPOMUK_INCLUDES})
+include_directories(${SOPRANO_INCLUDE_DIRS})
 
 set(weshnotes_UI  
 ./src/main/ui_main_window.ui 
@@ -59,6 +59,7 @@ set(weshnotes_SRC
 ./src/basket/TagBasket.cpp
 ./src/basket/BasketFactory.cpp
 ./src/basket/NewBasketDialog.cpp
+./src/basket/PropertiesBasketDialog.cpp
 ./src/config/Configuration.cpp
 ./src/config/ImageFactory.cpp
 ./src/config/ConfigDialog.cpp
@@ -72,6 +73,13 @@ set(weshnotes_SRC
 ./src/tag/NextTag.cpp
 ./src/technic/GeneratorID.cpp
 ./src/data/AssociationManager.cpp
+./src/data/ExportDataToXml.cpp
+./src/data/ImportDataFromXml.cpp
+./src/data/DataManager.cpp
+./src/synchro/DigitalBucketConnection.cpp
+./src/synchro/GoogleDocsConnection.cpp
+./src/synchro/AbstractConnection.cpp
+./src/synchro/SynchroManager.h
 ./src/config/GeneralPageDialog.cpp
 ./src/config/AppareancePageDialog.cpp
 ./src/config/AnimationPageDialog.cpp

@@ -1,21 +1,20 @@
 /*
- Copyright (c) 2009 LEROY Anthony <leroy.anthony@gmail.com>
+    Copyright (c) 2009 LEROY Anthony <leroy.anthony@gmail.com>
 
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Library General Public
- License as published by the Free Software Foundation; either
- version 3 of the License, or (at your option) any later version.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Library General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
- You should have received a copy of the GNU Library General Public License
- along with this library; see the file COPYING.LIB.  If not, write to
- the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- Boston, MA 02110-1301, USA.
- */
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
 
 #include "NoteItem.h"
 
@@ -43,6 +42,8 @@
 #include "../tag/NextTag.h"
 #include "../config/ImageFactory.h"
 #include "../config/VisualAspect.h"
+#include "../data/DataManager.h"
+#include "../handle/HandleItem.h"
 #include "settings.h"
 
 namespace Item
@@ -156,7 +157,7 @@ namespace Item
 
     void NoteItem::save( const QString & fileName, const QString & handleId )
     {
-        Config::Configuration settings( fileName );
+        Data::DataManager settings( fileName );
 
         settings.setValue(handleId,"data",GeneratorID::id());
         settings.setValue(handleId,"color",m_color.name());
@@ -172,19 +173,17 @@ namespace Item
             settings.removeValue(handleId,"tag");
         }
 
-        Config::Configuration::saveNote( settings.fileName(), m_plainTextEdit->document()->toHtml(), GeneratorID::id() );
+        Data::DataManager::saveNote( m_plainTextEdit->document()->toHtml(), GeneratorID::id() );
     }
 
-    void NoteItem::load( const QString & fileName )
+    void NoteItem::load()
     {       
         m_plainTextEdit->blockSignals( true );
 
-        m_plainTextEdit->setHtml( Config::Configuration::loadNote( fileName, GeneratorID::id() ) );
+        m_plainTextEdit->setHtml( Data::DataManager::loadNote( GeneratorID::id() ) );
         m_plainTextEdit->adaptSizeFromText();
 
-        m_plainTextEdit->blockSignals( false );
-
-        m_fileName = fileName; 
+        m_plainTextEdit->blockSignals( false ); 
     }
 
     void NoteItem::load( const QMimeData * mimeData )
@@ -264,15 +263,21 @@ namespace Item
             delete m_tag;
             m_tag = 0;
 
-            Nepomuk::Resource file( Settings::basketsStorePath().toLocalFile()+QDir::separator()+"baskets"+QDir::separator()+m_fileName );
-            file.remove();
+	    if ( m_handle != 0 )
+	    {
+		Nepomuk::Resource file( Settings::basketsStorePath().toLocalFile()+QDir::separator()+m_handle->configFile() );
+		file.remove();
+	    }
         }
     }
 
     void NoteItem::addNoteToNepomuk()
     {
-        Nepomuk::Resource file( Settings::basketsStorePath().toLocalFile()+QDir::separator()+"baskets"+QDir::separator()+m_fileName );
-        file.addTag( *m_tag->nepomukTag() );
+	if ( m_handle != 0 )
+	{
+	    Nepomuk::Resource file( Settings::basketsStorePath().toLocalFile()+QDir::separator()+m_handle->configFile() );
+	    file.addTag( *m_tag->nepomukTag() );
+	}
     }
 
 }
