@@ -64,6 +64,8 @@ namespace Tag
 
         void apply();
 
+        NoteTag * tag();
+
         static State * newState( NoteTag * tag );
 
     private:
