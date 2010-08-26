@@ -158,7 +158,7 @@ namespace Scene
 
         Handle::GraphicHandleItem * g = new Handle::GraphicHandleItem();
         g->setFlag(QGraphicsItem::ItemIsSelectable,true);
-        g->setFlag(QGraphicsItem::ItemIsFocusable,false);
+        g->setFlag(QGraphicsItem::ItemIsFocusable,true);
         g->setWidget(handle);
 
         addItem(g);
