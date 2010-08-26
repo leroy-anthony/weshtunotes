@@ -65,7 +65,8 @@ namespace Tag
         connect(m_delTagButton, SIGNAL(clicked()), this, SLOT(del()));
         connect(m_newTagButton, SIGNAL(clicked()), this, SLOT(newTag()));
         connect(m_newStateButton, SIGNAL(clicked()), this, SLOT(newState()));
-        connect(m_tagsTree, SIGNAL(itemClicked(QTreeWidgetItem*, int)), this, SLOT(loadTagOrState(QTreeWidgetItem*, int)));
+
+        connect(m_tagsTree, SIGNAL(itemActivated(QTreeWidgetItem*, int)), this, SLOT(loadTagOrState(QTreeWidgetItem*, int)));
 
         connect(m_nameTagOrState, SIGNAL(editingFinished()), this, SLOT(changeNameTagOrState()));
 
@@ -83,7 +84,7 @@ namespace Tag
 
         connect(m_withIcon, SIGNAL(stateChanged(int)), this, SLOT(withIcon(int)));
 
-        connect( this, SIGNAL( okClicked() ), this, SLOT( ok() ) );
+        connect(this, SIGNAL(okClicked()), this, SLOT(ok()));
 
         connect(m_iconButton, SIGNAL(iconChanged(const QString&)), this, SLOT(selectIcon(const QString&)));
     }
@@ -112,6 +113,18 @@ namespace Tag
         }
 
         delete item;
+
+        item = m_tagsTree->currentItem();
+        if ( item != 0 )
+        {
+            loadTagOrState( item, 0 );
+        }
+        else
+        {
+            m_nameTagOrState->setEnabled( false );
+            m_appareanceGroupBox->setEnabled( false );
+            m_fontGroupBox->setEnabled( false );
+        }
     }
 
     void TagFactory::selectIcon( const QString & icon )
@@ -186,6 +199,20 @@ namespace Tag
     {
         if ( m_currentState != 0 )
         {
+            QStringList names;
+            const QList<State*> & states = m_currentState->tag()->states();
+            for ( int i=0 ; i<states.size() ; ++i )
+            {
+                names += states[i]->name();
+            }
+
+            int index = 1;
+            while ( names.contains(m_nameTagOrState->text()) )
+            {
+                ++index;
+                m_nameTagOrState->setText( QString(m_nameTagOrState->text()+"(%1)").arg(index) );
+            }
+
             m_currentState->setName(m_nameTagOrState->text());
             m_currentItemState->setText( 0, m_nameTagOrState->text() );
         }

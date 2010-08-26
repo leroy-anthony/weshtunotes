@@ -154,7 +154,7 @@ namespace Tag
 
         m_name = name;
 
-        QStringList states = settings.values( m_name,"states" );
+        QStringList states = settings.values( m_name, "states" );
         for ( int i=0 ; i<states.size() ; ++i )
         {
             State * s = new State(this);
@@ -209,7 +209,7 @@ namespace Tag
     void NoteTag::nextState()
     {
         int index = ++m_index;
-        if ( m_states.size() == index )
+        if ( m_states.size() <= index )
         {
             index = 0;
         }

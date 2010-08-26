@@ -187,7 +187,25 @@ namespace Tag
         State * state = new State(tag);
         state->setName( "new state" );
 
+        QStringList names;
+        for ( int i=0 ; i<tag->states().size() ; ++i )
+        {
+            names += tag->states()[i]->name();
+        }
+
+        int index = 1;
+        while ( names.contains(state->name()) )
+        {
+            ++index;
+            state->setName( QString("new state (%1)").arg(index) );
+        }
+
         return state;
+    }
+
+    NoteTag * State::tag()
+    {
+        return m_tag;
     }
 
 }
