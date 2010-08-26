@@ -12,12 +12,14 @@
   <Menu name="edit" >
    <text>&amp;Edit</text>
    <Action name="clear" />
+   <Action name="deleteItem" />
   </Menu>
   <Menu name="text" >
    <text>&amp;Text</text>
    <Action name="bold" />
    <Action name="italic" />
    <Action name="strikeout" />
+   <Separator/>
    <Action name="alignleft" />
    <Action name="aligncenter" />
    <Action name="alignright" />
@@ -28,8 +30,6 @@
    <Action name="zoomin" />
    <Action name="zoomout" />
    <Action name="fittopage" />
-   <Action name="listscene" />
-  <Action name="freescene" />
   </Menu>
   <Menu name="settings"><text>&amp;Settings</text>
 <MergeLocal/>
@@ -38,22 +38,30 @@
  </Menu>
   
  </MenuBar>
- <ToolBar iconText="icontextbottom" name="textToolBar" >
-  <text>Text Toolbar</text>
+ 
+ <ToolBar name="mainToolBar" noMerge="1"><text>Main Toolbar</text>
+  <Action name="file_save" />
+  <Separator/>
+  <Action name="edit_copy" />
+  <Action name="edit_paste" />
+  <Action name="deleteItem" />
+  <Separator/>
   <Action name="fontfamily" />
   <Action name="fontsize" />
   <Action name="fontcolor" />
+  <Separator/>
   <Action name="bold" />
   <Action name="italic" />
   <Action name="underline" />
   <Action name="strikeout" />
+  <Separator/>
   <Action name="alignleft" />
   <Action name="aligncenter" />
   <Action name="alignright" />
- </ToolBar>
- <ToolBar iconText="icontextbottom" name="noteToolBar" >
+  <Separator />
   <text>Note Toolbar</text>
   <Action name="notecolor" />
+  <Separator />
  </ToolBar>
  <ActionProperties scheme="Default" >
   <Action shortcut="Ctrl+B" name="bold" />
