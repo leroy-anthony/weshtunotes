@@ -17,6 +17,7 @@
 #include <limits>
 
 #include "AbstractScene.h"
+#include "settings.h"
 #include "../main/general.h"
 #include "../main/MainWindow.h"
 #include "../handle/HandleItem.h"
@@ -260,28 +261,86 @@ namespace Scene
         }
     }
 
-    void CustomGraphicsView::resetZoom()
+    void CustomGraphicsView::setScale( double scale )
     {
-        int dx = matrix().dx();
-        int dy = matrix().dy();
-        resetMatrix();
-        translate(dx,dy);
+        QMatrix m =  matrix();
+        m.setMatrix( scale, 0, 0, scale, matrix().dx(), matrix().dy() );
+        setMatrix( m );
     }
 
-    void CustomGraphicsView::doubleZoom()
+    void CustomGraphicsView::timerEvent( QTimerEvent * ev )
     {
-        scale(2.0,2.0);
+        if( qAbs(matrix().m11()-m_scale) < qAbs((matrix().m11()*(1+m_scaleStep))-m_scale) )
+        {
+            killTimer(m_idTimer);
+
+            QMatrix m =  matrix();
+            m.setMatrix( m_scale, 0, 0, m_scale, matrix().dx(), matrix().dy() );
+            setMatrix( m );
+        }
+        else
+        {
+            scale( 1+m_scaleStep, 1+m_scaleStep );
+        }
     }
 
-    void CustomGraphicsView::halfZoom()
+    void CustomGraphicsView::resetZoom( bool smooth )
     {
-        scale(0.5,0.5);
+        if ( !smooth && !Settings::smoothZoom() )
+        {
+            setScale(1);
+            return;
+        }
+
+        if ( matrix().m11() == 1 )
+            return;
+
+        m_idTimer = startTimer(10);
+
+        m_scale = 1;
+
+        if ( matrix().m11()>1 )
+        {
+            m_scaleStep = -0.05;
+        }
+        else
+        {
+            m_scaleStep = 0.05;
+        }
     }
 
-    void CustomGraphicsView::centerZoom()
+    void CustomGraphicsView::doubleZoom( bool smooth )
+    {
+        if ( !smooth && !Settings::smoothZoom() )
+        {
+            setScale(matrix().m11()*2);
+            return;
+        }
+
+        m_idTimer = startTimer(10);
+
+        m_scale     = matrix().m11()*2;
+        m_scaleStep = 0.05;
+    }
+
+    void CustomGraphicsView::halfZoom( bool smooth )
+    {
+        if ( !smooth && !Settings::smoothZoom() )
+        {
+            setScale(matrix().m11()*0.5);
+            return;
+        }
+
+        m_idTimer = startTimer(10);
+
+        m_scale=matrix().m11()*0.5;
+        m_scaleStep = -0.05;
+    }
+
+    void CustomGraphicsView::centerZoom( bool smooth )
     {
         fitInViewZoom();
-        resetZoom();
+        resetZoom( smooth );
     }
 
     void CustomGraphicsView::fitInViewZoom()
@@ -396,5 +455,7 @@ namespace Scene
         item->setSelected(true);
         centerZoom();
     }
+
+
 
 }

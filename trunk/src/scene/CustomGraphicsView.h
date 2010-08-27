@@ -20,6 +20,7 @@
 #define CUSTOMGRAPHICSVIEW_H
 
 #include <QGraphicsView>
+#include <QTimer>
 
 #include "../handle/GraphicHandleItem.h"
 
@@ -39,11 +40,11 @@ namespace Scene
 
         void deleteItem();
 
-        void resetZoom();
-        void doubleZoom();
-        void halfZoom();
+        void resetZoom( bool smooth = false );
+        void doubleZoom( bool smooth = false );
+        void halfZoom( bool smooth = false );
         void fitInViewZoom();
-        void centerZoom();
+        void centerZoom( bool smooth = false );
 
         void nextItem();
         void prevItem();
@@ -55,13 +56,24 @@ namespace Scene
         void mouseMoveEvent( QMouseEvent * event );
         void resizeEvent ( QResizeEvent * event );
 
+        void timerEvent( QTimerEvent * ev );
+
     private:
         void prevOrNextItem( bool next );
+        void setScale( double scale );
 
         double m_scale;
+        double m_scaleStep;
+
+        double m_x;
+        double m_y;
+
         bool m_move;
         bool m_selection;
         int m_indexItem;
+
+        QTimer m_timer;
+        int m_idTimer;
 
         QGraphicsPathItem * m_selectionItem;
         QPointF m_position;
