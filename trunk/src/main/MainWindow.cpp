@@ -201,7 +201,7 @@ void MainWindow::initView()
 
     QToolButton * q5 = new QToolButton();
     q5->setIcon(Config::ImageFactory::newInstance()->icon("shapes"));
-    q5->setToolTip("Zoom fit");
+    q5->setToolTip("Zoom center");
     connect( q5, SIGNAL(clicked()), m_view, SLOT(centerZoom()) );
     layoutButtonView->addWidget(q5);
 
@@ -209,13 +209,13 @@ void MainWindow::initView()
 
     QToolButton * q6 = new QToolButton();
     q6->setIcon(Config::ImageFactory::newInstance()->icon("go-previous"));
-    q6->setToolTip("Zoom fit");
+    q6->setToolTip("Previous note");
     connect( q6, SIGNAL(clicked()), m_view, SLOT(prevItem()) );
     layoutButtonView->addWidget(q6);
 
     QToolButton * q7 = new QToolButton();
     q7->setIcon(Config::ImageFactory::newInstance()->icon("go-next"));
-    q7->setToolTip("Zoom fit");
+    q7->setToolTip("Next note");
     connect( q7, SIGNAL(clicked()), m_view, SLOT(nextItem()) );
     layoutButtonView->addWidget(q7);
 
