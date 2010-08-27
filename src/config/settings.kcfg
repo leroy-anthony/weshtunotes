@@ -56,5 +56,9 @@
 	<value>scale</value>
       </values>
     </entry>
+    <entry name="smoothZoom" type="Bool">
+      <label>Smooth zoom.</label>
+      <default>true</default>
+    </entry>
   </group>
 </kcfg> 
