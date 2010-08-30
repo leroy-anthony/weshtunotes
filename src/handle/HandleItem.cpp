@@ -353,11 +353,11 @@ namespace Handle
 
     void HandleItem::questionDelItem()
     {
-        int reply = KMessageBox::questionYesNo(0, "Do you want really delete this note ?",
-                                               "Delete note",
+        int reply = KMessageBox::questionYesNo(0, i18n("Do you want really delete this note ?"),
+                                               i18n("Delete note"),
                                                KStandardGuiItem::yes(),
                                                KStandardGuiItem::no(),
-                                               "delete note");
+                                               i18n("delete note"));
         if (reply == KMessageBox::Yes)
         {
             emit delItem( this );

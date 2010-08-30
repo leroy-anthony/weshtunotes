@@ -18,11 +18,13 @@
 
 #include "AbstractScene.h"
 
-#include <QScrollBar>
-
-#include <settings.h>
 #include <limits>
 
+#include <QScrollBar>
+
+#include <KLocalizedString>
+
+#include "settings.h"
 #include "../config/Configuration.h"
 #include "../config/VisualAspect.h"
 #include "../handle/HandleItem.h"
@@ -57,7 +59,7 @@ namespace Scene
         int size = selectedItems().size();
         if ( size > 0 )
         {
-            MainWindow::showMessage( QString("%1 selected item(s)").arg(size), 0 );
+            MainWindow::showMessage( i18n("1 selected item", "%1 selected items", size), 0 );
         }
         else
         {

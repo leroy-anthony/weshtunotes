@@ -34,6 +34,7 @@
 #include <KSystemTrayIcon>
 #include <KAction>
 #include <KTreeWidgetSearchLine>
+#include <KLocalizedString>
 
 #include "settings.h"
 #include "../tag/TagFactory.h"
@@ -117,7 +118,7 @@ void MainWindow::setupActions()
     KStandardAction::paste(m_view, SLOT(paste()), actionCollection());
     KStandardAction::copy(m_view, SLOT(copy()), actionCollection());
 
-    KAction * a = new KAction("Configure Tag...",0);
+    KAction * a = new KAction( i18n("Configure Tag..."), 0);
     actionCollection()->addAction( "tag", a );
     connect( a, SIGNAL(triggered(bool)), m_tagFactory, SLOT(show()) );
 
@@ -126,7 +127,7 @@ void MainWindow::setupActions()
 
 void MainWindow::save()
 {
-    statusBar()->showMessage( "save", 100 );
+    statusBar()->showMessage( i18n("Save"), 100 );
 
     if ( m_lastBasketLoad != 0 )
     {
@@ -177,31 +178,31 @@ void MainWindow::initView()
 
     QToolButton * q1 = new QToolButton();
     q1->setIcon(Config::ImageFactory::newInstance()->icon("zoom-original"));
-    q1->setToolTip("Zoom 1:1");
+    q1->setToolTip(i18n("Zoom 1:1"));
     connect( q1, SIGNAL(clicked()), m_view, SLOT(resetZoom()) );
     layoutButtonView->addWidget(q1);
 
     QToolButton * q2 = new QToolButton();
     q2->setIcon(Config::ImageFactory::newInstance()->icon("zoom-in"));
-    q2->setToolTip("Zoom in");
+    q2->setToolTip(i18n("Zoom in"));
     connect( q2, SIGNAL(clicked()), m_view, SLOT(doubleZoom()) );
     layoutButtonView->addWidget(q2);
 
     QToolButton * q3 = new QToolButton();
     q3->setIcon(Config::ImageFactory::newInstance()->icon("zoom-out"));
-    q3->setToolTip("Zoom out");
+    q3->setToolTip(i18n("Zoom out"));
     connect( q3, SIGNAL(clicked()), m_view, SLOT(halfZoom()) );
     layoutButtonView->addWidget(q3);
 
     QToolButton * q4 = new QToolButton();
     q4->setIcon(Config::ImageFactory::newInstance()->icon("zoom-fit-best"));
-    q4->setToolTip("Zoom fit");
+    q4->setToolTip(i18n("Zoom fit"));
     connect( q4, SIGNAL(clicked()), m_view, SLOT(fitInViewZoom()) );
     layoutButtonView->addWidget(q4);
 
     QToolButton * q5 = new QToolButton();
     q5->setIcon(Config::ImageFactory::newInstance()->icon("shapes"));
-    q5->setToolTip("Zoom center");
+    q5->setToolTip(i18n("Zoom center"));
     connect( q5, SIGNAL(clicked()), m_view, SLOT(centerZoom()) );
     layoutButtonView->addWidget(q5);
 
@@ -209,13 +210,13 @@ void MainWindow::initView()
 
     QToolButton * q6 = new QToolButton();
     q6->setIcon(Config::ImageFactory::newInstance()->icon("go-previous"));
-    q6->setToolTip("Previous note");
+    q6->setToolTip(i18n("Previous note"));
     connect( q6, SIGNAL(clicked()), m_view, SLOT(prevItem()) );
     layoutButtonView->addWidget(q6);
 
     QToolButton * q7 = new QToolButton();
     q7->setIcon(Config::ImageFactory::newInstance()->icon("go-next"));
-    q7->setToolTip("Next note");
+    q7->setToolTip(i18n("Next note"));
     connect( q7, SIGNAL(clicked()), m_view, SLOT(nextItem()) );
     layoutButtonView->addWidget(q7);
 
@@ -243,13 +244,13 @@ void MainWindow::initExplorer()
 
     QToolButton * q1 = new QToolButton();
     q1->setIcon(Config::ImageFactory::newInstance()->icon("folder-new"));
-    q1->setToolTip("New root basket");
+    q1->setToolTip(i18n("New root basket"));
     connect( q1, SIGNAL(clicked()), m_treeExplorer, SLOT(addBasketToRoot()) );
     layoutButtonExplorer->addWidget(q1);
 
     QToolButton * q3 = new QToolButton();
     q3->setIcon(Config::ImageFactory::newInstance()->icon("edit-delete"));
-    q3->setToolTip("Delete basket");
+    q3->setToolTip(i18n("Delete basket"));
     connect( q3, SIGNAL(clicked()), m_treeExplorer, SLOT(delCurrentBasket()) );
     layoutButtonExplorer->addWidget(q3);
 
@@ -299,7 +300,7 @@ void MainWindow::reloadView()
         m_view->setEnabled( true );
         scene->restoreView( m_view );
 
-        showMessage( QString("%1 item(s) loaded").arg(scene->handles().size()), 1000 );
+        showMessage( i18np("1 item loaded","%1 items loaded",scene->handles().size()), 1000 );
     }
 }
 
@@ -376,9 +377,9 @@ void MainWindow::showSettings()
     KConfigDialog *dialog = new KConfigDialog(this, "settings", Settings::self());
     dialog->resize(650,400);
     dialog->setFaceType(KPageDialog::List);
-    dialog->addPage(new Config::GeneralPageDialog(dialog), "General", "system-run" );
-    dialog->addPage(new Config::AppareancePageDialog(dialog), "Appareance note", "preferences-desktop-color" );
-    dialog->addPage(new Config::AnimationPageDialog(dialog), "Animation", "preferences-desktop-launch-feedback" );
+    dialog->addPage(new Config::GeneralPageDialog(dialog), i18n("General"), "system-run" );
+    dialog->addPage(new Config::AppareancePageDialog(dialog), i18n("Appareance note"), "preferences-desktop-color" );
+    dialog->addPage(new Config::AnimationPageDialog(dialog), i18n("Animation"), "preferences-desktop-launch-feedback" );
     dialog->show();
 
     connect( dialog, SIGNAL(settingsChanged()), this, SLOT(updateConfiguration()) );

@@ -20,6 +20,8 @@
 
 #include <QtGui>
 
+#include <KLocalizedString>
+
 namespace Config
 {
 
@@ -38,7 +40,7 @@ namespace Config
         pagesWidget->addWidget(new QWidget);
         pagesWidget->addWidget(new QWidget);
 
-        QPushButton *closeButton = new QPushButton(tr("Close"));
+        QPushButton *closeButton = new QPushButton(i18n("Close"));
 
         createIcons();
         contentsWidget->setCurrentRow(0);
@@ -60,26 +62,26 @@ namespace Config
         mainLayout->addLayout(buttonsLayout);
         setLayout(mainLayout);
 
-        setWindowTitle(tr("Config Dialog"));
+        setWindowTitle(i18n("Config Dialog"));
     }
 
     void ConfigDialog::createIcons()
     {
         QListWidgetItem *configButton = new QListWidgetItem(contentsWidget);
         configButton->setIcon(QIcon(":/images/config.png"));
-        configButton->setText(tr("Configuration"));
+        configButton->setText(i18n("Configuration"));
         configButton->setTextAlignment(Qt::AlignHCenter);
         configButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
         QListWidgetItem *updateButton = new QListWidgetItem(contentsWidget);
         updateButton->setIcon(QIcon(":/images/update.png"));
-        updateButton->setText(tr("Update"));
+        updateButton->setText(i18n("Update"));
         updateButton->setTextAlignment(Qt::AlignHCenter);
         updateButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
         QListWidgetItem *queryButton = new QListWidgetItem(contentsWidget);
         queryButton->setIcon(QIcon(":/images/query.png"));
-        queryButton->setText(tr("Query"));
+        queryButton->setText(i18n("Query"));
         queryButton->setTextAlignment(Qt::AlignHCenter);
         queryButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
