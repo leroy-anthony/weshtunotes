@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8'?>
+ <gui name="kweshtunotes" 
+ version="1" 
+ xmlns="http://www.kde.org/standards/kxmlgui/1.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.kde.org/standards/kxmlgui/1.0 http://www.kde.org/standards/kxmlgui/1.0/kxmlgui.xsd">
+ <MenuBar >
+  <Menu name="file" >
+   <text>&amp;File</text>
+   <Action name="file_save" />
+  </Menu>
+  <Menu name="edit" >
+   <text>&amp;Edit</text>
+   <Action name="clear" />
+   <Action name="deleteItem" />
+  </Menu>
+  <Menu name="text" >
+   <text>&amp;Text</text>
+   <Action name="bold" />
+   <Action name="italic" />
+   <Action name="strikeout" />
+   <Separator/>
+   <Action name="alignleft" />
+   <Action name="aligncenter" />
+   <Action name="alignright" />
+  </Menu>
+  <Menu name="view" >
+   <text>&amp;View</text>
+   <Action name="actualsize" />
+   <Action name="zoomin" />
+   <Action name="zoomout" />
+   <Action name="fittopage" />
+  </Menu>
+  <Menu name="settings"><text>&amp;Settings</text>
+<MergeLocal/>
+ <Action name="tag" />
+<Separator/>
+ </Menu>
+  
+ </MenuBar>
+ 
+ <ToolBar name="mainToolBar" noMerge="1"><text>Main Toolbar</text>
+  <Action name="file_save" />
+  <Separator/>
+  <Action name="edit_copy" />
+  <Action name="edit_paste" />
+  <Action name="deleteItem" />
+  <Separator/>
+  <Action name="fontfamily" />
+  <Action name="fontsize" />
+  <Action name="fontcolor" />
+  <Separator/>
+  <Action name="bold" />
+  <Action name="italic" />
+  <Action name="underline" />
+  <Action name="strikeout" />
+  <Separator/>
+  <Action name="alignleft" />
+  <Action name="aligncenter" />
+  <Action name="alignright" />
+  <Separator />
+  <text>Note Toolbar</text>
+  <Action name="notecolor" />
+  <Separator />
+ </ToolBar>
+ <ActionProperties scheme="Default" >
+  <Action shortcut="Ctrl+B" name="bold" />
+ </ActionProperties>
+</gui>
