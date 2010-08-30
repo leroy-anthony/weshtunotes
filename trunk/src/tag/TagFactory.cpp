@@ -21,6 +21,7 @@
 #include <QInputDialog>
 
 #include <KMessageBox>
+#include <KLocalizedString>
 
 #include "../main/general.h"
 #include "../config/ImageFactory.h"
@@ -161,9 +162,9 @@ namespace Tag
     void TagFactory::newTag()
     {
         bool ok;
-        QString name = QInputDialog::getText(this, tr("Tag name"),
-                                             tr("Tag name:"), QLineEdit::Normal,
-                                             "New tag", &ok);
+        QString name = QInputDialog::getText(this, i18n("Tag name"),
+                                             i18n("Tag name :"), QLineEdit::Normal,
+                                             i18n("New tag"), &ok);
 
         QList<QTreeWidgetItem*> items = m_tagsTree->findItems( name, Qt::MatchCaseSensitive | Qt::MatchRecursive );
 

@@ -43,7 +43,7 @@ namespace Explorer
     TreeExplorer::TreeExplorer( QWidget * parent ):
             QTreeWidget(parent)
     {
-        setHeaderLabel( tr("My baskets") );
+        setHeaderLabel( i18n("My baskets") );
         setHeaderHidden( false );
         setIconSize(QSize(24,24));
         setColumnCount(3);
@@ -241,29 +241,29 @@ namespace Explorer
 
             QMenu menu(this);
 
-            QAction * addAction = new QAction(tr("Add basket"), this);
+            QAction * addAction = new QAction(i18n("Add basket"), this);
             menu.addAction(addAction);
             connect(addAction, SIGNAL(triggered()), this, SLOT(addToCurrentBasket()));
             addAction->setIcon(Config::ImageFactory::newInstance()->icon("list-add"));
 
-            QAction * deleteAction = new QAction(tr("Delete"), this);
+            QAction * deleteAction = new QAction(i18n("Delete"), this);
             menu.addAction(deleteAction);
             connect(deleteAction, SIGNAL(triggered()), this, SLOT(delCurrentBasket()));
             deleteAction->setIcon(Config::ImageFactory::newInstance()->icon("edit-delete"));
 
             menu.addSeparator();
 
-            /*QAction * newAct = new QAction(tr("Commit to google"), this);
+            QAction * newAct = new QAction(i18n("Commit to google"), this);
             menu.addAction(newAct);
             connect(newAct, SIGNAL(triggered()), basketItem->basket(), SLOT(commitGoogle()));
 
-            QAction * newAct2 = new QAction(tr("Update from google"), this);
+            QAction * newAct2 = new QAction(i18n("Update from google"), this);
             menu.addAction(newAct2);
             connect(newAct2, SIGNAL(triggered()), basketItem->basket(), SLOT(updateGoogle()));
 
-            menu.addSeparator();*/
+            menu.addSeparator();
 
-            QAction * propertyAction = new QAction(tr("Properties"), this);
+            QAction * propertyAction = new QAction(i18n("Properties"), this);
             menu.addAction(propertyAction);
             connect(propertyAction, SIGNAL(triggered()), this, SLOT(showPropertiesBasket()));
 

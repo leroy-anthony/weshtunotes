@@ -27,6 +27,7 @@
 #include <KActionCollection>
 #include <KFontAction>
 #include <KFontComboBox>
+#include <KLocalizedString>
 
 #include "../interface/ITextEdition.h"
 #include "../interface/IVisualItemEdition.h"
@@ -45,56 +46,56 @@ namespace Scene
         KAction * a = 0;
 
         m_fontComboBox = new KFontComboBox();
-        m_fontComboBox->setToolTip("Text Font");
+        m_fontComboBox->setToolTip(i18n("Text Font"));
         a = new KAction(this);
         a->setDefaultWidget(m_fontComboBox);
         connect(m_fontComboBox, SIGNAL(currentFontChanged(const QFont &)), SLOT(setFontFamily(const QFont &)));
         m_mainWindow->actionCollection()->addAction("fontfamily", a);
 
         m_actionFontSize = new KFontSizeAction(0);
-        m_actionFontSize->setToolTip("Text Size");
+        m_actionFontSize->setToolTip(i18n("Text Size"));
         connect(m_actionFontSize, SIGNAL(fontSizeChanged(int)), SLOT(setFontPointSize(int)));
         m_mainWindow->actionCollection()->addAction("fontsize", m_actionFontSize);
 
         m_colorText = new KColorCombo();
         m_colorText->setFixedWidth(48);
-        m_colorText->setToolTip("Text Color");
+        m_colorText->setToolTip(i18n("Text Color"));
         a = new KAction(this);
         a->setDefaultWidget(m_colorText);
         connect(m_colorText, SIGNAL(activated(const QColor &)), SLOT(setTextColor(const QColor &)));
         m_mainWindow->actionCollection()->addAction("fontcolor", a);
 
-        m_boldAction = addAction(Config::ImageFactory::newInstance()->icon("format-text-bold.png"),tr("Bold"));
+        m_boldAction = addAction(Config::ImageFactory::newInstance()->icon("format-text-bold.png"),i18n("Bold"));
         m_mainWindow->actionCollection()->addAction("bold", m_boldAction);
         connect(m_boldAction, SIGNAL(triggered(bool)), this, SLOT(setBold(bool)));
 
-        m_italicAction = addAction(Config::ImageFactory::newInstance()->icon("format-text-italic.png"),tr("Italic"));
+        m_italicAction = addAction(Config::ImageFactory::newInstance()->icon("format-text-italic.png"),i18n("Italic"));
         connect(m_italicAction, SIGNAL(triggered(bool)), this, SLOT(setItalic(bool)));
         m_mainWindow->actionCollection()->addAction("italic", m_italicAction);
 
-        m_underlineAction = addAction(Config::ImageFactory::newInstance()->icon("format-text-underline.png"),tr("Underline"));
+        m_underlineAction = addAction(Config::ImageFactory::newInstance()->icon("format-text-underline.png"),i18n("Underline"));
         connect(m_underlineAction, SIGNAL(triggered(bool)), this, SLOT(setFontUnderline(bool)));
         m_mainWindow->actionCollection()->addAction("underline", m_underlineAction);
 
-        m_strikeoutAction = addAction(Config::ImageFactory::newInstance()->icon("format-text-strikethrough.png"),tr("Strikeout"));
+        m_strikeoutAction = addAction(Config::ImageFactory::newInstance()->icon("format-text-strikethrough.png"),i18n("Strikeout"));
         connect(m_strikeoutAction, SIGNAL(triggered(bool)), this, SLOT(setFontStrikeOut(bool)));
         m_mainWindow->actionCollection()->addAction("strikeout", m_strikeoutAction);
 
-        m_alignleftAction = addAction(Config::ImageFactory::newInstance()->icon("format-justify-left.png"),tr("Align Left"));
+        m_alignleftAction = addAction(Config::ImageFactory::newInstance()->icon("format-justify-left.png"),i18n("Align Left"));
         connect(m_alignleftAction, SIGNAL(triggered(bool)), this, SLOT(setAlignmentLeft(bool)));
         m_mainWindow->actionCollection()->addAction("alignleft", m_alignleftAction);
 
-        m_aligncenterAction = addAction(Config::ImageFactory::newInstance()->icon("format-justify-center.png"),tr("Align Center"));
+        m_aligncenterAction = addAction(Config::ImageFactory::newInstance()->icon("format-justify-center.png"),i18n("Align Center"));
         connect(m_aligncenterAction, SIGNAL(triggered(bool)), this, SLOT(setAlignmentCenter(bool)));
         m_mainWindow->actionCollection()->addAction("aligncenter", m_aligncenterAction);
 
-        m_alignrightAction = addAction(Config::ImageFactory::newInstance()->icon("format-justify-right.png"),tr("Align Right"));
+        m_alignrightAction = addAction(Config::ImageFactory::newInstance()->icon("format-justify-right.png"),i18n("Align Right"));
         connect(m_alignrightAction, SIGNAL(triggered(bool)), this, SLOT(setAlignmentRight(bool)));
         m_mainWindow->actionCollection()->addAction("alignright", m_alignrightAction);
 
         m_colorItem = new KColorCombo();
         m_colorItem->setFixedWidth(64);
-        m_colorItem->setToolTip("Note Color");
+        m_colorItem->setToolTip(i18n("Note Color"));
         a = new KAction(this);
         a->setDefaultWidget(m_colorItem);
         connect(m_colorItem, SIGNAL(activated(const QColor &)), SLOT(setColorItem(const QColor &)));
@@ -109,7 +110,7 @@ namespace Scene
         a = KStandardAction::fitToPage(mainWindow->currentView(),SLOT(fitInViewZoom()),m_mainWindow->actionCollection());
         a->setIcon(Config::ImageFactory::newInstance()->icon("zoom-fit-best.png"));
 
-        a = new KAction("Delete note",0);
+        a = new KAction(i18n("Delete"),0);
         a->setIcon(Config::ImageFactory::newInstance()->icon("edit-delete.png"));
         a->setShortcut(KShortcut(Qt ::CTRL+Qt::Key_D),KAction::DefaultShortcut);
         connect( a, SIGNAL(triggered(bool)), mainWindow->currentView(), SLOT(deleteItem()) );

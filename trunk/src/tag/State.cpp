@@ -18,6 +18,8 @@
 
 #include "State.h"
 
+#include <KLocalizedString>
+
 #include "../main/general.h"
 #include "../config/Configuration.h"
 #include "../config/VisualAspect.h"
@@ -185,7 +187,7 @@ namespace Tag
     State * State::newState( NoteTag * tag )
     {
         State * state = new State(tag);
-        state->setName( "new state" );
+        state->setName( i18n("new state") );
 
         QStringList names;
         for ( int i=0 ; i<tag->states().size() ; ++i )
@@ -197,7 +199,7 @@ namespace Tag
         while ( names.contains(state->name()) )
         {
             ++index;
-            state->setName( QString("new state (%1)").arg(index) );
+            state->setName( i18n("new state (%1)", index) );
         }
 
         return state;
