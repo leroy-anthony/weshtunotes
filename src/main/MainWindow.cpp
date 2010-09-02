@@ -342,8 +342,6 @@ void MainWindow::initSystemTray()
     m_trayIcon->setIcon(Config::ImageFactory::newInstance()->icon("basket.png"));
     m_trayIcon->show();
     setWindowIcon(Config::ImageFactory::newInstance()->icon("basket.png"));
-
-    connect(m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -352,21 +350,6 @@ void MainWindow::closeEvent(QCloseEvent *event)
     {
         hide();
         event->ignore();
-    }
-}
-
-void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
-{
-    switch (reason)
-    {
-    case QSystemTrayIcon::DoubleClick:
-    case QSystemTrayIcon::Trigger:
-        m_trayIcon->toggleActive();
-        break;
-    case QSystemTrayIcon::MiddleClick:
-        break;
-    default:
-        ;
     }
 }
 

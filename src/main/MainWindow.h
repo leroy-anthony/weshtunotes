@@ -77,8 +77,6 @@ public slots:
     void delCurrentBasket();
     void addBasket( Basket::ItemTreeBasket * item );
 
-    void iconActivated( QSystemTrayIcon::ActivationReason reason );
-
     void showSettings();
     void updateConfiguration();
 
