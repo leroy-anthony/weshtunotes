@@ -50,7 +50,7 @@ namespace Basket
 
     void Basket::save()
     {
-        m_contentScene->save();
+        m_contentScene->save();// clear and save !!
 
         AbstractBasket::save();
     }

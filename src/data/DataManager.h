@@ -37,6 +37,10 @@ namespace Data
         DataManager();
         DataManager( const QString & config );
 
+        void reparseData();
+
+        void setContent( const QByteArray & data );
+
         static void clearBasketConfig( const QString & directoryScene );
         static void setIdScene( const QString & directoryScene, const QString & id );
         static void saveSubHandles( const QString & configFileHandle, const QStringList & listHandles );
@@ -82,11 +86,15 @@ namespace Data
 	
         static void deleteNoteFile( const QString & name );
 
+        static QString itemsStorePath();
+        static QString datasStorePath();
+        static QString associationStorePath();
         static QString basketsStorePath();
+
         static QString itemPath( const QString & id );
 
 
-
+        static QString configFileAssoc( const QString & id );
         static QString configFileBasket( const QString & id );
         static QString configFileItem( const QString & id );
 
@@ -94,10 +102,6 @@ namespace Data
 
 
     protected:
-        static QString itemsStorePath();
-        static QString dataStorePath();
-
-
         static QDir dir( const QString & dirConfig );
         static void removeConfigDir( const QString & dir );
         static QStringList subDirs( const QString & directory );

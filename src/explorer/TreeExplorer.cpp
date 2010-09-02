@@ -175,7 +175,6 @@ namespace Explorer
         QStringList masterBasket = Data::DataManager::masterBaskets();
         for (int i = 0; i < masterBasket.size(); ++i)
         {
-            Data::DataManager settings( Data::DataManager::configFileBasket( masterBasket[i] ) );
             loadBasket( masterBasket[i] );
         }
 
@@ -253,7 +252,7 @@ namespace Explorer
 
             menu.addSeparator();
 
-            /*QAction * newAct = new QAction(i18n("Commit to google"), this);
+            QAction * newAct = new QAction(i18n("Commit to google"), this);
             menu.addAction(newAct);
             connect(newAct, SIGNAL(triggered()), basketItem->basket(), SLOT(commitGoogle()));
 
@@ -261,7 +260,7 @@ namespace Explorer
             menu.addAction(newAct2);
             connect(newAct2, SIGNAL(triggered()), basketItem->basket(), SLOT(updateGoogle()));
 
-            menu.addSeparator();*/
+            menu.addSeparator();
 
             QAction * propertyAction = new QAction(i18n("Properties"), this);
             menu.addAction(propertyAction);

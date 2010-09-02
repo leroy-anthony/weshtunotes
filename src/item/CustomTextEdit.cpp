@@ -92,7 +92,8 @@ namespace Item
             QImage image = qvariant_cast<QImage>(source->imageData());
             QTextCursor cursor = this->textCursor();
 
-            QString fileName = QDir::searchPaths( "data" )[0] + QDir::separator();
+            QString baseDir = Data::DataManager::datasStorePath();
+            QString fileName = "";
             if ( source->urls().size() > 0 )
             {
                 fileName += QUrl::toPercentEncoding(source->urls()[0].toString());
@@ -109,8 +110,8 @@ namespace Item
             }
             fileName += QDateTime::currentDateTime().toString("_yyyy_MM_dd_hh_mm_ss_zzz") + ".jpg";
 
-            image.save( fileName );
-            cursor.insertImage( image, fileName );
+            image.save( baseDir+fileName );
+            cursor.insertImage( image, baseDir+fileName );
         }
         else if (source->hasUrls())
         {

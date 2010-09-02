@@ -18,17 +18,28 @@
 
 #include "KWeshTuNotesApp.h"
 
+#include <Nepomuk/ResourceManager>
+#include <KMessageBox>
+#include <KLocalizedString>
+
 #include "MainWindow.h"
 #include "../config/Configuration.h"
 #include "../data/DataManager.h"
 
+MainWindow * KWeshTuNotesApp::m_mainWindow = 0;
+
 KWeshTuNotesApp::KWeshTuNotesApp():
-        KUniqueApplication(),
-        m_mainWindow( 0 )
+        KUniqueApplication()
 {
     setQuitOnLastWindowClosed ( false );
 
     Data::DataManager::iniConfigration();
+
+    int nepomukActivate = Nepomuk::ResourceManager::instance()->init();
+    if ( nepomukActivate < 0 )
+    {
+        KMessageBox::sorry(0, i18n("Nepomuk is not found. \"Tag basket\" cannot work correctly."), i18n("Alert"));
+    }
 
     m_mainWindow = new MainWindow();
     m_mainWindow->show();
@@ -37,6 +48,11 @@ KWeshTuNotesApp::KWeshTuNotesApp():
 KWeshTuNotesApp::~KWeshTuNotesApp()
 {
     delete m_mainWindow;
+}
+
+MainWindow * KWeshTuNotesApp::mainWindow()
+{
+    return m_mainWindow;
 }
 
 int KWeshTuNotesApp::newInstance()

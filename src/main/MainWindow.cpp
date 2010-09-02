@@ -66,7 +66,7 @@ MainWindow::MainWindow( QWidget * parent ) :
 {
     setupUi(this);
 
-    Data::DataManager::iniConfigration();
+    //Data::DataManager::iniConfigration();
     initView();
     initExplorer();
 
@@ -85,7 +85,8 @@ MainWindow::MainWindow( QWidget * parent ) :
     loadData();
     
     //Data::ExportDataToXml::exportToFile( m_treeExplorer->rootItem(), "/tmp/baskets.xml" );
-    //Data::ImportDataFromXml::importFromFile( "/tmp/baskets.xml" );
+    //Data::ImportDataFromXml xml( m_treeExplorer, "/tmp/baskets.xml" );
+    //xml.importFromFile();
 }
 
 MainWindow::~MainWindow()
