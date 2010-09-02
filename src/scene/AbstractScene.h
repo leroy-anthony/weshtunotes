@@ -41,7 +41,7 @@ namespace Scene
         Q_OBJECT
 
     public:
-        AbstractScene(QWidget * parent = 0);
+        AbstractScene(QWidget * parent, const QString & type);
         virtual ~AbstractScene();
 
         virtual Item::AbstractItem * currentAbstractItem() = 0;

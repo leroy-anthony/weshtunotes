@@ -52,13 +52,11 @@ namespace Scene
     QString FreeScene::type = "freescene";
 
     FreeScene::FreeScene(QWidget * parent) :
-            AbstractScene(parent),
+            AbstractScene(parent,FreeScene::type),
             m_currentAbstractItem(0),
             m_currentHandle(0),
             m_modeItem(Nothing)
     {
-        m_type = FreeScene::type;
-
         setBackgroundBrush(QColor(Qt::cyan).lighter(190));
         /*
           QGraphicsScene::BspTreeIndex
@@ -185,7 +183,6 @@ namespace Scene
         {
             static_cast<QWidget*>(handleItem)->move(x,y);
 
-            //Handle::HandleItem::resetInsert();
             if ( m_lastCibleHandle != 0 )
             {
                 m_lastCibleHandle->resetInsert();
@@ -200,6 +197,7 @@ namespace Scene
                     {
                         m_lastCibleHandle = m_items[static_cast<QGraphicsProxyWidget*>(items[i])];
                         m_lastCibleHandle->insert( handleItem->geometry().topLeft(), handleItem->height() );
+                        break;
                     }
                 }
             }
@@ -256,18 +254,11 @@ namespace Scene
         {
             delUselessHandleGroup( m_currentHandle  );
 
-            Handle::GraphicHandleItem * currentGraphicsItem = static_cast<Handle::GraphicHandleItem*>(selectedItems()[0]);
-
-            QList<QGraphicsItem *> items = collidingItems( currentGraphicsItem );
+            QList<QGraphicsItem *> items = collidingItems( m_handles[ m_currentHandle ] );
             if ( items.size() > 0 )
             {
                 if ( items[0]->isVisible() )
                 {
-                    if ( m_lastCibleHandle )
-                    {
-                        m_lastCibleHandle->resetInsert();
-                    }
-
                     Handle::HandleItem * handleCible = m_items[static_cast<QGraphicsProxyWidget*>(items[0])];
                     if ( handleCible->size() == 0 )
                     {
@@ -283,6 +274,11 @@ namespace Scene
                     else
                     {
                         handleCible->add( m_currentHandle );
+                    }
+
+                    if ( m_lastCibleHandle )
+                    {
+                        m_lastCibleHandle->resetInsert();
                     }
 
                     removeGraphicsItemFromScene( m_currentHandle, false );

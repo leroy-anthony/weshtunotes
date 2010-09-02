@@ -51,14 +51,12 @@ namespace Scene
     QString LayoutScene::type = "listscene";
     
     LayoutScene::LayoutScene(QWidget * parent) :
-            AbstractScene(),
+            AbstractScene(parent,LayoutScene::type),
             m_currentGraphicsItem(0),
             m_currentAbstractItem(0),
             m_currentHandle(0),
             m_modeItem(Nothing)
     {
-        m_type = LayoutScene::type;
-
         setBackgroundBrush(QColor(Qt::cyan).lighter(190));
         /*
           QGraphicsScene::BspTreeIndex
