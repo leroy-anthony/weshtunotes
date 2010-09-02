@@ -31,7 +31,6 @@
 
 #include "../technic/GeneratorID.h"
 #include "../synchro/AbstractConnection.h"
-#include "../synchro/ChooseBasketDialog.h"
 #include "../config/Configuration.h"
 #include "../basket/ItemTreeBasket.h"
 #include "../scene/AbstractScene.h"
