@@ -16,7 +16,6 @@
 
 */
 
-
 #include "CustomTextEdit.h"
 
 #include <QUrl>
@@ -87,6 +86,8 @@ namespace Item
 
     void CustomTextEdit::insertFromMimeData( const QMimeData *source )
     {
+
+
         if (source->hasImage())
         {
             QImage image = qvariant_cast<QImage>(source->imageData());
@@ -115,6 +116,8 @@ namespace Item
         }
         else if (source->hasUrls())
         {
+            qDebug() << "rdrzdrz";
+
             QTextCursor cursor = this->textCursor();
             QList<QUrl> urls = source->urls();
             for ( int i=0 ; i<urls.size() ; ++i )
@@ -145,6 +148,19 @@ namespace Item
                     cursor.insertHtml("<a href=\""+urls[i].toString()+"\">"+urls[i].toString()+"</a>");
 
                 }
+            }
+        }
+        else if (source->hasText())
+        {
+            QUrl url(source->text());
+            if ( !url.host().isEmpty() && !url.scheme().isEmpty() && url.isValid() )
+            {
+                QTextCursor cursor = this->textCursor();
+                cursor.insertHtml("<a href=\""+url.toString()+"\">"+url.toString()+"</a>");
+            }
+            else
+            {
+                QTextEdit::insertFromMimeData( source );
             }
         }
         else
