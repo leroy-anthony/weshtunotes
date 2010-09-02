@@ -77,10 +77,10 @@ namespace Basket
     
     void TagBasket::save()
     {
+        m_contentScene->save(); // clear and save !!
+
         Data::DataManager settings( m_configFile );
         settings.setValue( "basket", "tag_name", m_tagName );
-
-        m_contentScene->save();
         
         AbstractBasket::save();
     }
@@ -95,7 +95,8 @@ namespace Basket
         m_contentScene->setReadOnly(true);
 	
         Data::DataManager settings( m_configFile );
-        m_tagName = settings.valueGroup("basket","tag_name","T");
+
+        m_tagName = settings.valueGroup("basket","tag_name","error");
         
         Nepomuk::Tag tag( "KWeshTuNotes::" + m_tagName );
         
