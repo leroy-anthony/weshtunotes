@@ -83,7 +83,6 @@ set(weshnotes_SRC
 ./src/synchro/GoogleDocsConnection.cpp
 ./src/synchro/AbstractConnection.cpp
 ./src/synchro/SynchroManager.h
-./src/synchro/ChooseBasketDialog.cpp
 ./src/synchro/NetworkAccessManagerProxy.cpp
 ./src/config/GeneralPageDialog.cpp
 ./src/config/AppareancePageDialog.cpp
