@@ -108,9 +108,9 @@ namespace Item
                     fileName.append(QChar(str[index]));
                 }
             }
-            fileName += QDateTime::currentDateTime().toString("_yyyy_MM_dd_hh_mm_ss_zzz") + ".jpg";
+            fileName += QDateTime::currentDateTime().toString("_yyyy_MM_dd_hh_mm_ss_zzz") + ".png";
 
-            image.save( baseDir+fileName );
+            image.save( baseDir+fileName, "PNG" );
             cursor.insertImage( image, baseDir+fileName );
         }
         else if (source->hasUrls())
