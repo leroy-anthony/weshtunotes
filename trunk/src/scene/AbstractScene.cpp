@@ -40,13 +40,14 @@ namespace Scene
     {
     }
 
-    AbstractScene::AbstractScene(QWidget * parent):
+    AbstractScene::AbstractScene(QWidget * parent, const QString & type):
             QGraphicsScene(parent),
             GeneratorID("scene"),
             m_horizontalScrollBarValueView(0),
             m_verticalScrollBarValueView(0),
             m_readOnly(false),
-            m_lastCibleHandle(0)
+            m_lastCibleHandle(0),
+            m_type(type)
     {
         qreal max = std::numeric_limits<qreal>::max();
         setSceneRect( -max, -max, max, max );
