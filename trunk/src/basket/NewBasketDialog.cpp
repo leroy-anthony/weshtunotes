@@ -41,48 +41,27 @@ namespace Basket
             m_basketExplorer(basketExplorer),
             m_parent(parent)
     {
-        setCaption( "Create Basket" );
+
+        setCaption( i18n("Create Basket") );
         setButtons( KDialog::Ok | KDialog::Cancel );
-        setModal(true);
+        setModal( true );
 
-        QWidget * mainWidgetLeft  = new QWidget( this );
-        QWidget * mainWidgetRight = new QWidget( this );
+        button( KDialog::Ok )->setEnabled(false);
 
-        QLayout * layout = new QHBoxLayout( mainWidgetLeft );
+        m_basketsTab = new KTabWidget();
+        setupUi( m_basketsTab );
+        setMainWidget( m_basketsTab );
 
-        m_iconButton = new KIconButton();
         m_iconButton->setIcon( Settings::iconBasket() );
         m_iconButton->setFixedSize( 64, 64 );
-
-        layout->addWidget(m_iconButton);
-        layout->addWidget(mainWidgetRight);
-
-
-        QLabel * basketNamelabel = new QLabel("Name :");
-        m_basketName = new QLineEdit();
-
-        QLabel * basketBackgroundColor = new QLabel("Background color :");
-        m_colorBackground = new KColorCombo();
         m_colorBackground->setColor(Settings::colorBasket());
 
-        QLabel * basketTypelabel = new QLabel("Type:");
-        m_basketTypeCombo = new KComboBox();
-        connect( m_basketTypeCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeBasketType(int)) );
+        m_typeAccountRemote->addItem( m_managerCx.connectionName() );
 
-        QLabel * basketTaglabel = new QLabel("Tag Name :");
-        m_basketTagCombo  = new KComboBox();
-
-        QGridLayout * gridLayout = new QGridLayout( mainWidgetRight );
-        gridLayout->addWidget( basketNamelabel,       0, 0 );
-        gridLayout->addWidget( m_basketName,          0, 1 );
-        gridLayout->addWidget( basketBackgroundColor, 1, 0 );
-        gridLayout->addWidget( m_colorBackground,     1, 1 );
-        gridLayout->addWidget( basketTypelabel,       2, 0 );
-        gridLayout->addWidget( m_basketTypeCombo,     2, 1 );
-        gridLayout->addWidget( basketTaglabel,        3, 0 );
-        gridLayout->addWidget( m_basketTagCombo,      3, 1 );
-
-        setMainWidget( mainWidgetLeft );
+        connect( m_basketTypeCombo,    SIGNAL(currentIndexChanged(int)),    this, SLOT(changeBasketType(int)) );
+        connect( m_getBasketsRemote,   SIGNAL(released()),                  this, SLOT(getBasketsRemote()) );
+        connect( m_basketsTab,         SIGNAL(currentChanged(int)),         this, SLOT(changeTab(int)) );
+        connect( m_basketName,         SIGNAL(textChanged(const QString&)), this, SLOT(valid(const QString&)) );
 
         for ( int i=0 ; i<BasketFactory::MAX ; ++i )
         {
@@ -97,9 +76,88 @@ namespace Basket
 
     }
 
+    void NewBasketDialog::changeTab( int index )
+    {
+        button( KDialog::Ok )->setEnabled(false);
+
+        if ( index == 0 && !m_basketName->text().isEmpty() )
+        {
+            button( KDialog::Ok )->setEnabled(true);
+        }
+
+        if ( index == 1 && !m_basketsRemote->currentText().isEmpty() )
+        {
+            button( KDialog::Ok )->setEnabled(true);
+        }
+    }
+
+    void NewBasketDialog::valid( const QString & text )
+    {
+        button( KDialog::Ok )->setEnabled( !text.isEmpty() );
+    }
+
+    void NewBasketDialog::enableGetBasketButton( const QString & text )
+    {
+        m_getBasketsRemote->setEnabled(!text.isEmpty());
+    }
+
+    void NewBasketDialog::getBasketsRemote()
+    {
+        QStringList ids = m_managerCx.baskets();
+        m_basketsRemote->clear();
+        for ( int i=0 ; i<ids.size() ; ++i )
+        {
+            int index = ids[i].indexOf(":");
+            m_basketsRemote->addItem(ids[i].midRef(++index).toString(),ids[i].midRef(0,index).toString());
+        }
+
+        button( KDialog::Ok )->setEnabled(!ids.isEmpty());
+    }
+
     void NewBasketDialog::changeBasketType( int index )
     {
         m_basketTagCombo->setEnabled( index != 0 );
+    }
+
+    int NewBasketDialog::order()
+    {
+        ItemTreeBasket * parent = m_parent;
+        if ( parent == 0 )
+        {
+            parent = m_basketExplorer->rootItem();
+        }
+
+        ItemTreeBasket * brother = static_cast<ItemTreeBasket*>( parent->child(parent->childCount()-1) );
+        int order = 0;
+        if ( brother != 0 )
+        {
+            order = brother->basket()->order()+1;
+        }
+
+        return order;
+    }
+
+    ItemTreeBasket * NewBasketDialog::addRemoteBasket()
+    {
+        QString id = m_basketsRemote->itemData(m_basketsRemote->currentIndex()).toString();
+
+        m_managerCx.update(id);
+
+        QMap<QString,QString> options;
+
+        ItemTreeBasket * item = new ItemTreeBasket( m_parent, id, order(), options, "" );
+        item->basket()->load();
+
+        if ( m_parent == 0 )
+        {
+            Data::DataManager::addMasterBasket( item->basket()->id() );
+        }
+        else
+        {
+            Data::DataManager::addBasket( m_parent->basket()->id(), item->basket()->id() );
+        }
+
+        return item;
     }
 
     ItemTreeBasket * NewBasketDialog::addBasket()
@@ -116,20 +174,7 @@ namespace Basket
             options["tagName"] = m_basketTagCombo->currentText();
         }
 
-        ItemTreeBasket * parent = m_parent;
-        if ( parent == 0 )
-        {
-            parent = m_basketExplorer->rootItem();
-        }
-
-        ItemTreeBasket * brother = static_cast<ItemTreeBasket*>( parent->child(parent->childCount()-1) );
-        int order = 0;
-        if ( brother != 0 )
-        {
-            order = brother->basket()->order()+1;
-        }
-
-        ItemTreeBasket * item = new ItemTreeBasket( m_parent, "", order, options, type );
+        ItemTreeBasket * item = new ItemTreeBasket( m_parent, "", order(), options, type );
         item->setIcon( m_iconButton->icon() );
         item->basket()->setName(name);
         item->basket()->setBackgroundColor(colorBackground);
@@ -143,7 +188,14 @@ namespace Basket
             Data::DataManager::addBasket( m_parent->basket()->id(), item->basket()->id() );
         }
 
+        item->basket()->save();
+
         return item;
+    }
+
+    int NewBasketDialog::currentIndexTab()
+    {
+        return m_basketsTab->currentIndex();
     }
 
     ItemTreeBasket * NewBasketDialog::getNewBasket( Explorer::AbstractExplorer * basketExplorer, Basket::ItemTreeBasket * parent )
@@ -152,7 +204,14 @@ namespace Basket
 
         if ( newBasketDialog.exec() == KDialog::Accepted )
         {
-            return newBasketDialog.addBasket();
+            if ( newBasketDialog.currentIndexTab() == 0 )
+            {
+                return newBasketDialog.addBasket();
+            }
+            else
+            {
+                return newBasketDialog.addRemoteBasket();
+            }
         }
 
         return 0;

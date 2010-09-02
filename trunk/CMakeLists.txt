@@ -29,7 +29,8 @@ set(weshnotes_UI
 ./src/tag/tag_factory.ui
 ./src/config/GeneralSettings.ui
 ./src/config/AnimationSettings.ui
-./src/config/AppareanceSettings.ui)
+./src/config/AppareanceSettings.ui
+./src/basket/NewBasketForm.ui)
 
 QT_WRAP_UI(weshnotes weshnotes_UI_H weshnotes_UI_SRC ${weshnotes_UI})
 
@@ -82,6 +83,8 @@ set(weshnotes_SRC
 ./src/synchro/GoogleDocsConnection.cpp
 ./src/synchro/AbstractConnection.cpp
 ./src/synchro/SynchroManager.h
+./src/synchro/ChooseBasketDialog.cpp
+./src/synchro/NetworkAccessManagerProxy.cpp
 ./src/config/GeneralPageDialog.cpp
 ./src/config/AppareancePageDialog.cpp
 ./src/config/AnimationPageDialog.cpp

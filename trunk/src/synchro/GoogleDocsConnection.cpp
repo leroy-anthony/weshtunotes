@@ -16,6 +16,7 @@
 
 */
 
+
 #include "GoogleDocsConnection.h"
 
 #include <QNetworkReply>
@@ -30,34 +31,18 @@
 
 #include <kdebug.h>
 
+#include "../data/DataManager.h"
+#include "NetworkAccessManagerProxy.h"
+
 namespace Synchro
 {
 
     GoogleDocsConnection::GoogleDocsConnection () :
+            AbstractConnection("Google Document"),
             m_address( "/feeds/default/private/full/" ),
-            m_host ( "docs.google.com" )
+            m_host ( "docs.google.com" ),
+            m_networkAccessManager(0)
     {
-        m_networkAccessManager = new QNetworkAccessManager ( 0 );
-        connect( m_networkAccessManager, SIGNAL( finished( QNetworkReply * ) ), this, SLOT(replyFinished( QNetworkReply * ) ) );
-        connect( m_networkAccessManager, SIGNAL( sslErrors( QNetworkReply *, const QList<QSslError> & ) ), this, SLOT(sslErrors(QNetworkReply *, const QList<QSslError> &) ) );
-    }
-
-    void GoogleDocsConnection::replyFinished( QNetworkReply * reply )
-    {
-        if ( reply->isFinished() )
-        {
-            m_syncEvent.quit();
-        }
-
-        m_syncEvent.exit(1);
-    }
-
-    void GoogleDocsConnection::sslErrors(QNetworkReply * r, const QList<QSslError> & ssls)
-    {
-        for ( int i=0 ; i<ssls.size() ; ++i )
-        {
-            kDebug() << ssls[i].errorString();
-        }
     }
 
     bool GoogleDocsConnection::authentication( const QString & username, const QString & password )
@@ -74,24 +59,20 @@ namespace Synchro
         QNetworkRequest request ( urlConnection );
         request.setHeader(QNetworkRequest::ContentTypeHeader,"application/x-www-form-urlencoded");
 
-        QNetworkReply * reply = m_networkAccessManager->post( request, content );
-        m_syncEvent.exec(QEventLoop::ExcludeUserInputEvents);
+        QNetworkReply * reply = m_networkAccessManager.post( request, content );
 
-        if ( reply->isFinished() )
+        QString reponse = reply->readAll();
+
+        QStringList tokens = reponse.split("Auth=");
+        if ( tokens.size() == 2 )
         {
-            QString reponse = reply->readAll();
-            QStringList tokens = reponse.split("Auth=");
+            m_googleStringAuth = "GoogleLogin auth="+tokens[1];
+            m_googleStringAuth.chop(1); // delete new line character
 
-            if ( tokens.size() == 2 )
-            {
-                m_googleStringAuth = "GoogleLogin auth="+tokens[1];
-                m_googleStringAuth.chop(1); // delete new line character
-
-                return true;
-            }
-
-            return false;
+            return true;
         }
+
+        return false;
     }
 
     void GoogleDocsConnection::setAuthentication ( QNetworkRequest & request )
@@ -99,6 +80,58 @@ namespace Synchro
         request.setRawHeader ( "Host", m_host.toAscii() );
         request.setRawHeader ( "GData-Version", "3.0" );
         request.setRawHeader ( "Authorization", m_googleStringAuth.toAscii() );
+    }
+
+    QString GoogleDocsConnection::createFolder( const QString & folder, bool subDir )
+    {
+        QString url = "https://docs.google.com/feeds/default/private/full/folder%3A%1/contents";
+
+        if ( !subDir )
+        {
+            url = "https://docs.google.com/feeds/default/private/full";
+        }
+        else
+        {
+            QString idParentDir = findId( "kweshtunotes", true );
+            if ( idParentDir == "" )
+            {
+                idParentDir = createFolder( "kweshtunotes", false );
+            }
+
+            url = url.arg(idParentDir);
+        }
+
+        QByteArray content;
+        content += "<?xml version='1.0' encoding='UTF-8'?>\r\n";
+        content += "<entry xmlns=\"http://www.w3.org/2005/Atom\">\r\n";
+        content += "<category scheme=\"http://schemas.google.com/g/2005#kind\" term=\"http://schemas.google.com/docs/2007#folder\"/>\r\n";
+        content += "<title>";
+        content += folder.toAscii();
+        content += "</title>\r\n";
+        content += "</entry>\r\n";
+
+        QNetworkRequest r( url );
+
+        setAuthentication( r );
+
+        r.setRawHeader( "Content-Type", "application/atom+xml" );
+        r.setRawHeader( "Content-Length", QString::number(content.size()).toAscii() );
+
+        QNetworkReply * reply = m_networkAccessManager.post( r, content );
+
+        if ( reply->isFinished() )
+        {
+            QDomDocument result("result");
+            result.setContent(reply->readAll());
+
+            QDomNodeList nodes = result.elementsByTagName("gd:resourceId");
+            if ( nodes.size() > 0 )
+            {
+                return nodes.at(0).toElement().text().remove("folder:");
+            }
+        }
+
+        return "";
     }
 
     void GoogleDocsConnection::putFile( const QString & fileName, const QString & folder )
@@ -115,7 +148,12 @@ namespace Synchro
             if ( folder != QString("") )
             {
                 url.append("folder%3A%1/contents");
-                url = url.arg(findId(folder,true));
+                QString idFolder = findId(folder,true);
+                if ( idFolder == "" )
+                {
+                    idFolder = createFolder(folder,true);
+                }
+                url = url.arg(idFolder);
             }
 
             QNetworkRequest r(url);
@@ -126,6 +164,7 @@ namespace Synchro
             datas += "<entry xmlns=\"http://www.w3.org/2005/Atom\" xmlns:docs=\"http://schemas.google.com/docs/2007\">\r\n";
             datas += "<category scheme=\"http://schemas.google.com/g/2005#kind\" term=\"http://schemas.google.com/docs/2007#document\"/>\r\n";
             datas += "<title>"+QUrl(fileInfo.fileName()).toEncoded()+"</title>\r\n";
+            datas += "<gd:extendedProperty name=\"com.google\"><some_xml>value</some_xml></gd:extendedProperty>\r\n";
             datas += "<docs:writersCanInvite value=\"false\" />\r\n";
             datas += "</entry>\r\n\r\n";
             datas += QString("--" + boundary + "\r\n").toAscii();
@@ -142,8 +181,7 @@ namespace Synchro
             r.setRawHeader( "Content-Length", QString::number(datas.length()).toAscii());
             r.setRawHeader( "Slug", "test" );
 
-            QNetworkReply * reply = m_networkAccessManager->post(r,datas);
-            m_syncEvent.exec( QEventLoop::ExcludeUserInputEvents );
+            QNetworkReply * reply = m_networkAccessManager.post(r,datas);
         }
     }
 
@@ -167,14 +205,51 @@ namespace Synchro
                 r.setRawHeader( "Content-Length", QString::number(f->size()).toAscii() );
                 r.setRawHeader( "Slug", "test" );
 
-                QNetworkReply * reply = m_networkAccessManager->put(r,f);
-                m_syncEvent.exec( QEventLoop::ExcludeUserInputEvents );
+                QNetworkReply * reply = m_networkAccessManager.put(r,f);
             }
             else
             {
                 putFile( fileName, folder );
             }
         }
+    }
+
+    QStringList GoogleDocsConnection::content( const QString & folder )
+    {
+        QString idFolder = findId( folder, true );
+        if ( idFolder == "" )
+        {
+            return QStringList();
+        }
+
+        QString url = QString("https://docs.google.com/feeds/default/private/full/folder%3A%1/contents?showfolders=true").arg(idFolder);
+
+        QNetworkRequest request ( url );
+
+        setAuthentication ( request );
+
+        QNetworkReply * reply = m_networkAccessManager.get ( request );
+
+        QDomDocument result("result");
+        result.setContent(reply->readAll());
+
+        QDomNodeList nodes = result.elementsByTagName("title");
+
+        QStringList ids;
+        for ( int i=1 ; i<nodes.size() ; ++i )
+        {
+            QString basketName = nodes.at(i).toElement().text();
+            QByteArray content = file( basketName, "txt" );
+            if ( content != "" )
+            {
+                Data::DataManager d("tmp");
+                d.setContent(content);
+
+                ids += ( basketName+":"+ d.values("basket","name")[0] );
+            }
+        }
+
+        return ids;
     }
 
     QString GoogleDocsConnection::findId( const QString & ressourceName, bool folder )
@@ -187,12 +262,9 @@ namespace Synchro
         }
 
         QNetworkRequest request ( url );
-
         setAuthentication ( request );
 
-        QNetworkReply * reply = m_networkAccessManager->get ( request );
-
-        m_syncEvent.exec(QEventLoop::ExcludeUserInputEvents);
+        QNetworkReply * reply = m_networkAccessManager.get( request );
 
         QDomDocument result("result");
         result.setContent(reply->readAll());
@@ -221,9 +293,7 @@ namespace Synchro
 
         setAuthentication ( request );
 
-        QNetworkReply * reply = m_networkAccessManager->get ( request );
-
-        m_syncEvent.exec(QEventLoop::ExcludeUserInputEvents);
+        QNetworkReply * reply = m_networkAccessManager.get ( request );
 
         QDomDocument result("result");
         result.setContent(reply->readAll());
@@ -237,9 +307,7 @@ namespace Synchro
 
             setAuthentication ( request );
 
-            reply = m_networkAccessManager->get ( request );
-
-            m_syncEvent.exec(QEventLoop::ExcludeUserInputEvents);
+            reply = m_networkAccessManager.get ( request );
 
             QString content = reply->readAll();
 
@@ -248,7 +316,7 @@ namespace Synchro
                 content.remove(0,3);
             }
 
-            return content.toAscii();
+            return content.toLatin1();
         }
 
         return "";

@@ -21,6 +21,7 @@
 #include <QPair>
 #include <QFileInfo>
 #include <QCoreApplication>
+#include <QTemporaryFile>
 
 #include "settings.h"
 #include "../main/general.h"
@@ -41,18 +42,46 @@ namespace Data
 
     void DataManager::iniConfigration()
     {
-        QDir dir(dataStorePath());
+        QDir dir(datasStorePath());
         if ( !dir.exists() )
         {
-            dir.mkpath(dataStorePath());
+            dir.mkpath(datasStorePath());
         }
-        QDir::addSearchPath( "data", dataStorePath() );
-        QDir::addSearchPath( "icon", dataStorePath()+"icon" );
 
         QDir dir2( basketsStorePath() );
         if ( !dir2.exists() )
         {
             dir2.mkpath( basketsStorePath() );
+        }
+
+        QDir dir3( itemsStorePath() );
+        if ( !dir3.exists() )
+        {
+            dir3.mkpath( itemsStorePath() );
+        }
+
+        QDir dir4( associationStorePath() );
+        if ( !dir4.exists() )
+        {
+            dir4.mkpath( associationStorePath() );
+        }
+    }
+
+    void DataManager::reparseData()
+    {
+        reparseConfiguration();
+    }
+
+    void DataManager::setContent( const QByteArray & data )
+    {
+        QFile file(fileName());
+        if ( file.open(QIODevice::WriteOnly | QIODevice::Text) )
+        {
+            QTextStream os(&file);
+            os << data;
+            file.close();
+
+            reparseConfiguration();
         }
     }
 
@@ -128,9 +157,14 @@ namespace Data
         return Settings::basketsStorePath().toLocalFile()+QDir::separator()+"items"+QDir::separator();
     }
 
-    QString DataManager::dataStorePath()
+    QString DataManager::datasStorePath()
     {
         return Settings::basketsStorePath().toLocalFile()+QDir::separator()+"data"+QDir::separator();
+    }
+
+    QString DataManager::associationStorePath()
+    {
+        return Settings::basketsStorePath().toLocalFile()+QDir::separator()+"association"+QDir::separator();
     }
 
     QStringList DataManager::masterBaskets()
@@ -368,6 +402,9 @@ namespace Data
         return QString("items") + QDir::separator() + id;
     }
 
-
+    QString DataManager::configFileAssoc( const QString & id )
+    {
+        return QString("association") + QDir::separator() + id;
+    }
 
 }

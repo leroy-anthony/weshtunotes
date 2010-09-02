@@ -1,19 +1,4 @@
 /*
-    Copyright (c) 2009 LEROY Anthony <leroy.anthony@gmail.com>
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 */
 
 #include "ImportDataFromXml.h"
@@ -22,87 +7,127 @@
 #include <QXmlStreamReader>
 #include <KDebug>
 
+#include "../explorer/TreeExplorer.h"
+#include "../basket/Basket.h"
+
 namespace Data
 {
 
-    ImportDataFromXml::ImportDataFromXml()
+    ImportDataFromXml::ImportDataFromXml( Explorer::TreeExplorer * explorer, const QString & filePath ):
+            m_file(filePath),
+            m_treeEplorer(explorer)
     {
+        if (m_file.open(QIODevice::ReadOnly | QIODevice::Text))
+        {
+            m_xml.setDevice(&m_file);
+        }
     }
 
-    void ImportDataFromXml::importFromFile( const QString & filePath )
+    void ImportDataFromXml::importFromFile()
     {
-        QFile file(filePath);
-
-        if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        while (m_xml.readNextStartElement())
         {
-            return;
-        }
+            kDebug() << m_xml.name();
 
-        QXmlStreamReader xml(&file);
-
-        while (xml.readNextStartElement())
-        {
-            kDebug() << xml.name();
-
-            if (xml.name() == "kweshtunotes")
+            if (m_xml.name() == "kweshtunotes")
             {
-                readRoot(xml);
-            }
-            else if (xml.name() == "baskets")
-            {
-                readBasket(xml);
-            }
-            else if (xml.name() == "basket")
-            {
-                readBasket(xml);
-            }
-            else if (xml.name() == "scene")
-            {
-                readScene(xml);
-            }
-            else if (xml.name() == "handle")
-            {
-                readHandle(xml);
-            }
-            else if (xml.name() == "item")
-            {
-                readItem(xml);
+                readRoot();
             }
             else
             {
-                xml.skipCurrentElement();
+                m_xml.skipCurrentElement();
             }
         }
     }
 
-    void ImportDataFromXml::readRoot( QXmlStreamReader & xml )
+    void ImportDataFromXml::readRoot()
     {
-        kDebug() << "root";
+        kDebug() << m_xml.name();
+        while (m_xml.readNextStartElement())
+        {
+            if (m_xml.name() == "baskets")
+            {
+                readBaskets();
+            }
+            else
+            {
+                m_xml.skipCurrentElement();
+            }
+        }
     }
 
-    void ImportDataFromXml::readBaskets( QXmlStreamReader & xml )
+    void ImportDataFromXml::readBaskets()
     {
-        kDebug() << "baskets";
+        kDebug() << m_xml.name();
+        while (m_xml.readNextStartElement())
+        {
+            if (m_xml.name() == "basket")
+            {
+                readBasket();
+            }
+            else
+            {
+                m_xml.skipCurrentElement();
+            }
+        }
     }
 
-    void ImportDataFromXml::readBasket( QXmlStreamReader & xml )
+    void ImportDataFromXml::readBasket()
     {
-        kDebug() << "basket";
+        kDebug() << m_xml.name() << m_xml.attributes().value("id");
+
+        //m_treeEplorer->loadBasket( 0, m_xml.attributes().value("id").toString() );
+        //loadBasket( m_xml.attributes().value("id") );
+
+        while (m_xml.readNextStartElement())
+        {
+            if (m_xml.name() == "scene")
+            {
+                readScene();
+            }
+            else
+            {
+                m_xml.skipCurrentElement();
+            }
+        }
     }
 
-    void ImportDataFromXml::readScene( QXmlStreamReader & xml )
+    void ImportDataFromXml::readScene()
     {
-        kDebug() << "scene";
+        kDebug() << m_xml.name();
+        while (m_xml.readNextStartElement())
+        {
+            if (m_xml.name() == "handle")
+            {
+                readHandle();
+            }
+            else
+            {
+                m_xml.skipCurrentElement();
+            }
+        }
     }
 
-    void ImportDataFromXml::readHandle( QXmlStreamReader & xml )
+    void ImportDataFromXml::readHandle()
     {
-        kDebug() << "handle";
+        kDebug() << m_xml.name();
+        while (m_xml.readNextStartElement())
+        {
+            if (m_xml.name() == "item")
+            {
+                readItem();
+            }
+            else
+            {
+                m_xml.skipCurrentElement();
+            }
+        }
     }
 
-    void ImportDataFromXml::readItem( QXmlStreamReader & xml )
+    void ImportDataFromXml::readItem()
     {
-        kDebug() << "item";
+        kDebug() << m_xml.name();
+        m_xml.skipCurrentElement();
     }
 
 }

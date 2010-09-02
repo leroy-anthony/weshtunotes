@@ -21,17 +21,21 @@
 
 #include <KDialog>
 
+#include "NewBasketForm.h"
 #include "../basket/ItemTreeBasket.h"
 #include "../explorer/AbstractExplorer.h"
+#include "../synchro/SynchroManager.h"
+#include "../synchro/GoogleDocsConnection.h"
 
 class KComboBox;
 class KIconButton;
 class KColorCombo;
+class KTabWidget;
 
 namespace Basket
 {
 
-    class NewBasketDialog : public KDialog
+    class NewBasketDialog : public KDialog, public Ui::NewBasketDialog
     {
         Q_OBJECT
 
@@ -40,22 +44,28 @@ namespace Basket
 
         static ItemTreeBasket * getNewBasket( Explorer::AbstractExplorer * basketExplorer, Basket::ItemTreeBasket * parent );
 
+        int currentIndexTab();
+
     public slots:
         ItemTreeBasket * addBasket();
+        ItemTreeBasket * addRemoteBasket();
+        void changeTab( int index );
+        void valid( const QString & text );
 
     private slots:
         void changeBasketType( int index );
+        void getBasketsRemote();
+        void enableGetBasketButton( const QString & text );
 
     private:
+        int order();
+
         Explorer::AbstractExplorer * m_basketExplorer;
-
-        QLineEdit      * m_basketName;
         ItemTreeBasket * m_parent;
-        KIconButton    * m_iconButton;
-        KComboBox      * m_basketTypeCombo;
-        KComboBox      * m_basketTagCombo;
-        KColorCombo    * m_colorBackground;
 
+        KTabWidget * m_basketsTab;
+
+        Synchro::SynchroManager<Synchro::GoogleDocsConnection> m_managerCx;
     };
 
 }

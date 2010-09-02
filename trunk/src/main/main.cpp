@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
     KAboutData aboutData("kweshtunotes",
                          "kweshtunotes",
                          ki18n("(K) Wesh ! Tu Notes ?"),
-                         "0.0",
+                         "0.2",
                          ki18n("(K)WeshTuNotes is a note-taking application, just like BasKet Note Pads."),
                          KAboutData::License_GPL_V3,
                          ki18n("(c) 2009"),

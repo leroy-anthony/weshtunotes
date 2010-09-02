@@ -39,8 +39,14 @@
 namespace Synchro
 {
 
-    AbstractConnection::AbstractConnection()
+    AbstractConnection::AbstractConnection( const QString & connectionName ):
+            m_connectionName(connectionName)
     {
+    }
+
+    const QString & AbstractConnection::connectionName()
+    {
+        return m_connectionName;
     }
 
 }

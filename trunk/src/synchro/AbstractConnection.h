@@ -31,12 +31,18 @@ namespace Synchro
     class AbstractConnection
     {
     public:
-        AbstractConnection();
+        AbstractConnection( const QString & connectionName );
 
         virtual bool authentication( const QString & username, const QString & password ) = 0;
 
         virtual void saveOrUpdateFile( const QString & fileName, const QString & folder = QString("") ) = 0;
         virtual QByteArray file( const QString & fileName, const QString & format ) = 0;
+
+        const QString & connectionName();
+
+    private:
+        QString m_connectionName;
+
     };
 }
 

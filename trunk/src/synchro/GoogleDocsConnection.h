@@ -28,8 +28,7 @@
 #include <QSslError>
 
 #include "../synchro/AbstractConnection.h"
-
-class QNetworkAccessManager;
+#include "../synchro/NetworkAccessManagerProxy.h"
 
 namespace Synchro
 {
@@ -44,23 +43,18 @@ namespace Synchro
 
         void saveOrUpdateFile( const QString & fileName, const QString & folder = QString("") );
         QByteArray file( const QString & fileName, const QString & format );
-
-
-    public slots:
-        void replyFinished( QNetworkReply * );
-        void sslErrors(QNetworkReply *, const QList<QSslError> &);
-
+        QStringList content( const QString & folder );
 
     private:
         void setAuthentication( QNetworkRequest & request );
 
         void putFile( const QString & fileName, const QString & folder = QString("") );
         QString findId( const QString & ressourceName, bool folder = false );
+        QString createFolder( const QString & folder, bool subDir );
+
+        NetworkAccessManagerProxy m_networkAccessManager;
 
 
-        QNetworkAccessManager * m_networkAccessManager;
-
-        QEventLoop m_syncEvent;
 
         QString m_username;
         QString m_password;

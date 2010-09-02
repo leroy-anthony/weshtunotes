@@ -29,10 +29,12 @@ public:
     KWeshTuNotesApp();
     ~KWeshTuNotesApp();
 
+    static MainWindow * mainWindow();
+
     int newInstance();
 
 private:
-    MainWindow * m_mainWindow;
+    static MainWindow * m_mainWindow;
 
 };
 
