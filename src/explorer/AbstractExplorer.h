@@ -31,7 +31,6 @@ namespace Explorer
     public:
         virtual ~AbstractExplorer();
 
-        virtual bool findBasket( Basket::ItemTreeBasket * parent, const QString & name ) = 0;
         virtual Basket::ItemTreeBasket * rootItem() = 0;
 
     protected:

@@ -8,3 +8,5 @@ GenericName=Note
 Name=KWeshTuNotes
 X-KDE-StartupNotify=true
 X-DBUS-StartupType=Unique
+
+Name[fr]=test test

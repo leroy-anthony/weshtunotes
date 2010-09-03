@@ -41,7 +41,6 @@ namespace Explorer
 
         QTreeWidgetItem * loadFromConfigCurrentBasket();
 
-        bool findBasket( Basket::ItemTreeBasket * parent, const QString & name );
         Basket::ItemTreeBasket * rootItem();
 
         void saveBaskets( QTreeWidgetItem * b );

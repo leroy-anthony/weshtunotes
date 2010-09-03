@@ -77,6 +77,8 @@ namespace Explorer
     {
         Basket::ItemTreeBasket * item = Basket::NewBasketDialog::getNewBasket( this, dynamic_cast<Basket::ItemTreeBasket*>(currentItem()) );
 
+        setCurrentItem(item);
+
         emit addToCurrentBasketRequest( item );
 
         return item;
@@ -86,6 +88,8 @@ namespace Explorer
     {
         Basket::ItemTreeBasket * item = Basket::NewBasketDialog::getNewBasket( this, 0 );
         insertTopLevelItem(  topLevelItemCount(), item );
+
+        setCurrentItem(item);
 
         emit addToCurrentBasketRequest( item );
 
@@ -100,18 +104,6 @@ namespace Explorer
             Basket::PropertiesBasketDialog prop(this, b);
             prop.exec();
         }
-    }
-
-    bool TreeExplorer::findBasket( Basket::ItemTreeBasket * parent, const QString & name )
-    {
-        QList<QTreeWidgetItem*> items = findItems( name, Qt::MatchCaseSensitive | Qt::MatchRecursive );
-
-        if (  items.size()>0 && items[0]->parent() == parent )
-        {
-            return true;
-        }
-
-        return false;
     }
 
     Basket::ItemTreeBasket * TreeExplorer::rootItem()

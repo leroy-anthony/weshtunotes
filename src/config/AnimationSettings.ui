@@ -52,21 +52,21 @@
       <item row="1" column="0">
        <widget class="QLabel" name="label">
         <property name="text">
-         <string>Create :</string>
+         <string>Create item :</string>
         </property>
        </widget>
       </item>
       <item row="5" column="0">
        <widget class="QLabel" name="label_4">
         <property name="text">
-         <string>Load :</string>
+         <string>Load basket :</string>
         </property>
        </widget>
       </item>
       <item row="3" column="0">
        <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>Delete :</string>
+         <string>Delete item :</string>
         </property>
        </widget>
       </item>
