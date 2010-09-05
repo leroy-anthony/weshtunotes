@@ -41,16 +41,17 @@ namespace Synchro
         GoogleDocsConnection();
         bool authentication( const QString & username, const QString & password );
 
-        void saveOrUpdateFile( const QString & fileName, const QString & folder = QString("") );
+        void saveOrUpdateFile( const QString & fileName, const QString & idFolder = QString("") );
         QByteArray file( const QString & fileName, const QString & format );
         QStringList content( const QString & folder );
+
+        QString findId( const QString & ressourceName, bool folder = false );
+        QString createFolder( const QString & folder, bool subDir );
 
     private:
         void setAuthentication( QNetworkRequest & request );
 
-        void putFile( const QString & fileName, const QString & folder = QString("") );
-        QString findId( const QString & ressourceName, bool folder = false );
-        QString createFolder( const QString & folder, bool subDir );
+        void putFile( const QString & fileName, const QString & idFolder = QString("") );
 
         NetworkAccessManagerProxy m_networkAccessManager;
 

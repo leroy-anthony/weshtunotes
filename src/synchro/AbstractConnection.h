@@ -37,6 +37,8 @@ namespace Synchro
 
         virtual void saveOrUpdateFile( const QString & fileName, const QString & folder = QString("") ) = 0;
         virtual QByteArray file( const QString & fileName, const QString & format ) = 0;
+        virtual QString findId( const QString & ressourceName, bool folder = false ) = 0;
+        virtual QString createFolder( const QString & folder, bool subDir ) = 0;
 
         const QString & connectionName();
 

@@ -119,22 +119,19 @@ namespace Synchro
 
         QNetworkReply * reply = m_networkAccessManager.post( r, content );
 
-        if ( reply->isFinished() )
-        {
-            QDomDocument result("result");
-            result.setContent(reply->readAll());
+        QDomDocument result("result");
+        result.setContent(reply->readAll());
 
-            QDomNodeList nodes = result.elementsByTagName("gd:resourceId");
-            if ( nodes.size() > 0 )
-            {
-                return nodes.at(0).toElement().text().remove("folder:");
-            }
+        QDomNodeList nodes = result.elementsByTagName("gd:resourceId");
+        if ( nodes.size() > 0 )
+        {
+            return nodes.at(0).toElement().text().remove("folder:");
         }
 
         return "";
     }
 
-    void GoogleDocsConnection::putFile( const QString & fileName, const QString & folder )
+    void GoogleDocsConnection::putFile( const QString & fileName, const QString & idFolder )
     {
         QFile * f = new QFile(fileName);
         if ( f->open( QFile::ReadOnly ) )
@@ -145,15 +142,11 @@ namespace Synchro
 
             QString url = "https://docs.google.com/feeds/default/private/full/";
 
-            if ( folder != QString("") )
+            if ( idFolder != QString("") )
             {
-                url.append("folder%3A%1/contents");
-                QString idFolder = findId(folder,true);
-                if ( idFolder == "" )
-                {
-                    idFolder = createFolder(folder,true);
-                }
-                url = url.arg(idFolder);
+                url.append("folder%3A");
+                url.append(idFolder);
+                url.append("/contents");
             }
 
             QNetworkRequest r(url);
@@ -164,7 +157,6 @@ namespace Synchro
             datas += "<entry xmlns=\"http://www.w3.org/2005/Atom\" xmlns:docs=\"http://schemas.google.com/docs/2007\">\r\n";
             datas += "<category scheme=\"http://schemas.google.com/g/2005#kind\" term=\"http://schemas.google.com/docs/2007#document\"/>\r\n";
             datas += "<title>"+QUrl(fileInfo.fileName()).toEncoded()+"</title>\r\n";
-            datas += "<gd:extendedProperty name=\"com.google\"><some_xml>value</some_xml></gd:extendedProperty>\r\n";
             datas += "<docs:writersCanInvite value=\"false\" />\r\n";
             datas += "</entry>\r\n\r\n";
             datas += QString("--" + boundary + "\r\n").toAscii();
@@ -185,7 +177,7 @@ namespace Synchro
         }
     }
 
-    void GoogleDocsConnection::saveOrUpdateFile( const QString & fileName, const QString & folder )
+    void GoogleDocsConnection::saveOrUpdateFile( const QString & fileName, const QString & idFolder )
     {
         QFile * f = new QFile(fileName);
         if ( f->open( QFile::ReadOnly ) )
@@ -209,7 +201,7 @@ namespace Synchro
             }
             else
             {
-                putFile( fileName, folder );
+                putFile( fileName, idFolder );
             }
         }
     }
@@ -239,7 +231,7 @@ namespace Synchro
         for ( int i=1 ; i<nodes.size() ; ++i )
         {
             QString basketName = nodes.at(i).toElement().text();
-            QByteArray content = file( basketName, "txt" );
+            QByteArray content = file( basketName.remove("_"), "txt" );
             if ( content != "" )
             {
                 Data::DataManager d("tmp");

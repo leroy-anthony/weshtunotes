@@ -37,6 +37,7 @@
 #include "../config/ImageFactory.h"
 #include "../config/VisualAspect.h"
 #include "../item/NoteItem.h"
+#include "../handle/HandleItem.h"
 
 namespace Item
 {
@@ -95,11 +96,11 @@ namespace Item
 
             QString baseDir = Data::DataManager::datasStorePath();
             QString fileName = "";
-            if ( source->urls().size() > 0 )
+            /*if ( source->urls().size() > 0 )
             {
                 fileName += QUrl::toPercentEncoding(source->urls()[0].toString());
             }
-            else
+            else*/
             {
                 static char str[] = "abcdefghijklmnopqrstuvwxyz01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ";
                 srand(QTime::currentTime().msec());
@@ -112,12 +113,10 @@ namespace Item
             fileName += QDateTime::currentDateTime().toString("_yyyy_MM_dd_hh_mm_ss_zzz") + ".png";
 
             image.save( baseDir+fileName, "PNG" );
-            cursor.insertImage( image, baseDir+fileName );
+            cursor.insertImage( image, "basket_store_data"+fileName );
         }
         else if (source->hasUrls())
         {
-            qDebug() << "rdrzdrz";
-
             QTextCursor cursor = this->textCursor();
             QList<QUrl> urls = source->urls();
             for ( int i=0 ; i<urls.size() ; ++i )
