@@ -174,20 +174,28 @@ namespace Synchro
         m_ids = m_cx.content("kweshtunotes");
     }
 
-    template <class T> void SynchroManager<T>::commitBasket( const QString & idBasket )
+    template <class T> void SynchroManager<T>::commitBasket( const QString & idB )
     {
-        Data::DataManager b( Data::DataManager::configFileBasket( idBasket ) );
-        m_cx.saveOrUpdateFile(b.fileName(),idBasket);
+        QString idBasket = "_"+idB;
+
+        QString idFolder = m_cx.findId( idBasket, true );
+        if ( idFolder == "" )
+        {
+            idFolder = m_cx.createFolder( idBasket, true );
+        }
+
+        Data::DataManager b( Data::DataManager::configFileBasket( idB ) );
+        m_cx.saveOrUpdateFile(b.fileName(),idFolder);
 
         QString id = b.values("scene","id").at(0);
         Data::DataManager assoc( Data::DataManager::configFileAssoc( id ) );
-        m_cx.saveOrUpdateFile(assoc.fileName(),idBasket);
+        m_cx.saveOrUpdateFile(assoc.fileName(),idFolder);
 
         QStringList handles = assoc.values("general","items");
         for ( int i=0 ; i<handles.size() ; ++i )
         {
             Data::DataManager handle(handles[i]);
-            m_cx.saveOrUpdateFile(handle.fileName(),idBasket);
+            m_cx.saveOrUpdateFile(handle.fileName(),idFolder);
 
             QStringList subHandles = handle.values("general","items");
             for ( int j=0 ; j<subHandles.size() ; ++j )
@@ -195,8 +203,31 @@ namespace Synchro
                 QStringList items = handle.values(subHandles[j],"data");
                 for ( int k=0 ; k<items.size() ; ++k)
                 {
-                    QString pathItem = Settings::basketsStorePath().toLocalFile()+QDir::separator()+"items"+QDir::separator()+items[k]+".html";
-                    m_cx.saveOrUpdateFile(pathItem,idBasket);
+                    QString pathItem = Data::DataManager::itemsStorePath()+items[k]+".html";
+                    m_cx.saveOrUpdateFile(pathItem,idFolder);
+
+                    Data::DataManager data( Data::DataManager::configFileItem(items[k]) );
+                    m_cx.saveOrUpdateFile( data.fileName(), idFolder );
+
+                    QStringList images = data.values( "data", "images" );
+                    for ( int l=0 ; l<images.size() ; ++l)
+                    {
+                        QFile f(Data::DataManager::datasStorePath()+images[l]);
+                        if ( f.open( QFile::ReadOnly ) )
+                        {
+                            QByteArray data = f.readAll().toBase64();
+
+                            QFile fileTmp( Data::DataManager::basketsStorePath()+images[l] );
+                            fileTmp.open(QFile::WriteOnly);
+                            QTextStream stream(&fileTmp);
+                            stream << data;
+                            fileTmp.close();
+
+                            m_cx.saveOrUpdateFile( fileTmp.fileName(), idFolder );
+
+                            fileTmp.remove();
+                        }
+                    }
                 }
             }
         }
@@ -218,7 +249,7 @@ namespace Synchro
         }
 
         Data::DataManager b( Data::DataManager::configFileBasket( idBasket ) );
-        b.setContent(m_cx.file(idBasket,"txt"));
+        b.setContent( m_cx.file(idBasket,"txt") );
         QString id = b.values("scene","id").at(0);
 
         Data::DataManager assoc( Data::DataManager::configFileAssoc( id ) );
@@ -237,16 +268,40 @@ namespace Synchro
                 for ( int k=0 ; k<items.size() ; ++k)
                 {
                     QString pathItem = Settings::basketsStorePath().toLocalFile()+QDir::separator()+"items"+QDir::separator()+items[k]+".html";
-
                     QFile file3(pathItem);
                     if ( file3.open(QIODevice::WriteOnly | QIODevice::Text) )
                     {
-                        QByteArray data = m_cx.file(QFileInfo(pathItem).fileName(),"txt");
-                        QTextStream os3(&file3);
-                        os3 << QString::fromUtf8(data);
+                        file3.write( m_cx.file(QFileInfo(pathItem).fileName(),"txt") );
                         file3.close();
                     }
 
+                    QString pathDataItem = Settings::basketsStorePath().toLocalFile()+QDir::separator()+"items"+QDir::separator()+items[k];
+                    QFile file4(pathDataItem);
+                    if ( file4.open(QIODevice::WriteOnly) )
+                    {
+                        QByteArray data = m_cx.file(QFileInfo(pathDataItem).fileName(),"txt");
+                        if ( data != "" )
+                        {
+                            file4.write(data);
+                            file4.close();
+
+                            Data::DataManager data( Data::DataManager::configFileItem(items[k]) );
+                            QStringList images = data.values( "data", "images" );
+                            for ( int l=0 ; l<images.size() ; ++l)
+                            {
+                                QFile fData(Data::DataManager::datasStorePath()+images[l]);
+                                if ( fData.open(QIODevice::WriteOnly) )
+                                {
+                                    fData.write( QByteArray::fromBase64( m_cx.file(images[l],"txt") ) );
+                                    fData.close();
+                                }
+                            }
+                        }
+                        else
+                        {
+                            file4.close();
+                        }
+                    }
                 }
             }
         }

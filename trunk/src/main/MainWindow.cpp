@@ -66,7 +66,6 @@ MainWindow::MainWindow( QWidget * parent ) :
 {
     setupUi(this);
 
-    //Data::DataManager::iniConfigration();
     initView();
     initExplorer();
 
@@ -264,7 +263,6 @@ void MainWindow::initExplorer()
     connect( m_treeExplorer, SIGNAL(itemClicked(QTreeWidgetItem*,int)),                   this, SLOT(loadScene(QTreeWidgetItem*,int)) );
     connect( m_treeExplorer, SIGNAL(delCurrentBasketRequest()),                           this, SLOT(delCurrentBasket()) );
     connect( m_treeExplorer, SIGNAL(addToCurrentBasketRequest(Basket::ItemTreeBasket *)), this, SLOT(addBasket(Basket::ItemTreeBasket *)) );
-
 }
 
 void MainWindow::addBasket( Basket::ItemTreeBasket * item )

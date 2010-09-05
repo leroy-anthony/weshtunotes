@@ -44,7 +44,7 @@ namespace Scene
       QGraphicsView::BoundingRectViewportUpdate
       QGraphicsView::NoViewportUpdate
       */
-        setViewportUpdateMode( QGraphicsView::SmartViewportUpdate );
+        setViewportUpdateMode( QGraphicsView::BoundingRectViewportUpdate );
         /*
       QGraphicsView::CacheNone
       QGraphicsView::CacheBackground
@@ -55,7 +55,7 @@ namespace Scene
       QGraphicsView::DontSavePainterState
       QGraphicsView::DontClipPainter
       */
-        //m_view->setOptimizationFlags( QGraphicsView::DontClipPainter );
+        //setOptimizationFlags( QGraphicsView::DontClipPainter );
 
         setRenderHint(QPainter::SmoothPixmapTransform, true);
         setRenderHint(QPainter::Antialiasing, true);
@@ -66,9 +66,8 @@ namespace Scene
         setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
-        setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);//FullViewportUpdate);
-        setViewportMargins(5,5,5,5);
 
+        setViewportMargins(5,5,5,5);
 
         setAcceptDrops(true);
     }

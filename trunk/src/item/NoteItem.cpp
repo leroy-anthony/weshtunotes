@@ -173,14 +173,32 @@ namespace Item
             settings.removeValue(handleId,"tag");
         }
 
-        Data::DataManager::saveNote( m_plainTextEdit->document()->toHtml(), GeneratorID::id() );
+        QString contentHtml = m_plainTextEdit->document()->toHtml();
+        contentHtml.replace("<img src=\""+Data::DataManager::datasStorePath(),"<img src=\"basket_store_data");
+
+        QRegExp rx("<img src=\"basket_store_data([A-Za-z0-9_]+\.png)\" />");
+        QStringList images;
+        int pos = 0;
+        while ((pos = rx.indexIn(contentHtml, pos)) != -1)
+        {
+            images << rx.cap(1);
+            pos += rx.matchedLength();
+        }
+
+        Data::DataManager data( Data::DataManager::configFileItem(GeneratorID::id()) );
+        data.setValue( "data", "images", images );
+
+        Data::DataManager::saveNote( contentHtml, GeneratorID::id() );
     }
 
     void NoteItem::load()
     {       
         m_plainTextEdit->blockSignals( true );
 
-        m_plainTextEdit->setHtml( Data::DataManager::loadNote( GeneratorID::id() ) );
+        QString contentHtml = Data::DataManager::loadNote( GeneratorID::id() );
+        contentHtml.replace("<img src=\"basket_store_data","<img src=\""+Data::DataManager::datasStorePath());
+
+        m_plainTextEdit->setHtml( contentHtml );
         m_plainTextEdit->adaptSizeFromText();
 
         m_plainTextEdit->blockSignals( false ); 

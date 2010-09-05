@@ -75,10 +75,9 @@ namespace Data
     void DataManager::setContent( const QByteArray & data )
     {
         QFile file(fileName());
-        if ( file.open(QIODevice::WriteOnly | QIODevice::Text) )
+        if ( file.open(QIODevice::WriteOnly) )
         {
-            QTextStream os(&file);
-            os << data;
+            file.write(data);
             file.close();
 
             reparseConfiguration();
@@ -382,6 +381,7 @@ namespace Data
     {
         QFile f( itemsStorePath() + nameId + ".html" );
         f.open(QFile::WriteOnly | QFile::Text);
+
         QTextStream stream(&f);
         stream << contentNote;
         f.close();	
