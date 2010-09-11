@@ -394,17 +394,17 @@ namespace Data
 
     QString DataManager::configFileBasket( const QString & id )
     {
-        return QString("baskets") + QDir::separator() + id;
+        return QString("baskets/") + id;
     }
 
     QString DataManager::configFileItem( const QString & id )
     {
-        return QString("items") + QDir::separator() + id;
+        return QString("items/") + id;
     }
 
     QString DataManager::configFileAssoc( const QString & id )
     {
-        return QString("association") + QDir::separator() + id;
+        return QString("association/") + id;
     }
 
 }
