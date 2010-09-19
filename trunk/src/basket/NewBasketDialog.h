@@ -65,7 +65,7 @@ namespace Basket
 
         KTabWidget * m_basketsTab;
 
-        Synchro::SynchroManager<Synchro::GoogleDocsConnection> m_managerCx;
+        Synchro::SynchroManager m_managerCx;
     };
 
 }

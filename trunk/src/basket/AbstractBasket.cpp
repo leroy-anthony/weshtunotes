@@ -165,13 +165,13 @@ namespace Basket
 
     void AbstractBasket::commitGoogle()
     {
-        Synchro::SynchroManager<Synchro::GoogleDocsConnection> sync;
+        Synchro::SynchroManager sync(new Synchro::GoogleDocsConnection());
         sync.commit( GeneratorID::id() );
     }
 
     void AbstractBasket::updateGoogle()
     {
-        Synchro::SynchroManager<Synchro::GoogleDocsConnection> sync;
+        Synchro::SynchroManager sync(new Synchro::GoogleDocsConnection());
         sync.update( GeneratorID::id() );
         load();
         MainWindow::reloadView();

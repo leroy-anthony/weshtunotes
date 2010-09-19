@@ -40,8 +40,7 @@ namespace Synchro
     GoogleDocsConnection::GoogleDocsConnection () :
             AbstractConnection("Google Document"),
             m_address( "/feeds/default/private/full/" ),
-            m_host ( "docs.google.com" ),
-            m_networkAccessManager(0)
+            m_host ( "docs.google.com" )
     {
     }
 

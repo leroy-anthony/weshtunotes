@@ -23,13 +23,16 @@
 #include <KWallet/Wallet>
 
 #include "../technic/GeneratorID.h"
+#include "../synchro/NetworkAccessManagerProxy.h"
 
 namespace Synchro
 {
     class GoogleDocsConnection;
 
-    class AbstractConnection
+    class AbstractConnection : public QObject
     {
+        Q_OBJECT
+
     public:
         AbstractConnection( const QString & connectionName );
 
@@ -39,8 +42,20 @@ namespace Synchro
         virtual QByteArray file( const QString & fileName, const QString & format ) = 0;
         virtual QString findId( const QString & ressourceName, bool folder = false ) = 0;
         virtual QString createFolder( const QString & folder, bool subDir ) = 0;
+        virtual QStringList content( const QString & folder ) = 0;
 
         const QString & connectionName();
+
+        const QString & connectionError();
+
+    signals:
+        void error(const QString & errorString );
+
+    private slots:
+        void errorConnection(const QString & errorString );
+
+    protected:
+        NetworkAccessManagerProxy m_networkAccessManager;
 
     private:
         QString m_connectionName;

@@ -82,7 +82,7 @@ set(weshnotes_SRC
 ./src/synchro/DigitalBucketConnection.cpp
 ./src/synchro/GoogleDocsConnection.cpp
 ./src/synchro/AbstractConnection.cpp
-./src/synchro/SynchroManager.h
+./src/synchro/SynchroManager.cpp
 ./src/synchro/NetworkAccessManagerProxy.cpp
 ./src/config/GeneralPageDialog.cpp
 ./src/config/AppareancePageDialog.cpp
@@ -108,6 +108,8 @@ set(weshnotes_MOC
 ./src/config/ConfigDialog.h
 ./src/explorer/TreeExplorer.h
 ./src/basket/ItemTreeBasket.h 
+./src/synchro/SynchroManager.h
+./src/synchro/AbstractBasket.h
 ./src/tag/ChooseTag.h 
 ./src/tag/NoteTag.h
 ./src/tag/TagFactory.h
