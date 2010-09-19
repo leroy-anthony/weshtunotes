@@ -19,7 +19,10 @@
 #ifndef NETWORKACCESSMANAGERPROXY_H
 #define NETWORKACCESSMANAGERPROXY_H
 
+#include <exception>
+
 #include <QEventLoop>
+#include <QTimer>
 
 #include <KIO/AccessManager>
 
@@ -42,15 +45,27 @@ namespace Synchro
         QNetworkReply *	put(  const QNetworkRequest & request, QIODevice * data );
         QNetworkReply *	put(  const QNetworkRequest & request, const QByteArray & data );
 
+        int error();
+        const QString & detailError();
+
     public slots:
+        void replyTimeOut();
         void replyFinished( QNetworkReply * );
         void sslErrors( QNetworkReply *, const QList<QSslError> &);
 
+    signals:
+        void error(const QString & errorString );
+
     private:
         void waitReponse( const QNetworkRequest & request );
+        void buildDetailError( int codeError );
 
         KIO::AccessManager m_networkManager;
         QEventLoop m_syncEvent;
+        QTimer m_timer;
+
+        int m_codeError;
+        QString m_detailError;
 
     };
 

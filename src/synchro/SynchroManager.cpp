@@ -17,15 +17,16 @@
 */
 
 #include "settings.h"
+#include "SynchroManager.h"
 
 #include <QDir>
+#include <QLabel>
 
-#include <KDebug>
 #include <kpassworddialog.h>
-#include <KWallet/Wallet>
 #include <KCmdLineArgs>
 #include <KAboutData>
 #include <KApplication>
+#include <KMessageBox>
 
 #include "../config/Configuration.h"
 #include "../basket/ItemTreeBasket.h"
@@ -36,30 +37,49 @@
 namespace Synchro
 {
 
-    template <class T>
-    SynchroManager<T>::SynchroManager()
+    SynchroManager::SynchroManager( AbstractConnection * connection ):
+            QObject(0),
+            m_cx(connection)
     {
+        connect( m_cx, SIGNAL(error(const QString &)), this, SLOT(errorConnection(const QString &)) );
     }
 
-    template <class T>
-    void SynchroManager<T>::commitGoogle()
+    const QString & SynchroManager::connectionName()
     {
-        //google( &Synchro::AbstractConnection::commitGoogle );
+        return m_cx->connectionName();
     }
 
-    template <class T>
-    void SynchroManager<T>::updateGoogle()
+    void SynchroManager::setLogin( const QString & login )
     {
-        //google( &Synchro::AbstractConnection::updateGoogle );
-        //load();
-        //MainWindow::reloadView();
+        m_login = login;
     }
-/*
-    template <class T>
-    void SynchroManager<T>::google( void (SynchroManager::*actionPtr)(AbstractConnection &) )
+
+    void SynchroManager::errorConnection( const QString & errorString )
+    {
+        KMessageBox::error(0, errorString, i18n("Error"));
+    }
+
+    void SynchroManager::commit( const QString & configFileBasket )
+    {
+        connectionDialog( &SynchroManager::commitBasket, configFileBasket );
+    }
+
+    void SynchroManager::update( const QString & configFileBasket )
+    {
+        connectionDialog( &SynchroManager::updateBasket, configFileBasket );
+    }
+
+    QStringList SynchroManager::baskets()
+    {
+        connectionDialog( &SynchroManager::getBaskets, "" );
+
+        return m_ids;
+    }
+
+    void SynchroManager::connectionDialog( void (SynchroManager::*actionPtr)(const QString &), const QString & config )
     {
         KPasswordDialog dlg(0, KPasswordDialog::ShowUsernameLine | KPasswordDialog::ShowKeepPassword );
-        dlg.setPrompt("Enter a login and a password");
+        dlg.setPrompt(i18n("Enter a login and a password"));
         dlg.setKeepPassword(true);
 
         QString name = KCmdLineArgs::aboutData()->programName();
@@ -73,38 +93,50 @@ namespace Synchro
             wallet = 0;
         }
 
-        Config::Configuration conf;
-        QStringList logins = conf.values("GoogleAccount","login");
-
-        T cx;
-
-        if ( logins.size() > 0 && wallet != 0 )
+        if ( wallet != 0 )
         {
-            dlg.setUsername(logins[0]);
+            if ( m_login == "" )
+            {
+                Config::Configuration conf;
+                QStringList logins = conf.values(m_cx->connectionName(),"login");
+                if ( logins.size() > 0 )
+                {
+                    m_login = logins[0];
+                }
+            }
+
+            dlg.setUsername(m_login);
 
             QString password;
-            wallet->readPassword(logins[0],password);
+            wallet->readPassword(m_login,password);
             dlg.setPassword(password);
 
-            if ( !cx.authentication(dlg.username(), dlg.password()) )
+            if ( !m_cx->authentication(dlg.username(), dlg.password()) )
             {
-                googleDialog( cx, dlg, wallet, actionPtr );
+                if ( m_cx->connectionError() == "" )
+                {
+                    connectionExec( dlg, wallet, actionPtr, config );
+                    return;
+                }
+
                 return;
             }
 
-            (this->*actionPtr)( cx );
-            return;
+            (this->*actionPtr)( config );
         }
-
-        googleDialog( cx, dlg, wallet, actionPtr );
+        else
+        {
+            connectionExec( dlg, wallet, actionPtr, config );
+        }
     }
 
-    template <class T>
-    bool SynchroManager<T>::googleDialog( AbstractConnection & cx, KPasswordDialog & dlg, KWallet::Wallet * wallet, void (SynchroManager::*actionPtr)(AbstractConnection &) )
+    bool SynchroManager::connectionExec( KPasswordDialog & dlg, KWallet::Wallet * wallet, void (SynchroManager::*actionPtr)(const QString &), const QString & config )
     {
-        while ( dlg.exec() && !cx.authentication(dlg.username(), dlg.password()) )
+        while ( dlg.exec() &&
+                !m_cx->authentication(dlg.username(), dlg.password()) &&
+                (m_cx->connectionError() == "") )
         {
-            dlg.showErrorMessage( "Echec de connexion", KPasswordDialog::PasswordError );
+            dlg.showErrorMessage( "Fail authentication", KPasswordDialog::PasswordError );
         }
 
         if ( dlg.result() == QDialog::Accepted )
@@ -112,12 +144,149 @@ namespace Synchro
             if ( dlg.keepPassword() && wallet != 0 )
             {
                 Config::Configuration conf;
-                conf.setValue("GoogleAccount","login",dlg.username());
+                conf.setValue(m_cx->connectionName(),"login",dlg.username());
                 wallet->writePassword( dlg.username(), dlg.password());
             }
 
-            (this->*actionPtr)( cx );
+            (this->*actionPtr)( config );
         }
-    }*/
+    }
 
+    void SynchroManager::getBaskets( const QString & idBasket )
+    {
+        m_ids = m_cx->content("kweshtunotes");
+    }
+
+    void SynchroManager::commitBasket( const QString & idB )
+    {
+        QString idBasket = "_"+idB;
+
+        QString idFolder = m_cx->findId( idBasket, true );
+        if ( idFolder == "" )
+        {
+            idFolder = m_cx->createFolder( idBasket, true );
+        }
+
+        Data::DataManager b( Data::DataManager::configFileBasket( idB ) );
+        m_cx->saveOrUpdateFile(b.fileName(),idFolder);
+
+        QString id = b.values("scene","id").at(0);
+        Data::DataManager assoc( Data::DataManager::configFileAssoc( id ) );
+        m_cx->saveOrUpdateFile(assoc.fileName(),idFolder);
+
+        QStringList handles = assoc.values("general","items");
+        for ( int i=0 ; i<handles.size() ; ++i )
+        {
+            Data::DataManager handle(handles[i]);
+            m_cx->saveOrUpdateFile(handle.fileName(),idFolder);
+
+            QStringList subHandles = handle.values("general","items");
+            for ( int j=0 ; j<subHandles.size() ; ++j )
+            {
+                QStringList items = handle.values(subHandles[j],"data");
+                for ( int k=0 ; k<items.size() ; ++k)
+                {
+                    QString pathItem = Data::DataManager::itemsStorePath()+items[k]+".html";
+                    m_cx->saveOrUpdateFile(pathItem,idFolder);
+
+                    Data::DataManager data( Data::DataManager::configFileItem(items[k]) );
+                    m_cx->saveOrUpdateFile( data.fileName(), idFolder );
+
+                    QStringList images = data.values( "data", "images" );
+                    for ( int l=0 ; l<images.size() ; ++l)
+                    {
+                        QFile f(Data::DataManager::datasStorePath()+images[l]);
+                        if ( f.open( QFile::ReadOnly ) )
+                        {
+                            QByteArray data = f.readAll().toBase64();
+
+                            QFile fileTmp( Data::DataManager::basketsStorePath()+images[l] );
+                            fileTmp.open(QFile::WriteOnly);
+                            QTextStream stream(&fileTmp);
+                            stream << data;
+                            fileTmp.close();
+
+                            m_cx->saveOrUpdateFile( fileTmp.fileName(), idFolder );
+
+                            fileTmp.remove();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    void SynchroManager::updateBasket( const QString & idBasket )
+    {
+        m_ids = m_cx->content("kweshtunotes");
+
+        QStringList ids;
+        for ( int i=0 ; i<m_ids.size() ; ++i )
+        {
+            ids += m_ids[i].split(":")[0];
+        }
+
+        if ( !ids.contains(idBasket) )
+        {
+            return;
+        }
+
+        Data::DataManager b( Data::DataManager::configFileBasket( idBasket ) );
+        b.setContent( m_cx->file(idBasket,"txt") );
+        QString id = b.values("scene","id").at(0);
+
+        Data::DataManager assoc( Data::DataManager::configFileAssoc( id ) );
+        assoc.setContent(m_cx->file(QFileInfo(assoc.fileName()).fileName(),"txt"));
+
+        QStringList handles = assoc.values("general","items");
+        for ( int i=0 ; i<handles.size() ; ++i )
+        {
+            Data::DataManager handle(handles[i]);
+            handle.setContent(m_cx->file(QFileInfo(handle.fileName()).fileName(),"txt"));
+
+            QStringList subHandles = handle.values("general","items");
+            for ( int j=0 ; j<subHandles.size() ; ++j )
+            {
+                QStringList items = handle.values(subHandles[j],"data");
+                for ( int k=0 ; k<items.size() ; ++k)
+                {
+                    QString pathItem = Settings::basketsStorePath().toLocalFile()+QDir::separator()+"items"+QDir::separator()+items[k]+".html";
+                    QFile file3(pathItem);
+                    if ( file3.open(QIODevice::WriteOnly | QIODevice::Text) )
+                    {
+                        file3.write( m_cx->file(QFileInfo(pathItem).fileName(),"txt") );
+                        file3.close();
+                    }
+
+                    QString pathDataItem = Settings::basketsStorePath().toLocalFile()+QDir::separator()+"items"+QDir::separator()+items[k];
+                    QFile file4(pathDataItem);
+                    if ( file4.open(QIODevice::WriteOnly) )
+                    {
+                        QByteArray data = m_cx->file(QFileInfo(pathDataItem).fileName(),"txt");
+                        if ( data != "" )
+                        {
+                            file4.write(data);
+                            file4.close();
+
+                            Data::DataManager data( Data::DataManager::configFileItem(items[k]) );
+                            QStringList images = data.values( "data", "images" );
+                            for ( int l=0 ; l<images.size() ; ++l)
+                            {
+                                QFile fData(Data::DataManager::datasStorePath()+images[l]);
+                                if ( fData.open(QIODevice::WriteOnly) )
+                                {
+                                    fData.write( QByteArray::fromBase64( m_cx->file(images[l],"txt") ) );
+                                    fData.close();
+                                }
+                            }
+                        }
+                        else
+                        {
+                            file4.close();
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

@@ -28,14 +28,12 @@
 #include <QSslError>
 
 #include "../synchro/AbstractConnection.h"
-#include "../synchro/NetworkAccessManagerProxy.h"
 
 namespace Synchro
 {
 
-    class GoogleDocsConnection : public QObject, public AbstractConnection
+    class GoogleDocsConnection : public AbstractConnection
     {
-        Q_OBJECT
 
     public:
         GoogleDocsConnection();
@@ -52,10 +50,6 @@ namespace Synchro
         void setAuthentication( QNetworkRequest & request );
 
         void putFile( const QString & fileName, const QString & idFolder = QString("") );
-
-        NetworkAccessManagerProxy m_networkAccessManager;
-
-
 
         QString m_username;
         QString m_password;

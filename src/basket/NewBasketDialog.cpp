@@ -27,6 +27,7 @@
 #include <KIconButton>
 #include <KComboBox>
 #include <KColorCombo>
+#include <KLocalizedString>
 
 #include "settings.h"
 #include "../data/DataManager.h"
@@ -39,7 +40,8 @@ namespace Basket
     NewBasketDialog::NewBasketDialog( Explorer::AbstractExplorer * basketExplorer, Basket::ItemTreeBasket * parent ):
             KDialog(0),
             m_basketExplorer(basketExplorer),
-            m_parent(parent)
+            m_parent(parent),
+            m_managerCx(new Synchro::GoogleDocsConnection())
     {
 
         setCaption( i18n("Create Basket") );
