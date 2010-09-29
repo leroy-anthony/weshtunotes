@@ -429,4 +429,14 @@ namespace Handle
         return Data::DataManager::configFileItem( GeneratorID::id() );
     }
 
+    int HandleItem::indexInsert()
+    {
+        return m_index;
+    }
+
+    void HandleItem::setIndexInsert( int i )
+    {
+        m_index = i;
+    }
+
 }

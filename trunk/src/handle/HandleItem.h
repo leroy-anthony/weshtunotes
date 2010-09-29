@@ -95,6 +95,9 @@ namespace Handle
         int x();
         int y();
 
+        int indexInsert();
+        void setIndexInsert( int i );
+
         QString configFile() const;
 
     public slots:
