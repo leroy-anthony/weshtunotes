@@ -162,7 +162,7 @@ namespace Item
         settings.setValue(handleId,"data",GeneratorID::id());
         settings.setValue(handleId,"color",m_color.name());
 
-        if ( m_tag != 0 )
+        if ( m_tag != 0 && m_tag->currentState() != 0 )
         {
             settings.setValue(handleId,"tag",m_tag->name()+":" + m_tag->currentStateName());
 
