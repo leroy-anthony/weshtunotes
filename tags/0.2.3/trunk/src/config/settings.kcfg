@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+                          http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+  <kcfgfile name="kweshtunotesrc"/>
+  <include>QDir</include>
+  <group name="general">
+    <entry name="basketsStorePath" type="Url">
+      <label>Path to basket store</label>
+      <default code="true">QDir::homePath()+QDir::separator()+".kweshtunotes"</default>
+    </entry>
+  </group>
+  <group name="visual">
+    <entry name="colorItem" type="Color">
+      <label>Color note.</label>
+      <default>#F7F7C8</default>
+    </entry>
+    <entry name="widthNote" type="Int">
+      <label>Width note.</label>
+      <default>300</default>
+      <min>50</min>
+      <max>1000</max>
+    </entry>
+    <entry name="textItem" type="String">
+      <label>Text note.</label>
+      <default>&lt;br&gt;</default>
+    </entry>
+    <entry name="colorBasket" type="Color">
+      <label>Color Basket.</label>
+      <default>#F7F7C8</default>
+    </entry>
+    <entry name="iconBasket" type="String">
+      <label>Icon basket.</label>
+      <default>folder</default>
+    </entry>
+  </group>
+  <group name="animation">
+    <entry name="loadDuration" type="Int">
+      <label>Loading duration.</label>
+      <default>2000</default>
+    </entry>
+    <entry name="createDuration" type="Int">
+      <label>Creating duration.</label>
+      <default>2000</default>
+    </entry>
+    <entry name="deleteDuration" type="Int">
+      <label>Deleting duration.</label>
+      <default>2000</default>
+    </entry>
+    <entry name="deleteType" type="String">
+      <label>Deleting duration.</label>
+      <default>opacity</default>
+      <values>
+	<value>opacity</value>
+	<value>scale</value>
+      </values>
+    </entry>
+    <entry name="smoothZoom" type="Bool">
+      <label>Smooth zoom.</label>
+      <default>false</default>
+    </entry>
+  </group>
+</kcfg> 
