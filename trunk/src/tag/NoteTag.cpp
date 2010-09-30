@@ -114,7 +114,12 @@ namespace Tag
 
     const QString & NoteTag::currentStateName()
     {
-        return m_currentState->name();
+        if ( m_currentState != 0 )
+        {
+            return m_currentState->name();
+        }
+
+        return "";
     }
 
     void NoteTag::setCurrentState( const QString & stateName )
