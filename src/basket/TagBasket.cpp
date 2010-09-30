@@ -115,8 +115,6 @@ namespace Basket
         while( it.next() )
         {
             QUrl url = Nepomuk::Resource( it.binding( "r" ).uri() ).property( QUrl("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#url") ).toUrl();
-            qDebug() << url;
-
 
             QList<QString> liste;
             liste << url.toLocalFile().replace(Settings::basketsStorePath().toLocalFile()+QDir::separator(),"");

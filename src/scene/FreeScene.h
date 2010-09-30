@@ -78,9 +78,6 @@ namespace Scene
         QToolBar * m_textToolBar;
         Mode m_modeItem;
 
-        QGraphicsWidget * m_form;
-        QGraphicsLinearLayout * m_layout;
-
     public slots:
         void moveItem( Handle::HandleItem * handleItem, int x, int y );
 
