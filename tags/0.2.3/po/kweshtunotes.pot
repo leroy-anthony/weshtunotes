@@ -1,0 +1,646 @@
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# , 2010.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: http://code.google.com/p/weshtunotes/\n"
+"POT-Creation-Date: 2010-08-27 20:21+0200\n"
+"PO-Revision-Date: 2010-08-27 20:27+0200\n"
+"Last-Translator: \n"
+"Language-Team: French <kde-i18n-doc@kde.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Lokalize 1.1\n"
+
+#: config/ConfigDialog.cpp:43
+msgid "Close"
+msgstr "Fermer"
+
+#: config/ConfigDialog.cpp:65
+msgid "Config Dialog"
+msgstr ""
+
+#: config/ConfigDialog.cpp:72
+msgid "Configuration"
+msgstr "Configuration"
+
+#: config/ConfigDialog.cpp:78
+msgid "Update"
+msgstr "Mise à jour"
+
+#: config/ConfigDialog.cpp:84
+msgid "Query"
+msgstr "Requête"
+
+#: explorer/TreeExplorer.cpp:46
+msgid "My baskets"
+msgstr "Mes paniers"
+
+#: explorer/TreeExplorer.cpp:244
+msgid "Add basket"
+msgstr "Ajouter panier"
+
+#: explorer/TreeExplorer.cpp:249
+msgid "Delete"
+msgstr "Supprimer"
+
+#: explorer/TreeExplorer.cpp:266
+msgid "Properties"
+msgstr "Propriétés"
+
+#: handle/HandleItem.cpp:356
+msgid "Do you want really delete this note ?"
+msgstr "Voulez-vous vraiment supprimer cette note ?"
+
+#: handle/HandleItem.cpp:357 scene/ToolBarScene.cpp:113
+msgid "Delete note"
+msgstr "Supprimer note"
+
+#: handle/HandleItem.cpp:360
+msgid "delete note"
+msgstr "supprimer note"
+
+#: main/main.cpp:34
+msgid "(K) Wesh ! Tu Notes ?"
+msgstr ""
+
+#: main/main.cpp:36
+msgid ""
+"(K)WeshTuNotes is a note-taking application, just like BasKet Note Pads."
+msgstr ""
+
+#: main/main.cpp:38
+msgid "(c) 2009"
+msgstr ""
+
+#: main/main.cpp:39
+msgid ""
+"(K)WeshTuNotes allows you to write notes, copy/paste images and files to "
+"better organize them."
+msgstr ""
+"(K)WeshTuNotes te permet d'écrire des notes, de copier/coller des images "
+"et des fichiers pour mieux les organiser."
+
+#: main/main.cpp:43
+msgid "Anthony Leroy"
+msgstr ""
+
+#: main/main.cpp:44
+msgid "dev"
+msgstr ""
+
+#: main/MainWindow.cpp:121
+msgid "Configure Tag..."
+msgstr "Configurer les tags..."
+
+#: main/MainWindow.cpp:130
+msgid "Save"
+msgstr "Sauvegarder"
+
+#: main/MainWindow.cpp:181
+msgid "Zoom 1:1"
+msgstr ""
+
+#: main/MainWindow.cpp:187
+msgid "Zoom in"
+msgstr "Zoom avant"
+
+#: main/MainWindow.cpp:193
+msgid "Zoom out"
+msgstr "Zoom arrière"
+
+#: main/MainWindow.cpp:199
+msgid "Zoom fit"
+msgstr "Zoom adapté"
+
+#: main/MainWindow.cpp:205
+msgid "Zoom center"
+msgstr ""
+
+#: main/MainWindow.cpp:213
+msgid "Previous note"
+msgstr ""
+
+#: main/MainWindow.cpp:219
+msgid "Next note"
+msgstr ""
+
+#: main/MainWindow.cpp:247
+msgid "New root basket"
+msgstr ""
+
+#: main/MainWindow.cpp:253
+msgid "Delete basket"
+msgstr ""
+
+#: main/MainWindow.cpp:303
+msgid "1 item loaded"
+msgid_plural "%1 items loaded"
+msgstr[0] ""
+msgstr[1] ""
+
+#: main/MainWindow.cpp:380
+msgid "General"
+msgstr ""
+
+#: main/MainWindow.cpp:381
+msgid "Appareance note"
+msgstr ""
+
+#: main/MainWindow.cpp:382
+msgid "Animation"
+msgstr ""
+
+#: scene/AbstractScene.cpp:62
+msgid "1 selected item"
+msgstr ""
+
+#: scene/ToolBarScene.cpp:49
+msgid "Text Font"
+msgstr ""
+
+#: scene/ToolBarScene.cpp:56
+msgid "Text Size"
+msgstr ""
+
+#: scene/ToolBarScene.cpp:62
+msgid "Text Color"
+msgstr ""
+
+#: scene/ToolBarScene.cpp:68
+msgid "Bold"
+msgstr ""
+
+#: scene/ToolBarScene.cpp:72
+msgid "Italic"
+msgstr ""
+
+#: scene/ToolBarScene.cpp:76
+msgid "Underline"
+msgstr ""
+
+#: scene/ToolBarScene.cpp:80
+msgid "Strikeout"
+msgstr ""
+
+#: scene/ToolBarScene.cpp:84
+msgid "Align Left"
+msgstr ""
+
+#: scene/ToolBarScene.cpp:88
+msgid "Align Center"
+msgstr ""
+
+#: scene/ToolBarScene.cpp:92
+msgid "Align Right"
+msgstr ""
+
+#: scene/ToolBarScene.cpp:98
+msgid "Note Color"
+msgstr ""
+
+#: tag/State.cpp:190
+msgid "new state"
+msgstr ""
+
+#: tag/State.cpp:202
+msgid "new state (%1)"
+msgstr ""
+
+#: tag/TagFactory.cpp:165
+msgid "Tag name"
+msgstr ""
+
+#: tag/TagFactory.cpp:166
+msgid "Tag name :"
+msgstr ""
+
+#: tag/TagFactory.cpp:167
+msgid "New tag"
+msgstr ""
+
+#. i18n: file: config/AnimationSettings.ui:20
+#. i18n: ectx: property (windowTitle), widget (QWidget, AnimationSettings)
+#. i18n: file: config/AppareanceSettings.ui:20
+#. i18n: ectx: property (windowTitle), widget (QWidget, AppareanceSettings)
+#. i18n: file: config/GeneralSettings.ui:20
+#. i18n: ectx: property (windowTitle), widget (QWidget, GeneralSettings)
+#. i18n: file: tag/tag_factory.ui:14
+#. i18n: ectx: property (windowTitle), widget (QWidget, TagFactory)
+#: rc.cpp:3 rc.cpp:24 rc.cpp:48 rc.cpp:126
+msgid "Form"
+msgstr ""
+
+#. i18n: file: config/AnimationSettings.ui:29
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#: rc.cpp:6
+msgid "Duration"
+msgstr ""
+
+#. i18n: file: config/AnimationSettings.ui:55
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: rc.cpp:9
+msgid "Create :"
+msgstr ""
+
+#. i18n: file: config/AnimationSettings.ui:62
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#: rc.cpp:12
+msgid "Load :"
+msgstr ""
+
+#. i18n: file: config/AnimationSettings.ui:69
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: rc.cpp:15
+msgid "Delete :"
+msgstr ""
+
+#. i18n: file: config/AnimationSettings.ui:89
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#: rc.cpp:18
+msgid "Zoom"
+msgstr ""
+
+#. i18n: file: config/AnimationSettings.ui:95
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_smoothZoom)
+#: rc.cpp:21
+msgid "Activate smooth zoom"
+msgstr ""
+
+#. i18n: file: config/AppareanceSettings.ui:29
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#: rc.cpp:27
+msgid "Note"
+msgstr ""
+
+#. i18n: file: config/AppareanceSettings.ui:35
+#. i18n: ectx: property (text), widget (QLabel, label)
+#. i18n: file: config/AppareanceSettings.ui:99
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#. i18n: file: tag/tag_factory.ui:169
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: rc.cpp:30 rc.cpp:45 rc.cpp:148
+msgid "Color :"
+msgstr ""
+
+#. i18n: file: config/AppareanceSettings.ui:49
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: rc.cpp:33
+msgid "Width :"
+msgstr ""
+
+#. i18n: file: config/AppareanceSettings.ui:63
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#. i18n: file: tag/tag_factory.ui:278
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#: rc.cpp:36 rc.cpp:205
+msgid "Text :"
+msgstr ""
+
+#. i18n: file: config/AppareanceSettings.ui:76
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#: rc.cpp:39
+msgid "Basket"
+msgstr ""
+
+#. i18n: file: config/AppareanceSettings.ui:92
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#: rc.cpp:42
+msgid "Icon :"
+msgstr ""
+
+#. i18n: file: config/GeneralSettings.ui:36
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#: rc.cpp:51
+msgid "Data"
+msgstr ""
+
+#. i18n: file: config/GeneralSettings.ui:42
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: rc.cpp:54
+msgid "Where data are save :"
+msgstr ""
+
+#. i18n: file: config/settings.kcfg:10
+#. i18n: ectx: label, entry (basketsStorePath), group (general)
+#: rc.cpp:57
+msgid "Path to basket store"
+msgstr ""
+
+#. i18n: file: config/settings.kcfg:16
+#. i18n: ectx: label, entry (colorItem), group (visual)
+#: rc.cpp:60
+msgid "Color note."
+msgstr ""
+
+#. i18n: file: config/settings.kcfg:20
+#. i18n: ectx: label, entry (widthNote), group (visual)
+#: rc.cpp:63
+msgid "Width note."
+msgstr ""
+
+#. i18n: file: config/settings.kcfg:26
+#. i18n: ectx: label, entry (textItem), group (visual)
+#: rc.cpp:66
+msgid "Text note."
+msgstr ""
+
+#. i18n: file: config/settings.kcfg:30
+#. i18n: ectx: label, entry (colorBasket), group (visual)
+#: rc.cpp:69
+msgid "Color Basket."
+msgstr ""
+
+#. i18n: file: config/settings.kcfg:34
+#. i18n: ectx: label, entry (iconBasket), group (visual)
+#: rc.cpp:72
+msgid "Icon basket."
+msgstr ""
+
+#. i18n: file: config/settings.kcfg:40
+#. i18n: ectx: label, entry (loadDuration), group (animation)
+#: rc.cpp:75
+msgid "Loading duration."
+msgstr ""
+
+#. i18n: file: config/settings.kcfg:44
+#. i18n: ectx: label, entry (createDuration), group (animation)
+#: rc.cpp:78
+msgid "Creating duration."
+msgstr ""
+
+#. i18n: file: config/settings.kcfg:48
+#. i18n: ectx: label, entry (deleteDuration), group (animation)
+#. i18n: file: config/settings.kcfg:52
+#. i18n: ectx: label, entry (deleteType), group (animation)
+#: rc.cpp:81 rc.cpp:84
+msgid "Deleting duration."
+msgstr ""
+
+#. i18n: file: config/settings.kcfg:60
+#. i18n: ectx: label, entry (smoothZoom), group (animation)
+#: rc.cpp:87
+msgid "Smooth zoom."
+msgstr ""
+
+#. i18n: file: main/kweshtunotesui.rc:9
+#. i18n: ectx: Menu (file)
+#: rc.cpp:90
+msgid "&File"
+msgstr ""
+
+#. i18n: file: main/kweshtunotesui.rc:13
+#. i18n: ectx: Menu (edit)
+#: rc.cpp:93
+msgid "&Edit"
+msgstr ""
+
+#. i18n: file: main/kweshtunotesui.rc:18
+#. i18n: ectx: Menu (text)
+#: rc.cpp:96
+msgid "&Text"
+msgstr ""
+
+#. i18n: file: main/kweshtunotesui.rc:28
+#. i18n: ectx: Menu (view)
+#: rc.cpp:99
+msgid "&View"
+msgstr ""
+
+#. i18n: file: main/kweshtunotesui.rc:34
+#. i18n: ectx: Menu (settings)
+#: rc.cpp:102
+msgid "&Settings"
+msgstr ""
+
+#. i18n: file: main/kweshtunotesui.rc:42
+#. i18n: ectx: ToolBar (mainToolBar)
+#: rc.cpp:105
+msgid "Main Toolbar"
+msgstr ""
+
+#. i18n: file: main/kweshtunotesui.rc:62
+#. i18n: ectx: ToolBar (mainToolBar)
+#: rc.cpp:108
+msgid "Note Toolbar"
+msgstr ""
+
+#. i18n: file: main/ui_main_window.ui:49
+#. i18n: ectx: property (title), widget (KMenu, menuAide)
+#: rc.cpp:111
+msgid "Aide"
+msgstr ""
+
+#. i18n: file: main/ui_main_window.ui:54
+#. i18n: ectx: property (title), widget (KMenu, menuOptions)
+#: rc.cpp:114
+msgid "Options"
+msgstr ""
+
+#. i18n: file: main/ui_main_window.ui:59
+#. i18n: ectx: property (title), widget (KMenu, menuTag)
+#: rc.cpp:117
+msgid "Tag"
+msgstr ""
+
+#. i18n: file: main/ui_main_window.ui:64
+#. i18n: ectx: property (title), widget (KMenu, menuEdit)
+#: rc.cpp:120
+msgid "Edit"
+msgstr ""
+
+#. i18n: file: main/ui_main_window.ui:69
+#. i18n: ectx: property (title), widget (KMenu, menuFichier)
+#: rc.cpp:123
+msgid "Fichier"
+msgstr ""
+
+#. i18n: file: tag/tag_factory.ui:59
+#. i18n: ectx: property (text), widget (QPushButton, m_newTagButton)
+#: rc.cpp:129
+msgid "New Tag"
+msgstr ""
+
+#. i18n: file: tag/tag_factory.ui:66
+#. i18n: ectx: property (text), widget (QPushButton, m_newStateButton)
+#: rc.cpp:132
+msgid "New State"
+msgstr ""
+
+#. i18n: file: tag/tag_factory.ui:103
+#. i18n: ectx: property (text), widget (QPushButton, m_delTagButton)
+#: rc.cpp:136
+msgid "Del"
+msgstr ""
+
+#. i18n: file: tag/tag_factory.ui:143
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: rc.cpp:139
+msgid "Name:"
+msgstr ""
+
+#. i18n: file: tag/tag_factory.ui:153
+#. i18n: ectx: property (title), widget (QGroupBox, m_fontGroupBox)
+#: rc.cpp:142
+msgid "Fonts"
+msgstr ""
+
+#. i18n: file: tag/tag_factory.ui:159
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: rc.cpp:145
+msgid "Font :"
+msgstr ""
+
+#. i18n: file: tag/tag_factory.ui:182
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: rc.cpp:151
+msgid "Size :"
+msgstr ""
+
+#. i18n: file: tag/tag_factory.ui:190
+#. i18n: ectx: property (text), item, widget (QComboBox, m_sizeText)
+#: rc.cpp:154
+msgid "6"
+msgstr ""
+
+#. i18n: file: tag/tag_factory.ui:195
+#. i18n: ectx: property (text), item, widget (QComboBox, m_sizeText)
+#: rc.cpp:157
+msgid "7"
+msgstr ""
+
+#. i18n: file: tag/tag_factory.ui:200
+#. i18n: ectx: property (text), item, widget (QComboBox, m_sizeText)
+#: rc.cpp:160
+msgid "8"
+msgstr ""
+
+#. i18n: file: tag/tag_factory.ui:205
+#. i18n: ectx: property (text), item, widget (QComboBox, m_sizeText)
+#: rc.cpp:163
+msgid "9"
+msgstr ""
+
+#. i18n: file: tag/tag_factory.ui:210
+#. i18n: ectx: property (text), item, widget (QComboBox, m_sizeText)
+#: rc.cpp:166
+msgid "10"
+msgstr ""
+
+#. i18n: file: tag/tag_factory.ui:215
+#. i18n: ectx: property (text), item, widget (QComboBox, m_sizeText)
+#: rc.cpp:169
+msgid "11"
+msgstr ""
+
+#. i18n: file: tag/tag_factory.ui:220
+#. i18n: ectx: property (text), item, widget (QComboBox, m_sizeText)
+#: rc.cpp:172
+msgid "12"
+msgstr ""
+
+#. i18n: file: tag/tag_factory.ui:225
+#. i18n: ectx: property (text), item, widget (QComboBox, m_sizeText)
+#: rc.cpp:175
+msgid "14"
+msgstr ""
+
+#. i18n: file: tag/tag_factory.ui:230
+#. i18n: ectx: property (text), item, widget (QComboBox, m_sizeText)
+#: rc.cpp:178
+msgid "16"
+msgstr ""
+
+#. i18n: file: tag/tag_factory.ui:235
+#. i18n: ectx: property (text), item, widget (QComboBox, m_sizeText)
+#: rc.cpp:181
+msgid "18"
+msgstr ""
+
+#. i18n: file: tag/tag_factory.ui:240
+#. i18n: ectx: property (text), item, widget (QComboBox, m_sizeText)
+#: rc.cpp:184
+msgid "20"
+msgstr ""
+
+#. i18n: file: tag/tag_factory.ui:245
+#. i18n: ectx: property (text), item, widget (QComboBox, m_sizeText)
+#: rc.cpp:187
+msgid "22"
+msgstr ""
+
+#. i18n: file: tag/tag_factory.ui:250
+#. i18n: ectx: property (text), item, widget (QComboBox, m_sizeText)
+#: rc.cpp:190
+msgid "24"
+msgstr ""
+
+#. i18n: file: tag/tag_factory.ui:255
+#. i18n: ectx: property (text), item, widget (QComboBox, m_sizeText)
+#: rc.cpp:193
+msgid "26"
+msgstr ""
+
+#. i18n: file: tag/tag_factory.ui:260
+#. i18n: ectx: property (text), item, widget (QComboBox, m_sizeText)
+#: rc.cpp:196
+msgid "28"
+msgstr ""
+
+#. i18n: file: tag/tag_factory.ui:265
+#. i18n: ectx: property (text), item, widget (QComboBox, m_sizeText)
+#: rc.cpp:199
+msgid "36"
+msgstr ""
+
+#. i18n: file: tag/tag_factory.ui:270
+#. i18n: ectx: property (text), item, widget (QComboBox, m_sizeText)
+#: rc.cpp:202
+msgid "48"
+msgstr ""
+
+#. i18n: file: tag/tag_factory.ui:298
+#. i18n: ectx: property (text), widget (QToolButton, m_boldText)
+#. i18n: file: tag/tag_factory.ui:308
+#. i18n: ectx: property (text), widget (QToolButton, m_italicText)
+#. i18n: file: tag/tag_factory.ui:318
+#. i18n: ectx: property (text), widget (QToolButton, m_underlineText)
+#. i18n: file: tag/tag_factory.ui:328
+#. i18n: ectx: property (text), widget (QToolButton, m_strikeText)
+#: rc.cpp:208 rc.cpp:211 rc.cpp:214 rc.cpp:217
+msgid "..."
+msgstr ""
+
+#. i18n: file: tag/tag_factory.ui:363
+#. i18n: ectx: property (title), widget (QGroupBox, m_appareanceGroupBox)
+#: rc.cpp:220
+msgid "Appareance"
+msgstr ""
+
+#. i18n: file: tag/tag_factory.ui:369
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: rc.cpp:223
+msgid "Emblem :"
+msgstr ""
+
+#. i18n: file: tag/tag_factory.ui:376
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: rc.cpp:226
+msgid "Background :"
+msgstr ""
+
+#: rc.cpp:227
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr ""
+
+#: rc.cpp:228
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr ""
+
