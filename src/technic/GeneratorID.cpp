@@ -35,7 +35,7 @@ namespace Technic
 
     QString GeneratorID::newId()
     {
-        QString alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        QString alphabet = "0123456789abcdefghijklmnopqrstuvwxyz_";
         QString id = "";
         int nb = 0;
 

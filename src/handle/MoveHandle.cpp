@@ -65,6 +65,8 @@ namespace Handle
     {
         Q_UNUSED( event );
         m_mode = Nothing;
+
+        QWidget::mouseReleaseEvent(event);
     }
     
     void MoveHandle::mousePressEvent ( QMouseEvent * event )

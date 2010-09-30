@@ -226,9 +226,12 @@ namespace Synchro
             ids += m_ids[i].split(":")[0];
         }
 
+        qDebug() << idBasket;
+         qDebug() << ids;
+
         if ( !ids.contains(idBasket) )
         {
-            return;
+           return;
         }
 
         Data::DataManager b( Data::DataManager::configFileBasket( idBasket ) );
