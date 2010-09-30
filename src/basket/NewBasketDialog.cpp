@@ -110,7 +110,7 @@ namespace Basket
         for ( int i=0 ; i<ids.size() ; ++i )
         {
             int index = ids[i].indexOf(":");
-            m_basketsRemote->addItem(ids[i].midRef(++index).toString(),ids[i].midRef(0,--index).toString());
+            m_basketsRemote->addItem(ids[i].midRef(index+1).toString(),ids[i].midRef(0,index).toString());
         }
 
         button( KDialog::Ok )->setEnabled(!ids.isEmpty());
@@ -148,6 +148,7 @@ namespace Basket
         QMap<QString,QString> options;
 
         ItemTreeBasket * item = new ItemTreeBasket( m_parent, id, order(), options, "" );
+
         item->basket()->load();
 
         if ( m_parent == 0 )
