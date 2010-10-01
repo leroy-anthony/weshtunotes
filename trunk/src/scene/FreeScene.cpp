@@ -268,10 +268,14 @@ namespace Scene
                         QPointF pt = static_cast<QGraphicsProxyWidget*>(items[0])->pos();
 
                         Handle::HandleItem * handle = newHandle( pt.x(), pt.y(), Settings::widthNote() );
+
                         handle->setIndexInsert( handleCible->indexInsert() );
+
                         handle->add( handleCible );
                         handle->add( m_currentHandle );
                         addHandleToScene( handle );
+
+                        handle->setIndexInsert(-1);
 
                         removeGraphicsItemFromScene( handleCible, false );
                     }
