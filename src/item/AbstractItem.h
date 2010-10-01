@@ -65,7 +65,7 @@ namespace Item
         bool containTag( const QString & tagName );
         Tag::NoteTag * tag();
 
-        virtual void insertData( const QMimeData * data );
+        virtual void insertData( const QMimeData * data ) = 0;
 
         bool selected();
 	

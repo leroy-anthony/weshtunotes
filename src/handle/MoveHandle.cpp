@@ -178,6 +178,8 @@ namespace Handle
 
     void MoveHandle::paintEvent( QPaintEvent * event )
     {
+        Q_UNUSED(event);
+
         QPainter painter(this);
         painter.setPen(Qt::NoPen);
 

@@ -172,7 +172,7 @@ namespace Synchro
             r.setRawHeader( "Content-Length", QString::number(datas.length()).toAscii());
             r.setRawHeader( "Slug", "test" );
 
-            QNetworkReply * reply = m_networkAccessManager.post(r,datas);
+            m_networkAccessManager.post(r,datas);
         }
     }
 
@@ -196,7 +196,7 @@ namespace Synchro
                 r.setRawHeader( "Content-Length", QString::number(f->size()).toAscii() );
                 r.setRawHeader( "Slug", "test" );
 
-                QNetworkReply * reply = m_networkAccessManager.put(r,f);
+                m_networkAccessManager.put(r,f);
             }
             else
             {

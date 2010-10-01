@@ -39,20 +39,20 @@ namespace Basket
 {
     AbstractBasket::AbstractBasket( ItemTreeBasket * itemTreeBasket, const QString & id ):
             GeneratorID("basket"),
-            m_name( "<unkown>" ),
             m_itemTreeBasket(itemTreeBasket),
             m_contentScene(0),
-            m_order(0)
+            m_order(0),
+            m_name( "<unkown>" )
     {
         initConfigFile(id);
     }
 
     AbstractBasket::AbstractBasket( ItemTreeBasket * itemTreeBasket, AbstractBasket * basketParent, const QString & id ):
             GeneratorID("basket"),
-            m_name( "<unkown>" ),
             m_itemTreeBasket(itemTreeBasket),
             m_contentScene(0),
-            m_order(0)
+            m_order(0),
+            m_name( "<unkown>" )
     {
         basketParent->addChild( this );
 

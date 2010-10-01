@@ -166,6 +166,8 @@ namespace Synchro
 
     void NetworkAccessManagerProxy::sslErrors(QNetworkReply * r, const QList<QSslError> & ssls)
     {
+        Q_UNUSED(r);
+
         for ( int i=0 ; i<ssls.size() ; ++i )
         {
             kDebug() << ssls[i].errorString();
