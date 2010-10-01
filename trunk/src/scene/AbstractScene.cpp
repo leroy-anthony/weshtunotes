@@ -45,9 +45,9 @@ namespace Scene
             GeneratorID("scene"),
             m_horizontalScrollBarValueView(0),
             m_verticalScrollBarValueView(0),
-            m_readOnly(false),
             m_lastCibleHandle(0),
-            m_type(type)
+            m_type(type),
+            m_readOnly(false)
     {
         qreal max = std::numeric_limits<qreal>::max();
         setSceneRect( -max, -max, max, max );
@@ -76,14 +76,6 @@ namespace Scene
     void AbstractScene::setType( const QString & type )
     {
         m_type = type;
-    }
-
-    void AbstractScene::addData( const QMimeData * data )
-    {
-    }
-
-    void AbstractScene::addItemToScene( Handle::GraphicHandleItem * g )
-    {
     }
 
     void AbstractScene::buildListHandleToLoad( Handle::HandleItem * h, QStringList & l )
@@ -291,10 +283,6 @@ namespace Scene
         m_directoryScene = fileName;
 
         loadViewFromDisk( fileName );
-    }
-
-    void AbstractScene::resize( QResizeEvent * event )
-    {
     }
 
     bool AbstractScene::readOnly()

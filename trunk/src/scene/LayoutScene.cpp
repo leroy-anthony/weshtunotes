@@ -117,14 +117,24 @@ namespace Scene
     
     Item::AbstractItem * LayoutScene::newItem( int x, int y )
     {
+        Q_UNUSED(x);
+        Q_UNUSED(y);
+
         Item::NoteItem * item = new Item::NoteItem();
         connect( item, SIGNAL(editItem(Item::AbstractItem*)), this, SLOT(editItem(Item::AbstractItem*)));
         
         return item;
     }
     
+    void LayoutScene::addItemToScene( Handle::GraphicHandleItem * g )
+    {
+        Q_UNUSED( g );
+    }
+
     Handle::HandleItem *  LayoutScene::addItems( int x, int y, const QString & dataFile )
     {
+        Q_UNUSED(dataFile);
+
         Handle::HandleItem * handle = newHandle( x, y, Settings::widthNote() );
         
         Item::AbstractItem * item = newItem( x, y );
@@ -181,7 +191,10 @@ namespace Scene
     }
 
     void LayoutScene::moveItem( Handle::HandleItem * handleItem, int x, int y )
-    {/*
+    {   Q_UNUSED(handleItem);
+        Q_UNUSED(x);
+        Q_UNUSED(y);
+        /*
         m_modeItem = MoveItem;
 
         if ( handleItem->parentHandle() == 0 )

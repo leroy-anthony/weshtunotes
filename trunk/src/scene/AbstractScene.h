@@ -47,7 +47,7 @@ namespace Scene
         virtual Item::AbstractItem * currentAbstractItem() = 0;
         virtual Handle::HandleItem * currentHandle()       = 0;
 
-        virtual void addItemToScene( Handle::GraphicHandleItem * item );
+        virtual void addItemToScene( Handle::GraphicHandleItem * item ) = 0;
         virtual QGraphicsProxyWidget * addHandleToScene( Handle::HandleItem * handle ) = 0;
         virtual Handle::HandleItem * newHandle( int x, int y, int w ) = 0;
         virtual Item::AbstractItem * newItem( int x, int y ) = 0;
@@ -61,7 +61,7 @@ namespace Scene
         void storeView( CustomGraphicsView * view );
         void restoreView( CustomGraphicsView * view );
 
-        virtual void addData( const QMimeData * data );
+        virtual void addData( const QMimeData * data ) = 0;
 
         const QString & type();
         void setType( const QString & type );
@@ -77,7 +77,6 @@ namespace Scene
     public slots:
         virtual void delItem( Handle::HandleItem * h ) = 0;
         virtual void moveItem( Handle::HandleItem * handleItem, int x, int y ) = 0;
-        virtual void resize( QResizeEvent * event );
 
         void showMessageStatus();
 

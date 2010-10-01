@@ -107,6 +107,9 @@ namespace Scene
     
     Item::AbstractItem * FreeScene::newItem( int x, int y )
     {
+        Q_UNUSED(x);
+        Q_UNUSED(y);
+
         Item::NoteItem * item = new Item::NoteItem();
         connect( item, SIGNAL(editItem(Item::AbstractItem*)), this, SLOT(editItem(Item::AbstractItem*)));
         

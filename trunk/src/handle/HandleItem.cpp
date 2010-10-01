@@ -56,11 +56,12 @@ namespace Handle
             m_deleteHandle(this),
             m_parentHandle(0),
             m_modeDegroupement(false),
+            m_index(-1),
+            m_insertIndicator(0),
             m_contentMarginX(1),
             m_contentMarginY(1),
             m_x(x),
-            m_y(y),
-            m_index(-1)
+            m_y(y)
     {
         QWidget::resize(width, width);
         setContentsMargins( m_contentMarginX, m_contentMarginY, m_contentMarginX, m_contentMarginY );
@@ -204,6 +205,8 @@ namespace Handle
 
     void HandleItem::insert( QPoint  pt, int height )
     {
+        Q_UNUSED(height);
+
         int size = m_contentLayout->count();
         if ( m_index >=0 && m_index < size )
         {
@@ -292,6 +295,8 @@ namespace Handle
 
     void HandleItem::leaveEvent( QEvent * event )
     {
+        Q_UNUSED(event);
+
         setHoverMode( false );
         if ( m_parentHandle != 0 )
         {

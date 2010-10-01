@@ -40,8 +40,8 @@ namespace Synchro
 {
 
     AbstractConnection::AbstractConnection( const QString & connectionName ):
-            m_connectionName(connectionName),
-            m_networkAccessManager(0)
+            m_networkAccessManager(0),
+            m_connectionName(connectionName)
     {
         connect( &m_networkAccessManager, SIGNAL(error(const QString &)), this, SLOT(errorConnection(const QString &)) );
     }

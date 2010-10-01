@@ -85,6 +85,8 @@ namespace Tag
 
     void AddTag::paintEvent( QPaintEvent * event )
     {
+        Q_UNUSED(event);
+
         QPainter painter(this);
 
         QPen p(QApplication::palette().color(QPalette::Highlight));

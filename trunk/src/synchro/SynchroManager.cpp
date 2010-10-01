@@ -150,10 +150,14 @@ namespace Synchro
 
             (this->*actionPtr)( config );
         }
+
+        return false;
     }
 
     void SynchroManager::getBaskets( const QString & idBasket )
     {
+        Q_UNUSED(idBasket);
+
         m_ids = m_cx->content("kweshtunotes");
     }
 

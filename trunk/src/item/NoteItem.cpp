@@ -147,7 +147,7 @@ namespace Item
 
     void NoteItem::setTextBackgroundColor ( const QColor & c )
     {
-        // IMPLEMENT ME
+        //FIXME: IMPLEMENT ME
     }
 
     void NoteItem::setTextColor( const QColor & c )
@@ -262,6 +262,8 @@ namespace Item
 
     void NoteItem::paintEvent( QPaintEvent * event )
     {
+        Q_UNUSED(event);
+
         QPainter painter(this);
 
         QLinearGradient gradient( 0, 0, 0, height() );

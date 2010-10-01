@@ -102,10 +102,6 @@ namespace Item
         return m_tag;
     }
 
-    void AbstractItem::insertData( const QMimeData * data )
-    {
-    }
-
     void AbstractItem::setHandle( Handle::HandleItem * handle )
     {
 	m_handle = handle;

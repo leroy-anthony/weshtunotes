@@ -188,6 +188,7 @@ namespace Item
 
     void CustomTextEdit::contextMenuEvent ( QContextMenuEvent * event )
     {
+        Q_UNUSED(event);
     }
 
 }

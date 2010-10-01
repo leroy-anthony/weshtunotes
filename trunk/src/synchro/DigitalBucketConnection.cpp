@@ -91,6 +91,8 @@ namespace Synchro
 	{
 	    return reply->readAll();
 	}
+
+        return 0;
     }
     
     QByteArray DigitalBucketConnection::fileByTag( const QString & tag )

@@ -30,8 +30,8 @@ namespace Scene
             m_scale(1.0),
             m_move(false),
             m_selection(false),
-            m_selectionItem(0),
-            m_indexItem(0)
+            m_indexItem(0),
+            m_selectionItem(0)
     {
         if ( QGLFormat::hasOpenGL() )
         {
@@ -269,6 +269,8 @@ namespace Scene
 
     void CustomGraphicsView::timerEvent( QTimerEvent * ev )
     {
+        Q_UNUSED( ev );
+
         if( qAbs(matrix().m11()-m_scale) < qAbs((matrix().m11()*(1+m_scaleStep))-m_scale) )
         {
             killTimer(m_idTimer);
@@ -388,17 +390,6 @@ namespace Scene
         }
 
         fitInView(minx,miny,maxx-minx,maxy-miny,Qt::KeepAspectRatio);
-    }
-
-    void CustomGraphicsView::resizeEvent ( QResizeEvent * event )
-    {
-        QGraphicsScene * s = scene();
-        if ( s != 0 )
-        {
-            dynamic_cast<AbstractScene*>( s )->resize( event );
-        }
-
-        QGraphicsView::resizeEvent( event );
     }
 
     void CustomGraphicsView::nextItem()
