@@ -49,6 +49,7 @@
   <Action name="fontfamily" />
   <Action name="fontsize" />
   <Action name="fontcolor" />
+  <Action name="fontbackgroundcolor" />
   <Separator/>
   <Action name="bold" />
   <Action name="italic" />

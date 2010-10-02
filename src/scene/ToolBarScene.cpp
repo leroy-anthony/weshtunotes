@@ -65,6 +65,14 @@ namespace Scene
         connect(m_colorText, SIGNAL(activated(const QColor &)), SLOT(setTextColor(const QColor &)));
         m_mainWindow->actionCollection()->addAction("fontcolor", a);
 
+        m_colorBackgroundText = new KColorCombo();
+        m_colorBackgroundText->setFixedWidth(48);
+        m_colorBackgroundText->setToolTip(i18n("Background Text Color"));
+        a = new KAction(this);
+        a->setDefaultWidget(m_colorBackgroundText);
+        connect(m_colorBackgroundText, SIGNAL(activated(const QColor &)), SLOT(setTextBackgroundColor(const QColor &)));
+        m_mainWindow->actionCollection()->addAction("fontbackgroundcolor", a);
+
         m_boldAction = addAction(Config::ImageFactory::newInstance()->icon("format-text-bold.png"),i18n("Bold"));
         m_mainWindow->actionCollection()->addAction("bold", m_boldAction);
         connect(m_boldAction, SIGNAL(triggered(bool)), this, SLOT(setBold(bool)));
@@ -217,6 +225,14 @@ namespace Scene
         }
     }
 
+    void ToolBarScene::setTextBackgroundColor( const QColor & c )
+    {
+        if ( currentAbstractItem() != 0 )
+        {
+            dynamic_cast<Item::ITextEdition*>(currentAbstractItem())->setTextBackgroundColor(c);
+        }
+    }
+
     void ToolBarScene::setTextColor( const QColor & c )
     {
         if ( currentAbstractItem() != 0 )
@@ -281,6 +297,7 @@ namespace Scene
         m_boldAction->setChecked(f.fontWeight()>50);
         m_italicAction->setChecked(f.fontItalic());
         m_colorText->setColor(f.foreground().color());
+        m_colorBackgroundText->setColor(f.background().color());
         m_strikeoutAction->setChecked(f.fontStrikeOut());
 
         if ( f.fontPointSize() > 0 )

@@ -230,7 +230,7 @@ namespace Synchro
         for ( int i=1 ; i<nodes.size() ; ++i )
         {
             QString basketName = nodes.at(i).toElement().text();
-            QByteArray content = file( basketName.remove("_"), "txt" );
+            QByteArray content = file( basketName.remove(0,1), "txt" );
             if ( content != "" )
             {
                 Data::DataManager d("tmp");
