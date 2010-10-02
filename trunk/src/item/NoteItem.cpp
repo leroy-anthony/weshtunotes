@@ -147,7 +147,7 @@ namespace Item
 
     void NoteItem::setTextBackgroundColor ( const QColor & c )
     {
-        //FIXME: IMPLEMENT ME
+        m_plainTextEdit->setTextBackgroundColor(c);
     }
 
     void NoteItem::setTextColor( const QColor & c )

@@ -48,6 +48,7 @@ namespace Item
         settings.setValue( group,subGroup,"alignment", (int) m_alignment );
         settings.setValue( group,subGroup,"underline", m_underLine );
         settings.setValue( group,subGroup,"colorFont", m_colorFont.name() );
+        settings.setValue( group,subGroup,"colorBackgroundFont", m_colorBackgroundFont.name() );
         settings.setValue( group,subGroup,"font", m_font );
         settings.setValue( group,subGroup,"weight", m_weight );
     }
@@ -60,6 +61,7 @@ namespace Item
         //FIXME: m_alignment = settings.valueSubGroup( group,subGroup,"alignment", QVariant(1) ).toInt();
         m_underLine = settings.valueSubGroup( group,subGroup,"underline", QVariant(false) ) == QString("true");
         m_colorFont = QColor( settings.valueSubGroup( group,subGroup,"colorFont", "#000000" ) );
+        m_colorBackgroundFont = QColor( settings.valueSubGroup( group,subGroup,"colorBackgroundFont", "#000000" ) );
         m_font = settings.valueSubGroup( group,subGroup,"font","Arial" );
         m_weight = settings.valueSubGroup( group,subGroup,"weight", QVariant(1) ).toInt();
     }

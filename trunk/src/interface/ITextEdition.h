@@ -45,6 +45,7 @@ namespace Item
         virtual void setItalic( bool italic ) = 0;
         virtual void setAlignment( Qt::Alignment ) = 0;
         virtual void setFontUnderline( bool underLine ) = 0;
+        virtual void setTextBackgroundColor( const QColor & color ) = 0;
         virtual void setTextColor( const QColor & color ) = 0;
         virtual void setFontFamily( const QFont & font ) = 0;
         virtual void setFontPointSize( int weight ) = 0;
@@ -68,6 +69,7 @@ namespace Item
         Qt::Alignment m_alignment;
         bool m_underLine;
         QColor m_colorFont;
+        QColor m_colorBackgroundFont;
         QString m_font;
         int m_weight;
         bool m_strikeOut;

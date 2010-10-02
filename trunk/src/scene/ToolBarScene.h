@@ -61,6 +61,7 @@ namespace Scene
         void setAlignmentLeft( bool checked );
         void setAlignmentCenter( bool checked );
         void setFontUnderline( bool checked );
+        void setTextBackgroundColor( const QColor & c );
         void setTextColor( const QColor & c );
         void setFontFamily( const QFont & font );
         void setFontPointSize( int size );
@@ -78,6 +79,7 @@ namespace Scene
         MainWindow * m_mainWindow;
 
         KColorCombo     * m_colorText;
+        KColorCombo     * m_colorBackgroundText;
         KFontSizeAction * m_actionFontSize;
         KFontComboBox * m_fontComboBox;
         KFontAction   * m_actionFont;

@@ -52,6 +52,7 @@ namespace Tag
 
         void setFontUnderline( bool underLine );
         void setTextColor( const QColor & color );
+        void setTextBackgroundColor( const QColor & color );
         void setFontFamily( const QFont & font );
         void setFontPointSize( int weight );
 
