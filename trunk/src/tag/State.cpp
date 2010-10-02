@@ -94,6 +94,15 @@ namespace Tag
         }
     }
 
+    void State::setTextBackgroundColor( const QColor & color )
+    {
+        m_colorBackgroundFont = color;
+        if ( m_item != 0 )
+        {
+            m_item->setTextBackgroundColor( color );
+        }
+    }
+
     void State::setFontFamily( const QFont & font )
     {
         m_font = font.family();
