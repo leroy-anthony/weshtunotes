@@ -9,3 +9,5 @@ Compiling
   3. cmake ..
  
   4. make
+
+  5. make install (with root privelages)
