@@ -183,6 +183,7 @@ namespace Synchro
         {
             QFileInfo fileInfo(*f);
             QString url = "https://docs.google.com/feeds/default/media/document%3A";
+
             QString id = findId( fileInfo.fileName() );
 
             if ( id != "" )

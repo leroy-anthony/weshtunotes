@@ -10,6 +10,10 @@
       <label>Path to basket store</label>
       <default code="true">QDir::homePath()+QDir::separator()+".kweshtunotes"</default>
     </entry>
+    <entry name="useNepomuk" type="Bool">
+      <label>Use nepomuk</label>
+      <default>true</default>
+    </entry>
   </group>
   <group name="visual">
     <entry name="colorItem" type="Color">
@@ -60,5 +64,14 @@
       <label>Smooth zoom.</label>
       <default>false</default>
     </entry>
+  </group>
+  <group name="synchro">
+  <entry name="activateSynchro" type="Bool">
+    <label>Activate</label>
+    <default>true</default>
+  </entry>
+  <entry name="connections" type="StringList">
+    <label>Connections avaible.</label>
+  </entry>
   </group>
 </kcfg> 

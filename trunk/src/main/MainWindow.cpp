@@ -43,9 +43,6 @@
 #include "../config/Configuration.h"
 #include "../config/ImageFactory.h"
 #include "../config/ConfigDialog.h"
-#include "../config/GeneralPageDialog.h"
-#include "../config/AppareancePageDialog.h"
-#include "../config/AnimationPageDialog.h"
 #include "../scene/CustomGraphicsView.h"
 #include "../scene/FreeScene.h"
 #include "../scene/LayoutScene.h"
@@ -80,12 +77,6 @@ MainWindow::MainWindow( QWidget * parent ) :
     initSystemTray();
 
     setupGUI( Default, "kweshtunotesui.rc" );
-
-    loadData();
-    
-    //Data::ExportDataToXml::exportToFile( m_treeExplorer->rootItem(), "/tmp/baskets.xml" );
-    //Data::ImportDataFromXml xml( m_treeExplorer, "/tmp/baskets.xml" );
-    //xml.importFromFile();
 }
 
 MainWindow::~MainWindow()
@@ -168,7 +159,6 @@ void MainWindow::initView()
     centralwidget->layout()->setMargin(0);
     centralwidget->layout()->addWidget( m_view );
     centralwidget->layout()->addWidget( widget );
-    m_view->show();
 
     QLayout * layoutButtonView = new QHBoxLayout( widget );
     layoutButtonView->setMargin(0);
@@ -296,7 +286,6 @@ void MainWindow::reloadView()
     {
         Scene::AbstractScene * scene = m_lastBasketLoad->basket()->scene();
         m_view->setScene( scene );
-        m_view->setEnabled( true );
         scene->restoreView( m_view );
 
         showMessage( i18np("1 item loaded","%1 items loaded",scene->handles().size()), 1000 );
@@ -306,6 +295,8 @@ void MainWindow::reloadView()
 
 void MainWindow::loadScene( QTreeWidgetItem * item , int column )
 {
+    Q_UNUSED(column);
+
     Basket::ItemTreeBasket * i = dynamic_cast<Basket::ItemTreeBasket*>(item);
 
     if ( m_lastBasketLoad != 0 )
@@ -353,21 +344,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::showSettings()
 {
-    if(KConfigDialog::showDialog("settings"))
-        return;
-
-    KConfigDialog *dialog = new KConfigDialog(this, "settings", Settings::self());
-    dialog->resize(650,400);
-    dialog->setFaceType(KPageDialog::List);
-    dialog->addPage(new Config::GeneralPageDialog(dialog), i18n("General"), "system-run" );
-    dialog->addPage(new Config::AppareancePageDialog(dialog), i18n("Appareance note"), "preferences-desktop-color" );
-    dialog->addPage(new Config::AnimationPageDialog(dialog), i18n("Animation"), "preferences-desktop-launch-feedback" );
-    dialog->show();
-
-    connect( dialog, SIGNAL(settingsChanged()), this, SLOT(updateConfiguration()) );
+    new Config::ConfigDialog( this );
 }
 
-void MainWindow::updateConfiguration()
-{
-    Settings::self()->writeConfig();
-}
+

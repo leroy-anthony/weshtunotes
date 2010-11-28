@@ -75,8 +75,8 @@ namespace Basket
 
 
     public slots:
-        void commitGoogle();
-        void updateGoogle();
+        void commit();
+        void update();
 
 
     protected:

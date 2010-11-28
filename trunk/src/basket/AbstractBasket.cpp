@@ -1,21 +1,20 @@
 /*
- Copyright (c) 2009 LEROY Anthony <leroy.anthony@gmail.com>
+    Copyright (c) 2009 LEROY Anthony <leroy.anthony@gmail.com>
 
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Library General Public
- License as published by the Free Software Foundation; either
- version 3 of the License, or (at your option) any later version.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
- This library is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Library General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
- You should have received a copy of the GNU Library General Public License
- along with this library; see the file COPYING.LIB.  If not, write to
- the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- Boston, MA 02110-1301, USA.
- */
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
 
 #include "AbstractBasket.h"
 
@@ -34,6 +33,7 @@
 #include "../synchro/GoogleDocsConnection.h"
 #include "../synchro/AbstractConnection.h"
 #include "../synchro/SynchroManager.h"
+#include "../synchro/ConnectionFactory.h"
 
 namespace Basket
 {
@@ -163,16 +163,33 @@ namespace Basket
         return m_configFile;
     }
 
-    void AbstractBasket::commitGoogle()
+    void AbstractBasket::commit()
     {
-        Synchro::SynchroManager sync(new Synchro::GoogleDocsConnection());
-        sync.commit( GeneratorID::id() );
+        QAction * a = static_cast<QAction*>(sender());
+
+        Synchro::ConnectionFactory::Type type = (Synchro::ConnectionFactory::Type) a->data().toInt();
+        Synchro::AbstractConnection * cx = Synchro::ConnectionFactory::newConnection( type );
+
+        if ( cx != 0 )
+        {
+            Synchro::SynchroManager sync(cx);
+            sync.commit( GeneratorID::id() );
+        }
     }
 
-    void AbstractBasket::updateGoogle()
+    void AbstractBasket::update()
     {
-        Synchro::SynchroManager sync(new Synchro::GoogleDocsConnection());
-        sync.update( GeneratorID::id() );
+        QAction * a = static_cast<QAction*>(sender());
+
+        Synchro::ConnectionFactory::Type type = (Synchro::ConnectionFactory::Type) a->data().toInt();
+        Synchro::AbstractConnection * cx = Synchro::ConnectionFactory::newConnection( type );
+
+        if ( cx != 0 )
+        {
+            Synchro::SynchroManager sync(cx);
+            sync.update( GeneratorID::id() );
+        }
+
         load();
         MainWindow::reloadView();
     }

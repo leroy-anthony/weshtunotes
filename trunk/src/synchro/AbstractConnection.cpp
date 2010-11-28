@@ -44,6 +44,7 @@ namespace Synchro
             m_connectionName(connectionName)
     {
         connect( &m_networkAccessManager, SIGNAL(error(const QString &)), this, SLOT(errorConnection(const QString &)) );
+        connect( &m_networkAccessManager, SIGNAL(info(const QString &)), this, SLOT(infoConnection(const QString &)) );
     }
 
     const QString & AbstractConnection::connectionName()
@@ -59,6 +60,11 @@ namespace Synchro
     void AbstractConnection::errorConnection(const QString & errorString )
     {
         emit error(errorString);
+    }
+
+    void AbstractConnection::infoConnection(const QString & infoString )
+    {
+        emit info(infoString);
     }
 
 }

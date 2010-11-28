@@ -18,84 +18,48 @@
 
 #include "ConfigDialog.h"
 
-#include <QtGui>
+#include <settings.h>
+
+#include <QWidget>
 
 #include <KLocalizedString>
+#include <KConfigDialog>
+
+#include "../config/GeneralPageDialog.h"
+#include "../config/AppareancePageDialog.h"
+#include "../config/AnimationPageDialog.h"
+#include "../config/SynchroPageDialog.h"
 
 namespace Config
 {
 
-    ConfigDialog::ConfigDialog():
-            QDialog()
+    ConfigDialog::ConfigDialog( QWidget * parent )
     {
-        contentsWidget = new QListWidget;
-        contentsWidget->setViewMode(QListView::IconMode);
-        contentsWidget->setIconSize(QSize(96, 84));
-        contentsWidget->setMovement(QListView::Static);
-        contentsWidget->setMaximumWidth(128);
-        contentsWidget->setSpacing(12);
+        if (KConfigDialog::showDialog("settings"))
+        {
+            return;
+        }
 
-        pagesWidget = new QStackedWidget;
-        pagesWidget->addWidget(new QWidget);
-        pagesWidget->addWidget(new QWidget);
-        pagesWidget->addWidget(new QWidget);
+        KConfigDialog *dialog = new KConfigDialog(parent, "settings", Settings::self());
+        dialog->resize(650,400);
+        dialog->setFaceType(KPageDialog::List);
+        dialog->addPage(new Config::GeneralPageDialog(dialog), i18n("General"), "system-run" );
+        dialog->addPage(new Config::AppareancePageDialog(dialog), i18n("Appareance note"), "preferences-desktop-color" );
+        dialog->addPage(new Config::AnimationPageDialog(dialog), i18n("Animation"), "preferences-desktop-launch-feedback" );
 
-        QPushButton *closeButton = new QPushButton(i18n("Close"));
+        Config::SynchroPageDialog * p = new Config::SynchroPageDialog(dialog);
+        connect( p, SIGNAL(changed()), dialog, SLOT(settingsChangedSlot()) );
+        dialog->addPage(p, i18n("Synchronisation"), "preferences-desktop-launch-feedback" );
+        p->load();
 
-        createIcons();
-        contentsWidget->setCurrentRow(0);
+        dialog->show();
 
-        connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
-
-        QHBoxLayout *horizontalLayout = new QHBoxLayout;
-        horizontalLayout->addWidget(contentsWidget);
-        horizontalLayout->addWidget(pagesWidget, 1);
-
-        QHBoxLayout *buttonsLayout = new QHBoxLayout;
-        buttonsLayout->addStretch(1);
-        buttonsLayout->addWidget(closeButton);
-
-        QVBoxLayout *mainLayout = new QVBoxLayout;
-        mainLayout->addLayout(horizontalLayout);
-        mainLayout->addStretch(1);
-        mainLayout->addSpacing(12);
-        mainLayout->addLayout(buttonsLayout);
-        setLayout(mainLayout);
-
-        setWindowTitle(i18n("Config Dialog"));
+        connect( dialog, SIGNAL(settingsChanged(const QString&)), this, SLOT(updateConfiguration()) );
     }
 
-    void ConfigDialog::createIcons()
+    void ConfigDialog::updateConfiguration()
     {
-        QListWidgetItem *configButton = new QListWidgetItem(contentsWidget);
-        configButton->setIcon(QIcon(":/images/config.png"));
-        configButton->setText(i18n("Configuration"));
-        configButton->setTextAlignment(Qt::AlignHCenter);
-        configButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-
-        QListWidgetItem *updateButton = new QListWidgetItem(contentsWidget);
-        updateButton->setIcon(QIcon(":/images/update.png"));
-        updateButton->setText(i18n("Update"));
-        updateButton->setTextAlignment(Qt::AlignHCenter);
-        updateButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-
-        QListWidgetItem *queryButton = new QListWidgetItem(contentsWidget);
-        queryButton->setIcon(QIcon(":/images/query.png"));
-        queryButton->setText(i18n("Query"));
-        queryButton->setTextAlignment(Qt::AlignHCenter);
-        queryButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-
-        connect(contentsWidget,
-                SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)),
-                this, SLOT(changePage(QListWidgetItem *, QListWidgetItem*)));
-    }
-
-    void ConfigDialog::changePage(QListWidgetItem *current, QListWidgetItem *previous)
-    {
-        if (!current)
-            current = previous;
-
-        pagesWidget->setCurrentIndex(contentsWidget->row(current));
+        Settings::self()->writeConfig();
     }
 
 }

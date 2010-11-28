@@ -27,6 +27,7 @@
 #include <KAboutData>
 #include <KApplication>
 #include <KMessageBox>
+#include <QTextListFormat>
 
 #include "../config/Configuration.h"
 #include "../basket/ItemTreeBasket.h"
@@ -39,9 +40,15 @@ namespace Synchro
 
     SynchroManager::SynchroManager( AbstractConnection * connection ):
             QObject(0),
-            m_cx(connection)
+            m_cx(connection),
+            m_dialog(0)
     {
         connect( m_cx, SIGNAL(error(const QString &)), this, SLOT(errorConnection(const QString &)) );
+        connect( m_cx, SIGNAL(info(const QString &)), this, SLOT(infoConnection(const QString &)) );
+    }
+
+    SynchroManager::~SynchroManager()
+    {
     }
 
     const QString & SynchroManager::connectionName()
@@ -56,17 +63,71 @@ namespace Synchro
 
     void SynchroManager::errorConnection( const QString & errorString )
     {
-        KMessageBox::error(0, errorString, i18n("Error"));
+        if ( m_dialog != 0 )
+        {
+            m_dialog->enableButton(KDialog::Details,true);
+            QTextCharFormat f;
+            f.setForeground(QColor("red"));
+            m_log.textCursor().insertText(" [ERROR] "+errorString+"\n",f);
+        }
+    }
+
+    void SynchroManager::infoConnection( const QString & infoString )
+    {
+        if ( m_dialog != 0 )
+        {
+            m_dialog->enableButton(KDialog::Details,true);
+            QTextCharFormat f;
+            f.setForeground(QColor("black"));
+            m_log.textCursor().insertText(" [INFO] "+infoString+"\n",f);
+        }
     }
 
     void SynchroManager::commit( const QString & configFileBasket )
     {
+        delete m_dialog;
+        m_dialog = new KProgressDialog;
+        m_dialog->setButtons( KDialog::Details | KDialog::Ok );
+        m_dialog->setDetailsWidget( &m_log );
+        m_dialog->setModal(true);
+        m_dialog->enableButtonOk(false);
+        m_dialog->setInitialSize(QSize(400,100));
+        m_dialog->enableButton(KDialog::Details,false);
+        m_dialog->setVisible(false);
+
+        m_dialog->show();
+        m_dialog->setLabelText(i18n("Commit basket..."));
+
         connectionDialog( &SynchroManager::commitBasket, configFileBasket );
+
+        m_dialog->enableButtonOk(true);
+        m_dialog->exec();
     }
 
     void SynchroManager::update( const QString & configFileBasket )
     {
+        m_dialog = new KProgressDialog;
+        m_dialog->setButtons( KDialog::Details | KDialog::Ok );
+        m_dialog->setDetailsWidget( &m_log );
+        m_dialog->setModal(true);
+        m_dialog->enableButtonOk(false);
+        m_dialog->setInitialSize(QSize(400,100));
+        m_dialog->enableButton(KDialog::Details,false);
+        m_dialog->setVisible(false);
+
+        m_dialog->show();
+        m_dialog->setLabelText(i18n("Update basket..."));
+        m_dialog->progressBar()->setRange(0,0);
+
         connectionDialog( &SynchroManager::updateBasket, configFileBasket );
+
+        m_dialog->progressBar()->setRange(0,1);
+        m_dialog->progressBar()->setValue(1);
+        m_dialog->enableButtonOk(true);
+        m_dialog->exec();
+
+        delete m_dialog;
+        m_dialog = 0;
     }
 
     QStringList SynchroManager::baskets()
@@ -162,27 +223,60 @@ namespace Synchro
     }
 
     void SynchroManager::commitBasket( const QString & idB )
-    {
-        QString idBasket = "_"+idB;
+    {        
+        Data::DataManager b( Data::DataManager::configFileBasket( idB ) );
 
+        QString id = b.values("scene","id").at(0);
+        Data::DataManager assoc( Data::DataManager::configFileAssoc( id ) );
+
+
+        int nbStep = 3;
+        QStringList handles = assoc.values("general","items");
+        for ( int i=0 ; i<handles.size() ; ++i )
+        {
+            nbStep++;
+            Data::DataManager handle(handles[i]);
+            QStringList subHandles = handle.values("general","items");
+            for ( int j=0 ; j<subHandles.size() ; ++j )
+            {
+                QStringList items = handle.values(subHandles[j],"data");
+                for ( int k=0 ; k<items.size() ; ++k)
+                {
+                    nbStep+=2;
+                    Data::DataManager data( Data::DataManager::configFileItem(items[k]) );
+                    QStringList images = data.values( "data", "images" );
+                    for ( int l=0 ; l<images.size() ; ++l)
+                    {
+                        nbStep++;
+                    }
+                }
+            }
+        }
+
+        m_dialog->progressBar()->setRange(0,nbStep);
+        nbStep = 0;
+
+        QString idBasket = "_"+idB;
         QString idFolder = m_cx->findId( idBasket, true );
         if ( idFolder == "" )
         {
             idFolder = m_cx->createFolder( idBasket, true );
         }
+        m_dialog->progressBar()->setValue( ++nbStep );
 
-        Data::DataManager b( Data::DataManager::configFileBasket( idB ) );
         m_cx->saveOrUpdateFile(b.fileName(),idFolder);
-
-        QString id = b.values("scene","id").at(0);
-        Data::DataManager assoc( Data::DataManager::configFileAssoc( id ) );
+        m_dialog->progressBar()->setValue( ++nbStep );
         m_cx->saveOrUpdateFile(assoc.fileName(),idFolder);
+        m_dialog->progressBar()->setValue( ++nbStep );
 
-        QStringList handles = assoc.values("general","items");
+
+        //QStringList handles = assoc.values("general","items");
         for ( int i=0 ; i<handles.size() ; ++i )
         {
             Data::DataManager handle(handles[i]);
             m_cx->saveOrUpdateFile(handle.fileName(),idFolder);
+
+            m_dialog->progressBar()->setValue( ++nbStep );
 
             QStringList subHandles = handle.values("general","items");
             for ( int j=0 ; j<subHandles.size() ; ++j )
@@ -193,8 +287,12 @@ namespace Synchro
                     QString pathItem = Data::DataManager::itemsStorePath()+items[k]+".html";
                     m_cx->saveOrUpdateFile(pathItem,idFolder);
 
+                    m_dialog->progressBar()->setValue( ++nbStep );
+
                     Data::DataManager data( Data::DataManager::configFileItem(items[k]) );
                     m_cx->saveOrUpdateFile( data.fileName(), idFolder );
+
+                    m_dialog->progressBar()->setValue( ++nbStep );
 
                     QStringList images = data.values( "data", "images" );
                     for ( int l=0 ; l<images.size() ; ++l)
@@ -213,6 +311,9 @@ namespace Synchro
                             m_cx->saveOrUpdateFile( fileTmp.fileName(), idFolder );
 
                             fileTmp.remove();
+
+                            m_dialog->progressBar()->setValue( ++nbStep );
+
                         }
                     }
                 }
@@ -232,7 +333,7 @@ namespace Synchro
 
         if ( !ids.contains(idBasket) )
         {
-           return;
+            return;
         }
 
         Data::DataManager b( Data::DataManager::configFileBasket( idBasket ) );
@@ -293,4 +394,5 @@ namespace Synchro
             }
         }
     }
+
 }

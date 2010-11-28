@@ -49,10 +49,12 @@ namespace Synchro
         const QString & connectionError();
 
     signals:
-        void error(const QString & errorString );
+        void error( const QString & errorString );
+        void info( const QString & infoString );
 
     private slots:
         void errorConnection(const QString & errorString );
+        void infoConnection(const QString & infoString );
 
     protected:
         NetworkAccessManagerProxy m_networkAccessManager;
