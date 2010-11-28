@@ -158,6 +158,7 @@ namespace Synchro
             m_detailError = reply->errorString();
             buildDetailError( m_codeError );
             kDebug() << m_codeError;
+            kDebug() << reply->readAll();
 
             m_syncEvent.exit(1);
             emit error(m_detailError);
@@ -176,10 +177,12 @@ namespace Synchro
 
     void NetworkAccessManagerProxy::waitReponse( const QNetworkRequest & request )
     {
-        MainWindow::showMessage( QString("Connecting %1...").arg(request.url().toString()), 0 );
+        MainWindow::showMessage( QString("Connecting %1 ...").arg(request.url().toString()), 0 );
+
+        emit info( QString("Connecting %1 ...").arg(request.url().toString()) );
 
         m_timer.start(10000);
-        m_syncEvent.exec(QEventLoop::ExcludeUserInputEvents);
+        m_syncEvent.exec();
 
         MainWindow::showMessage( "", 0 );
     }

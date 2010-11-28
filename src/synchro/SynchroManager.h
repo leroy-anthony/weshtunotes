@@ -22,6 +22,8 @@
 #include "settings.h"
 
 #include <KWallet/Wallet>
+#include <KTextEdit>
+#include <KProgressDialog>
 
 #include "../synchro/AbstractConnection.h"
 
@@ -34,6 +36,7 @@ namespace Synchro
 
     public:
         SynchroManager( AbstractConnection * connection );
+        ~SynchroManager();
 
         void commit( const QString & configFileBasket );
         void update( const QString & configFileBasket );
@@ -46,6 +49,7 @@ namespace Synchro
 
     public slots:
         void errorConnection( const QString & errorString );
+        void infoConnection( const QString & infoString );
 
     protected:
         void connectionDialog( void (SynchroManager::*pt2Func)(const QString &), const QString & config );
@@ -57,6 +61,9 @@ namespace Synchro
 
     private:
         AbstractConnection * m_cx;
+
+        KProgressDialog * m_dialog;
+        KTextEdit m_log;
 
         QStringList m_ids;
 

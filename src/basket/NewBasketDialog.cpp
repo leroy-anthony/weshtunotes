@@ -32,6 +32,7 @@
 #include "settings.h"
 #include "../data/DataManager.h"
 #include "../basket/BasketFactory.h"
+#include "../synchro/ConnectionFactory.h"
 #include "../tag/TagFactory.h"
 
 namespace Basket
@@ -40,8 +41,7 @@ namespace Basket
     NewBasketDialog::NewBasketDialog( Explorer::AbstractExplorer * basketExplorer, Basket::ItemTreeBasket * parent ):
             KDialog(0),
             m_basketExplorer(basketExplorer),
-            m_parent(parent),
-            m_managerCx(new Synchro::GoogleDocsConnection())
+            m_parent(parent)
     {
 
         setCaption( i18n("Create Basket") );
@@ -58,16 +58,28 @@ namespace Basket
         m_iconButton->setFixedSize( 64, 64 );
         m_colorBackground->setColor(Settings::colorBasket());
 
-        m_typeAccountRemote->addItem( m_managerCx.connectionName() );
-
-        connect( m_basketTypeCombo,    SIGNAL(currentIndexChanged(int)),    this, SLOT(changeBasketType(int)) );
-        connect( m_getBasketsRemote,   SIGNAL(released()),                  this, SLOT(getBasketsRemote()) );
-        connect( m_basketsTab,         SIGNAL(currentChanged(int)),         this, SLOT(changeTab(int)) );
-        connect( m_basketName,         SIGNAL(textChanged(const QString&)), this, SLOT(valid(const QString&)) );
+        for (int i=0 ; i<Synchro::ConnectionFactory::MAX ; ++i)
+        {
+            Synchro::ConnectionFactory::Type type = Synchro::ConnectionFactory::Type(i);
+            Synchro::AbstractConnection * cx = Synchro::ConnectionFactory::newConnection(type);
+            m_managerConnections << new Synchro::SynchroManager(cx);
+            m_typeAccountRemote->addItem( cx->connectionName() );
+        }
 
         for ( int i=0 ; i<BasketFactory::MAX ; ++i )
         {
-            m_basketTypeCombo->addItem( BasketFactory::label(i), BasketFactory::type(i) );
+            QString type = BasketFactory::type(i);
+            if ( type == "tag_basket")
+            {
+                if ( Settings::useNepomuk() )
+                {
+                    m_basketTypeCombo->addItem( BasketFactory::label(i), type );
+                }
+            }
+            else
+            {
+                m_basketTypeCombo->addItem( BasketFactory::label(i), type );
+            }
         }
 
         QStringList tags = Tag::TagFactory::tagsNames();
@@ -76,6 +88,10 @@ namespace Basket
             m_basketTagCombo->addItem( tags[i] );
         }
 
+        connect( m_basketTypeCombo,    SIGNAL(currentIndexChanged(int)),    this, SLOT(changeBasketType(int)) );
+        connect( m_getBasketsRemote,   SIGNAL(released()),                  this, SLOT(getBasketsRemote()) );
+        connect( m_basketsTab,         SIGNAL(currentChanged(int)),         this, SLOT(changeTab(int)) );
+        connect( m_basketName,         SIGNAL(textChanged(const QString&)), this, SLOT(valid(const QString&)) );
     }
 
     void NewBasketDialog::changeTab( int index )
@@ -105,7 +121,8 @@ namespace Basket
 
     void NewBasketDialog::getBasketsRemote()
     {
-        QStringList ids = m_managerCx.baskets();
+        int index = m_typeAccountRemote->currentIndex();
+        QStringList ids = m_managerConnections[index]->baskets();
         m_basketsRemote->clear();
         for ( int i=0 ; i<ids.size() ; ++i )
         {
@@ -143,7 +160,8 @@ namespace Basket
     {
         QString id = m_basketsRemote->itemData(m_basketsRemote->currentIndex()).toString();
 
-        m_managerCx.update(id);
+        int index = m_typeAccountRemote->currentIndex();
+        m_managerConnections[index]->update(id);
 
         QMap<QString,QString> options;
 

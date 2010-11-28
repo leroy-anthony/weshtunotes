@@ -25,6 +25,7 @@
 #include <QTimer>
 
 #include <KIO/AccessManager>
+#include <QNetworkAccessManager>
 
 class QNetworkReply;
 
@@ -55,12 +56,15 @@ namespace Synchro
 
     signals:
         void error(const QString & errorString );
+        void info( const QString & infoString );
 
     private:
         void waitReponse( const QNetworkRequest & request );
         void buildDetailError( int codeError );
 
-        KIO::AccessManager m_networkManager;
+        QNetworkAccessManager m_networkManager;
+        //KIO::AccessManager m_networkManager: Update don't work, KDE bugs ?
+
         QEventLoop m_syncEvent;
         QTimer m_timer;
 

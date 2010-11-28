@@ -23,6 +23,7 @@
 #include <KLocalizedString>
 
 #include "MainWindow.h"
+#include "settings.h"
 #include "../config/Configuration.h"
 #include "../data/DataManager.h"
 
@@ -35,14 +36,18 @@ KWeshTuNotesApp::KWeshTuNotesApp():
 
     Data::DataManager::iniConfigration();
 
-    int nepomukActivate = Nepomuk::ResourceManager::instance()->init();
-    if ( nepomukActivate < 0 )
+    if ( Settings::useNepomuk() )
     {
-        KMessageBox::sorry(0, i18n("Nepomuk is not found. \"Tag basket\" cannot work correctly."), i18n("Alert"));
+        int nepomukActivate = Nepomuk::ResourceManager::instance()->init();
+        if ( nepomukActivate < 0 )
+        {
+            KMessageBox::information(0, i18n("Nepomuk is not found. \"Tag basket\" cannot work correctly."), i18n("Alert"), "nepomukdontwork");
+        }
     }
 
     m_mainWindow = new MainWindow();
     m_mainWindow->show();
+    m_mainWindow->loadData();
 }
 
 KWeshTuNotesApp::~KWeshTuNotesApp()

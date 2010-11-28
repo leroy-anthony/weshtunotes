@@ -16,29 +16,44 @@
 
 */
 
-#ifndef CONFIGDIALOG_H
-#define CONFIGDIALOG_H
+#ifndef SYNCHROPAGEDIALOG_H
+#define SYNCHROPAGEDIALOG_H
 
-#include <QObject>
+#include <QWidget>
+#include <QMap>
+#include <QCheckBox>
 
-class QWidget;
+#include <KEditListBox>
+
+#include <SynchroSettings.h>
 
 namespace Config
 {
 
-    class ConfigDialog : public QObject
+    class SynchroPageDialog : public QWidget, public Ui::SynchroSettings
     {
         Q_OBJECT
 
     public:
-        ConfigDialog( QWidget * parent );
+        SynchroPageDialog(QWidget *parent = 0);
+
+        void saveServices();
+
 
     public slots:
-        void updateConfiguration();
+        void connectionChanged();
+        void load();
 
+    signals:
+        void changed();
+
+    private:
+        void loadServices();
+
+        QMap<QString, QCheckBox*> m_servicesMap;
 
     };
 
 }
 
-#endif // CONFIGDIALOG_H
+#endif // SYNCHROPAGEDIALOG_H

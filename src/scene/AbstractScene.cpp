@@ -94,14 +94,12 @@ namespace Scene
         QList<Handle::HandleItem*> handles = m_handles.keys();
 
         // on récupère les notes présentes lors de la dernière sauvegarde
-        //FIXME:Config::Configuration delSettings( m_directoryScene );
 
         QStringList listLastFile = Data::AssociationManager::abstractNotes( GeneratorID::id() );
 
         //efface l'ancien configuration du panier
         Data::DataManager::clearBasketConfig( m_directoryScene );
 
-        //FIXME:Config::Configuration settings( m_directoryScene );
         Data::DataManager::setIdScene( m_directoryScene, GeneratorID::id() );
 
         for (int i=0 ; i<handles.size() ; ++i)

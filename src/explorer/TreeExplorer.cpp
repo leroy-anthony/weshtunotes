@@ -23,6 +23,7 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QMenu>
+#include <QPair>
 
 #include <KLineEdit>
 #include <KLocalizedString>
@@ -36,6 +37,7 @@
 #include "../config/Configuration.h"
 #include "../config/ImageFactory.h"
 #include "../basket/ItemTreeBasket.h"
+#include "../synchro/ConnectionFactory.h"
 
 namespace Explorer
 {
@@ -244,13 +246,19 @@ namespace Explorer
 
             menu.addSeparator();
 
-            QAction * newAct = new QAction(i18n("Commit to google"), this);
-            menu.addAction(newAct);
-            connect(newAct, SIGNAL(triggered()), basketItem->basket(), SLOT(commitGoogle()));
+            QList<QAction*> actions = Synchro::ConnectionFactory::menus();
+            for ( int i=0 ; i < actions.size() ; i+=2 )
+            {
+                if (  Synchro::ConnectionFactory::synchroServiceIsOn( (Synchro::ConnectionFactory::Type) actions[i]->data().toInt() ) )
+                {
+                    menu.addAction(actions[i]);
+                    connect(actions[i], SIGNAL(triggered()), basketItem->basket(), SLOT(update()));
 
-            QAction * newAct2 = new QAction(i18n("Update from google"), this);
-            menu.addAction(newAct2);
-            connect(newAct2, SIGNAL(triggered()), basketItem->basket(), SLOT(updateGoogle()));
+                    menu.addAction(actions[i+1]);
+                    connect(actions[i+1], SIGNAL(triggered()), basketItem->basket(), SLOT(commit()));
+                }
+            }
+
 
             menu.addSeparator();
 

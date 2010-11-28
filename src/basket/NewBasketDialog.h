@@ -65,7 +65,7 @@ namespace Basket
 
         KTabWidget * m_basketsTab;
 
-        Synchro::SynchroManager m_managerCx;
+        QList<Synchro::SynchroManager*> m_managerConnections;
     };
 
 }

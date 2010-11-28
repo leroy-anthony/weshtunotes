@@ -69,6 +69,7 @@ public:
     Scene::CustomGraphicsView * currentView();
 
     static void reloadView();
+    void loadData();
 
 public slots:
     void loadScene( QTreeWidgetItem * item , int column = 0 );
@@ -78,7 +79,6 @@ public slots:
     void addBasket( Basket::ItemTreeBasket * item );
 
     void showSettings();
-    void updateConfiguration();
 
     static void showMessage( const QString & message, int time );
     static KStatusBar * statusBar();
@@ -96,7 +96,7 @@ private:
     void initExplorer();
     void initSystemTray();
     void setupActions();
-    void loadData();
+
 
     Scene::AbstractScene * m_currentScene;
     Scene::ToolBarScene * m_controlerScene;
