@@ -4,6 +4,22 @@ cmake_minimum_required(VERSION 2.6)
 
 SET(CMAKE_VERBOSE_MAKEFILE ON)
 
+#### VERSION ####
+
+EXECUTE_PROCESS(
+        COMMAND cat version.txt
+        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+        OUTPUT_VARIABLE VERSION_INFO
+        ERROR_VARIABLE VERSION_INFO
+OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+CONFIGURE_FILE ( "${PROJECT_SOURCE_DIR}/src/main/version.h.in" "${PROJECT_BINARY_DIR}/version.h"  )
+
+INCLUDE_DIRECTORIES("${PROJECT_BINARY_DIR}")
+
+#### VERSION ####
+
 find_package(KDE4 REQUIRED)
 include_directories(${KDE4_INCLUDES})
 
@@ -30,6 +46,7 @@ set(weshnotes_UI
 ./src/config/GeneralSettings.ui
 ./src/config/AnimationSettings.ui
 ./src/config/AppareanceSettings.ui
+./src/config/SynchroSettings.ui
 ./src/basket/NewBasketForm.ui)
 
 QT_WRAP_UI(weshnotes weshnotes_UI_H weshnotes_UI_SRC ${weshnotes_UI})
@@ -84,9 +101,11 @@ set(weshnotes_SRC
 ./src/synchro/AbstractConnection.cpp
 ./src/synchro/SynchroManager.cpp
 ./src/synchro/NetworkAccessManagerProxy.cpp
+./src/synchro/ConnectionFactory.cpp
 ./src/config/GeneralPageDialog.cpp
 ./src/config/AppareancePageDialog.cpp
 ./src/config/AnimationPageDialog.cpp
+./src/config/SynchroPageDialog.cpp
 ./src/animation/AnimationManager.cpp
 ${weshnotes_UI_H})
 
