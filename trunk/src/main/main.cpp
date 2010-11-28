@@ -25,14 +25,15 @@
 #include <KMessageBox>
 
 #include "KWeshTuNotesApp.h"
-#include "../config/ImageFactory.h"
+
+#include "version.h" // CMake generated include
 
 int main(int argc, char *argv[])
 {
     KAboutData aboutData("kweshtunotes",
                          "kweshtunotes",
                          ki18n("(K) Wesh ! Tu Notes ?"),
-                         "0.2",
+                         VERSION_INFO,
                          ki18n("(K)WeshTuNotes is a note-taking application, just like BasKet Note Pads."),
                          KAboutData::License_GPL_V3,
                          ki18n("(c) 2009"),
@@ -48,7 +49,7 @@ int main(int argc, char *argv[])
     aboutData.setProgramIconName("basket");
 
     KCmdLineArgs::init( argc, argv, &aboutData );
-    
+
     KUniqueApplication::addCmdLineOptions();
 
     if (!KWeshTuNotesApp::start())
