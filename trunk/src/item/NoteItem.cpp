@@ -300,4 +300,11 @@ namespace Item
 	}
     }
 
+    void NoteItem::setPin( bool pin )
+    {
+        AbstractItem::setPin( pin );
+
+        m_plainTextEdit->setReadOnly( pin );
+    }
+
 }

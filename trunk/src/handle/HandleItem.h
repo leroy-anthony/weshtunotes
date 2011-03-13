@@ -19,14 +19,17 @@
 #ifndef HANDLEITEM_H_
 #define HANDLEITEM_H_
 
+#include <QSize>
+#include <QColor>
+#include <QWidget>
+
 #include "../technic/GeneratorID.h"
-#include "MoveHandle.h"
-#include "SizeHorHandle.h"
-#include "DeleteHandle.h"
 
 class QGridLayout;
 class QWidget;
 class QPoint;
+class QPaintEvent;
+class QLayout;
 
 namespace Scene
 {
@@ -40,6 +43,11 @@ namespace Item
 
 namespace Handle
 {
+    class PinHandle;
+    class SizeHorHandle;
+    class MoveHandle;
+    class DeleteHandle;
+
 
     class HandleItem : public QWidget, public Technic::GeneratorID
     {
@@ -78,6 +86,7 @@ namespace Handle
         void setModeDegroupement( bool m_mode );
 
         void setHoverMode( bool isHover );
+        bool isPin();
 
         void enterEvent( QEvent * event );
         void leaveEvent( QEvent * event );
@@ -103,6 +112,9 @@ namespace Handle
     public slots:
         void setDefaultColor();
         void questionDelItem();
+        void setPin( bool pin );
+        void setLock();
+        void contextMenuEvent( QContextMenuEvent * event );
 
     protected:
         void paintEvent( QPaintEvent * event );
@@ -126,12 +138,14 @@ namespace Handle
 
         Item::AbstractItem * m_item;
 
-        SizeHorHandle m_sizeHorHandle;
-        MoveHandle m_moveHandle;
-        DeleteHandle m_deleteHandle;
-        HandleItem * m_parentHandle;
+        SizeHorHandle * m_sizeHorHandle;
+        MoveHandle    * m_moveHandle;
+        DeleteHandle  * m_deleteHandle;
+        PinHandle     * m_pinHandle;
+        HandleItem    * m_parentHandle;
 
         bool m_isHover;
+        bool m_isPin;
 
         bool m_modeDegroupement;
 

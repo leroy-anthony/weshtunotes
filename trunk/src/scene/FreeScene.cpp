@@ -199,7 +199,10 @@ namespace Scene
                     if ( items[i]->isVisible() )
                     {
                         m_lastCibleHandle = m_items[static_cast<QGraphicsProxyWidget*>(items[i])];
-                        m_lastCibleHandle->insert( handleItem->geometry().topLeft(), handleItem->height() );
+                        if ( !m_lastCibleHandle->isPin() )
+                        {
+                            m_lastCibleHandle->insert( handleItem->geometry().topLeft(), handleItem->height() );
+                        }
                         break;
                     }
                 }
@@ -260,9 +263,9 @@ namespace Scene
             QList<QGraphicsItem *> items = collidingItems( m_handles[ m_currentHandle ] );
             if ( items.size() > 0 )
             {
-                if ( items[0]->isVisible() )
+                Handle::HandleItem * handleCible = m_items[static_cast<QGraphicsProxyWidget*>(items[0])];
+                if ( items[0]->isVisible() && !handleCible->isPin() )
                 {
-                    Handle::HandleItem * handleCible = m_items[static_cast<QGraphicsProxyWidget*>(items[0])];
                     if ( handleCible->size() == 0 )
                     {
                         QPointF pt = static_cast<QGraphicsProxyWidget*>(items[0])->pos();
