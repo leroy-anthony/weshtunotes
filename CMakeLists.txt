@@ -68,6 +68,7 @@ set(weshnotes_SRC
 ./src/handle/SizeHorHandle.cpp
 ./src/handle/MoveHandle.cpp
 ./src/handle/DeleteHandle.cpp
+./src/handle/PinHandle.cpp
 ./src/handle/GraphicHandleItem.cpp
 ./src/interface/IVisualItemEdition.cpp
 ./src/interface/ITextEdition.cpp

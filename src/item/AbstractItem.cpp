@@ -18,11 +18,16 @@
 
 #include "AbstractItem.h"
 
+#include <QContextMenuEvent>
+
 #include "settings.h"
 #include "../tag/NoteTag.h"
 #include "../tag/AddTag.h"
 #include "../tag/NextTag.h"
 #include "../config/VisualAspect.h"
+#include "../main/KWeshTuNotesApp.h"
+#include "../main/MainWindow.h"
+#include "../handle/HandleItem.h"
 
 namespace Item
 {
@@ -37,9 +42,13 @@ namespace Item
             m_addTag(0),
             m_nextTag(0),
             m_tag(0),
-            m_handle(0)
+            m_handle(0),
+            m_selected(false),
+            m_isPin(false)
     {
         m_color = Settings::colorItem();
+
+         setContextMenuPolicy( Qt::ActionsContextMenu );
     }
 
     const QColor & AbstractItem::color()
@@ -105,6 +114,16 @@ namespace Item
     void AbstractItem::setHandle( Handle::HandleItem * handle )
     {
 	m_handle = handle;
+    }
+
+    void AbstractItem::setPin( bool pin )
+    {
+        m_isPin = pin;
+    }
+
+    void AbstractItem::contextMenu( QContextMenuEvent * event )
+    {
+        m_handle->contextMenuEvent( event );
     }
     
 }

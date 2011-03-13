@@ -256,6 +256,8 @@ namespace Scene
 			    dynamic_cast<Item::NoteItem*>(item)->addTag(s[0],s[1]); //fixme: pourquoi pas abstractitem
 			}
 		    }
+
+                    handle->setPin( settingsHandle.valueGroup( itemId, "pin", false) != "false" );
 		}
             }
             

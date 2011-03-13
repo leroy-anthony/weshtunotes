@@ -69,6 +69,8 @@ namespace Item
         void setTextBackgroundColor ( const QColor & c );
         void setTextColor( const QColor & c );
 
+        void setPin( bool pin );
+
         void tagApply( QAction * action );
 
     protected:

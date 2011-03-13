@@ -71,6 +71,10 @@ namespace Item
 	
 	void setHandle( Handle::HandleItem * handle );
 
+        void contextMenu( QContextMenuEvent * event );
+
+        virtual void setPin( bool pin );
+
     signals:
         void editItem( Item::AbstractItem * item );
         void sizeChange();
@@ -94,6 +98,7 @@ namespace Item
 	Handle::HandleItem * m_handle;
 
         bool m_selected;
+        bool m_isPin;
 
     };
 

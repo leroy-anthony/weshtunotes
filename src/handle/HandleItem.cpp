@@ -21,7 +21,6 @@
 #include <QFrame>
 #include <QLabel>
 #include <QDebug>
-#include <QApplication>
 #include <QGraphicsSceneHoverEvent>
 #include <QPainter>
 #include <QFormLayout>
@@ -31,7 +30,8 @@
 #include <QGridLayout>
 #include <QSizePolicy>
 #include <QApplication>
-#include <QSvgRenderer>
+#include <QAction>
+#include <QMenu>
 
 #include <KDebug>
 #include <KLocalizedString>
@@ -42,6 +42,12 @@
 #include "../item/AbstractItem.h"
 #include "../scene/AbstractScene.h"
 #include "../data/DataManager.h"
+#include "../main/KWeshTuNotesApp.h"
+#include "../main/MainWindow.h"
+#include "MoveHandle.h"
+#include "SizeHorHandle.h"
+#include "DeleteHandle.h"
+#include "PinHandle.h"
 
 namespace Handle
 {
@@ -51,10 +57,9 @@ namespace Handle
             GeneratorID("handle"),
             m_scene(parent),
             m_item(0),
-            m_sizeHorHandle(this),
-            m_moveHandle(this),
-            m_deleteHandle(this),
             m_parentHandle(0),
+            m_isHover(false),
+            m_isPin(false),
             m_modeDegroupement(false),
             m_index(-1),
             m_insertIndicator(0),
@@ -66,12 +71,17 @@ namespace Handle
         QWidget::resize(width, width);
         setContentsMargins( m_contentMarginX, m_contentMarginY, m_contentMarginX, m_contentMarginY );
 
+        m_sizeHorHandle = new SizeHorHandle(this);
+        m_moveHandle = new MoveHandle(this);
+        m_deleteHandle = new DeleteHandle(this);
+        m_pinHandle = new PinHandle(this);
+
         m_handleLayout = new QGridLayout( this );
         m_handleLayout->setContentsMargins( 0, 0, 0, 0 );
         m_handleLayout->setSpacing( 0 );
         m_handleLayout->setSizeConstraint(QLayout::SetMaximumSize);
 
-        m_handleLayout->addWidget( &m_moveHandle, 0, 0 );
+        m_handleLayout->addWidget( m_moveHandle, 0, 0 );
 
         m_contentLayout = new QVBoxLayout();
         m_contentLayout->setContentsMargins( 0, 0, 0, 0 );
@@ -79,11 +89,12 @@ namespace Handle
         m_handleLayout->addLayout( m_contentLayout, 0, 1 );
 
         QVBoxLayout * h = new QVBoxLayout();
-        h->addWidget( &m_deleteHandle );
-        h->addWidget( &m_sizeHorHandle );
+        h->addWidget( m_deleteHandle );
+        h->addWidget( m_pinHandle );
+        h->addWidget( m_sizeHorHandle );
         m_handleLayout->addLayout( h, 0, 2 );
 
-        connect( &m_deleteHandle, SIGNAL(pressed()), this, SLOT(questionDelItem()) );
+        connect( m_deleteHandle, SIGNAL(pressed()), this, SLOT(questionDelItem()) );
 
         m_insertIndicator = new QFrame();
         m_insertIndicator->setMinimumHeight(24);
@@ -116,9 +127,10 @@ namespace Handle
     {
         m_defaultColor = QColor(color);
         setStyleSheet( Config::VisualAspect::gradiantBackground( m_defaultColor ) );
-        m_moveHandle.setDefaultColor(m_defaultColor);
-        m_sizeHorHandle.setDefaultColor(m_defaultColor);
-        m_deleteHandle.setDefaultColor(m_defaultColor);
+        m_moveHandle->setDefaultColor(m_defaultColor);
+        m_sizeHorHandle->setDefaultColor(m_defaultColor);
+        m_deleteHandle->setDefaultColor(m_defaultColor);
+        m_pinHandle->setDefaultColor(m_defaultColor);
     }
 
     void HandleItem::add( HandleItem * h )
@@ -271,12 +283,13 @@ namespace Handle
     void HandleItem::setHoverMode( bool isHover )
     {
         m_isHover = isHover;
-        m_moveHandle.setHoverMode( isHover );
-        m_sizeHorHandle.setHoverMode( isHover );
+        m_moveHandle->setHoverMode( isHover );
+        m_sizeHorHandle->setHoverMode( isHover );
 
-        if ( m_parentHandle == 0 ) // on ne peut pas effacer les handles qui dans dans des handles
+        if ( m_parentHandle == 0 ) // on ne peut pas effacer/punaiser les handles qui dans dans des handles
         {
-            m_deleteHandle.setHoverMode( isHover );
+            m_deleteHandle->setHoverMode( isHover );
+            m_pinHandle->setHoverMode( isHover );
         }
 
         if ( m_item != 0 )
@@ -289,7 +302,7 @@ namespace Handle
     {
         Q_UNUSED( event );
 
-        setHoverMode( true );
+        setHoverMode( true && !m_isPin );
         setContentsMargins( m_contentMarginX, m_contentMarginY, m_contentMarginX, m_contentMarginY );
     }
 
@@ -318,6 +331,7 @@ namespace Handle
 
         settings.setValue(GeneratorID::id(),"height",height());
         settings.setValue(GeneratorID::id(),"width",width());
+        settings.setValue(GeneratorID::id(),"pin",m_isPin);
 
         if ( children.size() > 0 )
         {
@@ -442,6 +456,62 @@ namespace Handle
     void HandleItem::setIndexInsert( int i )
     {
         m_index = i;
+    }
+
+    void HandleItem::setPin( bool pin )
+    {
+        m_isPin = pin;
+        m_moveHandle->setDisabled(pin);
+        m_sizeHorHandle->setDisabled(pin);
+
+        if ( m_item != 0 )
+        {
+            m_item->setPin(pin);
+        }
+        else
+        {
+            for ( int i=0 ; i<m_handles.size() ; ++i )
+            {
+                m_handles[i]->setPin(pin);
+            }
+        }
+    }
+
+    bool HandleItem::isPin()
+    {
+        return m_isPin;
+    }
+
+    void HandleItem::setLock()
+    {
+        if ( m_parentHandle != 0 )
+        {
+            m_parentHandle->setPin(!m_isPin);
+        }
+        else
+        {
+            setPin(!m_isPin);
+        }
+    }
+
+    void HandleItem::contextMenuEvent ( QContextMenuEvent * event )
+    {
+        QMenu * menu = new QMenu(KWeshTuNotesApp::mainWindow());
+
+        if ( m_isPin )
+        {
+            QAction * a = new QAction("Unlock",this);
+            menu->addAction(a);
+            connect(a, SIGNAL(triggered(bool)), this, SLOT(setLock()));
+        }
+        else
+        {
+            QAction * a = new QAction("Lock",this);
+            menu->addAction(a);
+            connect(a, SIGNAL(triggered(bool)), this, SLOT(setLock()));
+        }
+
+        menu->exec(QCursor::pos());
     }
 
 }
