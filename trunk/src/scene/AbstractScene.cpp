@@ -60,11 +60,11 @@ namespace Scene
         int size = selectedItems().size();
         if ( size > 0 )
         {
-            MainWindow::showMessage( i18n("1 selected item", "%1 selected items", size), 0 );
+            MainWindow::showMessage( i18np("1 selected item", "%1 selected items", size), 0 );
         }
         else
         {
-            MainWindow::showMessage( "", 0 );
+            MainWindow::showMessage( i18np("1 item","%1 items", this->handles().size()), 0 );
         }
     }
 
