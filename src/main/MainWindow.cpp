@@ -288,7 +288,7 @@ void MainWindow::reloadView()
         m_view->setScene( scene );
         scene->restoreView( m_view );
 
-        showMessage( i18np("1 item loaded","%1 items loaded",scene->handles().size()), 1000 );
+        showMessage( i18np("1 item","%1 items",scene->handles().size()), 0 );
     }
 }
 
