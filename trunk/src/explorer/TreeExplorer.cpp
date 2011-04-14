@@ -27,6 +27,7 @@
 
 #include <KLineEdit>
 #include <KLocalizedString>
+#include <KMessageBox>
 
 #include "../basket/NewBasketDialog.h"
 #include "../basket/PropertiesBasketDialog.h"
@@ -63,16 +64,24 @@ namespace Explorer
 
     void TreeExplorer::delCurrentBasket()
     {
-        Basket::ItemTreeBasket * b = dynamic_cast<Basket::ItemTreeBasket*>(currentItem());
-        if ( b != 0 )
+        int reply = KMessageBox::questionYesNo(0, i18n("Do you really want to delete this basket ?"),
+                                               i18n("Delete basket"),
+                                               KStandardGuiItem::yes(),
+                                               KStandardGuiItem::no(),
+                                               i18n("delete basket"));
+        if (reply == KMessageBox::Yes)
         {
-            b->basket()->del();
-            delete b;
+            Basket::ItemTreeBasket * b = dynamic_cast<Basket::ItemTreeBasket*>(currentItem());
+            if ( b != 0 )
+            {
+                b->basket()->del();
+                delete b;
 
-            saveBaskets();
+                saveBaskets();
+            }
+
+            emit delCurrentBasketRequest();
         }
-
-        emit delCurrentBasketRequest();
     }
 
     Basket::ItemTreeBasket * TreeExplorer::addToCurrentBasket()
