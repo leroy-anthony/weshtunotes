@@ -284,6 +284,8 @@ namespace Data
             {
                 QFile::remove(file.absoluteDir().path()+QDir::separator()+dataFileName+".html");
             }
+
+            QFile::remove(file.absoluteDir().path()+QDir::separator()+dataFileName);
         }
 
         QFile::remove(settings.fileName());
@@ -291,7 +293,7 @@ namespace Data
     
     void DataManager::removeNotes( const QString & idScene )
     {
-	Data::DataManager settings( QString("../association") + QDir::separator() + idScene );
+        Data::DataManager settings( configFileAssoc(idScene) );
 	QFile::remove(settings.fileName());
     }
 
