@@ -41,6 +41,8 @@ set(QT_QTCORE_INCLUDE_DIR ${KDE_PREFIX}/include/QtCore)
 set(QT_MKSPECS_DIR  ${KDE_PREFIX}/mkspecs)
 set(PHONON_INCLUDE_DIR ${KDE_PREFIX}/include/)
 set(PHONON_LIBRARY   ${KDE_PREFIX}/lib/phonon.a)
+set(SOPRANO_LIBRARIES   ${KDE_PREFIX}/lib/libsoprano.dll.a)
+set(SOPRANO_INCLUDE_DIR   ${KDE_PREFIX}/include/)
 
 set(QT_QTSVG_LIBRARY   ${KDE_PREFIX}/lib/libQtSvg4.a)
 
