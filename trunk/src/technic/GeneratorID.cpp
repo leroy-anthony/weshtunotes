@@ -27,10 +27,17 @@ namespace Technic
     QMap< QString, QSet<QString> > GeneratorID::m_cacheId;
     int GeneratorID::m_sizeKey = 32;
 
-    GeneratorID::GeneratorID( const QString & name ):
+    GeneratorID::GeneratorID( const QString & name, bool withGeneratedId ):
             m_name(name)
     {
-        m_nameId = QString(m_name+"%1").arg( newId() );
+        if ( withGeneratedId )
+        {
+            m_nameId = QString(m_name+"%1").arg( newId() );
+        }
+        else
+        {
+            m_nameId = m_name;
+        }
     }
 
     QString GeneratorID::newId()

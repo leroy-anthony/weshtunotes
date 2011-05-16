@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009 LEROY Anthony <leroy.anthony@gmail.com>
+    Copyright (c) 2011 LEROY Anthony <leroy.anthony@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,35 +16,23 @@
 
 */
 
-#ifndef GENERATORID_H
-#define GENERATORID_H
+#ifndef CLIPPERPAGEDIALOG_H
+#define CLIPPERPAGEDIALOG_H
 
-#include <QString>
-#include <QMap>
-#include <QSet>
+#include <ClipperSettings.h>
 
-namespace Technic
+namespace Config
 {
-    class GeneratorID
+
+    class ClipperPageDialog : public QWidget, public Ui::ClipperSettings
     {
+        Q_OBJECT
+
     public:
-        GeneratorID( const QString & name, bool withGeneratedId = true );
-
-        const QString & id() const;
-        void setId( const QString & id );
-        void regenerateId();
-
-    private:
-        QString newId();
-
-        QString m_name;
-        QString m_nameId;
-
-    private:
-        static QMap< QString, QSet<QString> > m_cacheId;
-        static int m_sizeKey;
+        ClipperPageDialog( QWidget * parent );
 
     };
+
 }
 
-#endif // GENERATORID_H
+#endif // CLIPPERPAGEDIALOG_H

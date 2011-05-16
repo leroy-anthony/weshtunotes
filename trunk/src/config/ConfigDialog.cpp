@@ -29,6 +29,7 @@
 #include "../config/AppareancePageDialog.h"
 #include "../config/AnimationPageDialog.h"
 #include "../config/SynchroPageDialog.h"
+#include "../config/ClipperPageDialog.h"
 
 namespace Config
 {
@@ -46,6 +47,7 @@ namespace Config
         dialog->addPage(new Config::GeneralPageDialog(dialog), i18n("General"), "system-run" );
         dialog->addPage(new Config::AppareancePageDialog(dialog), i18n("Appareance note"), "preferences-desktop-color" );
         dialog->addPage(new Config::AnimationPageDialog(dialog), i18n("Animation"), "preferences-desktop-launch-feedback" );
+        dialog->addPage(new Config::ClipperPageDialog(dialog), i18n("Clipper"), "klipper" );
 
         Config::SynchroPageDialog * p = new Config::SynchroPageDialog(dialog);
         connect( p, SIGNAL(changed()), dialog, SLOT(settingsChangedSlot()) );

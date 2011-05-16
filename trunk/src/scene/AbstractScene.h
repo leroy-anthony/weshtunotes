@@ -26,6 +26,8 @@
 
 template <typename T> class QList;
 class QMimeData;
+class QGraphicsWidget;
+class QGraphicsLinearLayout;
 
 namespace Handle
 {
@@ -41,7 +43,8 @@ namespace Scene
         Q_OBJECT
 
     public:
-        AbstractScene(QWidget * parent, const QString & type);
+        AbstractScene( const QString & id );
+        AbstractScene();
         virtual ~AbstractScene();
 
         virtual Item::AbstractItem * currentAbstractItem() = 0;
@@ -61,7 +64,7 @@ namespace Scene
         void storeView( CustomGraphicsView * view );
         void restoreView( CustomGraphicsView * view );
 
-        virtual void addData( const QMimeData * data ) = 0;
+        virtual Handle::HandleItem * addData( const QMimeData * data ) = 0;
 
         const QString & type();
         void setType( const QString & type );
@@ -69,13 +72,18 @@ namespace Scene
         bool readOnly();
         void setReadOnly( bool readOnly );
 
+        virtual bool hasZoomAbilities();
+
         void setDirectoryScene( const QString & directory );
         const QString & directoryScene();
+
+        QGraphicsWidget * form();
 
         QList<Handle::HandleItem*> handles();
 
     public slots:
         virtual void delItem( Handle::HandleItem * h ) = 0;
+        virtual void delItem( QGraphicsProxyWidget * item );
         virtual void moveItem( Handle::HandleItem * handleItem, int x, int y ) = 0;
 
         void showMessageStatus();
@@ -89,7 +97,12 @@ namespace Scene
         int m_horizontalScrollBarValueView;
         int m_verticalScrollBarValueView;
 
-        QHash<Handle::HandleItem * ,QGraphicsProxyWidget*> m_handles;
+        QGraphicsWidget * m_form;
+        QGraphicsLinearLayout * m_layout;
+
+        QHash<Handle::HandleItem*, QGraphicsProxyWidget*> m_handles;
+        QHash<QGraphicsProxyWidget*, Handle::HandleItem*> m_items;
+
         Handle::HandleItem * m_lastCibleHandle;
 
         QString m_directoryScene;

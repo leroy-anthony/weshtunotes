@@ -39,12 +39,14 @@
 #include "../config/ImageFactory.h"
 #include "../basket/ItemTreeBasket.h"
 #include "../synchro/ConnectionFactory.h"
+#include "../basket/ClipperBasket.h"
 
 namespace Explorer
 {
 
     TreeExplorer::TreeExplorer( QWidget * parent ):
-            QTreeWidget(parent)
+            QTreeWidget(parent),
+            m_clipperBasket(0)
     {
         setHeaderLabel( i18n("My baskets") );
         setHeaderHidden( false );
@@ -56,31 +58,52 @@ namespace Explorer
         setContextMenuPolicy(Qt::CustomContextMenu);
 
         connect( this, SIGNAL(customContextMenuRequested( const QPoint & )), this, SLOT(showMenuContext( const QPoint & )) );
+
+
+        if ( Settings::useClipper() )
+        {
+            Basket::ItemTreeBasket * item = new Basket::ItemTreeBasket( 0, "Clipper", 0 );
+            m_clipperBasket = new Basket::ClipperBasket(item,"clipper");
+            item->setBasket(m_clipperBasket);
+            insertTopLevelItem(  topLevelItemCount(), item );
+        }
     }
 
     TreeExplorer::~TreeExplorer()
     {
+        if ( m_clipperBasket != 0 )
+        {
+            m_clipperBasket->del();
+        }
     }
 
     void TreeExplorer::delCurrentBasket()
     {
-        int reply = KMessageBox::questionYesNo(0, i18n("Do you really want to delete this basket ?"),
-                                               i18n("Delete basket"),
-                                               KStandardGuiItem::yes(),
-                                               KStandardGuiItem::no(),
-                                               i18n("delete basket"));
-        if (reply == KMessageBox::Yes)
+        Basket::ItemTreeBasket * b = dynamic_cast<Basket::ItemTreeBasket*>(currentItem());
+        if ( b->basket()->isImmuable() )
         {
-            Basket::ItemTreeBasket * b = dynamic_cast<Basket::ItemTreeBasket*>(currentItem());
-            if ( b != 0 )
+            KMessageBox::information( 0, i18n("This basket cannot be delete."),
+                                     i18n("Delete basket"));
+        }
+        else
+        {
+            int reply = KMessageBox::questionYesNo(0, i18n("Do you really want to delete this basket ?"),
+                                                   i18n("Delete basket"),
+                                                   KStandardGuiItem::yes(),
+                                                   KStandardGuiItem::no(),
+                                                   i18n("delete basket"));
+            if (reply == KMessageBox::Yes)
             {
-                b->basket()->del();
-                delete b;
+                if ( b != 0 )
+                {
+                    b->basket()->del();
+                    delete b;
 
-                saveBaskets();
+                    saveBaskets();
+                }
+
+                emit delCurrentBasketRequest();
             }
-
-            emit delCurrentBasketRequest();
         }
     }
 
@@ -279,4 +302,10 @@ namespace Explorer
 
         }
     }
+
+    Basket::ClipperBasket * TreeExplorer::clipperBasket()
+    {
+        return m_clipperBasket;
+    }
+
 }

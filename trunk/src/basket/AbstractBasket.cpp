@@ -64,6 +64,7 @@ namespace Basket
         if ( id != "" )
         {
             m_configFile = Data::DataManager::configFileBasket( id );
+            setId(id);
         }
         else
         {
@@ -202,6 +203,11 @@ namespace Basket
     void AbstractBasket::setBackgroundColor( const QString & color )
     {
         m_backgroundColor = color;
+    }
+
+    bool AbstractBasket::isImmuable()
+    {
+        return m_immuable;
     }
 
 }

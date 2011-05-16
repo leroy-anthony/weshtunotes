@@ -372,7 +372,7 @@ namespace Handle
 
     void HandleItem::questionDelItem()
     {
-        int reply = KMessageBox::questionYesNo(0, i18n("Do you want really delete this note ?"),
+        int reply = KMessageBox::questionYesNo(0, i18n("Do you really want to delete this note ?"),
                                                i18n("Delete note"),
                                                KStandardGuiItem::yes(),
                                                KStandardGuiItem::no(),
@@ -428,7 +428,7 @@ namespace Handle
         return m_modeDegroupement;
     }
 
-    int HandleItem::size()
+    int HandleItem::nbItems()
     {
         return m_handles.size();
     }

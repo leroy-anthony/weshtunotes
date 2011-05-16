@@ -53,6 +53,8 @@ namespace Scene
 
         static ToolBarScene * toolBarScene();
 
+        void setEnableZoom( bool enabled );
+
     public slots:
         void setBold( bool checked );
         void setItalic( bool checked );

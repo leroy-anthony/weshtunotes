@@ -111,7 +111,8 @@ namespace Scene
 
         KStandardAction::actualSize(mainWindow->currentView(),SLOT(resetZoom()),m_mainWindow->actionCollection());
 
-        KStandardAction::zoomIn(mainWindow->currentView(),SLOT(doubleZoom()),m_mainWindow->actionCollection());
+        a = KStandardAction::zoomIn(mainWindow->currentView(),SLOT(doubleZoom()),m_mainWindow->actionCollection());
+        a->setEnabled(false);
 
         KStandardAction::zoomOut(mainWindow->currentView(),SLOT(halfZoom()),m_mainWindow->actionCollection());
 
@@ -304,6 +305,14 @@ namespace Scene
         {
             m_actionFontSize->setFontSize( f.fontPointSize() );
         }
+    }
+
+    void ToolBarScene::setEnableZoom( bool enabled )
+    {
+        m_mainWindow->actionCollection()->action( KStandardAction::ZoomIn )->setEnabled(enabled);
+        m_mainWindow->actionCollection()->action( KStandardAction::ZoomOut )->setEnabled(enabled);
+        m_mainWindow->actionCollection()->action( KStandardAction::ActualSize )->setEnabled(enabled);
+        m_mainWindow->actionCollection()->action( KStandardAction::FitToPage )->setEnabled(enabled);
     }
 
     ToolBarScene * ToolBarScene::m_toolBar = 0;

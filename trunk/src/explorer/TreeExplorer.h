@@ -26,6 +26,7 @@
 namespace Basket
 {
     class ItemTreeBasket;
+    class ClipperBasket;
 }
 
 namespace Explorer
@@ -42,6 +43,7 @@ namespace Explorer
         QTreeWidgetItem * loadFromConfigCurrentBasket();
 
         Basket::ItemTreeBasket * rootItem();
+        Basket::ClipperBasket * clipperBasket();
 
         void saveBaskets( QTreeWidgetItem * b );
 
@@ -68,6 +70,7 @@ namespace Explorer
     private:
         Basket::ItemTreeBasket * addBasket( Basket::ItemTreeBasket * parent, const QString & name );
         void loadBasket( Basket::ItemTreeBasket * parent, const QString & name );
+        Basket::ClipperBasket * m_clipperBasket;
 
     };
 

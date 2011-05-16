@@ -42,7 +42,8 @@ namespace Scene
         Q_OBJECT
 
     public:
-        FreeScene( QWidget * parent  = 0 );
+        FreeScene();
+        FreeScene( const QString & id );
         ~FreeScene();
 
         enum Mode { Nothing, MoveItem, ScaleXItem, ScaleYItem, ScaleXYItem };
@@ -51,32 +52,31 @@ namespace Scene
         Handle::HandleItem * currentHandle();
 
         void addItemToScene( Handle::GraphicHandleItem * item );
-        void addData( const QMimeData * data );
+        Handle::HandleItem * addData( const QMimeData * data );
         Handle::HandleItem * addItems( int x, int y );
         void delItem( Handle::HandleItem * h );
 
         void save( const QString & id, const QString & fileName );
 
-        static QString type;
 
     protected:
         void mousePressEvent( QGraphicsSceneMouseEvent * mouseEvent );
         void mouseReleaseEvent( QGraphicsSceneMouseEvent * mouseEvent);
-        void removeGraphicsItemFromScene( Handle::HandleItem * handle, bool animated );
+        virtual void removeGraphicsItemFromScene( Handle::HandleItem * handle, bool animated );
         Handle::GraphicHandleItem * addHandleToScene( Handle::HandleItem * handle );
         Handle::HandleItem * newHandle( int x, int y, int w  );
         Item::AbstractItem * newItem( int x, int y );
         void delUselessHandleGroup( Handle::HandleItem * currentHandle  );
         void deleteGraphicsItemFromScene( QGraphicsProxyWidget * g );
 
-    private:
-        Item::AbstractItem * m_currentAbstractItem;
+        Mode m_modeItem;
         Handle::HandleItem * m_currentHandle;
+        Item::AbstractItem * m_currentAbstractItem;
+
+    private:
         QPointF m_mouseLocalPositionItem;
 
-        QHash<QGraphicsProxyWidget * ,Handle::HandleItem*> m_items;
         QToolBar * m_textToolBar;
-        Mode m_modeItem;
 
     public slots:
         void moveItem( Handle::HandleItem * handleItem, int x, int y );

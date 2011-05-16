@@ -44,6 +44,7 @@ namespace Basket
         ~ItemTreeBasket();
 
         AbstractBasket * basket();
+        void setBasket( AbstractBasket * basket );
 
         void setIcon( const QString & icon );
 

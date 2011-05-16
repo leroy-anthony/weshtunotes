@@ -40,6 +40,7 @@
 #include "../tag/TagFactory.h"
 #include "../explorer/TreeExplorer.h"
 #include "../basket/ItemTreeBasket.h"
+#include "../basket/ClipperBasket.h"
 #include "../config/Configuration.h"
 #include "../config/ImageFactory.h"
 #include "../config/ConfigDialog.h"
@@ -63,6 +64,7 @@ MainWindow::MainWindow( QWidget * parent ) :
 {
     setupUi(this);
 
+    initToolBar();
     initView();
     initExplorer();
 
@@ -73,7 +75,7 @@ MainWindow::MainWindow( QWidget * parent ) :
     setupActions();
 
     initStatusBar();
-    initToolBar();
+
     initSystemTray();
 
     setupGUI( Default, "kweshtunotesui.rc" );
@@ -148,7 +150,7 @@ KStatusBar * MainWindow::statusBar()
 
 void MainWindow::initToolBar()
 {
-    m_controlerScene = new Scene::ToolBarScene( this );
+    m_controllerScene = new Scene::ToolBarScene( this );
 }
 
 void MainWindow::initView()
@@ -287,6 +289,7 @@ void MainWindow::reloadView()
         Scene::AbstractScene * scene = m_lastBasketLoad->basket()->scene();
         m_view->setScene( scene );
         scene->restoreView( m_view );
+        m_view->adjustLayoutSize();
 
         showMessage( i18np("1 item","%1 items",scene->handles().size()), 0 );
     }

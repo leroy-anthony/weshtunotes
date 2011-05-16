@@ -99,7 +99,7 @@ private:
 
 
     Scene::AbstractScene * m_currentScene;
-    Scene::ToolBarScene * m_controlerScene;
+    Scene::ToolBarScene * m_controllerScene;
     static KStatusBar * m_statusBar;
 
     static Scene::CustomGraphicsView * m_view;
