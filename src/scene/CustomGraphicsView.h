@@ -21,6 +21,7 @@
 
 #include <QGraphicsView>
 #include <QTimer>
+#include <QGraphicsScene>
 
 #include "../handle/GraphicHandleItem.h"
 
@@ -33,6 +34,13 @@ namespace Scene
 
     public:
         CustomGraphicsView();
+
+        void setScene( QGraphicsScene * scene );
+
+        bool hasZoomAbilities();
+
+        void adjustLayoutSize();
+        void adjustLayoutSize( int width, int height );
 
     public slots:
         void paste();
@@ -56,6 +64,8 @@ namespace Scene
         void mouseMoveEvent( QMouseEvent * event );
 
         void timerEvent( QTimerEvent * ev );
+
+        void resizeEvent( QResizeEvent * event );
 
     private:
         void prevOrNextItem( bool next );

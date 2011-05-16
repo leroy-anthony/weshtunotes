@@ -91,7 +91,7 @@ namespace Handle
         void enterEvent( QEvent * event );
         void leaveEvent( QEvent * event );
 
-        int size();
+        int nbItems();
 
         const QColor & defaultColor();
         void setDefaultColor( const QColor & color );

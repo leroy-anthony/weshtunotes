@@ -29,13 +29,19 @@ namespace Scene
     class SceneFactory
     {
     public:
+        enum Type { FREESCENE, LAYOUTSCENE, MAX };
+
         SceneFactory();
 
         static AbstractScene * newScene( const QString & fileName );
-        static AbstractScene * newScene( const QString & fileName, const QString & type );
+        static AbstractScene * newScene( const QString & fileName, SceneFactory::Type type );
+        static AbstractScene * newScene( const QString & fileName, SceneFactory::Type type, const QString & id );
+
+        static QString typeName( SceneFactory::Type type );
+        static SceneFactory::Type type( const QString & typeName );
 
     private:
-        static AbstractScene * newSceneInterne( const QString & type );
+        static AbstractScene * newSceneInterne( SceneFactory::Type type, const QString & id );
 
     };
 

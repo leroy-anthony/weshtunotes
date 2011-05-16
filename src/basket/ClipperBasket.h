@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009 LEROY Anthony <leroy.anthony@gmail.com>
+    Copyright (c) 2011 LEROY Anthony <leroy.anthony@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,35 +16,39 @@
 
 */
 
-#ifndef GENERATORID_H
-#define GENERATORID_H
 
-#include <QString>
-#include <QMap>
-#include <QSet>
 
-namespace Technic
+#ifndef CLIPPERBASKET_H
+#define CLIPPERBASKET_H
+
+#include "../basket/AbstractBasket.h"
+
+class QClipboard;
+
+namespace Basket
 {
-    class GeneratorID
+
+    class ClipperBasket : public Basket::AbstractBasket
     {
+        Q_OBJECT
+
     public:
-        GeneratorID( const QString & name, bool withGeneratedId = true );
+        ClipperBasket( ItemTreeBasket * itemTreeBasket, const QString & id );
 
-        const QString & id() const;
-        void setId( const QString & id );
-        void regenerateId();
+        void save();
+        void load();
+        void del();
 
-    private:
-        QString newId();
-
-        QString m_name;
-        QString m_nameId;
+    public slots:
+        void clipboardDataChanged();
 
     private:
-        static QMap< QString, QSet<QString> > m_cacheId;
-        static int m_sizeKey;
+        QClipboard * m_clipboard;
+
+        int m_maxItem;
 
     };
+
 }
 
-#endif // GENERATORID_H
+#endif // CLIPPERBASKET_H

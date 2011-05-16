@@ -73,6 +73,7 @@ namespace Basket
         const QString & backgroundColor();
         void setBackgroundColor( const QString & color );
 
+        bool isImmuable();
 
     public slots:
         void commit();
@@ -93,6 +94,8 @@ namespace Basket
         QString m_backgroundColor;
 
         QString m_configFile;
+
+        bool m_immuable;
 
     };
 

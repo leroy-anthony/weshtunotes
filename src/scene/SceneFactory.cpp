@@ -35,28 +35,79 @@ namespace Scene
     {
         Data::DataManager settings( fileName );
 
-        return newSceneInterne( settings.valueGroup("scene","type",FreeScene::type) );
+        return newSceneInterne( type(settings.valueGroup("scene", "type", typeName(FREESCENE))), "" );
     }
 
-    AbstractScene * SceneFactory::newScene( const QString & fileName, const QString & type )
+    AbstractScene * SceneFactory::newScene( const QString & fileName, SceneFactory::Type type )
     {
         Data::DataManager settings( fileName );
 
-        return newSceneInterne( type );
+        return newSceneInterne( type, "" );
     }
 
-    AbstractScene * SceneFactory::newSceneInterne( const QString & type )
+    AbstractScene * SceneFactory::newScene( const QString & fileName, SceneFactory::Type type, const QString & id )
+    {
+        Data::DataManager settings( fileName );
+
+        return newSceneInterne( type, id );
+    }
+
+    SceneFactory::Type SceneFactory::type( const QString & typeName )
+    {
+        if ( typeName == "freescene" )
+        {
+            return FREESCENE;
+        }
+
+        if ( typeName == "layoutscene" )
+        {
+            return LAYOUTSCENE;
+        }
+
+        return FREESCENE;
+    }
+
+    QString SceneFactory::typeName( SceneFactory::Type type )
+    {
+        if ( type == FREESCENE )
+        {
+            return "freescene";
+        }
+
+        if ( type == LAYOUTSCENE )
+        {
+            return "layoutscene";
+        }
+
+        return "freescene";
+    }
+
+    AbstractScene * SceneFactory::newSceneInterne( SceneFactory::Type type, const QString & id )
     {
         AbstractScene * scene = 0;
 
-        if ( type == FreeScene::type )
+        if ( type == FREESCENE )
         {
-            scene = new FreeScene();
+            if ( id != "" )
+            {
+                scene = new FreeScene(id);
+            }
+            else
+            {
+                scene = new FreeScene();
+            }
         }
 
-        if ( type == LayoutScene::type )
+        if ( type == LAYOUTSCENE )
         {
-            scene = new LayoutScene();
+            if ( id != "" )
+            {
+                scene = new LayoutScene(id);
+            }
+            else
+            {
+                scene = new LayoutScene();
+            }
         }
 
         return scene;

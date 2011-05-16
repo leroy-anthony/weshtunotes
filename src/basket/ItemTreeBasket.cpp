@@ -72,6 +72,11 @@ namespace Basket
     {
     }
 
+    void ItemTreeBasket::setBasket( AbstractBasket * basket )
+    {
+        m_basket = basket;
+    }
+
     AbstractBasket * ItemTreeBasket::basket()
     {
         return m_basket;

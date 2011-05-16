@@ -16,35 +16,15 @@
 
 */
 
-#ifndef GENERATORID_H
-#define GENERATORID_H
+#include "ClipperPageDialog.h"
 
-#include <QString>
-#include <QMap>
-#include <QSet>
-
-namespace Technic
+namespace Config
 {
-    class GeneratorID
+
+    ClipperPageDialog::ClipperPageDialog( QWidget * parent ):
+        QWidget( parent )
     {
-    public:
-        GeneratorID( const QString & name, bool withGeneratedId = true );
+        setupUi( this );
+    }
 
-        const QString & id() const;
-        void setId( const QString & id );
-        void regenerateId();
-
-    private:
-        QString newId();
-
-        QString m_name;
-        QString m_nameId;
-
-    private:
-        static QMap< QString, QSet<QString> > m_cacheId;
-        static int m_sizeKey;
-
-    };
 }
-
-#endif // GENERATORID_H

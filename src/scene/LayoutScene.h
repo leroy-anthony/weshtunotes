@@ -19,7 +19,7 @@
 #ifndef LAYOUTSCENE_H_
 #define LAYOUTSCENE_H_
 
-#include "AbstractScene.h"
+#include "FreeScene.h"
 
 #include <QGraphicsProxyWidget>
 #include <QHash>
@@ -29,58 +29,26 @@
 namespace Scene
 {
 
-    class LayoutScene : public Scene::AbstractScene
+    class LayoutScene : public FreeScene
     {
         Q_OBJECT
 
     public:
-        LayoutScene( QWidget * parent  = 0 );
+        LayoutScene();
+        LayoutScene( const QString & id );
+
         ~LayoutScene();
 
-        enum Mode { Nothing, MoveItem, ScaleXItem, ScaleYItem, ScaleXYItem };
-
-        QGraphicsItem * currentGraphicsItem();
-        Item::AbstractItem * currentAbstractItem();
-        Handle::HandleItem * currentHandle();
-
-        void addItemToScene( Handle::GraphicHandleItem * g );
-        void addData( const QMimeData * data );
-        Handle::HandleItem * addItems( int x, int y, const QString & dataFile  );
+        Handle::GraphicHandleItem * addHandleToScene( Handle::HandleItem * handle );
         void delItem( Handle::HandleItem * h );
 
-        void save( const QString & id, const QString & fileName );
-
-        static QString type;
-
-    protected:
-        void mousePressEvent( QGraphicsSceneMouseEvent * mouseEvent );
-        void mouseReleaseEvent( QGraphicsSceneMouseEvent * mouseEvent);
-        void removeGraphicsItemFromScene( Handle::HandleItem * handle );
-        QGraphicsProxyWidget * addHandleToScene( Handle::HandleItem * handle );
-        Handle::HandleItem * newHandle( int x, int y, int w );
-        Item::AbstractItem * newItem( int x, int y );
-
-
-
-    private:
-        QGraphicsItem * m_currentGraphicsItem;
-        Item::AbstractItem * m_currentAbstractItem;
-        Handle::HandleItem * m_currentHandle;
-        QPointF m_mouseLocalPositionItem;
-
-        QHash<QGraphicsProxyWidget * ,Handle::HandleItem*> m_items;
-        QToolBar * m_textToolBar;
-        Mode m_modeItem;
-
-        QGraphicsWidget * m_form;
-        QGraphicsLinearLayout * m_layout;
-
-    private slots:
-        void editItem( Item::AbstractItem * item );
+        virtual bool hasZoomAbilities();
 
     public slots:
         void moveItem( Handle::HandleItem * handleItem, int x, int y );
-        void resize( QResizeEvent * event );
+
+    protected:
+        void mouseReleaseEvent( QGraphicsSceneMouseEvent * mouseEvent);
 
     };
 

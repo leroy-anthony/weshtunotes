@@ -15,6 +15,16 @@
       <default>true</default>
     </entry>
   </group>
+  <group name="clipperBasket">
+    <entry name="maxItem" type="Int">
+      <label>Max item</label>
+      <default>10</default>
+    </entry>
+    <entry name="useClipper" type="Bool">
+      <label>Use clipper</label>
+      <default>true</default>
+    </entry>
+  </group>
   <group name="visual">
     <entry name="colorItem" type="Color">
       <label>Color note.</label>

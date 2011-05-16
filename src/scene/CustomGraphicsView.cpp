@@ -15,6 +15,8 @@
 #include <QGLWidget>
 #include <QGraphicsItem>
 #include <limits>
+#include <QGraphicsRectItem>
+#include <QScrollBar>
 
 #include "AbstractScene.h"
 #include "settings.h"
@@ -55,7 +57,7 @@ namespace Scene
       QGraphicsView::DontSavePainterState
       QGraphicsView::DontClipPainter
       */
-        //setOptimizationFlags( QGraphicsView::DontClipPainter );
+        setOptimizationFlags(QGraphicsView::DontSavePainterState);
 
         setRenderHint(QPainter::SmoothPixmapTransform, true);
         setRenderHint(QPainter::Antialiasing, true);
@@ -69,7 +71,56 @@ namespace Scene
 
         setViewportMargins(5,5,5,5);
 
+        setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+
         setAcceptDrops(true);
+
+        viewport()->setFocusPolicy(Qt::NoFocus);
+
+        setFocusPolicy(Qt::StrongFocus);
+    }
+
+    void CustomGraphicsView::setScene( QGraphicsScene * scene )
+    {
+        adjustLayoutSize( size().width(), size().height() );
+
+        QGraphicsView::setScene(scene);
+    }
+
+    void CustomGraphicsView::adjustLayoutSize()
+    {
+        adjustLayoutSize( size().width(), size().height() );
+    }
+
+    void CustomGraphicsView::adjustLayoutSize( int width, int height )
+    {
+        if ( scene() != 0 )
+        {
+            QGraphicsWidget * form = static_cast<Scene::AbstractScene*>(scene())->form();
+            if ( form != 0 )
+            {
+                int w = viewport()->rect().width();
+
+                QScrollBar * vscrollBar = verticalScrollBar();
+                if ( vscrollBar != 0 )
+                {
+                    w -= (25 - vscrollBar->width());
+                }
+
+                QRectF r = scene()->sceneRect();
+                r.setRect(0,0,w,INT_MAX);
+                scene()->setSceneRect(r);
+
+                form->resize( w+8, height );
+            }
+        }
+    }
+
+    void CustomGraphicsView::resizeEvent( QResizeEvent * event )
+    {
+        adjustLayoutSize( event->size().width(), event->size().height() );
+
+        QGraphicsView::resizeEvent(event);
     }
 
     void CustomGraphicsView::mousePressEvent(QMouseEvent * event)
@@ -163,27 +214,34 @@ namespace Scene
 
     void CustomGraphicsView::wheelEvent(QWheelEvent * e)
     {
-        int numSteps = ( e->delta() / 8 ) / 15;
-        double f = 1.2;
-
-        QMatrix mat = matrix();
-        QPoint mousePosition = e->pos();
-
-        mat.translate((width() / 2) - mousePosition.x(), (height() / 2) - mousePosition.y());
-
-        if ( numSteps > 0 )
+        if ( hasZoomAbilities() )
         {
-            mat.scale( numSteps * f, numSteps * f );
-            m_scale = numSteps * f;
+            int numSteps = ( e->delta() / 8 ) / 15;
+            double f = 1.2;
+
+            QMatrix mat = matrix();
+            QPoint mousePosition = e->pos();
+
+            mat.translate((width() / 2) - mousePosition.x(), (height() / 2) - mousePosition.y());
+
+            if ( numSteps > 0 )
+            {
+                mat.scale( numSteps * f, numSteps * f );
+                m_scale = numSteps * f;
+            }
+            else
+            {
+                mat.scale( -1 / ( numSteps * f ), -1 / ( numSteps * f ) );
+                m_scale = -1 / (numSteps * f);
+            }
+
+            mat.translate(mousePosition.x() - (width() / 2), mousePosition.y() - (height() / 2));
+            setMatrix(mat);
         }
         else
         {
-            mat.scale( -1 / ( numSteps * f ), -1 / ( numSteps * f ) );
-            m_scale = -1 / (numSteps * f);
+            QGraphicsView::wheelEvent(e);
         }
-
-        mat.translate(mousePosition.x() - (width() / 2), mousePosition.y() - (height() / 2));
-        setMatrix(mat);
     }
 
     void CustomGraphicsView::paste()
@@ -287,109 +345,124 @@ namespace Scene
 
     void CustomGraphicsView::resetZoom( bool smooth )
     {
-        if ( !smooth && !Settings::smoothZoom() )
+        if ( hasZoomAbilities() )
         {
-            setScale(1);
-            return;
-        }
+            if ( !smooth && !Settings::smoothZoom() )
+            {
+                setScale(1);
+                return;
+            }
 
-        if ( matrix().m11() == 1 )
-            return;
+            if ( matrix().m11() == 1 )
+                return;
 
-        m_idTimer = startTimer(10);
+            m_idTimer = startTimer(10);
 
-        m_scale = 1;
+            m_scale = 1;
 
-        if ( matrix().m11()>1 )
-        {
-            m_scaleStep = -0.05;
-        }
-        else
-        {
-            m_scaleStep = 0.05;
+            if ( matrix().m11()>1 )
+            {
+                m_scaleStep = -0.05;
+            }
+            else
+            {
+                m_scaleStep = 0.05;
+            }
         }
     }
 
     void CustomGraphicsView::doubleZoom( bool smooth )
     {
-        if ( !smooth && !Settings::smoothZoom() )
+        if ( hasZoomAbilities() )
         {
-            setScale(matrix().m11()*2);
-            return;
+            if ( !smooth && !Settings::smoothZoom() )
+            {
+                setScale(matrix().m11()*2);
+                return;
+            }
+
+            m_idTimer = startTimer(10);
+
+            m_scale     = matrix().m11()*2;
+            m_scaleStep = 0.05;
         }
-
-        m_idTimer = startTimer(10);
-
-        m_scale     = matrix().m11()*2;
-        m_scaleStep = 0.05;
     }
 
     void CustomGraphicsView::halfZoom( bool smooth )
     {
-        if ( !smooth && !Settings::smoothZoom() )
+        if ( hasZoomAbilities() )
         {
-            setScale(matrix().m11()*0.5);
-            return;
+            if ( !smooth && !Settings::smoothZoom() )
+            {
+                setScale(matrix().m11()*0.5);
+                return;
+            }
+
+            m_idTimer = startTimer(10);
+
+            m_scale=matrix().m11()*0.5;
+            m_scaleStep = -0.05;
         }
-
-        m_idTimer = startTimer(10);
-
-        m_scale=matrix().m11()*0.5;
-        m_scaleStep = -0.05;
     }
 
     void CustomGraphicsView::centerZoom( bool smooth )
     {
-        fitInViewZoom();
-        resetZoom( smooth );
+        if ( hasZoomAbilities() )
+        {
+            fitInViewZoom();
+            resetZoom( smooth );
+        }
     }
 
     void CustomGraphicsView::fitInViewZoom()
     {
-        QList<QGraphicsItem*> itemList = scene()->selectedItems();
-
-        if ( itemList.isEmpty() )
+        if ( hasZoomAbilities() )
         {
-            itemList = items();
-        }
+            QList<QGraphicsItem*> itemList = scene()->selectedItems();
 
-        if ( itemList.isEmpty() )
-        {
-            return;
-        }
-
-        double minx = std::numeric_limits<double>::infinity();
-        double miny = std::numeric_limits<double>::infinity();
-        double maxx = - std::numeric_limits<double>::infinity();
-        double maxy = - std::numeric_limits<double>::infinity();
-
-        for ( int i=0 ; i<itemList.size() ; ++i )
-        {
-            QGraphicsItem * item = itemList[i];
-            if ( item->isVisible() )
+            if ( itemList.isEmpty() )
             {
-                if ( minx > item->x() )
-                {
-                    minx = item->x();
-                }
+                itemList = items();
+            }
 
-                if ( miny > item->y() )
-                {
-                    miny= item->y();
-                }
-                if ( maxx < item->x() + item->boundingRect().width() )
-                {
-                    maxx = item->x() + item->boundingRect().width();
-                }
+            if ( itemList.isEmpty() )
+            {
+                return;
+            }
 
-                if ( maxy < item->y() + item->boundingRect().height() )
+            double minx = std::numeric_limits<double>::infinity();
+            double miny = std::numeric_limits<double>::infinity();
+            double maxx = - std::numeric_limits<double>::infinity();
+            double maxy = - std::numeric_limits<double>::infinity();
+
+            for ( int i=0 ; i<itemList.size() ; ++i )
+            {
+                QGraphicsItem * item = itemList[i];
+                if ( item->isVisible() )
                 {
-                    maxy= item->y() + item->boundingRect().height();
+                    if ( minx > item->x() )
+                    {
+                        minx = item->x();
+                    }
+
+                    if ( miny > item->y() )
+                    {
+                        miny= item->y();
+                    }
+                    if ( maxx < item->x() + item->boundingRect().width() )
+                    {
+                        maxx = item->x() + item->boundingRect().width();
+                    }
+
+                    if ( maxy < item->y() + item->boundingRect().height() )
+                    {
+                        maxy= item->y() + item->boundingRect().height();
+                    }
                 }
             }
-        }
 
-        fitInView(minx,miny,maxx-minx,maxy-miny,Qt::KeepAspectRatio);
+            fitInView(minx,miny,maxx-minx,maxy-miny,Qt::KeepAspectRatio);
+        }
     }
 
     void CustomGraphicsView::nextItem()
@@ -446,6 +519,10 @@ namespace Scene
         centerZoom();
     }
 
-
+    bool CustomGraphicsView::hasZoomAbilities()
+    {
+        AbstractScene * s = static_cast<AbstractScene*>(scene());
+        return s != 0 && s->hasZoomAbilities();
+    }
 
 }

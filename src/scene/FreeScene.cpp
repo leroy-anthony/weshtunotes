@@ -28,9 +28,7 @@
 #include <QGraphicsProxyWidget>
 #include <QGraphicsGridLayout>
 #include <QHBoxLayout>
-#include <QGraphicsLinearLayout>
 #include <QLabel>
-#include <QGraphicsLayout>
 #include <QLabel>
 #include <QAction>
 #include <QColor>
@@ -40,6 +38,8 @@
 #include <QScrollBar>
 #include <QPropertyAnimation>
 #include <QAnimationGroup>
+#include <QGraphicsLinearLayout>
+#include <QGraphicsTextItem>
 
 #include "settings.h"
 #include "../handle/HandleItem.h"
@@ -49,10 +49,8 @@
 
 namespace Scene
 {
-    QString FreeScene::type = "freescene";
-
-    FreeScene::FreeScene(QWidget * parent) :
-            AbstractScene(parent,FreeScene::type),
+    FreeScene::FreeScene( const QString & id ) :
+            AbstractScene(id),
             m_currentAbstractItem(0),
             m_currentHandle(0),
             m_modeItem(Nothing)
@@ -63,22 +61,46 @@ namespace Scene
           QGraphicsScene::NoIndex
           */
         setItemIndexMethod(QGraphicsScene::NoIndex);
+
+        m_type = "freescene";
+    }
+
+    FreeScene::FreeScene() :
+            AbstractScene(),
+            m_currentAbstractItem(0),
+            m_currentHandle(0),
+            m_modeItem(Nothing)
+    {
+        setBackgroundBrush(QColor(Qt::cyan).lighter(190));
+        /*
+          QGraphicsScene::BspTreeIndex
+          QGraphicsScene::NoIndex
+          */
+        setItemIndexMethod(QGraphicsScene::NoIndex);
+
+        m_type = "freescene";
     }
     
     FreeScene::~FreeScene()
     {
     }
     
-    void FreeScene::addData( const QMimeData * data )
+    Handle::HandleItem * FreeScene::addData( const QMimeData * data )
     {
         if ( m_currentAbstractItem == 0 )
         {
-            QGraphicsView * view = views()[0];
+            QList<QGraphicsView*> viewList = views();
 
-            QPointF pt = view->mapToScene( view->viewport()->width()/2, view->viewport()->height()/2 );
-            int x = (rand() % 30 + 1)*(rand() % 2 == 0 ? -1 : 1 );
-            int y = (rand() % 30 + 1)*(rand() % 2 == 0 ? -1 : 1 );
-            pt += QPointF(x,y);
+            QPointF pt;
+            if ( viewList.size() > 0 )
+            {
+                QGraphicsView * view = views()[0];
+
+                pt = view->mapToScene( view->viewport()->width()/2, view->viewport()->height()/2 );
+                int x = (rand() % 30 + 1)*(rand() % 2 == 0 ? -1 : 1 );
+                int y = (rand() % 30 + 1)*(rand() % 2 == 0 ? -1 : 1 );
+                pt += QPointF(x,y);
+            }
 
             Handle::HandleItem * handle = newHandle( pt.x(), pt.y(), Settings::widthNote() );
 
@@ -89,10 +111,14 @@ namespace Scene
             addHandleToScene( handle );
 
             item->load( data );
+
+            return handle;
         }
         else
         {
             m_currentAbstractItem->insertData( data );
+
+            return 0;
         }
     }
 
@@ -150,7 +176,7 @@ namespace Scene
 
     Handle::GraphicHandleItem * FreeScene::addHandleToScene( Handle::HandleItem * handle )
     {
-        QGraphicsProxyWidget * w = m_handles[handle];
+        QGraphicsProxyWidget * w = m_handles.value(handle);
         if ( w != 0 )
         {
             m_items.remove(w);
@@ -191,7 +217,7 @@ namespace Scene
                 m_lastCibleHandle->resetInsert();
             }
 
-            QList<QGraphicsItem*> items = collidingItems( m_handles[handleItem] );
+            QList<QGraphicsItem*> items = collidingItems( m_handles.value(handleItem) );
             if ( items.size() > 0 )
             {
                 for ( int i=0 ; i<items.size() ; ++i )
@@ -199,11 +225,11 @@ namespace Scene
                     if ( items[i]->isVisible() )
                     {
                         m_lastCibleHandle = m_items[static_cast<QGraphicsProxyWidget*>(items[i])];
-                        if ( !m_lastCibleHandle->isPin() )
+                        if ( m_lastCibleHandle != 0 && !m_lastCibleHandle->isPin() )
                         {
                             m_lastCibleHandle->insert( handleItem->geometry().topLeft(), handleItem->height() );
+                            break;
                         }
-                        break;
                     }
                 }
             }
@@ -260,39 +286,43 @@ namespace Scene
         {
             delUselessHandleGroup( m_currentHandle  );
 
-            QList<QGraphicsItem *> items = collidingItems( m_handles[ m_currentHandle ] );
+            QList<QGraphicsItem *> items = collidingItems( m_handles.value( m_currentHandle ) );
             if ( items.size() > 0 )
             {
-                Handle::HandleItem * handleCible = m_items[static_cast<QGraphicsProxyWidget*>(items[0])];
-                if ( items[0]->isVisible() && !handleCible->isPin() )
+                for ( int i=0 ; i<items.size() ; ++i )
                 {
-                    if ( handleCible->size() == 0 )
+                    Handle::HandleItem * handleCible = m_items[static_cast<QGraphicsProxyWidget*>(items[i])];
+                    if ( items[i]->isVisible() && handleCible != 0 && !handleCible->isPin() )
                     {
-                        QPointF pt = static_cast<QGraphicsProxyWidget*>(items[0])->pos();
+                        if ( handleCible->nbItems() == 0 )
+                        {
+                            QPointF pt = static_cast<QGraphicsProxyWidget*>(items[i])->pos();
 
-                        Handle::HandleItem * handle = newHandle( pt.x(), pt.y(), Settings::widthNote() );
+                            Handle::HandleItem * handle = newHandle( pt.x(), pt.y(), Settings::widthNote() );
 
-                        handle->setIndexInsert( handleCible->indexInsert() );
+                            handle->setIndexInsert( handleCible->indexInsert() );
 
-                        handle->add( handleCible );
-                        handle->add( m_currentHandle );
-                        addHandleToScene( handle );
+                            handle->add( handleCible );
+                            handle->add( m_currentHandle );
+                            addHandleToScene( handle );
 
-                        handle->setIndexInsert(-1);
+                            handle->setIndexInsert(-1);
 
-                        removeGraphicsItemFromScene( handleCible, false );
+                            removeGraphicsItemFromScene( handleCible, false );
+                        }
+                        else
+                        {
+                            handleCible->add( m_currentHandle );
+                        }
+
+                        if ( m_lastCibleHandle )
+                        {
+                            m_lastCibleHandle->resetInsert();
+                        }
+
+                        removeGraphicsItemFromScene( m_currentHandle, false );
+                        break;
                     }
-                    else
-                    {
-                        handleCible->add( m_currentHandle );
-                    }
-
-                    if ( m_lastCibleHandle )
-                    {
-                        m_lastCibleHandle->resetInsert();
-                    }
-
-                    removeGraphicsItemFromScene( m_currentHandle, false );
                 }
             }
 
@@ -323,7 +353,7 @@ namespace Scene
 
     void FreeScene::removeGraphicsItemFromScene( Handle::HandleItem * handle, bool animated )
     {
-        QGraphicsProxyWidget * g = m_handles[ handle ];
+        QGraphicsProxyWidget * g = m_handles.value( handle );
         if ( g != 0 )
         {
             if ( animated )
@@ -350,8 +380,7 @@ namespace Scene
 
         g->setWidget(0);
 
-        //FIXME: Qt bug, pb focus, bug 6544, mark as fixed but not.
-        //g->deleteLater();
+        g->deleteLater();
     }
 
     void FreeScene::deleteGraphicsItemFromSceneAnimated()
@@ -380,8 +409,7 @@ namespace Scene
                 child->clearFocus();
                 parentHandle->add( child->abstractItem() );
 
-                //FIXME: Qt bug, pb focus, bug 6544, mark as fixed but not.
-                //child->deleteLater();
+                child->deleteLater();
             }
 
             currentHandle->setParentHandle(0);

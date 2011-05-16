@@ -21,6 +21,7 @@
 #include <limits>
 
 #include <QScrollBar>
+#include <QGraphicsWidget>
 
 #include <KLocalizedString>
 
@@ -40,14 +41,31 @@ namespace Scene
     {
     }
 
-    AbstractScene::AbstractScene(QWidget * parent, const QString & type):
-            QGraphicsScene(parent),
+    AbstractScene::AbstractScene( const QString & id ):
+            QGraphicsScene(0),
+            GeneratorID(id,false),
+            m_horizontalScrollBarValueView(0),
+            m_verticalScrollBarValueView(0),
+            m_lastCibleHandle(0),
+            m_readOnly(false),
+            m_form(0),
+            m_layout(0)
+    {
+        qreal max = std::numeric_limits<qreal>::max();
+        setSceneRect( -max, -max, max, max );
+
+        connect( this, SIGNAL(selectionChanged()), this, SLOT(showMessageStatus()) );
+    }
+
+    AbstractScene::AbstractScene():
+            QGraphicsScene(0),
             GeneratorID("scene"),
             m_horizontalScrollBarValueView(0),
             m_verticalScrollBarValueView(0),
             m_lastCibleHandle(0),
-            m_type(type),
-            m_readOnly(false)
+            m_readOnly(false),
+            m_form(0),
+            m_layout(0)
     {
         qreal max = std::numeric_limits<qreal>::max();
         setSceneRect( -max, -max, max, max );
@@ -241,7 +259,7 @@ namespace Scene
 		    else
 		    {
 			//TODO: replace me by item->load() ???
-			Item::AbstractItem * item = newItem( 0, 0 );
+                        Item::AbstractItem * item = newItem( 0, 0 );
 			item->setItemColor( QColor(settingsHandle.valueGroup(items[i],"color", Settings::colorItem() )) );
 			handle->add( item );
 
@@ -253,8 +271,8 @@ namespace Scene
 			for ( int k=0 ; k<namesTags.size() ; ++k )
 			{
 			    QStringList s = namesTags[k].split(":");
-			    dynamic_cast<Item::NoteItem*>(item)->addTag(s[0],s[1]); //fixme: pourquoi pas abstractitem
-			}
+                            dynamic_cast<Item::NoteItem*>(item)->addTag(s[0],s[1]); //fixme: pourquoi pas abstractitem
+                        }
 		    }
 
                     handle->setPin( settingsHandle.valueGroup( itemId, "pin", false) != "false" );
@@ -308,6 +326,21 @@ namespace Scene
     QList<Handle::HandleItem*> AbstractScene::handles()
     {
         return m_handles.keys();
+    }
+
+    QGraphicsWidget * AbstractScene::form()
+    {
+        return m_form;
+    }
+
+    bool AbstractScene::hasZoomAbilities()
+    {
+        return true;
+    }
+
+    void AbstractScene::delItem( QGraphicsProxyWidget * item )
+    {
+        delItem( m_items[item] );
     }
 
 }

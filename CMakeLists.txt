@@ -47,6 +47,7 @@ set(weshnotes_UI
 ./src/config/AnimationSettings.ui
 ./src/config/AppareanceSettings.ui
 ./src/config/SynchroSettings.ui
+./src/config/ClipperSettings.ui
 ./src/basket/NewBasketForm.ui)
 
 QT_WRAP_UI(weshnotes weshnotes_UI_H weshnotes_UI_SRC ${weshnotes_UI})
@@ -78,6 +79,7 @@ set(weshnotes_SRC
 ./src/basket/AbstractBasket.cpp
 ./src/basket/Basket.cpp
 ./src/basket/TagBasket.cpp
+./src/basket/ClipperBasket.cpp
 ./src/basket/BasketFactory.cpp
 ./src/basket/NewBasketDialog.cpp
 ./src/basket/PropertiesBasketDialog.cpp
@@ -107,6 +109,7 @@ set(weshnotes_SRC
 ./src/config/AppareancePageDialog.cpp
 ./src/config/AnimationPageDialog.cpp
 ./src/config/SynchroPageDialog.cpp
+./src/config/ClipperPageDialog.cpp
 ./src/animation/AnimationManager.cpp
 ${weshnotes_UI_H})
 
