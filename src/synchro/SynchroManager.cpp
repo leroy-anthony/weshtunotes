@@ -125,9 +125,6 @@ namespace Synchro
         m_dialog->progressBar()->setValue(1);
         m_dialog->enableButtonOk(true);
         m_dialog->exec();
-
-        delete m_dialog;
-        m_dialog = 0;
     }
 
     QStringList SynchroManager::baskets()
@@ -139,7 +136,7 @@ namespace Synchro
 
     void SynchroManager::connectionDialog( void (SynchroManager::*actionPtr)(const QString &), const QString & config )
     {
-        KPasswordDialog dlg(0, KPasswordDialog::ShowUsernameLine | KPasswordDialog::ShowKeepPassword );
+        KPasswordDialog dlg( 0, KPasswordDialog::ShowUsernameLine | KPasswordDialog::ShowKeepPassword );
         dlg.setPrompt(i18n("Enter a login and a password"));
         dlg.setKeepPassword(true);
 
@@ -169,21 +166,27 @@ namespace Synchro
             dlg.setUsername(m_login);
 
             QString password;
-            wallet->readPassword(m_login,password);
-            dlg.setPassword(password);
-
-            if ( !m_cx->authentication(dlg.username(), dlg.password()) )
+            if ( wallet->readPassword(m_login,password) == 0 )
             {
-                if ( m_cx->connectionError() == "" )
+                dlg.setPassword(password);
+
+                if ( !m_cx->authentication(dlg.username(), dlg.password()) )
                 {
-                    connectionExec( dlg, wallet, actionPtr, config );
+                    if ( m_cx->connectionError() == "" )
+                    {
+                        connectionExec( dlg, wallet, actionPtr, config );
+                        return;
+                    }
+
                     return;
                 }
 
-                return;
+                (this->*actionPtr)( config );
             }
-
-            (this->*actionPtr)( config );
+            else
+            {
+                connectionExec( dlg, wallet, actionPtr, config );
+            }
         }
         else
         {
