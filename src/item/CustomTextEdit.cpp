@@ -87,8 +87,6 @@ namespace Item
 
     void CustomTextEdit::insertFromMimeData( const QMimeData *source )
     {
-
-
         if (source->hasImage())
         {
             QImage image = qvariant_cast<QImage>(source->imageData());
@@ -171,7 +169,7 @@ namespace Item
     void CustomTextEdit::adaptSizeFromText()
     {
         int heightMax =  document()->size().toSize().height();
-        setFixedHeight( heightMax-2 );
+        setFixedHeight( heightMax );
     }
 
     void CustomTextEdit::openAnchor( const QUrl & url )
