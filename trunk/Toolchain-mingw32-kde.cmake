@@ -4,6 +4,7 @@ SET(CMAKE_SYSTEM_NAME Windows)
 # which compilers to use for C and C++
 SET(CMAKE_C_COMPILER i486-mingw32-gcc)
 SET(CMAKE_CXX_COMPILER i486-mingw32-g++)
+SET(CMAKE_RC_COMPILER i486-mingw32-windres)
 
 set(KDE_PREFIX    "/home/kahal/.wine/drive_c/Program\ Files/KDE")
 set(QT_INSTALL_DIR ${KDE_PREFIX})
