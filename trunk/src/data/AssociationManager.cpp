@@ -79,14 +79,14 @@ namespace Data
     }
 
     bool AssociationManager::removeNotes( const QString & idScene )
-    {
-	Data::DataManager::removeNotes( idScene );
-      
+    { 
 	QList<QString> notes = abstractNotes( idScene );
 	for ( int i=0 ; i<notes.size() ; ++i )
 	{
 	    Data::DataManager::deleteNoteFile(notes[i]);
-	}
+        }
+
+        Data::DataManager::removeNotes( idScene );
 
 	return true;
     }
