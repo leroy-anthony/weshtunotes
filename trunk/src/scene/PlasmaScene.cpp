@@ -23,7 +23,7 @@
 #include <KDE/Plasma/Corona>
 #include <Plasma/Service>
 #include <Plasma/DataEngine>
-#include <plasma/pluginloader.h>
+#include <KDE/KServiceTypeTrader>
 
 #include <QGraphicsSceneMouseEvent>
 #include <QListWidgetItem>
@@ -70,7 +70,8 @@ namespace Scene
         {
             NewAppletDialog dialog;
 
-            foreach (const KPluginInfo & info, Plasma::Applet::listAppletInfo())
+            KService::List offers = KServiceTypeTrader::self()->query("Plasma/Applet", 0);
+            foreach (const KPluginInfo & info, KPluginInfo::fromServices(offers))
             {
                 if (info.property("NoDisplay").toBool()) {
                     continue;
