@@ -24,6 +24,10 @@
 #include "../main/MainWindow.h"
 #include "../handle/HandleItem.h"
 
+#include <KDE/Plasma/Applet>
+#include <KDE/Plasma/Containment>
+#include <KDE/Plasma/Corona>
+
 namespace Scene
 {
 
@@ -71,8 +75,6 @@ namespace Scene
 
         setViewportMargins(5,5,5,5);
 
-        setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-
         setAcceptDrops(true);
 
         viewport()->setFocusPolicy(Qt::NoFocus);
@@ -80,11 +82,13 @@ namespace Scene
         setFocusPolicy(Qt::StrongFocus);
     }
 
-    void CustomGraphicsView::setScene( QGraphicsScene * scene )
+    void CustomGraphicsView::setScene( AbstractScene * abstractScene )
     {
         adjustLayoutSize( size().width(), size().height() );
 
-        QGraphicsView::setScene(scene);
+        m_scene = abstractScene;
+
+        QGraphicsView::setScene(abstractScene->scene());
     }
 
     void CustomGraphicsView::adjustLayoutSize()
@@ -96,22 +100,16 @@ namespace Scene
     {
         if ( scene() != 0 )
         {
-            QGraphicsWidget * form = static_cast<Scene::AbstractScene*>(scene())->form();
+            QGraphicsWidget * form = m_scene->form();
             if ( form != 0 )
             {
                 int w = viewport()->rect().width();
-
-                QScrollBar * vscrollBar = verticalScrollBar();
-                if ( vscrollBar != 0 )
-                {
-                    w -= (25 - vscrollBar->width());
-                }
 
                 QRectF r = scene()->sceneRect();
                 r.setRect(0,0,w,INT_MAX);
                 scene()->setSceneRect(r);
 
-                form->resize( w+8, height );
+                form->resize( w, height );
             }
         }
     }
@@ -248,8 +246,6 @@ namespace Scene
     {
         if ( !m_copyHandlesItem.isEmpty() )
         {
-            AbstractScene * s =  static_cast<AbstractScene*>( scene() );
-
             QStringList filesName;
             for ( int i=0 ; i<m_copyHandlesItem.size() ; ++i )
             {
@@ -280,25 +276,22 @@ namespace Scene
                 }
             }
 
-            s->loadHandles( filesName, mapToScene( viewport()->width()/2, viewport()->height()/2 ), abs(maxX-minX), abs(maxY-minY) );
+            m_scene->loadHandles( filesName, mapToScene( viewport()->width()/2, viewport()->height()/2 ), abs(maxX-minX), abs(maxY-minY) );
         }
         else
         {
-            AbstractScene * s =  static_cast<AbstractScene*>( scene() );
-
             const QClipboard * clipboard = QApplication::clipboard();
             const QMimeData * mimeData = clipboard->mimeData();
 
-            s->addData( mimeData );
+            m_scene->addData( mimeData );
         }
     }
 
     void CustomGraphicsView::copy()
     {
-        AbstractScene * s =  static_cast<AbstractScene*>( scene() );
-        s->save();
+        m_scene->save();
 
-        QList<QGraphicsItem*> items = s->selectedItems();
+        QList<QGraphicsItem*> items = m_scene->scene()->selectedItems();
         m_copyHandlesItem.clear();
 
         for ( int i=0 ; i<items.size() ; ++i )
@@ -309,12 +302,10 @@ namespace Scene
 
     void CustomGraphicsView::deleteItem()
     {
-        AbstractScene * s =  static_cast<AbstractScene*>( scene() );
-
-        QList<QGraphicsItem*> items = s->selectedItems();
+        QList<QGraphicsItem*> items = m_scene->scene()->selectedItems();
         for ( int i=0 ; i<items.size() ; ++i )
         {
-            s->delItem( static_cast<Handle::GraphicHandleItem*>(items[i])->handleItem() );
+            m_scene->delItem( static_cast<Handle::GraphicHandleItem*>(items[i])->handleItem() );
         }
     }
 
@@ -521,8 +512,7 @@ namespace Scene
 
     bool CustomGraphicsView::hasZoomAbilities()
     {
-        AbstractScene * s = static_cast<AbstractScene*>(scene());
-        return s != 0 && s->hasZoomAbilities();
+        return m_scene != 0 && m_scene->hasZoomAbilities();
     }
 
 }

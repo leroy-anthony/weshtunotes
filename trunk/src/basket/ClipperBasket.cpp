@@ -53,6 +53,8 @@ namespace Basket
         connect( m_clipboard, SIGNAL(dataChanged()), this, SLOT(clipboardDataChanged()));
 
         m_contentScene = Scene::SceneFactory::newScene( m_configFile, Scene::SceneFactory::LAYOUTSCENE, "clipper" );
+
+        save();
     }
 
     void ClipperBasket::save()
@@ -70,7 +72,7 @@ namespace Basket
         m_contentScene = Scene::SceneFactory::newScene( m_configFile, Scene::SceneFactory::LAYOUTSCENE, "clipper" );
         m_contentScene->load( m_configFile );;
         m_contentScene->loadHandles( Data::AssociationManager::abstractNotes( m_contentScene->id() ) );
-        m_contentScene->setBackgroundBrush(QBrush(QColor(m_backgroundColor)));
+        m_contentScene->scene()->setBackgroundBrush(QBrush(QColor(m_backgroundColor)));
     }
 
     void ClipperBasket::del()
@@ -96,7 +98,7 @@ namespace Basket
             m_contentScene->delItem(item);
         }
 
-        QList<QGraphicsView*> viewList = m_contentScene->views();
+        QList<QGraphicsView*> viewList = m_contentScene->scene()->views();
         if ( viewList.size() > 0 )
         {
             QGraphicsView * view = viewList[0];

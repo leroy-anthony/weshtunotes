@@ -38,7 +38,7 @@ namespace Handle
 namespace Scene
 {
 
-    class AbstractScene : public QGraphicsScene, public Technic::GeneratorID
+    class AbstractScene : public QObject, public Technic::GeneratorID
     {
         Q_OBJECT
 
@@ -47,17 +47,18 @@ namespace Scene
         AbstractScene();
         virtual ~AbstractScene();
 
+        virtual QGraphicsScene * scene();
+
         virtual Item::AbstractItem * currentAbstractItem() = 0;
         virtual Handle::HandleItem * currentHandle()       = 0;
 
         virtual void addItemToScene( Handle::GraphicHandleItem * item ) = 0;
         virtual QGraphicsProxyWidget * addHandleToScene( Handle::HandleItem * handle ) = 0;
-        virtual Handle::HandleItem * newHandle( int x, int y, int w ) = 0;
-        virtual Item::AbstractItem * newItem( int x, int y ) = 0;
+        virtual Handle::HandleItem * newHandle( int x, int y ) = 0;
 
         void loadHandles( const QList<QString> & filesName, QPointF centerPt = QPointF(0,0), int selectionWidth = 0, int selectionHeigth = 0, bool newHandles = false );
-        void load( const QString & fileName );
-        void save();
+        virtual void load( const QString & fileName );
+        virtual void save();
 
         void saveViewOnDisk( const QString & fileName );
         void loadViewFromDisk( const QString & fileName );
@@ -110,6 +111,8 @@ namespace Scene
         QString m_type;
 
         bool m_readOnly;
+
+        QGraphicsScene m_scene;
 
     };
 

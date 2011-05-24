@@ -60,12 +60,14 @@ namespace Scene
 
 
     protected:
+        bool eventFilter(QObject *obj, QEvent *event);
         void mousePressEvent( QGraphicsSceneMouseEvent * mouseEvent );
         void mouseReleaseEvent( QGraphicsSceneMouseEvent * mouseEvent);
+
         virtual void removeGraphicsItemFromScene( Handle::HandleItem * handle, bool animated );
         Handle::GraphicHandleItem * addHandleToScene( Handle::HandleItem * handle );
-        Handle::HandleItem * newHandle( int x, int y, int w  );
-        Item::AbstractItem * newItem( int x, int y );
+        Handle::HandleItem * newHandle( int x, int y );
+        Item::AbstractItem * newItem();
         void delUselessHandleGroup( Handle::HandleItem * currentHandle  );
         void deleteGraphicsItemFromScene( QGraphicsProxyWidget * g );
 

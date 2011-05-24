@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009 LEROY Anthony <leroy.anthony@gmail.com>
+    Copyright (c) 2011 LEROY Anthony <leroy.anthony@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 
 */
 
-#include "Basket.h"
+#include "PlasmaBasket.h"
 
 #include "../scene/SceneFactory.h"
 #include "../config/Configuration.h"
@@ -29,53 +29,43 @@
 namespace Basket
 {
 
-    Basket::Basket( ItemTreeBasket * itemTreeBasket, AbstractBasket * basketParent, const QString & id ):
+    PlasmaBasket::PlasmaBasket( ItemTreeBasket * itemTreeBasket, AbstractBasket * basketParent, const QString & id ):
             AbstractBasket( itemTreeBasket, basketParent, id )
     {
         initBasket();
     }
 
-    Basket::Basket( ItemTreeBasket * itemTreeBasket, const QString & id ):
+    PlasmaBasket::PlasmaBasket( ItemTreeBasket * itemTreeBasket, const QString & id ):
             AbstractBasket( itemTreeBasket, id )
     {
         initBasket();
     }
 
-    void Basket::initBasket()
+    void PlasmaBasket::initBasket()
     {
-        m_type = BasketFactory::type(BasketFactory::BASKET);
+        m_type = BasketFactory::type(BasketFactory::PLASMA_BASKET);
 
-        m_contentScene = Scene::SceneFactory::newScene( m_configFile );
+        m_contentScene = Scene::SceneFactory::newScene( m_configFile, Scene::SceneFactory::PLASMASCENE );
     }
 
-    void Basket::save()
+    void PlasmaBasket::save()
     {
-        m_contentScene->save();// clear and save !!
-
         AbstractBasket::save();
     }
 
-    void Basket::load()
+    void PlasmaBasket::load()
     {
         AbstractBasket::load();
 
         delete m_contentScene;
 
-        m_contentScene = Scene::SceneFactory::newScene( m_configFile );
+        m_contentScene = Scene::SceneFactory::newScene( m_configFile, Scene::SceneFactory::PLASMASCENE );
         m_contentScene->load( m_configFile );;
-        m_contentScene->loadHandles( Data::AssociationManager::abstractNotes( m_contentScene->id() ) );
         m_contentScene->scene()->setBackgroundBrush(QBrush(QColor(m_backgroundColor)));
     }
 
-    void Basket::del()
+    void PlasmaBasket::del()
     {
-        QList<AbstractBasket*> & children = childrenBasket();
-        for ( int i=0 ; i<children.size() ; ++i )
-        {
-            children[i]->del();
-        }
-
-        Data::AssociationManager::removeNotes( m_contentScene->id() );
         Data::DataManager::removeBasket( m_configFile );
     }
 

@@ -52,8 +52,6 @@ namespace Scene
     LayoutScene::LayoutScene( const QString & id ) :
             FreeScene(id)
     {
-        setSceneRect(0,0,1600,INT_MAX);
-
         m_type = "layoutscene";
 
         m_layout = new QGraphicsLinearLayout( Qt::Vertical, 0 );
@@ -66,13 +64,13 @@ namespace Scene
 
         m_readOnly = true;
 
-        addItem(m_form);
+        m_scene.addItem(m_form);
     }
 
     LayoutScene::LayoutScene() :
             FreeScene()
     {
-        setSceneRect(0,0,1600,INT_MAX);
+        m_scene.setSceneRect(0,0,1600,INT_MAX);
 
         m_type = "layoutscene";
 
@@ -86,7 +84,7 @@ namespace Scene
 
         m_readOnly = true;
 
-        addItem(m_form);
+        m_scene.addItem(m_form);
     }
     
     LayoutScene::~LayoutScene()
@@ -124,7 +122,7 @@ namespace Scene
         {
             delUselessHandleGroup( FreeScene::currentHandle()  );
 
-            QList<QGraphicsItem*> items = collidingItems( m_handles.value( FreeScene::currentHandle() ) );
+            QList<QGraphicsItem*> items = m_scene.collidingItems( m_handles.value( FreeScene::currentHandle() ) );
             if ( items.size() > 1 )
             {
                 for ( int i=0 ; i<items.size() ; ++i )
@@ -136,7 +134,7 @@ namespace Scene
                         {
                             QPointF pt = static_cast<QGraphicsProxyWidget*>(items[i])->pos();
 
-                            Handle::HandleItem * handle = newHandle( pt.x(), pt.y(), Settings::widthNote() );
+                            Handle::HandleItem * handle = newHandle( pt.x(), pt.y() );
 
                             handle->setIndexInsert( handleCible->indexInsert() );
 

@@ -160,7 +160,6 @@ namespace Item
         Data::DataManager settings( fileName );
 
         settings.setValue(handleId,"data",GeneratorID::id());
-        settings.setValue(handleId,"color",m_color.name());
 
         if ( m_tag != 0 && m_tag->currentState() != 0 )
         {
@@ -187,6 +186,7 @@ namespace Item
 
         Data::DataManager data( Data::DataManager::configFileItem(GeneratorID::id()) );
         data.setValue( "data", "images", images );
+        data.setValue( "general", "color", m_color.name() );
 
         Data::DataManager::saveNote( contentHtml, GeneratorID::id() );
     }
@@ -200,6 +200,9 @@ namespace Item
 
         m_plainTextEdit->setHtml( contentHtml );
         m_plainTextEdit->adaptSizeFromText();
+
+        Data::DataManager data( Data::DataManager::configFileItem(GeneratorID::id()) );
+        setItemColor( QColor(data.valueGroup("general","color", Settings::colorItem() )) );
 
         m_plainTextEdit->blockSignals( false ); 
     }

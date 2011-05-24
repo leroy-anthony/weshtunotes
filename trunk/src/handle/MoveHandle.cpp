@@ -194,7 +194,7 @@ namespace Handle
         }
         else
         {
-            HandleItem * h = dynamic_cast<HandleItem*>(parentWidget());
+            HandleItem * h = static_cast<HandleItem*>(parentWidget());
             const QList<HandleItem*> & handles = h->children();
 
             int x = 0;

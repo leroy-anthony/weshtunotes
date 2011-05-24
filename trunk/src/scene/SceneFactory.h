@@ -29,7 +29,7 @@ namespace Scene
     class SceneFactory
     {
     public:
-        enum Type { FREESCENE, LAYOUTSCENE, MAX };
+        enum Type { FREESCENE, LAYOUTSCENE, PLASMASCENE, MAX };
 
         SceneFactory();
 

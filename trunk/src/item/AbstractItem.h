@@ -62,6 +62,7 @@ namespace Item
         void setItemColor( const QColor & color );
         const QColor & itemColor();
 
+        virtual void addTag( const QString & tagName, const QString & tagState ) = 0;
         bool containTag( const QString & tagName );
         Tag::NoteTag * tag();
 

@@ -129,7 +129,7 @@ namespace Handle
         pen.setWidth(1);
         painter.setPen(pen);
 
-        HandleItem * h = dynamic_cast<HandleItem*>(parentWidget());
+        HandleItem * h = static_cast<HandleItem*>(parentWidget());
         const QList<HandleItem*> & handles = h->children();
 
         if ( m_isHover )
@@ -146,7 +146,7 @@ namespace Handle
         {
             if ( handles.size() > 0 )
             {
-                HandleItem * h = dynamic_cast<HandleItem*>(parentWidget());
+                HandleItem * h = static_cast<HandleItem*>(parentWidget());
                 const QList<HandleItem*> & handles = h->children();
 
                 int x = 0;
