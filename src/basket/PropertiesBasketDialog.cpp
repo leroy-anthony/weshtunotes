@@ -83,7 +83,7 @@ namespace Basket
         m_itemBasket->basket()->setIcon( m_iconButton->icon() );
 
         m_itemBasket->basket()->setBackgroundColor(m_colorBackground->color().name());
-        m_itemBasket->basket()->scene()->setBackgroundBrush(QColor(m_colorBackground->color()));
+        m_itemBasket->basket()->scene()->scene()->setBackgroundBrush(QColor(m_colorBackground->color()));
 
         m_itemBasket->setIcon( m_iconButton->icon() );
         m_itemBasket->setData( 0, Qt::DisplayRole, m_basketName->text() );

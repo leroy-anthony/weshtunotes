@@ -42,7 +42,8 @@ namespace Basket
             m_itemTreeBasket(itemTreeBasket),
             m_contentScene(0),
             m_order(0),
-            m_name( "<unkown>" )
+            m_name( "<unkown>" ),
+            m_immuable(false)
     {
         initConfigFile(id);
     }
@@ -136,7 +137,12 @@ namespace Basket
     void AbstractBasket::load()
     {
         Data::DataManager settings( m_configFile );
-        m_type = settings.valueGroup( "basket", "type", "basket" );
+
+        if ( m_type.isEmpty() )
+        {
+            m_type = settings.valueGroup( "basket", "type", "basket" );
+        }
+
         m_icon = settings.valueGroup( "basket", "icon", "folder" );
         m_name = settings.valueGroup( "basket", "name", "<unknow>" );
         m_order = settings.valueGroup( "basket", "order", 0 ).toInt();

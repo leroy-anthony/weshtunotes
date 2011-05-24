@@ -71,15 +71,16 @@ namespace Explorer
 
     TreeExplorer::~TreeExplorer()
     {
-        if ( m_clipperBasket != 0 )
-        {
-            m_clipperBasket->del();
-        }
     }
 
     void TreeExplorer::delCurrentBasket()
     {
-        Basket::ItemTreeBasket * b = dynamic_cast<Basket::ItemTreeBasket*>(currentItem());
+        Basket::ItemTreeBasket * b = static_cast<Basket::ItemTreeBasket*>(currentItem());
+        if ( b == 0 )
+        {
+            return;
+        }
+
         if ( b->basket()->isImmuable() )
         {
             KMessageBox::information( 0, i18n("This basket cannot be delete."),
@@ -109,7 +110,7 @@ namespace Explorer
 
     Basket::ItemTreeBasket * TreeExplorer::addToCurrentBasket()
     {
-        Basket::ItemTreeBasket * item = Basket::NewBasketDialog::getNewBasket( this, dynamic_cast<Basket::ItemTreeBasket*>(currentItem()) );
+        Basket::ItemTreeBasket * item = Basket::NewBasketDialog::getNewBasket( this, static_cast<Basket::ItemTreeBasket*>(currentItem()) );
 
         setCurrentItem(item);
 
@@ -132,7 +133,7 @@ namespace Explorer
 
     void TreeExplorer::showPropertiesBasket()
     {
-        Basket::ItemTreeBasket * b = dynamic_cast<Basket::ItemTreeBasket*>(currentItem());
+        Basket::ItemTreeBasket * b = static_cast<Basket::ItemTreeBasket*>(currentItem());
         if ( b != 0 )
         {
             Basket::PropertiesBasketDialog prop(this, b);

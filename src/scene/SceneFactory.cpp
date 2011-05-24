@@ -22,6 +22,7 @@
 
 #include "FreeScene.h"
 #include "LayoutScene.h"
+#include "PlasmaScene.h"
 #include "../data/DataManager.h"
 
 namespace Scene
@@ -64,6 +65,11 @@ namespace Scene
             return LAYOUTSCENE;
         }
 
+        if ( typeName == "plasmascene" )
+        {
+            return PLASMASCENE;
+        }
+
         return FREESCENE;
     }
 
@@ -77,6 +83,11 @@ namespace Scene
         if ( type == LAYOUTSCENE )
         {
             return "layoutscene";
+        }
+
+        if ( type == PLASMASCENE )
+        {
+            return "plasmascene";
         }
 
         return "freescene";
@@ -107,6 +118,18 @@ namespace Scene
             else
             {
                 scene = new LayoutScene();
+            }
+        }
+
+        if ( type == PLASMASCENE )
+        {
+            if ( id != "" )
+            {
+                scene = new PlasmaScene();
+            }
+            else
+            {
+                scene = new PlasmaScene();
             }
         }
 

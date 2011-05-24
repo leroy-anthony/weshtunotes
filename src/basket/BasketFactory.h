@@ -31,7 +31,7 @@ namespace Basket
     class BasketFactory
     {
     public:
-        enum Type { BASKET, TAG_BASKET, MAX };
+        enum Type { BASKET, TAG_BASKET, PLASMA_BASKET, MAX };
 
         static AbstractBasket * newBasket( ItemTreeBasket * itemTreeBasket,
                                            AbstractBasket * parent,

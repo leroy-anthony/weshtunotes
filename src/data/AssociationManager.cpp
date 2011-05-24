@@ -36,20 +36,20 @@ namespace Data
 
     QList<QString> AssociationManager::abstractNotes( const QString & idScene )
     {
-	Data::DataManager settings( QString("association") + QDir::separator() + idScene );
+        Data::DataManager settings( Data::DataManager::configFileAssoc(idScene) );
 
 	return settings.values( "general", "items" );
     }
 
     QPoint AssociationManager::positionAbstractNotes( const QString & idScene, const QString & urlItem )
     {
-	Data::DataManager settings( QString("association") + QDir::separator() + idScene );
+        Data::DataManager settings( Data::DataManager::configFileAssoc(idScene) );
 	return settings.pointValueGroup( idScene, urlItem, QPoint(0,0) );
     }
 
     bool AssociationManager::addNote( const QString & idScene, const QString & urlItem, qlonglong x, qlonglong y )
     {
-	Data::DataManager settings( QString("association") + QDir::separator() + idScene );
+        Data::DataManager settings( Data::DataManager::configFileAssoc(idScene) );
 
 	QStringList items = settings.values( "general", "items" );
 	if ( !items.contains(urlItem) )
@@ -65,7 +65,7 @@ namespace Data
 
     bool AssociationManager::removeNote( const QString & idScene, const QString & urlItem )
     {
-	Data::DataManager settings( QString("association") + QDir::separator() + idScene );
+        Data::DataManager settings( Data::DataManager::configFileAssoc(idScene) );
 
 	QStringList items = settings.values( "general", "items" );
 	items.removeAll(urlItem);
@@ -93,7 +93,7 @@ namespace Data
 
     bool AssociationManager::removeAssociationNotes( const QString & idScene )
     {
-	Data::DataManager settings( QString("association") + QDir::separator() + idScene );
+        Data::DataManager settings( Data::DataManager::configFileAssoc(idScene) );
 	settings.clear();
 
 	return true;

@@ -35,6 +35,8 @@
 #include <KAction>
 #include <KTreeWidgetSearchLine>
 #include <KLocalizedString>
+#include <KMessageBox>
+
 
 #include "settings.h"
 #include "../tag/TagFactory.h"
@@ -48,6 +50,7 @@
 #include "../scene/FreeScene.h"
 #include "../scene/LayoutScene.h"
 #include "../scene/ToolBarScene.h"
+#include "../scene/PlasmaScene.h"
 #include "../data/AssociationManager.h"
 #include "../data/ExportDataToXml.h"
 #include "../data/ImportDataFromXml.h"
@@ -300,7 +303,7 @@ void MainWindow::loadScene( QTreeWidgetItem * item , int column )
 {
     Q_UNUSED(column);
 
-    Basket::ItemTreeBasket * i = dynamic_cast<Basket::ItemTreeBasket*>(item);
+    Basket::ItemTreeBasket * i = static_cast<Basket::ItemTreeBasket*>(item);
 
     if ( m_lastBasketLoad != 0 )
     {
@@ -311,16 +314,18 @@ void MainWindow::loadScene( QTreeWidgetItem * item , int column )
 
     i->basket()->load();
 
+    m_currentScene = i->basket()->scene();
+
     reloadView();
 
-    Animation::AnimationManager::startLoad( i->basket()->scene()->items() );
+    Animation::AnimationManager::startLoad( m_currentScene->scene()->items() );
 
     m_view->update();
 }
 
 Scene::AbstractScene * MainWindow::currentScene()
 {
-    return dynamic_cast<Scene::AbstractScene*>(m_view->scene());
+    return m_currentScene;
 }
 
 Scene::CustomGraphicsView * MainWindow::currentView()

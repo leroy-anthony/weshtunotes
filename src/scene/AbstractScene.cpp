@@ -30,7 +30,8 @@
 #include "../config/VisualAspect.h"
 #include "../handle/HandleItem.h"
 #include "../main/MainWindow.h"
-#include "../item/NoteItem.h"
+#include "../item/AbstractItem.h"
+#include "../item/ItemFactory.h"
 #include "../data/AssociationManager.h"
 #include "../data/DataManager.h"
 
@@ -42,7 +43,6 @@ namespace Scene
     }
 
     AbstractScene::AbstractScene( const QString & id ):
-            QGraphicsScene(0),
             GeneratorID(id,false),
             m_horizontalScrollBarValueView(0),
             m_verticalScrollBarValueView(0),
@@ -52,13 +52,12 @@ namespace Scene
             m_layout(0)
     {
         qreal max = std::numeric_limits<qreal>::max();
-        setSceneRect( -max, -max, max, max );
+        m_scene.setSceneRect( -max, -max, max, max );
 
-        connect( this, SIGNAL(selectionChanged()), this, SLOT(showMessageStatus()) );
+        connect( &m_scene, SIGNAL(selectionChanged()), this, SLOT(showMessageStatus()) );
     }
 
     AbstractScene::AbstractScene():
-            QGraphicsScene(0),
             GeneratorID("scene"),
             m_horizontalScrollBarValueView(0),
             m_verticalScrollBarValueView(0),
@@ -68,14 +67,14 @@ namespace Scene
             m_layout(0)
     {
         qreal max = std::numeric_limits<qreal>::max();
-        setSceneRect( -max, -max, max, max );
+        m_scene.setSceneRect( -max, -max, max, max );
 
-        connect( this, SIGNAL(selectionChanged()), this, SLOT(showMessageStatus()) );
+        connect( &m_scene, SIGNAL(selectionChanged()), this, SLOT(showMessageStatus()) );
     }
 
     void AbstractScene::showMessageStatus()
     {
-        int size = selectedItems().size();
+        int size = m_scene.selectedItems().size();
         if ( size > 0 )
         {
             MainWindow::showMessage( i18np("1 selected item", "%1 selected items", size), 0 );
@@ -170,9 +169,9 @@ namespace Scene
 
     void AbstractScene::saveViewOnDisk( const QString & fileName )
     {
-        if ( views().size() > 0 )
+        if ( m_scene.views().size() > 0 )
         {
-            storeView( (CustomGraphicsView*) views()[0] );
+            storeView( (CustomGraphicsView*) m_scene.views()[0] );
 
             Data::DataManager::saveView( fileName, m_transformView, m_horizontalScrollBarValueView, m_verticalScrollBarValueView, m_type );
         }
@@ -197,9 +196,9 @@ namespace Scene
         m_horizontalScrollBarValueView = viewConfig.second.first;
         m_verticalScrollBarValueView = viewConfig.second.second;
 
-        if ( views().size() > 0 )
+        if ( m_scene.views().size() > 0 )
         {
-            restoreView( (CustomGraphicsView*) views()[0] );
+            restoreView( (CustomGraphicsView*) m_scene.views()[0] );
         }
     }
 
@@ -212,7 +211,7 @@ namespace Scene
         {
             QString fileName = filesName[j];
 
-            QMap<QString,Item::AbstractItem*> itemsToLoad;
+            QList<Item::AbstractItem*> itemsToLoad;
             QMap<QString,Handle::HandleItem*> handles;
 
             Data::DataManager settingsHandle( fileName );
@@ -235,10 +234,10 @@ namespace Scene
                     dy = centerPt.y()-y-selectionHeigth/2;
                 }
 
-                handle = newHandle( x+dx, y+dy, settingsHandle.valueGroup( itemId, "width", Settings::widthNote()).toInt() );
+                handle = newHandle( x+dx, y+dy );
 		if ( handle != 0 )
 		{
-		    handle->setId( itemId );
+                    handle->load( itemId );
 
 		    //for copy/paste
 		    if ( newHandles )
@@ -258,24 +257,21 @@ namespace Scene
 		    }
 		    else
 		    {
-			//TODO: replace me by item->load() ???
-                        Item::AbstractItem * item = newItem( 0, 0 );
-			item->setItemColor( QColor(settingsHandle.valueGroup(items[i],"color", Settings::colorItem() )) );
+                        QString id = settingsHandle.valueGroup( itemId, "data", "" );
+
+                        Item::AbstractItem * item = Item::ItemFactory::newItem( id );
+                        connect( item, SIGNAL(editItem(Item::AbstractItem*)), this, SLOT(editItem(Item::AbstractItem*)));
 			handle->add( item );
 
-			QString id = settingsHandle.valueGroup( itemId,"data","" );
-			item->setId( id );
-			itemsToLoad[ id ] = item;
+                        itemsToLoad += item;
 
 			QStringList namesTags = settingsHandle.values( itemId, "tag" );
 			for ( int k=0 ; k<namesTags.size() ; ++k )
 			{
 			    QStringList s = namesTags[k].split(":");
-                            dynamic_cast<Item::NoteItem*>(item)->addTag(s[0],s[1]); //fixme: pourquoi pas abstractitem
+                            item->addTag(s[0],s[1]);
                         }
 		    }
-
-                    handle->setPin( settingsHandle.valueGroup( itemId, "pin", false) != "false" );
 		}
             }
             
@@ -285,10 +281,9 @@ namespace Scene
 	    }
 
             //charge la note
-            for ( int k=0 ; k<itemsToLoad.keys().size() ; ++k )
+            for ( int k=0 ; k<itemsToLoad.size() ; ++k )
             {
-                Item::AbstractItem * item = itemsToLoad[ itemsToLoad.keys()[k] ];
-                item->load();
+                itemsToLoad[k]->load();
             }
         }
     }
@@ -297,7 +292,7 @@ namespace Scene
     {
         Data::DataManager settings( fileName );
 
-        setId( settings.valueGroup("scene","id",GeneratorID::id()) );
+        setId( settings.valueGroup( "scene", "id", GeneratorID::id() ) );
         m_directoryScene = fileName;
 
         loadViewFromDisk( fileName );
@@ -341,6 +336,11 @@ namespace Scene
     void AbstractScene::delItem( QGraphicsProxyWidget * item )
     {
         delItem( m_items[item] );
+    }
+
+    QGraphicsScene * AbstractScene::scene()
+    {
+        return &m_scene;
     }
 
 }

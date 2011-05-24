@@ -41,6 +41,11 @@
 #include <QGraphicsLinearLayout>
 #include <QGraphicsTextItem>
 
+#include <KDE/Plasma/Applet>
+#include <KDE/Plasma/Containment>
+#include <KDE/Plasma/Corona>
+#include <KDE/Plasma/Wallpaper>
+
 #include "settings.h"
 #include "../handle/HandleItem.h"
 #include "../config/Configuration.h"
@@ -55,12 +60,14 @@ namespace Scene
             m_currentHandle(0),
             m_modeItem(Nothing)
     {
-        setBackgroundBrush(QColor(Qt::cyan).lighter(190));
+        m_scene.setBackgroundBrush(QColor(Qt::cyan).lighter(190));
         /*
           QGraphicsScene::BspTreeIndex
           QGraphicsScene::NoIndex
           */
-        setItemIndexMethod(QGraphicsScene::NoIndex);
+        m_scene.setItemIndexMethod(QGraphicsScene::NoIndex);
+
+        m_scene.installEventFilter(this);
 
         m_type = "freescene";
     }
@@ -71,12 +78,14 @@ namespace Scene
             m_currentHandle(0),
             m_modeItem(Nothing)
     {
-        setBackgroundBrush(QColor(Qt::cyan).lighter(190));
+        m_scene.setBackgroundBrush(QColor(Qt::cyan).lighter(190));
         /*
           QGraphicsScene::BspTreeIndex
           QGraphicsScene::NoIndex
           */
-        setItemIndexMethod(QGraphicsScene::NoIndex);
+        m_scene.setItemIndexMethod(QGraphicsScene::NoIndex);
+
+        m_scene.installEventFilter(this);
 
         m_type = "freescene";
     }
@@ -84,17 +93,31 @@ namespace Scene
     FreeScene::~FreeScene()
     {
     }
+
+    bool FreeScene::eventFilter(QObject *obj, QEvent *event)
+    {
+        if (event->type() == QEvent::GraphicsSceneMousePress) {
+            QGraphicsSceneMouseEvent * mouseButtonPress = static_cast<QGraphicsSceneMouseEvent *>(event);
+            mousePressEvent(mouseButtonPress);
+        } else if (event->type() == QEvent::GraphicsSceneMouseRelease) {
+            QGraphicsSceneMouseEvent * mouseButtonRelease = static_cast<QGraphicsSceneMouseEvent *>(event);
+            mouseReleaseEvent(mouseButtonRelease);
+        }
+
+        // standard event processing
+        return QObject::eventFilter(obj, event);
+     }
     
     Handle::HandleItem * FreeScene::addData( const QMimeData * data )
     {
         if ( m_currentAbstractItem == 0 )
         {
-            QList<QGraphicsView*> viewList = views();
+            QList<QGraphicsView*> viewList = m_scene.views();
 
             QPointF pt;
             if ( viewList.size() > 0 )
             {
-                QGraphicsView * view = views()[0];
+                QGraphicsView * view = m_scene.views()[0];
 
                 pt = view->mapToScene( view->viewport()->width()/2, view->viewport()->height()/2 );
                 int x = (rand() % 30 + 1)*(rand() % 2 == 0 ? -1 : 1 );
@@ -102,9 +125,9 @@ namespace Scene
                 pt += QPointF(x,y);
             }
 
-            Handle::HandleItem * handle = newHandle( pt.x(), pt.y(), Settings::widthNote() );
+            Handle::HandleItem * handle = newHandle( pt.x(), pt.y() );
 
-            Item::AbstractItem * item = newItem( pt.x(), pt.y() );
+            Item::AbstractItem * item = newItem();
 
             handle->add( item );
 
@@ -122,20 +145,17 @@ namespace Scene
         }
     }
 
-    Handle::HandleItem * FreeScene::newHandle( int x, int y, int w  )
+    Handle::HandleItem * FreeScene::newHandle( int x, int y )
     {
-        Handle::HandleItem * handle = new Handle::HandleItem( this, x, y, w );
+        Handle::HandleItem * handle = new Handle::HandleItem( this, x, y );
         connect( handle, SIGNAL(move(Handle::HandleItem*,int,int)), this, SLOT(moveItem(Handle::HandleItem*,int,int)));
         connect( handle, SIGNAL(delItem(Handle::HandleItem*)), this, SLOT(delItem(Handle::HandleItem*)));
         
         return handle;
     }
     
-    Item::AbstractItem * FreeScene::newItem( int x, int y )
+    Item::AbstractItem * FreeScene::newItem()
     {
-        Q_UNUSED(x);
-        Q_UNUSED(y);
-
         Item::NoteItem * item = new Item::NoteItem();
         connect( item, SIGNAL(editItem(Item::AbstractItem*)), this, SLOT(editItem(Item::AbstractItem*)));
         
@@ -144,10 +164,8 @@ namespace Scene
     
     Handle::HandleItem *  FreeScene::addItems( int x, int y )
     {
-        Handle::HandleItem * handle = newHandle( x, y, Settings::widthNote() );
-        
-        Item::AbstractItem * item = newItem( x, y );
-
+        Handle::HandleItem * handle = newHandle( x, y );
+        Item::AbstractItem * item = newItem();
         handle->add( item );
 
         Handle::GraphicHandleItem  * g = addHandleToScene( handle );
@@ -163,7 +181,7 @@ namespace Scene
 
     void FreeScene::addItemToScene( Handle::GraphicHandleItem * g )
     {
-        addItem(g);
+        m_scene.addItem(g);
 
         Handle::HandleItem * handle = (Handle::HandleItem *) g->widget();
 
@@ -188,7 +206,7 @@ namespace Scene
         g->setFlag(QGraphicsItem::ItemIsFocusable,true);
         g->setWidget(handle);
 
-        addItem(g);
+        m_scene.addItem(g);
 
         g->setPos( handle->x(), handle->y() );
         g->setZValue( 1 );
@@ -217,19 +235,16 @@ namespace Scene
                 m_lastCibleHandle->resetInsert();
             }
 
-            QList<QGraphicsItem*> items = collidingItems( m_handles.value(handleItem) );
-            if ( items.size() > 0 )
+            QList<QGraphicsItem*> items = m_scene.collidingItems( m_handles.value(handleItem) );
+            for ( int i=0 ; i<items.size() ; ++i )
             {
-                for ( int i=0 ; i<items.size() ; ++i )
+                if ( items[i]->isVisible() )
                 {
-                    if ( items[i]->isVisible() )
+                    m_lastCibleHandle = m_items[static_cast<QGraphicsProxyWidget*>(items[i])];
+                    if ( m_lastCibleHandle != 0 && !m_lastCibleHandle->isPin() )
                     {
-                        m_lastCibleHandle = m_items[static_cast<QGraphicsProxyWidget*>(items[i])];
-                        if ( m_lastCibleHandle != 0 && !m_lastCibleHandle->isPin() )
-                        {
-                            m_lastCibleHandle->insert( handleItem->geometry().topLeft(), handleItem->height() );
-                            break;
-                        }
+                        m_lastCibleHandle->insert( handleItem->geometry().topLeft(), handleItem->height() );
+                        break;
                     }
                 }
             }
@@ -250,7 +265,7 @@ namespace Scene
     void FreeScene::mousePressEvent ( QGraphicsSceneMouseEvent * mouseEvent )
     {
         m_currentAbstractItem = 0;
-        Handle::GraphicHandleItem * currentGraphicsItem = static_cast<Handle::GraphicHandleItem*>(itemAt( mouseEvent->scenePos().x(), mouseEvent->scenePos().y() ));
+        Handle::GraphicHandleItem * currentGraphicsItem = static_cast<Handle::GraphicHandleItem*>(m_scene.itemAt( mouseEvent->scenePos().x(), mouseEvent->scenePos().y() ));
 
         if ( mouseEvent->button() == Qt::LeftButton )
         {
@@ -259,7 +274,7 @@ namespace Scene
             {
                 if ( mouseEvent->modifiers() != Qt::ControlModifier )
                 {
-                    clearSelection();
+                    m_scene.clearSelection();
                 }
 
                 currentGraphicsItem->setSelected(true);
@@ -276,8 +291,6 @@ namespace Scene
                 addItems( mouseEvent->scenePos().x(), mouseEvent->scenePos().y() );
             }
         }
-
-        QGraphicsScene::mousePressEvent ( mouseEvent );
     }
 
     void FreeScene::mouseReleaseEvent(QGraphicsSceneMouseEvent * mouseEvent)
@@ -286,7 +299,7 @@ namespace Scene
         {
             delUselessHandleGroup( m_currentHandle  );
 
-            QList<QGraphicsItem *> items = collidingItems( m_handles.value( m_currentHandle ) );
+            QList<QGraphicsItem *> items = m_scene.collidingItems( m_handles.value( m_currentHandle ) );
             if ( items.size() > 0 )
             {
                 for ( int i=0 ; i<items.size() ; ++i )
@@ -298,7 +311,7 @@ namespace Scene
                         {
                             QPointF pt = static_cast<QGraphicsProxyWidget*>(items[i])->pos();
 
-                            Handle::HandleItem * handle = newHandle( pt.x(), pt.y(), Settings::widthNote() );
+                            Handle::HandleItem * handle = newHandle( pt.x(), pt.y() );
 
                             handle->setIndexInsert( handleCible->indexInsert() );
 
@@ -337,8 +350,6 @@ namespace Scene
         }
 
         m_modeItem = Nothing;
-
-        QGraphicsScene::mouseReleaseEvent ( mouseEvent );
     }
 
     Item::AbstractItem * FreeScene::currentAbstractItem()
@@ -374,7 +385,7 @@ namespace Scene
     {
         g->clearFocus();
 
-        removeItem(g);
+        m_scene.removeItem(g);
 
         m_items.remove(g);
 

@@ -23,6 +23,7 @@
 
 #include "../basket/Basket.h"
 #include "../basket/TagBasket.h"
+#include "../basket/PlasmaBasket.h"
 #include "../basket/AbstractBasket.h"
 #include "../config/Configuration.h"
 #include "../data/DataManager.h"
@@ -30,8 +31,8 @@
 namespace Basket
 {
 
-    const char * BasketFactory::m_types[] = { "basket" , "tag_basket" };
-    const char * BasketFactory::m_labels[] = { "Basket" , "Tag Basket" };
+    const char * BasketFactory::m_types[] = { "basket" , "tag_basket", "plasma_basket" };
+    const char * BasketFactory::m_labels[] = { "Basket" , "Tag Basket", "Plasma basket" };
 
     BasketFactory::BasketFactory()
     {
@@ -81,6 +82,10 @@ namespace Basket
         {
             basket = new TagBasket( itemTreeBasket, id, options );
         }
+        else if ( type == m_types[ PLASMA_BASKET ] )
+        {
+            basket = new PlasmaBasket( itemTreeBasket, id );
+        }
         else
         {
             basket = new Basket( itemTreeBasket, id );
@@ -101,10 +106,17 @@ namespace Basket
         {
             basket = new Basket( itemTreeBasket, parent, id );
         }
-
-        if ( type == m_types[ TAG_BASKET ] )
+        else if ( type == m_types[ PLASMA_BASKET ] )
+        {
+            basket = new PlasmaBasket( itemTreeBasket, parent, id );
+        }
+        else if ( type == m_types[ TAG_BASKET ] )
         {
             basket = new TagBasket( itemTreeBasket, parent, id, options );
+        }
+        else
+        {
+            basket = new Basket( itemTreeBasket, parent, id );
         }
 
         return basket;

@@ -6,14 +6,6 @@ SET(CMAKE_VERBOSE_MAKEFILE ON)
 
 #### VERSION ####
 
-EXECUTE_PROCESS(
-        COMMAND cat version.txt
-        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
-        OUTPUT_VARIABLE VERSION_INFO
-        ERROR_VARIABLE VERSION_INFO
-OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-
 CONFIGURE_FILE ( "${PROJECT_SOURCE_DIR}/src/main/version.h.in" "${PROJECT_BINARY_DIR}/version.h"  )
 
 INCLUDE_DIRECTORIES("${PROJECT_BINARY_DIR}")
@@ -48,7 +40,8 @@ set(weshnotes_UI
 ./src/config/AppareanceSettings.ui
 ./src/config/SynchroSettings.ui
 ./src/config/ClipperSettings.ui
-./src/basket/NewBasketForm.ui)
+./src/basket/NewBasketForm.ui
+./src/scene/NewAppletForm.ui)
 
 QT_WRAP_UI(weshnotes weshnotes_UI_H weshnotes_UI_SRC ${weshnotes_UI})
 
@@ -62,6 +55,9 @@ set(weshnotes_SRC
 ./src/scene/SceneFactory.cpp
 ./src/scene/ToolBarScene.cpp
 ./src/scene/CustomGraphicsView.cpp
+./src/scene/PlasmaScene.cpp
+./src/scene/NewAppletDialog.cpp
+./src/item/ItemFactory.cpp
 ./src/item/AbstractItem.cpp 
 ./src/item/NoteItem.cpp
 ./src/item/CustomTextEdit.cpp
@@ -79,6 +75,7 @@ set(weshnotes_SRC
 ./src/basket/AbstractBasket.cpp
 ./src/basket/Basket.cpp
 ./src/basket/TagBasket.cpp
+./src/basket/PlasmaBasket.cpp
 ./src/basket/ClipperBasket.cpp
 ./src/basket/BasketFactory.cpp
 ./src/basket/NewBasketDialog.cpp
@@ -140,7 +137,7 @@ set(weshnotes_MOC
 
 kde4_add_kcfg_files(weshnotes_SRC ./src/config/settings.kcfgc)
 kde4_add_executable(kweshtunotes ${weshnotes_SRC})
-target_link_libraries(kweshtunotes ${KDE4_KDEUI_LIBS} ${KDE4_KPARTS_LIBS} ${QT_LIBRARIES} ${SOPRANO_LIBRARIES} ${NEPOMUK_QUERY_LIBRARIES} ${NEPOMUK_LIBRARIES} )
+target_link_libraries(kweshtunotes ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} ${KDE4_KPARTS_LIBS} ${QT_LIBRARIES} ${SOPRANO_LIBRARIES} ${NEPOMUK_QUERY_LIBRARIES} ${NEPOMUK_LIBRARIES} )
 
 install(TARGETS kweshtunotes DESTINATION ${BIN_INSTALL_DIR})
 install(FILES ./src/main/kweshtunotesui.rc DESTINATION  ${DATA_INSTALL_DIR}/kweshtunotes)

@@ -27,6 +27,7 @@
 
 namespace Scene
 {
+    class AbstractScene;
 
     class CustomGraphicsView : public QGraphicsView
     {
@@ -35,7 +36,7 @@ namespace Scene
     public:
         CustomGraphicsView();
 
-        void setScene( QGraphicsScene * scene );
+        void setScene( AbstractScene * scene );
 
         bool hasZoomAbilities();
 
@@ -88,6 +89,8 @@ namespace Scene
         QPointF m_position;
 
         QList<Handle::GraphicHandleItem*> m_copyHandlesItem;
+
+        AbstractScene * m_scene;
 
     };
 

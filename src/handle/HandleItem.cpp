@@ -48,11 +48,12 @@
 #include "SizeHorHandle.h"
 #include "DeleteHandle.h"
 #include "PinHandle.h"
+#include "settings.h"
 
 namespace Handle
 {
 
-    HandleItem::HandleItem( Scene::AbstractScene * parent, int x, int y, int width ) :
+    HandleItem::HandleItem( Scene::AbstractScene * parent, int x, int y ) :
             QWidget(0),
             GeneratorID("handle"),
             m_scene(parent),
@@ -68,7 +69,8 @@ namespace Handle
             m_x(x),
             m_y(y)
     {
-        QWidget::resize(width, width);
+        QWidget::resize(Settings::widthNote(),Settings::widthNote());
+
         setContentsMargins( m_contentMarginX, m_contentMarginY, m_contentMarginX, m_contentMarginY );
 
         m_sizeHorHandle = new SizeHorHandle(this);
@@ -317,6 +319,21 @@ namespace Handle
         }
     }
     
+    void HandleItem::load( const QString & id )
+    {
+        Data::DataManager settings( Data::DataManager::configFileItem( id ) );
+
+        int width = settings.valueGroup( id, "width", Settings::widthNote()).toInt();
+        QWidget::resize(width, width);
+
+        setPin( settings.valueGroup( id, "pin", false) != "false" );
+    }
+
+    void HandleItem::load()
+    {
+        load( GeneratorID::id() );
+    }
+
     void HandleItem::save()
     {
         QStringList children;

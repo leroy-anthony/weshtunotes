@@ -54,7 +54,7 @@ namespace Handle
         Q_OBJECT
 
     public:
-        HandleItem( Scene::AbstractScene * parent, int x, int y, int width );
+        HandleItem( Scene::AbstractScene * parent, int x, int y );
         virtual ~HandleItem();
 
         void add( Item::AbstractItem * w );
@@ -97,6 +97,8 @@ namespace Handle
         void setDefaultColor( const QColor & color );
 
         void save();
+        void load();
+        void load( const QString & id );
 
         int contentMarginX();
         int contentMarginY();
