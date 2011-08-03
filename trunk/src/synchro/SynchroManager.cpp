@@ -172,11 +172,7 @@ namespace Synchro
 
                 if ( !m_cx->authentication(dlg.username(), dlg.password()) )
                 {
-                    if ( m_cx->connectionError() == "" )
-                    {
-                        connectionExec( dlg, wallet, actionPtr, config );
-                        return;
-                    }
+                    connectionExec( dlg, wallet, actionPtr, config );
 
                     return;
                 }
@@ -336,6 +332,9 @@ namespace Synchro
 
         if ( !ids.contains(idBasket) )
         {
+            QTextCharFormat f;
+            f.setForeground(QColor("red"));
+            m_log.textCursor().insertText(" [ERROR] Can't found basket.\n",f);
             return;
         }
 
