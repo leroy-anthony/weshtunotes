@@ -58,7 +58,7 @@ namespace Scene
 
         void loadHandles( const QList<QString> & filesName, QPointF centerPt = QPointF(0,0), int selectionWidth = 0, int selectionHeigth = 0, bool newHandles = false );
         virtual void load( const QString & fileName );
-        virtual void save();
+        void save();
 
         void saveViewOnDisk( const QString & fileName );
         void loadViewFromDisk( const QString & fileName );
@@ -84,7 +84,7 @@ namespace Scene
 
     public slots:
         virtual void delItem( Handle::HandleItem * h ) = 0;
-        virtual void delItem( QGraphicsProxyWidget * item );
+        void delItem( QGraphicsProxyWidget * item );
         virtual void moveItem( Handle::HandleItem * handleItem, int x, int y ) = 0;
 
         void showMessageStatus();

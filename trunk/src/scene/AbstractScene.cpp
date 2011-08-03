@@ -46,10 +46,10 @@ namespace Scene
             GeneratorID(id,false),
             m_horizontalScrollBarValueView(0),
             m_verticalScrollBarValueView(0),
-            m_lastCibleHandle(0),
-            m_readOnly(false),
             m_form(0),
-            m_layout(0)
+            m_layout(0),
+            m_lastCibleHandle(0),
+            m_readOnly(false)
     {
         qreal max = std::numeric_limits<qreal>::max();
         m_scene.setSceneRect( -max, -max, max, max );
@@ -61,10 +61,10 @@ namespace Scene
             GeneratorID("scene"),
             m_horizontalScrollBarValueView(0),
             m_verticalScrollBarValueView(0),
-            m_lastCibleHandle(0),
-            m_readOnly(false),
             m_form(0),
-            m_layout(0)
+            m_layout(0),
+            m_lastCibleHandle(0),
+            m_readOnly(false)
     {
         qreal max = std::numeric_limits<qreal>::max();
         m_scene.setSceneRect( -max, -max, max, max );

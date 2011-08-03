@@ -54,9 +54,13 @@ namespace Scene
         void addItemToScene( Handle::GraphicHandleItem * item );
         Handle::HandleItem * addData( const QMimeData * data );
         Handle::HandleItem * addItems( int x, int y );
-        void delItem( Handle::HandleItem * h );
 
         void save( const QString & id, const QString & fileName );
+
+
+    public slots:
+        void moveItem( Handle::HandleItem * handleItem, int x, int y );
+        void delItem( Handle::HandleItem * h );
 
 
     protected:
@@ -75,13 +79,11 @@ namespace Scene
         Handle::HandleItem * m_currentHandle;
         Item::AbstractItem * m_currentAbstractItem;
 
+
     private:
         QPointF m_mouseLocalPositionItem;
-
         QToolBar * m_textToolBar;
 
-    public slots:
-        void moveItem( Handle::HandleItem * handleItem, int x, int y );
 
     private slots:
         void editItem( Item::AbstractItem * item );
