@@ -56,9 +56,9 @@ namespace Scene
 {
     FreeScene::FreeScene( const QString & id ) :
             AbstractScene(id),
-            m_currentAbstractItem(0),
+            m_modeItem(Nothing),
             m_currentHandle(0),
-            m_modeItem(Nothing)
+            m_currentAbstractItem(0)
     {
         m_scene.setBackgroundBrush(QColor(Qt::cyan).lighter(190));
         /*
@@ -74,9 +74,9 @@ namespace Scene
 
     FreeScene::FreeScene() :
             AbstractScene(),
-            m_currentAbstractItem(0),
+            m_modeItem(Nothing),
             m_currentHandle(0),
-            m_modeItem(Nothing)
+            m_currentAbstractItem(0)
     {
         m_scene.setBackgroundBrush(QColor(Qt::cyan).lighter(190));
         /*
