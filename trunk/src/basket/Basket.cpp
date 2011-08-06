@@ -21,7 +21,7 @@
 #include "../scene/SceneFactory.h"
 #include "../config/Configuration.h"
 #include "../basket/BasketFactory.h"
-#include "../basket/ItemTreeBasket.h"
+#include "../explorer/ItemTreeBasket.h"
 #include "../data/AssociationManager.h"
 #include "../data/DataManager.h"
 #include "settings.h"
@@ -29,13 +29,13 @@
 namespace Basket
 {
 
-    Basket::Basket( ItemTreeBasket * itemTreeBasket, AbstractBasket * basketParent, const QString & id ):
+    Basket::Basket( Explorer::ItemTreeBasket * itemTreeBasket, AbstractBasket * basketParent, const QString & id ):
             AbstractBasket( itemTreeBasket, basketParent, id )
     {
         initBasket();
     }
 
-    Basket::Basket( ItemTreeBasket * itemTreeBasket, const QString & id ):
+    Basket::Basket( Explorer::ItemTreeBasket * itemTreeBasket, const QString & id ):
             AbstractBasket( itemTreeBasket, id )
     {
         initBasket();

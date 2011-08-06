@@ -41,7 +41,7 @@
 #include "settings.h"
 #include "../tag/TagFactory.h"
 #include "../explorer/TreeExplorer.h"
-#include "../basket/ItemTreeBasket.h"
+#include "../explorer/ItemTreeBasket.h"
 #include "../basket/ClipperBasket.h"
 #include "../config/Configuration.h"
 #include "../config/ImageFactory.h"
@@ -60,15 +60,22 @@ KStatusBar * MainWindow::m_statusBar = 0;
 
 Scene::CustomGraphicsView * MainWindow::m_view = 0;
 
-Basket::ItemTreeBasket * MainWindow::m_lastBasketLoad = 0;
+Explorer::ItemTreeBasket * MainWindow::m_lastBasketLoad = 0;
 
 MainWindow::MainWindow( QWidget * parent ) :
-        KXmlGuiWindow( parent )
+        KXmlGuiWindow( parent ),
+        m_temporyScene(0),
+        m_currentScene(0),
+        m_controllerScene(0),
+        m_tagFactory(0),
+        m_treeExplorer(0),
+        m_trayIcon(0),
+        m_copyHandleItem(0)
 {
     setupUi(this);
 
-    initToolBar();
     initView();
+    initToolBar();
     initExplorer();
 
     m_tagFactory = Tag::TagFactory::newTagFactory();
@@ -88,6 +95,7 @@ MainWindow::~MainWindow()
 {
     save();
 
+    delete m_temporyScene;
     delete m_tagFactory;
 }
 
@@ -103,7 +111,8 @@ void MainWindow::loadData()
     }
     else
     {
-        m_view->setScene( new Scene::FreeScene() );
+        m_temporyScene = new Scene::FreeScene();
+        m_view->setScene( m_temporyScene );
     }
 }
 
@@ -257,10 +266,10 @@ void MainWindow::initExplorer()
 
     connect( m_treeExplorer, SIGNAL(itemClicked(QTreeWidgetItem*,int)),                   this, SLOT(loadScene(QTreeWidgetItem*,int)) );
     connect( m_treeExplorer, SIGNAL(delCurrentBasketRequest()),                           this, SLOT(delCurrentBasket()) );
-    connect( m_treeExplorer, SIGNAL(addToCurrentBasketRequest(Basket::ItemTreeBasket *)), this, SLOT(addBasket(Basket::ItemTreeBasket *)) );
+    connect( m_treeExplorer, SIGNAL(addToCurrentBasketRequest(Explorer::ItemTreeBasket *)), this, SLOT(addBasket(Explorer::ItemTreeBasket *)) );
 }
 
-void MainWindow::addBasket( Basket::ItemTreeBasket * item )
+void MainWindow::addBasket( Explorer::ItemTreeBasket * item )
 {
     if ( item != 0 )
     {
@@ -279,7 +288,8 @@ void MainWindow::delCurrentBasket()
     }
     else
     {
-        m_view->setScene( new Scene::FreeScene() );
+        m_temporyScene = new Scene::FreeScene();
+        m_view->setScene( m_temporyScene );
         m_view->setDisabled(true);
     }
 }
@@ -303,7 +313,7 @@ void MainWindow::loadScene( QTreeWidgetItem * item , int column )
 {
     Q_UNUSED(column);
 
-    Basket::ItemTreeBasket * i = static_cast<Basket::ItemTreeBasket*>(item);
+    Explorer::ItemTreeBasket * i = static_cast<Explorer::ItemTreeBasket*>(item);
 
     if ( m_lastBasketLoad != 0 )
     {

@@ -33,7 +33,7 @@ namespace Basket
         Q_OBJECT
 
     public:
-        ClipperBasket( ItemTreeBasket * itemTreeBasket, const QString & id );
+        ClipperBasket( Explorer::ItemTreeBasket * itemTreeBasket, const QString & id );
 
         void save();
         void load();

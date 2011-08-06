@@ -89,10 +89,6 @@ namespace Scene
 
         m_type = "freescene";
     }
-    
-    FreeScene::~FreeScene()
-    {
-    }
 
     bool FreeScene::eventFilter(QObject *obj, QEvent *event)
     {

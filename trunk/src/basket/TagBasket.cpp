@@ -37,14 +37,14 @@
 #include "../config/Configuration.h"
 #include "../basket/AbstractBasket.h"
 #include "../basket/BasketFactory.h"
-#include "../basket/ItemTreeBasket.h"
+#include "../explorer/ItemTreeBasket.h"
 #include "../data/AssociationManager.h"
 #include "../data/DataManager.h"
 
 namespace Basket
 {
     
-    TagBasket::TagBasket( ItemTreeBasket * itemTreeBasket,
+    TagBasket::TagBasket( Explorer::ItemTreeBasket * itemTreeBasket,
                           AbstractBasket * basket,
                           const QString & id,
                           const QMap<QString,QString> & options ):
@@ -54,7 +54,7 @@ namespace Basket
         initTagBasket( options );
     }
     
-    TagBasket::TagBasket( ItemTreeBasket * itemTreeBasket,
+    TagBasket::TagBasket( Explorer::ItemTreeBasket * itemTreeBasket,
                           const QString & id,
                           const QMap<QString,QString> & options ):
     AbstractBasket( itemTreeBasket, id ),

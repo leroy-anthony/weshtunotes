@@ -22,7 +22,7 @@
 #include <KDialog>
 
 #include "NewBasketForm.h"
-#include "../basket/ItemTreeBasket.h"
+#include "../explorer/ItemTreeBasket.h"
 #include "../explorer/AbstractExplorer.h"
 #include "../synchro/SynchroManager.h"
 #include "../synchro/GoogleDocsConnection.h"
@@ -40,15 +40,15 @@ namespace Basket
         Q_OBJECT
 
     public:
-        NewBasketDialog( Explorer::AbstractExplorer * basketExplorer, ItemTreeBasket * parent );
+        NewBasketDialog( Explorer::AbstractExplorer * basketExplorer, Explorer::ItemTreeBasket * parent );
 
-        static ItemTreeBasket * getNewBasket( Explorer::AbstractExplorer * basketExplorer, Basket::ItemTreeBasket * parent );
+        static Explorer::ItemTreeBasket * getNewBasket( Explorer::AbstractExplorer * basketExplorer, Explorer::ItemTreeBasket * parent );
 
         int currentIndexTab();
 
     public slots:
-        ItemTreeBasket * addBasket();
-        ItemTreeBasket * addRemoteBasket();
+        Explorer::ItemTreeBasket * addBasket();
+        Explorer::ItemTreeBasket * addRemoteBasket();
         void changeTab( int index );
         void valid( const QString & text );
 
@@ -61,7 +61,7 @@ namespace Basket
         int order();
 
         Explorer::AbstractExplorer * m_basketExplorer;
-        ItemTreeBasket * m_parent;
+        Explorer::ItemTreeBasket * m_parent;
 
         KTabWidget * m_basketsTab;
 

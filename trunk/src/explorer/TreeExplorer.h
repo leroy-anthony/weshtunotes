@@ -22,10 +22,10 @@
 #include <QTreeWidget>
 
 #include "../explorer/AbstractExplorer.h"
+#include "../explorer/ItemTreeBasket.h"
 
 namespace Basket
 {
-    class ItemTreeBasket;
     class ClipperBasket;
 }
 
@@ -42,7 +42,7 @@ namespace Explorer
 
         QTreeWidgetItem * loadFromConfigCurrentBasket();
 
-        Basket::ItemTreeBasket * rootItem();
+        ItemTreeBasket * rootItem();
         Basket::ClipperBasket * clipperBasket();
 
         void saveBaskets( QTreeWidgetItem * b );
@@ -50,8 +50,8 @@ namespace Explorer
     public slots:
         void saveBaskets();
         void delCurrentBasket();
-        Basket::ItemTreeBasket * addBasketToRoot();
-        Basket::ItemTreeBasket * addToCurrentBasket();
+        ItemTreeBasket * addBasketToRoot();
+        ItemTreeBasket * addToCurrentBasket();
         void showPropertiesBasket();
 
         void loadBaskets();
@@ -61,15 +61,15 @@ namespace Explorer
 
     signals:
         void delCurrentBasketRequest();
-        void addToCurrentBasketRequest( Basket::ItemTreeBasket * );
+        void addToCurrentBasketRequest( Explorer::ItemTreeBasket * );
     
     protected:
         void dropEvent ( QDropEvent * event );
         void startDrag( Qt::DropActions supportedActions );
         
     private:
-        Basket::ItemTreeBasket * addBasket( Basket::ItemTreeBasket * parent, const QString & name );
-        void loadBasket( Basket::ItemTreeBasket * parent, const QString & name );
+        ItemTreeBasket * addBasket( ItemTreeBasket * parent, const QString & name );
+        void loadBasket( ItemTreeBasket * parent, const QString & name );
         Basket::ClipperBasket * m_clipperBasket;
 
     };

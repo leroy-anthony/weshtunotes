@@ -19,19 +19,19 @@
 #ifndef ABSTRACTEXPLORER_H_
 #define ABSTRACTEXPLORER_H_
 
-#include "../basket/ItemTreeBasket.h"
 
 class QString;
 
 namespace Explorer
 {
+    class ItemTreeBasket;
 
     class AbstractExplorer
     {
     public:
         virtual ~AbstractExplorer();
 
-        virtual Basket::ItemTreeBasket * rootItem() = 0;
+        virtual ItemTreeBasket * rootItem() = 0;
 
     protected:
         AbstractExplorer();

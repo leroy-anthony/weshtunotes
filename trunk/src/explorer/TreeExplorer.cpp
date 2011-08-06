@@ -31,13 +31,12 @@
 
 #include "../basket/NewBasketDialog.h"
 #include "../basket/PropertiesBasketDialog.h"
-#include "../basket/ItemTreeBasket.h"
+#include "../explorer/ItemTreeBasket.h"
 #include "../basket/BasketFactory.h"
 #include "../scene/FreeScene.h"
 #include "../scene/LayoutScene.h"
 #include "../config/Configuration.h"
 #include "../config/ImageFactory.h"
-#include "../basket/ItemTreeBasket.h"
 #include "../synchro/ConnectionFactory.h"
 #include "../basket/ClipperBasket.h"
 
@@ -62,7 +61,7 @@ namespace Explorer
 
         if ( Settings::useClipper() )
         {
-            Basket::ItemTreeBasket * item = new Basket::ItemTreeBasket( 0, "Clipper", 0 );
+            ItemTreeBasket * item = new ItemTreeBasket( 0, "Clipper", 0 );
             m_clipperBasket = new Basket::ClipperBasket(item,"clipper");
             item->setBasket(m_clipperBasket);
             insertTopLevelItem(  topLevelItemCount(), item );
@@ -75,7 +74,7 @@ namespace Explorer
 
     void TreeExplorer::delCurrentBasket()
     {
-        Basket::ItemTreeBasket * b = static_cast<Basket::ItemTreeBasket*>(currentItem());
+        ItemTreeBasket * b = static_cast<ItemTreeBasket*>(currentItem());
         if ( b == 0 )
         {
             return;
@@ -108,9 +107,9 @@ namespace Explorer
         }
     }
 
-    Basket::ItemTreeBasket * TreeExplorer::addToCurrentBasket()
+    ItemTreeBasket * TreeExplorer::addToCurrentBasket()
     {
-        Basket::ItemTreeBasket * item = Basket::NewBasketDialog::getNewBasket( this, static_cast<Basket::ItemTreeBasket*>(currentItem()) );
+        ItemTreeBasket * item = Basket::NewBasketDialog::getNewBasket( this, static_cast<ItemTreeBasket*>(currentItem()) );
 
         setCurrentItem(item);
 
@@ -119,9 +118,9 @@ namespace Explorer
         return item;
     }
 
-    Basket::ItemTreeBasket * TreeExplorer::addBasketToRoot()
+    ItemTreeBasket * TreeExplorer::addBasketToRoot()
     {
-        Basket::ItemTreeBasket * item = Basket::NewBasketDialog::getNewBasket( this, 0 );
+        ItemTreeBasket * item = Basket::NewBasketDialog::getNewBasket( this, 0 );
         insertTopLevelItem(  topLevelItemCount(), item );
 
         setCurrentItem(item);
@@ -133,7 +132,7 @@ namespace Explorer
 
     void TreeExplorer::showPropertiesBasket()
     {
-        Basket::ItemTreeBasket * b = static_cast<Basket::ItemTreeBasket*>(currentItem());
+        ItemTreeBasket * b = static_cast<ItemTreeBasket*>(currentItem());
         if ( b != 0 )
         {
             Basket::PropertiesBasketDialog prop(this, b);
@@ -141,9 +140,9 @@ namespace Explorer
         }
     }
 
-    Basket::ItemTreeBasket * TreeExplorer::rootItem()
+    ItemTreeBasket * TreeExplorer::rootItem()
     {
-        return static_cast<Basket::ItemTreeBasket*>(QTreeWidget::invisibleRootItem());
+        return static_cast<ItemTreeBasket*>(QTreeWidget::invisibleRootItem());
     }
 
     void TreeExplorer::saveBaskets( QTreeWidgetItem * b )
@@ -153,7 +152,7 @@ namespace Explorer
         int childSize = b->childCount();
         for ( int i=0 ; i<childSize ; ++i )
         {
-            Basket::ItemTreeBasket * child = static_cast<Basket::ItemTreeBasket*>(b->child(i));
+            ItemTreeBasket * child = static_cast<ItemTreeBasket*>(b->child(i));
 
             childBasket += child->basket()->id();
 
@@ -162,7 +161,7 @@ namespace Explorer
 
         if ( b != invisibleRootItem ()  )
         {
-            Data::DataManager::addBasket(static_cast<Basket::ItemTreeBasket*>(b)->basket()->id(),childBasket);
+            Data::DataManager::addBasket(static_cast<ItemTreeBasket*>(b)->basket()->id(),childBasket);
         }
         else
         {
@@ -176,18 +175,18 @@ namespace Explorer
         saveBaskets( invisibleRootItem() );
     }
 
-    Basket::ItemTreeBasket * TreeExplorer::addBasket( Basket::ItemTreeBasket * parent, const QString & id )
+    ItemTreeBasket * TreeExplorer::addBasket( ItemTreeBasket * parent, const QString & id )
     {
-        Basket::ItemTreeBasket * b = 0;
+        ItemTreeBasket * b = 0;
 
         if ( parent == 0 )
         {
-            b = new Basket::ItemTreeBasket( parent, id, 0 );
+            b = new ItemTreeBasket( parent, id, 0 );
             insertTopLevelItem(  topLevelItemCount(), b );
         }
         else
         {
-            b = new Basket::ItemTreeBasket( parent, id, 0 );
+            b = new ItemTreeBasket( parent, id, 0 );
         }
 
         setCurrentIndex( indexFromItem( b, 0 ) );
@@ -213,9 +212,9 @@ namespace Explorer
         loadBasket( 0, id );
     }
 
-    void TreeExplorer::loadBasket( Basket::ItemTreeBasket * parent, const QString & id )
+    void TreeExplorer::loadBasket( ItemTreeBasket * parent, const QString & id )
     {
-        Basket::ItemTreeBasket * b = addBasket( parent, id );
+        ItemTreeBasket * b = addBasket( parent, id );
 
         setCurrentItem( b );
 
@@ -263,7 +262,7 @@ namespace Explorer
 
         if ( item != 0 )
         {
-            Basket::ItemTreeBasket * basketItem = static_cast<Basket::ItemTreeBasket*>(item);
+            ItemTreeBasket * basketItem = static_cast<ItemTreeBasket*>(item);
 
             QMenu menu(this);
 

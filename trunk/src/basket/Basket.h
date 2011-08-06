@@ -21,6 +21,12 @@
 
 #include "AbstractBasket.h"
 
+namespace Explorer
+{
+    class ItemTreeBasket;
+
+}
+
 namespace Basket
 {
     class ItemTreeBasket;
@@ -28,8 +34,8 @@ namespace Basket
     class Basket : public AbstractBasket
     {
     public:
-        Basket( ItemTreeBasket * itemTreeBasket, AbstractBasket * basket, const QString & id );
-        Basket( ItemTreeBasket * itemTreeBasket, const QString & id );
+        Basket( Explorer::ItemTreeBasket * itemTreeBasket, AbstractBasket * basket, const QString & id );
+        Basket( Explorer::ItemTreeBasket * itemTreeBasket, const QString & id );
 
         void load();
         void save();

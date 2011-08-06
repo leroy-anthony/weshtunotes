@@ -44,7 +44,6 @@ namespace Scene
     public:
         FreeScene();
         FreeScene( const QString & id );
-        ~FreeScene();
 
         enum Mode { Nothing, MoveItem, ScaleXItem, ScaleYItem, ScaleXYItem };
 

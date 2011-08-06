@@ -18,7 +18,7 @@
 
 #include "ClipperBasket.h"
 #include "../config/ImageFactory.h"
-#include "../basket/ItemTreeBasket.h"
+#include "../explorer/ItemTreeBasket.h"
 #include "../basket/BasketFactory.h"
 #include "../scene/AbstractScene.h"
 #include "../scene/SceneFactory.h"
@@ -36,7 +36,7 @@
 namespace Basket
 {
 
-    ClipperBasket::ClipperBasket( ItemTreeBasket * itemTreeBasket, const QString & id ):
+    ClipperBasket::ClipperBasket( Explorer::ItemTreeBasket * itemTreeBasket, const QString & id ):
         AbstractBasket( itemTreeBasket, id ),
         m_maxItem(Settings::maxItem())
     {

@@ -38,10 +38,6 @@
 namespace Scene
 {
 
-    AbstractScene::~AbstractScene()
-    {
-    }
-
     AbstractScene::AbstractScene( const QString & id ):
             GeneratorID(id,false),
             m_horizontalScrollBarValueView(0),
@@ -70,6 +66,10 @@ namespace Scene
         m_scene.setSceneRect( -max, -max, max, max );
 
         connect( &m_scene, SIGNAL(selectionChanged()), this, SLOT(showMessageStatus()) );
+    }
+
+    AbstractScene::~AbstractScene()
+    {
     }
 
     void AbstractScene::showMessageStatus()

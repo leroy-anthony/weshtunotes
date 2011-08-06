@@ -22,7 +22,7 @@
 #include <QString>
 #include <QXmlStreamWriter>
 
-namespace Basket
+namespace Explorer
 {
     class ItemTreeBasket;
 }
@@ -53,9 +53,9 @@ namespace Data
         static void exportHandle( Handle::HandleItem * handleItem, QXmlStreamWriter & xmlWriter );
         static void exportConfigFile( const QString & pathFile, QXmlStreamWriter & xmlWriter );
         static void exportScene( Scene::AbstractScene * scene, QXmlStreamWriter & xmlWriter );
-        static void exploreBaskets( Basket::ItemTreeBasket * basket, QXmlStreamWriter & xmlWriter );
-        static void exportBasket( Basket::ItemTreeBasket * basket, QXmlStreamWriter & xmlWriter );
-        static void exportToFile( Basket::ItemTreeBasket * root, const QString & file);
+        static void exploreBaskets( Explorer::ItemTreeBasket * basket, QXmlStreamWriter & xmlWriter );
+        static void exportBasket( Explorer::ItemTreeBasket * basket, QXmlStreamWriter & xmlWriter );
+        static void exportToFile( Explorer::ItemTreeBasket * root, const QString & file);
 
     protected:
         ExportDataToXml();
