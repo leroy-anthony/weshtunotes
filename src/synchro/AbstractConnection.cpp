@@ -30,7 +30,6 @@
 #include <KApplication>
 
 #include "../config/Configuration.h"
-#include "../basket/ItemTreeBasket.h"
 #include "../scene/AbstractScene.h"
 #include "../data/DataManager.h"
 #include "../main/MainWindow.h"
