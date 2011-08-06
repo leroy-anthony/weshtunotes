@@ -62,7 +62,7 @@ namespace Animation
         animation->setEndValue( QPointF(graphicsWidget->pos()) );
         animation->setEasingCurve( QEasingCurve::OutExpo );
 
-        animation->start();
+        animation->start(QAbstractAnimation::DeleteWhenStopped);
     }
 
     QAbstractAnimation * AnimationManager::startCreate( QGraphicsWidget * graphicsWidget )
@@ -82,7 +82,7 @@ namespace Animation
         QParallelAnimationGroup * group = new QParallelAnimationGroup;
         group->addAnimation(animation1);
         group->addAnimation(animation2);
-        group->start();
+        group->start(QAbstractAnimation::DeleteWhenStopped);
 
         return group;
     }
@@ -111,7 +111,7 @@ namespace Animation
         group->addAnimation(animation1);
         group->addAnimation(animation2);
         group->addAnimation(animation3);
-        group->start();
+        group->start(QAbstractAnimation::DeleteWhenStopped);
 
         return group;
     }
