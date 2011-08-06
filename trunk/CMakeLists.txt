@@ -15,6 +15,8 @@ INCLUDE_DIRECTORIES("${PROJECT_BINARY_DIR}")
 find_package(KDE4 REQUIRED)
 include_directories(${KDE4_INCLUDES})
 
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall -Wextra")
+
 SET(QT_USE_QTSVG TRUE)
 SET(QT_USE_QTOPENGL TRUE)
 SET(QT_USE_QTSQL TRUE)
@@ -71,7 +73,7 @@ set(weshnotes_SRC
 ./src/interface/ITextEdition.cpp
 ./src/explorer/AbstractExplorer.cpp
 ./src/explorer/TreeExplorer.cpp
-./src/basket/ItemTreeBasket.cpp
+./src/explorer/ItemTreeBasket.cpp
 ./src/basket/AbstractBasket.cpp
 ./src/basket/Basket.cpp
 ./src/basket/TagBasket.cpp
