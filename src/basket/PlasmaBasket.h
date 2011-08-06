@@ -29,8 +29,8 @@ namespace Basket
     class PlasmaBasket : public AbstractBasket
     {
     public:
-        PlasmaBasket( ItemTreeBasket * itemTreeBasket, AbstractBasket * basket, const QString & id );
-        PlasmaBasket( ItemTreeBasket * itemTreeBasket, const QString & id );
+        PlasmaBasket( Explorer::ItemTreeBasket * itemTreeBasket, AbstractBasket * basket, const QString & id );
+        PlasmaBasket( Explorer::ItemTreeBasket * itemTreeBasket, const QString & id );
 
         void load();
         void save();

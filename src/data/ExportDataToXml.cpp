@@ -23,7 +23,7 @@
 #include <QDateTime>
 #include <QTextStream>
 
-#include "../basket/ItemTreeBasket.h"
+#include "../explorer/ItemTreeBasket.h"
 #include "../basket/AbstractBasket.h"
 #include "../config/Configuration.h"
 #include "../scene/AbstractScene.h"
@@ -38,11 +38,11 @@ namespace Data
     {
     }
 
-    void ExportDataToXml::exploreBaskets( Basket::ItemTreeBasket * itemBasket, QXmlStreamWriter & xmlWriter )
+    void ExportDataToXml::exploreBaskets( Explorer::ItemTreeBasket * itemBasket, QXmlStreamWriter & xmlWriter )
     {
         for ( int i=0 ; itemBasket != 0 && i<itemBasket->childCount() ; ++i )
         {
-            Basket::ItemTreeBasket * b = static_cast<Basket::ItemTreeBasket*>(itemBasket->child(i));
+            Explorer::ItemTreeBasket * b = static_cast<Explorer::ItemTreeBasket*>(itemBasket->child(i));
             exportBasket( b, xmlWriter );
             exploreBaskets( b, xmlWriter );
         }
@@ -100,7 +100,7 @@ namespace Data
         xmlWriter.writeEndElement(); // scene
     }
 
-    void ExportDataToXml::exportBasket( Basket::ItemTreeBasket * itemBasket, QXmlStreamWriter & xmlWriter )
+    void ExportDataToXml::exportBasket( Explorer::ItemTreeBasket * itemBasket, QXmlStreamWriter & xmlWriter )
     {
         Basket::AbstractBasket * basket = itemBasket->basket();
 
@@ -136,7 +136,7 @@ namespace Data
         xmlWriter.writeEndElement(); // config file
     }
 
-    void ExportDataToXml::exportToFile( Basket::ItemTreeBasket * root, const QString & filePath )
+    void ExportDataToXml::exportToFile( Explorer::ItemTreeBasket * root, const QString & filePath )
     {
         QFile file(filePath);
 

@@ -23,23 +23,27 @@
 
 template <typename T, typename U> class QMap;
 
+namespace Explorer
+{
+    class ItemTreeBasket;
+}
+
 namespace Basket
 {
     class AbstractBasket;
-    class ItemTreeBasket;
 
     class BasketFactory
     {
     public:
         enum Type { BASKET, TAG_BASKET, PLASMA_BASKET, MAX };
 
-        static AbstractBasket * newBasket( ItemTreeBasket * itemTreeBasket,
+        static AbstractBasket * newBasket( Explorer::ItemTreeBasket * itemTreeBasket,
                                            AbstractBasket * parent,
                                            const QString & id,
                                            const QMap<QString,QString> & options,
                                            const QString & type = QString("") );
 
-        static AbstractBasket * newBasket( ItemTreeBasket * itemTreeBasket,
+        static AbstractBasket * newBasket( Explorer::ItemTreeBasket * itemTreeBasket,
                                            const QString & id,
                                            const QMap<QString,QString> & options,
                                            const QString & type = QString("") );
@@ -53,13 +57,13 @@ namespace Basket
         BasketFactory();
 
     private:
-        static AbstractBasket * newBasketInterne( ItemTreeBasket * itemTreeBasket,
+        static AbstractBasket * newBasketInterne( Explorer::ItemTreeBasket * itemTreeBasket,
                                                   AbstractBasket * parent,
                                                   const QString &  id,
                                                   const QMap<QString,QString> & options,
                                                   const QString & type );
 
-        static AbstractBasket * newBasketInterne( ItemTreeBasket * itemTreeBasket,
+        static AbstractBasket * newBasketInterne( Explorer::ItemTreeBasket * itemTreeBasket,
                                                   const QString &  id,
                                                   const QMap<QString,QString> & options,
                                                   const QString & type );

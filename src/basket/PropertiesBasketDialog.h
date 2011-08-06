@@ -21,7 +21,7 @@
 
 #include <KDialog>
 
-#include "../basket/ItemTreeBasket.h"
+#include "../explorer/ItemTreeBasket.h"
 #include "../explorer/AbstractExplorer.h"
 
 class KComboBox;
@@ -36,16 +36,16 @@ namespace Basket
         Q_OBJECT
 
     public:
-        PropertiesBasketDialog( Explorer::AbstractExplorer * basketExplorer, ItemTreeBasket * item );
+        PropertiesBasketDialog( Explorer::AbstractExplorer * basketExplorer, Explorer::ItemTreeBasket * item );
 
     public slots:
         virtual void accept();
 
     private:
         Explorer::AbstractExplorer * m_basketExplorer;
+        Explorer::ItemTreeBasket * m_itemBasket;
 
         QLineEdit      * m_basketName;
-        ItemTreeBasket * m_itemBasket;
         KIconButton    * m_iconButton;
         KColorCombo    * m_colorBackground;
 

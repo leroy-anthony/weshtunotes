@@ -38,7 +38,7 @@ namespace Basket
     {
     }
 
-    AbstractBasket * BasketFactory::newBasket( ItemTreeBasket * itemTreeBasket,
+    AbstractBasket * BasketFactory::newBasket( Explorer::ItemTreeBasket * itemTreeBasket,
                                                AbstractBasket * parent,
                                                const QString & id,
                                                const QMap<QString,QString> & options,
@@ -53,7 +53,7 @@ namespace Basket
         return newBasketInterne( itemTreeBasket, parent, id, options, type );
     }
 
-    AbstractBasket * BasketFactory::newBasket( ItemTreeBasket * itemTreeBasket,
+    AbstractBasket * BasketFactory::newBasket( Explorer::ItemTreeBasket * itemTreeBasket,
                                                const QString & id,
                                                const QMap<QString,QString> & options,
                                                const QString & type )
@@ -67,7 +67,7 @@ namespace Basket
         return newBasketInterne( itemTreeBasket, id, options, type );
     }
 
-    AbstractBasket * BasketFactory::newBasketInterne( ItemTreeBasket * itemTreeBasket,
+    AbstractBasket * BasketFactory::newBasketInterne( Explorer::ItemTreeBasket * itemTreeBasket,
                                                       const QString & id,
                                                       const QMap<QString,QString> & options,
                                                       const QString & type )
@@ -94,7 +94,7 @@ namespace Basket
         return basket;
     }
 
-    AbstractBasket * BasketFactory::newBasketInterne( ItemTreeBasket * itemTreeBasket,
+    AbstractBasket * BasketFactory::newBasketInterne( Explorer::ItemTreeBasket * itemTreeBasket,
                                                       AbstractBasket * parent,
                                                       const QString & id,
                                                       const QMap<QString,QString> & options,

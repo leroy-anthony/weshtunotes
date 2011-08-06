@@ -26,7 +26,8 @@
 #include <KApplication>
 
 #include "../config/Configuration.h"
-#include "../basket/ItemTreeBasket.h"
+#include "../explorer/ItemTreeBasket.h"
+#include "../basket/BasketFactory.h"
 #include "../scene/AbstractScene.h"
 #include "../data/DataManager.h"
 #include "../main/MainWindow.h"
@@ -37,7 +38,7 @@
 
 namespace Basket
 {
-    AbstractBasket::AbstractBasket( ItemTreeBasket * itemTreeBasket, const QString & id ):
+    AbstractBasket::AbstractBasket( Explorer::ItemTreeBasket * itemTreeBasket, const QString & id ):
             GeneratorID("basket"),
             m_itemTreeBasket(itemTreeBasket),
             m_contentScene(0),
@@ -48,7 +49,7 @@ namespace Basket
         initConfigFile(id);
     }
 
-    AbstractBasket::AbstractBasket( ItemTreeBasket * itemTreeBasket, AbstractBasket * basketParent, const QString & id ):
+    AbstractBasket::AbstractBasket( Explorer::ItemTreeBasket * itemTreeBasket, AbstractBasket * basketParent, const QString & id ):
             GeneratorID("basket"),
             m_itemTreeBasket(itemTreeBasket),
             m_contentScene(0),
@@ -75,6 +76,7 @@ namespace Basket
 
     AbstractBasket::~AbstractBasket()
     {
+        delete m_contentScene;
     }
 
     void AbstractBasket::addChild( AbstractBasket * basket )

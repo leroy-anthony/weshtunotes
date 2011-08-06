@@ -24,12 +24,8 @@
 #include "../main/general.h"
 #include "../basket/AbstractBasket.h"
 
-namespace Explorer
-{
-    class TreeExplorer;
-}
 
-namespace Basket
+namespace Explorer
 {
 
     class ItemTreeBasket : public QTreeWidgetItem
@@ -43,15 +39,15 @@ namespace Basket
 
         ~ItemTreeBasket();
 
-        AbstractBasket * basket();
-        void setBasket( AbstractBasket * basket );
+        Basket::AbstractBasket * basket();
+        void setBasket( Basket::AbstractBasket * basket );
 
         void setIcon( const QString & icon );
 
     private:
         void initItemTreeBasket();
 
-        AbstractBasket * m_basket;
+        Basket::AbstractBasket * m_basket;
 
     };
 

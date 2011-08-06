@@ -33,17 +33,21 @@ namespace Scene
     class AbstractScene;
 }
 
-namespace Basket
+namespace Explorer
 {
     class ItemTreeBasket;
+}
+
+namespace Basket
+{
 
     class AbstractBasket : public QObject, public Technic::GeneratorID
     {
         Q_OBJECT
 
     public:
-        AbstractBasket( ItemTreeBasket * itemTreeBasket, AbstractBasket * basket, const QString & id );
-        AbstractBasket( ItemTreeBasket * itemTreeBasket, const QString & id );
+        AbstractBasket( Explorer::ItemTreeBasket * itemTreeBasket, AbstractBasket * basket, const QString & id );
+        AbstractBasket( Explorer::ItemTreeBasket * itemTreeBasket, const QString & id );
 
         virtual ~AbstractBasket();
 
@@ -83,7 +87,7 @@ namespace Basket
     protected:
         void initConfigFile( const QString & id );
 
-        ItemTreeBasket * m_itemTreeBasket;
+        Explorer::ItemTreeBasket * m_itemTreeBasket;
         Scene::AbstractScene * m_contentScene;
         QList<AbstractBasket*> m_childrenBasket;
 

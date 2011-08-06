@@ -28,7 +28,7 @@
 #include "../basket/BasketFactory.h"
 #include "../explorer/TreeExplorer.h"
 
-namespace Basket
+namespace Explorer
 {
 
     ItemTreeBasket::ItemTreeBasket( ItemTreeBasket * itemTreeBasket,
@@ -41,11 +41,11 @@ namespace Basket
     {
         if ( itemTreeBasket != 0 )
         {
-            m_basket = BasketFactory::newBasket( this, itemTreeBasket->basket(), id, options, type );
+            m_basket = Basket::BasketFactory::newBasket( this, itemTreeBasket->basket(), id, options, type );
         }
         else
         {
-            m_basket = BasketFactory::newBasket( this, id, options, type );
+            m_basket = Basket::BasketFactory::newBasket( this, id, options, type );
         }
 
         m_basket->setOrder( order );
@@ -70,14 +70,16 @@ namespace Basket
 
     ItemTreeBasket::~ItemTreeBasket()
     {
+        delete m_basket;
     }
 
-    void ItemTreeBasket::setBasket( AbstractBasket * basket )
+    void ItemTreeBasket::setBasket( Basket::AbstractBasket * basket )
     {
+        delete m_basket;
         m_basket = basket;
     }
 
-    AbstractBasket * ItemTreeBasket::basket()
+    Basket::AbstractBasket * ItemTreeBasket::basket()
     {
         return m_basket;
     }

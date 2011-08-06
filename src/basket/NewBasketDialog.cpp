@@ -38,7 +38,7 @@
 namespace Basket
 {
 
-    NewBasketDialog::NewBasketDialog( Explorer::AbstractExplorer * basketExplorer, Basket::ItemTreeBasket * parent ):
+    NewBasketDialog::NewBasketDialog( Explorer::AbstractExplorer * basketExplorer, Explorer::ItemTreeBasket * parent ):
             KDialog(0),
             m_basketExplorer(basketExplorer),
             m_parent(parent)
@@ -140,13 +140,13 @@ namespace Basket
 
     int NewBasketDialog::order()
     {
-        ItemTreeBasket * parent = m_parent;
+        Explorer::ItemTreeBasket * parent = m_parent;
         if ( parent == 0 )
         {
             parent = m_basketExplorer->rootItem();
         }
 
-        ItemTreeBasket * brother = static_cast<ItemTreeBasket*>( parent->child(parent->childCount()-1) );
+        Explorer::ItemTreeBasket * brother = static_cast<Explorer::ItemTreeBasket*>( parent->child(parent->childCount()-1) );
         int order = 0;
         if ( brother != 0 )
         {
@@ -156,7 +156,7 @@ namespace Basket
         return order;
     }
 
-    ItemTreeBasket * NewBasketDialog::addRemoteBasket()
+    Explorer::ItemTreeBasket * NewBasketDialog::addRemoteBasket()
     {
         QString id = m_basketsRemote->itemData(m_basketsRemote->currentIndex()).toString();
 
@@ -165,7 +165,7 @@ namespace Basket
 
         QMap<QString,QString> options;
 
-        ItemTreeBasket * item = new ItemTreeBasket( m_parent, id, order(), options, "" );
+        Explorer::ItemTreeBasket * item = new Explorer::ItemTreeBasket( m_parent, id, order(), options, "" );
 
         item->basket()->load();
 
@@ -181,7 +181,7 @@ namespace Basket
         return item;
     }
 
-    ItemTreeBasket * NewBasketDialog::addBasket()
+    Explorer::ItemTreeBasket * NewBasketDialog::addBasket()
     {
         QString name = m_basketName->text();
 
@@ -195,7 +195,7 @@ namespace Basket
             options["tagName"] = m_basketTagCombo->currentText();
         }
 
-        ItemTreeBasket * item = new ItemTreeBasket( m_parent, "", order(), options, type );
+        Explorer::ItemTreeBasket * item = new Explorer::ItemTreeBasket( m_parent, "", order(), options, type );
         item->setIcon( m_iconButton->icon() );
         item->basket()->setName(name);
         item->basket()->setBackgroundColor(colorBackground);
@@ -219,7 +219,7 @@ namespace Basket
         return m_basketsTab->currentIndex();
     }
 
-    ItemTreeBasket * NewBasketDialog::getNewBasket( Explorer::AbstractExplorer * basketExplorer, Basket::ItemTreeBasket * parent )
+    Explorer::ItemTreeBasket * NewBasketDialog::getNewBasket( Explorer::AbstractExplorer * basketExplorer, Explorer::ItemTreeBasket * parent )
     {
         NewBasketDialog newBasketDialog( basketExplorer, parent );
 

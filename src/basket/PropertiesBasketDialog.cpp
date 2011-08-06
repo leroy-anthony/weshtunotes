@@ -37,7 +37,7 @@
 namespace Basket
 {
 
-    PropertiesBasketDialog::PropertiesBasketDialog( Explorer::AbstractExplorer * basketExplorer, Basket::ItemTreeBasket * item ):
+    PropertiesBasketDialog::PropertiesBasketDialog( Explorer::AbstractExplorer * basketExplorer, Explorer::ItemTreeBasket * item ):
             KDialog(0),
             m_basketExplorer(basketExplorer),
             m_itemBasket(item)
