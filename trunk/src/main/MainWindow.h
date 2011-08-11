@@ -28,11 +28,6 @@ class QNetworkReply;
 
 class KSystemTrayIcon;
 
-namespace Basket
-{
-    class ItemTreeBasket;
-}
-
 namespace Handle
 {
     class GraphicHandleItem;
@@ -48,6 +43,7 @@ namespace Scene
 namespace Explorer
 {
     class TreeExplorer;
+    class ItemTreeBasket;
 }
 
 namespace Tag
@@ -76,7 +72,7 @@ public slots:
     void save();
     
     void delCurrentBasket();
-    void addBasket( Basket::ItemTreeBasket * item );
+    void addBasket( Explorer::ItemTreeBasket * item );
 
     void showSettings();
 
@@ -97,7 +93,7 @@ private:
     void initSystemTray();
     void setupActions();
 
-
+    Scene::AbstractScene * m_temporyScene;
     Scene::AbstractScene * m_currentScene;
     Scene::ToolBarScene * m_controllerScene;
     static KStatusBar * m_statusBar;
@@ -107,7 +103,7 @@ private:
     Tag::TagFactory * m_tagFactory;
 
     Explorer::TreeExplorer * m_treeExplorer;
-    static Basket::ItemTreeBasket * m_lastBasketLoad;
+    static Explorer::ItemTreeBasket * m_lastBasketLoad;
 
     KSystemTrayIcon * m_trayIcon;
 

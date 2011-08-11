@@ -19,12 +19,14 @@
 #ifndef KWESHTUNOTESAPP_H
 #define KWESHTUNOTESAPP_H
 
-#include <KUniqueApplication>
+#include <KApplication>
 
 class MainWindow;
 
-class KWeshTuNotesApp : public KUniqueApplication
+class KWeshTuNotesApp : public KApplication
 {
+    Q_OBJECT
+
 public:
     KWeshTuNotesApp();
     ~KWeshTuNotesApp();

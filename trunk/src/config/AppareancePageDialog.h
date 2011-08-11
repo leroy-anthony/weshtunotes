@@ -35,6 +35,8 @@ namespace Config
 
     public slots:
         void iconBasketChanged( const QString & icon );
+        void colorItemChanged( const QColor & color );
+        void colorBasketChanged( const QColor & color );
 
     };
 

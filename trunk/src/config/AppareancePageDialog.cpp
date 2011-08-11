@@ -33,12 +33,30 @@ namespace Config
         kcfg_iconBasket->setVisible(false);
         m_iconBasketButton->setIcon(Settings::iconBasket());
 
+        kcfg_colorItem->setVisible(false);
+        m_colorItem->setColor(Settings::colorItem());
+
+        kcfg_colorBasket->setVisible(false);
+        m_colorBasket->setColor(Settings::colorBasket());
+
         connect( m_iconBasketButton, SIGNAL(iconChanged(const QString &)), this, SLOT(iconBasketChanged(const QString &)) );
+        connect( m_colorItem, SIGNAL(highlighted(const QColor &)), this, SLOT(colorItemChanged(const QColor &)) );
+        connect( m_colorBasket, SIGNAL(highlighted(const QColor &)), this, SLOT(colorBasketChanged(const QColor &)) );
     }
 
     void AppareancePageDialog::iconBasketChanged( const QString & icon )
     {
         kcfg_iconBasket->setText(icon);
+    }
+
+    void AppareancePageDialog::colorItemChanged( const QColor & color )
+    {
+        kcfg_colorItem->setText( color.name() );
+    }
+
+    void AppareancePageDialog::colorBasketChanged( const QColor & color )
+    {
+        kcfg_colorBasket->setText( color.name() );
     }
 
 }

@@ -24,6 +24,8 @@
 #include <KSystemTrayIcon>
 #include <KMessageBox>
 
+#include <QTextBrowser>
+
 #include "KWeshTuNotesApp.h"
 
 #include "version.h" // CMake generated include
@@ -52,11 +54,11 @@ int main(int argc, char *argv[])
 
     KUniqueApplication::addCmdLineOptions();
 
-    if (!KWeshTuNotesApp::start())
+    /*if (!KWeshTuNotesApp::start())
     {
         std::cerr << "KWeshTuNotes is already running!\n" << std::endl;
         return 0;
-    }
+    }*/
 
     KWeshTuNotesApp app;
 
