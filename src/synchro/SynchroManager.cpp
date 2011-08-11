@@ -95,7 +95,7 @@ namespace Synchro
         m_dialog->setVisible(false);
 
         m_dialog->show();
-        m_dialog->setLabelText(i18n("Commit basket..."));
+        m_dialog->setLabelText(i18n("Saving basket..."));
 
         connectionDialog( &SynchroManager::commitBasket, configFileBasket );
 
@@ -115,7 +115,7 @@ namespace Synchro
         m_dialog->setVisible(false);
 
         m_dialog->show();
-        m_dialog->setLabelText(i18n("Update basket..."));
+        m_dialog->setLabelText(i18n("Loading basket..."));
         m_dialog->progressBar()->setRange(0,0);
 
         connectionDialog( &SynchroManager::updateBasket, configFileBasket );
