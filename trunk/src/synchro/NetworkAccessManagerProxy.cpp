@@ -133,8 +133,6 @@ namespace Synchro
 
     void NetworkAccessManagerProxy::replyTimeOut()
     {
-        kDebug() << "TimeOut network.";
-
         m_codeError = 4;
         m_detailError = "The connection to the remote server timed out.";
         m_syncEvent.exit(1);
@@ -157,8 +155,6 @@ namespace Synchro
             m_codeError = reply->error();
             m_detailError = reply->errorString();
             buildDetailError( m_codeError );
-            kDebug() << m_codeError;
-            kDebug() << reply->readAll();
 
             m_syncEvent.exit(1);
             emit error(m_detailError);
