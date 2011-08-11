@@ -22,6 +22,7 @@
 
 #include <KMessageBox>
 #include <KLocalizedString>
+#include <KStandardDirs>
 
 #include "../main/general.h"
 #include "../config/ImageFactory.h"
@@ -33,7 +34,7 @@ namespace Tag
 
     TagFactory * TagFactory::m_instance = 0;
 
-    TagFactory * TagFactory::newTagFactory( QWidget * parent )
+    TagFactory * TagFactory::instance( QWidget * parent )
     {
         if ( m_instance == 0 )
         {
@@ -139,6 +140,11 @@ namespace Tag
     void TagFactory::loadTags()
     {
         Data::DataManager settings( "tags" );
+        if ( !QFile::exists(settings.fileName()) )
+        {
+            QString tagsFile = KStandardDirs::locate("appdata", "tags");
+            QFile::copy(tagsFile,settings.fileName());
+        }
 
         QStringList tags = settings.values( "General", "tags" );
         for ( int i=0 ; i<tags.size() ; ++i )
@@ -371,4 +377,5 @@ namespace Tag
         Data::DataManager settings( "tags" );
         return settings.values( "General", "tags" );
     }
+
 }

@@ -143,4 +143,5 @@ target_link_libraries(kweshtunotes ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} ${KDE4
 
 install(TARGETS kweshtunotes DESTINATION ${BIN_INSTALL_DIR})
 install(FILES ./src/main/kweshtunotesui.rc DESTINATION  ${DATA_INSTALL_DIR}/kweshtunotes)
+install(FILES ./data/tags DESTINATION  ${DATA_INSTALL_DIR}/kweshtunotes)
 install(FILES kweshtunotes.desktop DESTINATION  ${XDG_APPS_INSTALL_DIR})

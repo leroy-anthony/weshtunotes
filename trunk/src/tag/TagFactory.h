@@ -35,7 +35,7 @@ namespace Tag
         Q_OBJECT
 
     public:
-        static TagFactory * newTagFactory( QWidget * parent = 0 );
+        static TagFactory * instance( QWidget * parent = 0 );
         static QStringList tagsNames();
 
         void loadTags();
