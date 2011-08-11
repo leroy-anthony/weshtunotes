@@ -125,7 +125,7 @@
      <item row="0" column="1">
       <widget class="QLabel" name="label_5">
        <property name="text">
-        <string>Note color</string>
+        <string>Note color :</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -152,6 +152,9 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockText">
+   <property name="features">
+    <set>QDockWidget::AllDockWidgetFeatures</set>
+   </property>
    <property name="windowTitle">
     <string>Text</string>
    </property>
@@ -198,7 +201,7 @@
      <item row="1" column="0">
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>Text color</string>
+        <string>Text color :</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -208,7 +211,7 @@
      <item row="2" column="0">
       <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>Background color</string>
+        <string>Text highlighting :</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -246,7 +249,7 @@
      <item row="3" column="0">
       <widget class="QLabel" name="label_3">
        <property name="text">
-        <string>Text align</string>
+        <string>Text align :</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -284,7 +287,7 @@
      <item row="5" column="0">
       <widget class="QLabel" name="label_4">
        <property name="text">
-        <string>Text style</string>
+        <string>Text style :</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

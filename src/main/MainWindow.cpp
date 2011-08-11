@@ -78,7 +78,7 @@ MainWindow::MainWindow( QWidget * parent ) :
     initToolBar();
     initExplorer();
 
-    m_tagFactory = Tag::TagFactory::newTagFactory();
+    m_tagFactory = Tag::TagFactory::instance();
     m_tagFactory->loadTags();
 
     setupActions();

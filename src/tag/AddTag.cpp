@@ -53,7 +53,7 @@ namespace Tag
         }
         else
         {
-            Tag::TagFactory::newTagFactory()->show();
+            Tag::TagFactory::instance()->show();
         }
     }
 
