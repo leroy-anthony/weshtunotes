@@ -39,7 +39,7 @@
   
  </MenuBar>
  
- <ToolBar name="mainToolBar" noMerge="1"><text>Main Toolbar</text>
+ <ToolBar name="mainToolBar" noMerge="1" hidden="true"><text>Main Toolbar</text>
   <Action name="file_save" />
   <Separator/>
   <Action name="edit_copy" />
