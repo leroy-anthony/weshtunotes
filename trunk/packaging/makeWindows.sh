@@ -3,7 +3,7 @@ svn up weshtunotes/version.txt
 VERSION=`cat weshtunotes/version.txt`
 VERSION_KDE=`wine C://Program\ Files//kde//bin//kde4-config.exe --version | grep KDE`
 VERSION_QT=`wine C://Program\ Files//kde//bin//kde4-config.exe --version | grep Qt`
-VERSION_SVN="r"`svnversion weshtunotes | sed s/M//`
+VERSION_SVN="r"`svnversion weshtunotes | sed s/P//`
 cd windows
 rm -rf *
 svn checkout https://weshtunotes.googlecode.com/svn/trunk/ "kweshtunotes-$VERSION" --username leroy.anthony

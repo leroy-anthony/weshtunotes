@@ -2,7 +2,7 @@ svn co https://weshtunotes.googlecode.com/svn/trunk/ weshtunotes/ --depth empty
 svn up weshtunotes/version.txt
 
 VERSION=`cat weshtunotes/version.txt`
-VERSION_SVN="r"`svnversion weshtunotes | sed s/M//`
+VERSION_SVN="r"`svnversion weshtunotes | sed s/P//`
 
 cd sources
 rm -rf *
