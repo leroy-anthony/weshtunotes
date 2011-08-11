@@ -82,6 +82,7 @@ namespace Basket
             }
         }
 
+        m_basketTagCombo->setEnabled( false );
         QStringList tags = Tag::TagFactory::tagsNames();
         for ( int i=0 ; i<tags.size() ; ++i )
         {
@@ -135,7 +136,7 @@ namespace Basket
 
     void NewBasketDialog::changeBasketType( int index )
     {
-        m_basketTagCombo->setEnabled( index != 0 );
+        m_basketTagCombo->setEnabled( index == 1 );
     }
 
     int NewBasketDialog::order()
