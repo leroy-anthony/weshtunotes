@@ -219,6 +219,22 @@ namespace Item
         update();
     }
 
+    void NoteItem::paintEvent( QPaintEvent * event )
+    {
+        Q_UNUSED(event);
+
+        QPainter painter(this);
+
+        QLinearGradient gradient( 0, 0, 0, height() );
+        gradient.setColorAt( 0, m_color.lighter(Config::VisualAspect::lighterIntensity) );
+        gradient.setColorAt( 1, m_color );
+
+        painter.setPen( Qt::NoPen );
+        painter.setBrush( gradient );
+
+        painter.drawRect( 0, 0, width(), height() );
+    }
+
     void NoteItem::addTag( const QString & tagName, const QString & tagState )
     {
         removeNoteFromNepomuk();
@@ -263,22 +279,6 @@ namespace Item
         m_plainTextEdit->addData( data );
     }
 
-    void NoteItem::paintEvent( QPaintEvent * event )
-    {
-        Q_UNUSED(event);
-
-        QPainter painter(this);
-
-        QLinearGradient gradient( 0, 0, 0, height() );
-        gradient.setColorAt( 0, m_color.lighter(Config::VisualAspect::lighterIntensity) );
-        gradient.setColorAt( 1, m_color );
-
-        painter.setPen( Qt::NoPen );
-        painter.setBrush( gradient );
-
-        painter.drawRect( 0, 0, width(), height() );
-    }
-
     void NoteItem::removeNoteFromNepomuk()
     {
         if ( m_tag != 0 )
@@ -296,7 +296,7 @@ namespace Item
 
     void NoteItem::addNoteToNepomuk()
     {
-	if ( m_handle != 0 )
+        if ( m_handle != 0 )
 	{
 	    Nepomuk::Resource file( Settings::basketsStorePath().toLocalFile()+QDir::separator()+m_handle->configFile() );
 	    file.addTag( *m_tag->nepomukTag() );
