@@ -30,7 +30,7 @@
 MainWindow * KWeshTuNotesApp::m_mainWindow = 0;
 
 KWeshTuNotesApp::KWeshTuNotesApp():
-        KUniqueApplication()
+        KApplication()
 {
     setQuitOnLastWindowClosed ( false );
 
@@ -69,3 +69,5 @@ int KWeshTuNotesApp::newInstance()
 
     return 0;
 }
+
+

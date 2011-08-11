@@ -26,7 +26,7 @@
     </entry>
   </group>
   <group name="visual">
-    <entry name="colorItem" type="Color">
+    <entry key="colorItem" type="String">
       <label>Color note.</label>
       <default>#F7F7C8</default>
     </entry>
@@ -40,7 +40,7 @@
       <label>Text note.</label>
       <default>&lt;br&gt;</default>
     </entry>
-    <entry name="colorBasket" type="Color">
+    <entry name="colorBasket" type="String">
       <label>Color Basket.</label>
       <default>#F7F7C8</default>
     </entry>
