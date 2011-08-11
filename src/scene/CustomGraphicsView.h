@@ -43,6 +43,8 @@ namespace Scene
         void adjustLayoutSize();
         void adjustLayoutSize( int width, int height );
 
+        QRectF sceneSize( const QList<QGraphicsItem*> & itemList );
+
     public slots:
         void paste();
         void copy();
@@ -57,6 +59,8 @@ namespace Scene
 
         void nextItem();
         void prevItem();
+
+        void exportToPdf();
 
     protected:
         void wheelEvent( QWheelEvent * e );

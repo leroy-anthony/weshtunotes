@@ -14,19 +14,18 @@
 #include <QApplication>
 #include <QGLWidget>
 #include <QGraphicsItem>
-#include <limits>
 #include <QGraphicsRectItem>
 #include <QScrollBar>
+#include <QPrinter>
+
+#include <KFileDialog>
+#include <KLocalizedString>
 
 #include "AbstractScene.h"
 #include "settings.h"
 #include "../main/general.h"
 #include "../main/MainWindow.h"
 #include "../handle/HandleItem.h"
-
-#include <KDE/Plasma/Applet>
-#include <KDE/Plasma/Containment>
-#include <KDE/Plasma/Corona>
 
 namespace Scene
 {
@@ -421,39 +420,46 @@ namespace Scene
                 return;
             }
 
-            double minx = std::numeric_limits<double>::infinity();
-            double miny = std::numeric_limits<double>::infinity();
-            double maxx = - std::numeric_limits<double>::infinity();
-            double maxy = - std::numeric_limits<double>::infinity();
+            QRectF r = sceneSize(itemList);
 
-            for ( int i=0 ; i<itemList.size() ; ++i )
+            fitInView(r,Qt::KeepAspectRatio);
+        }
+    }
+
+    QRectF CustomGraphicsView::sceneSize( const QList<QGraphicsItem*> & itemList )
+    {
+        double minx = std::numeric_limits<double>::infinity();
+        double miny = std::numeric_limits<double>::infinity();
+        double maxx = - std::numeric_limits<double>::infinity();
+        double maxy = - std::numeric_limits<double>::infinity();
+
+        for ( int i=0 ; i<itemList.size() ; ++i )
+        {
+            QGraphicsItem * item = itemList[i];
+            if ( item->isVisible() )
             {
-                QGraphicsItem * item = itemList[i];
-                if ( item->isVisible() )
+                if ( minx > item->x() )
                 {
-                    if ( minx > item->x() )
-                    {
-                        minx = item->x();
-                    }
+                    minx = item->x();
+                }
 
-                    if ( miny > item->y() )
-                    {
-                        miny= item->y();
-                    }
-                    if ( maxx < item->x() + item->boundingRect().width() )
-                    {
-                        maxx = item->x() + item->boundingRect().width();
-                    }
+                if ( miny > item->y() )
+                {
+                    miny= item->y();
+                }
+                if ( maxx < item->x() + item->boundingRect().width() )
+                {
+                    maxx = item->x() + item->boundingRect().width();
+                }
 
-                    if ( maxy < item->y() + item->boundingRect().height() )
-                    {
-                        maxy= item->y() + item->boundingRect().height();
-                    }
+                if ( maxy < item->y() + item->boundingRect().height() )
+                {
+                    maxy= item->y() + item->boundingRect().height();
                 }
             }
-
-            fitInView(minx,miny,maxx-minx,maxy-miny,Qt::KeepAspectRatio);
         }
+
+        return QRectF(minx,miny,maxx-minx,maxy-miny);
     }
 
     void CustomGraphicsView::nextItem()
@@ -513,6 +519,37 @@ namespace Scene
     bool CustomGraphicsView::hasZoomAbilities()
     {
         return m_scene != 0 && m_scene->hasZoomAbilities();
+    }
+
+    void CustomGraphicsView::exportToPdf()
+    {
+        QString fileName = KFileDialog::getSaveFileName( KUrl(), "*.pdf", 0, i18n("Export to pdf")) ;
+        if ( fileName.isNull() )
+        {
+            return;
+        }
+
+        QList<QGraphicsItem*> itemList = scene()->selectedItems();
+        if ( itemList.isEmpty() )
+        {
+            itemList = items();
+        }
+        QRectF r = sceneSize( itemList );
+
+        QPrinter * pdfPrinter = new QPrinter(QPrinter::HighResolution);
+        pdfPrinter->setOutputFormat(QPrinter::PdfFormat);
+        pdfPrinter->setPaperSize(r.size(), QPrinter::Point);
+        pdfPrinter->setFullPage(true);
+        pdfPrinter->setOutputFileName(fileName);
+
+        QPainter * pdfPainter = new QPainter();
+        pdfPainter->begin(pdfPrinter);
+        pdfPainter->setRenderHints(QPainter::Antialiasing);
+        render(pdfPainter, QRectF(), QRect(mapFromScene(r.topLeft()), r.size().toSize()));
+        pdfPainter->end();
+
+        delete pdfPainter;
+        delete pdfPrinter;
     }
 
 }

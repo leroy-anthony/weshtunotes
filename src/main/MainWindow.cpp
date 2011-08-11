@@ -184,12 +184,13 @@ void MainWindow::initView()
 
     m_view = new Scene::CustomGraphicsView();
     centralwidget->layout()->setMargin(0);
+    centralwidget->layout()->setSpacing(0);
     centralwidget->layout()->addWidget( m_view );
     centralwidget->layout()->addWidget( widget );
 
     QLayout * layoutButtonView = new QHBoxLayout( widget );
     layoutButtonView->setMargin(0);
-    layoutButtonView->setSpacing(2);
+    layoutButtonView->setSpacing(0);
 
     layoutButtonView->addItem(new QSpacerItem(0,0,QSizePolicy::Expanding,QSizePolicy::Ignored));
 
@@ -236,6 +237,14 @@ void MainWindow::initView()
     q7->setToolTip(i18n("Next note"));
     connect( q7, SIGNAL(clicked()), m_view, SLOT(nextItem()) );
     layoutButtonView->addWidget(q7);
+
+    layoutButtonView->addItem(new QSpacerItem(0,0,QSizePolicy::Expanding,QSizePolicy::Ignored));
+
+    QToolButton * q8 = new QToolButton();
+    q8->setIcon(Config::ImageFactory::instance()->icon("application-pdf"));
+    q8->setToolTip(i18n("Export to pdf"));
+    connect( q8, SIGNAL(clicked()), m_view, SLOT(exportToPdf()) );
+    layoutButtonView->addWidget(q8);
 
     layoutButtonView->addItem(new QSpacerItem(0,0,QSizePolicy::Expanding,QSizePolicy::Ignored));
 
