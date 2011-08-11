@@ -1,0 +1,68 @@
+ dpkg-buildpackage -rfakeroot -d -us -uc -S -sa
+dpkg-buildpackage : définir CFLAGS à la valeur par défaut : -g -O2
+dpkg-buildpackage : définir CPPFLAGS à la valeur par défaut : 
+dpkg-buildpackage : définir LDFLAGS à la valeur par défaut : -Wl,-Bsymbolic-functions
+dpkg-buildpackage : définir FFLAGS à la valeur par défaut : -g -O2
+dpkg-buildpackage : définir CXXFLAGS à la valeur par défaut : -g -O2
+dpkg-buildpackage: paquet source weshtunotes
+dpkg-buildpackage: version source 0.0.49-1
+dpkg-buildpackage: source changé par anthony leroy <leroy.anthony@gmail.com>
+ fakeroot debian/rules clean
+dh_testdir
+dh_testroot
+rm -f build-stamp 
+# Add here commands to clean up after the build process.
+rm -rf builddir
+dh_clean 
+ dpkg-source -b weshtunotes-0.0.49
+dpkg-source: info: utilisation du format source « 1.0 »
+dpkg-source: info: construction de weshtunotes dans weshtunotes_0.0.49-1.tar.gz
+dpkg-source: info: construction de weshtunotes dans weshtunotes_0.0.49-1.dsc
+ dpkg-genchanges -S -sa >../weshtunotes_0.0.49-1_source.changes
+dpkg-genchanges: inclusion du code source original dans l'envoi (« upload »)
+dpkg-buildpackage: envoi de source uniquement : paquet Debian natif
+Now running lintian...
+W: weshtunotes source: native-package-with-dash-version
+N: 
+N:    Native packaging should only be used if a piece of software was written
+N:    specifically to be turned into a Debian package. In this case, the
+N:    version number should not contain a Debian revision part.
+N:    
+N:    Native source packages are sometimes created by accident. In most cases
+N:    the reason is the location of the original source tarball. dpkg-source
+N:    searches for this in ../package_upstream-version.orig.tar.gz.
+N:    
+N:    Severity: normal, Certainty: certain
+N: 
+W: weshtunotes source: diff-contains-svn-control-dir src/explorer/.svn
+N: 
+N:    The Debian diff or native package contains files in an .svn directory.
+N:    These are usually artifacts of the revision control system used by the
+N:    Debian maintainer and not useful in a diff or native package. Passing -i
+N:    to dpkg-buildpackage or the equivalent will automatically exclude them.
+N:    
+N:    Severity: normal, Certainty: certain
+N: 
+W: weshtunotes source: diff-contains-svn-control-dir src/scene/.svn
+W: weshtunotes source: diff-contains-svn-control-dir src/config/.svn
+W: weshtunotes source: diff-contains-svn-control-dir src/handle/.svn
+W: weshtunotes source: diff-contains-svn-control-dir src/tag/.svn
+W: weshtunotes source: diff-contains-svn-control-dir src/interface/.svn
+W: weshtunotes source: diff-contains-svn-control-dir src/main/.svn
+W: weshtunotes source: diff-contains-svn-control-dir src/item/.svn
+W: weshtunotes source: diff-contains-svn-control-dir src/basket/.svn
+W: weshtunotes source: diff-contains-svn-control-dir src/.svn
+W: weshtunotes source: diff-contains-svn-control-dir src/widget/.svn
+W: weshtunotes source: diff-contains-svn-control-dir data/icon/.svn
+W: weshtunotes source: diff-contains-svn-control-dir data/.svn
+W: weshtunotes source: diff-contains-svn-control-dir .svn
+Finished running lintian.
+Now signing changes and any dsc files...
+ signfile weshtunotes_0.0.49-1.dsc anthony leroy <leroy.anthony@gmail.com>
+gpg: failed to create temporary file `/home/kahal/.gnupg/.#lk0x97b4e30.xena.13268': Permission non accordée
+gpg: ressource bloc de clés `/home/kahal/.gnupg/secring.gpg': erreur générale
+gpg: failed to create temporary file `/home/kahal/.gnupg/.#lk0x97b8038.xena.13268': Permission non accordée
+gpg: ressource bloc de clés `/home/kahal/.gnupg/pubring.gpg': erreur générale
+gpg: « anthony leroy <leroy.anthony@gmail.com> » a été ignoré: la clé secrète n'est pas disponible
+gpg: /tmp/debsign.KzbqmEfA/weshtunotes_0.0.49-1.dsc: clearsign failed: la clé secrète n'est pas disponible
+debsign: gpg error occurred!  Aborting....
