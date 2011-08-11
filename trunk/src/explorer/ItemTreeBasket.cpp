@@ -55,7 +55,7 @@ namespace Explorer
 
     void ItemTreeBasket::initItemTreeBasket()
     {
-        QTreeWidgetItem::setIcon( 0, Config::ImageFactory::newInstance()->icon( m_basket->icon() ) );
+        QTreeWidgetItem::setIcon( 0, Config::ImageFactory::instance()->icon( m_basket->icon() ) );
     }
 
     void ItemTreeBasket::setIcon( const QString & icon )

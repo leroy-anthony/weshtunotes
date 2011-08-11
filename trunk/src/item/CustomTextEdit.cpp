@@ -124,9 +124,9 @@ namespace Item
                     QFileInfo fileInfo(urls[i].path());
 
                     QPixmap pix;
-                    QString iconName = Config::ImageFactory::newInstance()->iconNameForUrl( urls[i] );
-                    Config::ImageFactory::newInstance()->loadMimeTypeIcon( iconName, pix );
-                    QString path = Config::ImageFactory::newInstance()->iconPath( iconName );
+                    QString iconName = Config::ImageFactory::instance()->iconNameForUrl( urls[i] );
+                    Config::ImageFactory::instance()->loadMimeTypeIcon( iconName, pix );
+                    QString path = Config::ImageFactory::instance()->iconPath( iconName );
 
                     //référence l'image
                     document()->addResource(QTextDocument::ImageResource, QUrl(path), pix);

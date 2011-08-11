@@ -269,12 +269,12 @@ namespace Explorer
             QAction * addAction = new QAction(i18n("Add basket"), this);
             menu.addAction(addAction);
             connect(addAction, SIGNAL(triggered()), this, SLOT(addToCurrentBasket()));
-            addAction->setIcon(Config::ImageFactory::newInstance()->icon("list-add"));
+            addAction->setIcon(Config::ImageFactory::instance()->icon("list-add"));
 
             QAction * deleteAction = new QAction(i18n("Delete"), this);
             menu.addAction(deleteAction);
             connect(deleteAction, SIGNAL(triggered()), this, SLOT(delCurrentBasket()));
-            deleteAction->setIcon(Config::ImageFactory::newInstance()->icon("edit-delete"));
+            deleteAction->setIcon(Config::ImageFactory::instance()->icon("edit-delete"));
 
             menu.addSeparator();
 

@@ -27,7 +27,7 @@ namespace Config
 {
     ImageFactory * ImageFactory::m_imageFactory = 0;
 
-    ImageFactory *  ImageFactory::newInstance()
+    ImageFactory * ImageFactory::instance()
     {
         if ( m_imageFactory == 0 )
         {

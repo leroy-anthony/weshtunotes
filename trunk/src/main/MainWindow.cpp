@@ -36,7 +36,7 @@
 #include <KTreeWidgetSearchLine>
 #include <KLocalizedString>
 #include <KMessageBox>
-
+#include <KFontSizeAction>
 
 #include "settings.h"
 #include "../tag/TagFactory.h"
@@ -80,7 +80,6 @@ MainWindow::MainWindow( QWidget * parent ) :
 
     m_tagFactory = Tag::TagFactory::newTagFactory();
     m_tagFactory->loadTags();
-
 
     setupActions();
 
@@ -163,6 +162,20 @@ KStatusBar * MainWindow::statusBar()
 void MainWindow::initToolBar()
 {
     m_controllerScene = new Scene::ToolBarScene( this );
+
+    leftAlignToolButton->setDefaultAction(actionCollection()->action("alignleft"));
+    centerAlignToolButton->setDefaultAction(actionCollection()->action("aligncenter"));
+    rightAlignToolButton->setDefaultAction(actionCollection()->action("alignright"));
+    blockAlignToolButton->setDefaultAction(actionCollection()->action("alignblock"));
+
+    boldToolButton->setDefaultAction(actionCollection()->action("bold"));
+    italicToolButton->setDefaultAction(actionCollection()->action("italic"));
+    strikeoutToolButton->setDefaultAction(actionCollection()->action("strikeout"));
+    underlineToolButton->setDefaultAction(actionCollection()->action("underline"));
+
+    KFontSizeAction * a = (KFontSizeAction*) actionCollection()->action("fontsize");
+    horizontalLayout->addWidget(a->requestWidget(0));
+    fontComboBox->setMinimumWidth(100);
 }
 
 void MainWindow::initView()
@@ -181,31 +194,31 @@ void MainWindow::initView()
     layoutButtonView->addItem(new QSpacerItem(0,0,QSizePolicy::Expanding,QSizePolicy::Ignored));
 
     QToolButton * q1 = new QToolButton();
-    q1->setIcon(Config::ImageFactory::newInstance()->icon("zoom-original"));
+    q1->setIcon(Config::ImageFactory::instance()->icon("zoom-original"));
     q1->setToolTip(i18n("Zoom 1:1"));
     connect( q1, SIGNAL(clicked()), m_view, SLOT(resetZoom()) );
     layoutButtonView->addWidget(q1);
 
     QToolButton * q2 = new QToolButton();
-    q2->setIcon(Config::ImageFactory::newInstance()->icon("zoom-in"));
+    q2->setIcon(Config::ImageFactory::instance()->icon("zoom-in"));
     q2->setToolTip(i18n("Zoom in"));
     connect( q2, SIGNAL(clicked()), m_view, SLOT(doubleZoom()) );
     layoutButtonView->addWidget(q2);
 
     QToolButton * q3 = new QToolButton();
-    q3->setIcon(Config::ImageFactory::newInstance()->icon("zoom-out"));
+    q3->setIcon(Config::ImageFactory::instance()->icon("zoom-out"));
     q3->setToolTip(i18n("Zoom out"));
     connect( q3, SIGNAL(clicked()), m_view, SLOT(halfZoom()) );
     layoutButtonView->addWidget(q3);
 
     QToolButton * q4 = new QToolButton();
-    q4->setIcon(Config::ImageFactory::newInstance()->icon("zoom-fit-best"));
+    q4->setIcon(Config::ImageFactory::instance()->icon("zoom-fit-best"));
     q4->setToolTip(i18n("Zoom fit"));
     connect( q4, SIGNAL(clicked()), m_view, SLOT(fitInViewZoom()) );
     layoutButtonView->addWidget(q4);
 
     QToolButton * q5 = new QToolButton();
-    q5->setIcon(Config::ImageFactory::newInstance()->icon("shapes"));
+    q5->setIcon(Config::ImageFactory::instance()->icon("shapes"));
     q5->setToolTip(i18n("Zoom center"));
     connect( q5, SIGNAL(clicked()), m_view, SLOT(centerZoom()) );
     layoutButtonView->addWidget(q5);
@@ -213,13 +226,13 @@ void MainWindow::initView()
     layoutButtonView->addItem(new QSpacerItem(0,0,QSizePolicy::Expanding,QSizePolicy::Ignored));
 
     QToolButton * q6 = new QToolButton();
-    q6->setIcon(Config::ImageFactory::newInstance()->icon("go-previous"));
+    q6->setIcon(Config::ImageFactory::instance()->icon("go-previous"));
     q6->setToolTip(i18n("Previous note"));
     connect( q6, SIGNAL(clicked()), m_view, SLOT(prevItem()) );
     layoutButtonView->addWidget(q6);
 
     QToolButton * q7 = new QToolButton();
-    q7->setIcon(Config::ImageFactory::newInstance()->icon("go-next"));
+    q7->setIcon(Config::ImageFactory::instance()->icon("go-next"));
     q7->setToolTip(i18n("Next note"));
     connect( q7, SIGNAL(clicked()), m_view, SLOT(nextItem()) );
     layoutButtonView->addWidget(q7);
@@ -235,25 +248,25 @@ void MainWindow::initExplorer()
 
     // creation du layout du dock
     QLayout * layoutDock = new QVBoxLayout( dockWidgetContents );
-    layoutDock->setMargin(2);
+    layoutDock->setMargin(0);
     layoutDock->setSpacing(0);
 
     QWidget * widget = new QWidget();
-    dockFichier->setTitleBarWidget( widget );
-    dockFichier->titleBarWidget()->setContentsMargins(6,4,0,0);
+    dockBasket->setTitleBarWidget( widget );
+    dockBasket->titleBarWidget()->setContentsMargins(4,2,0,0);
 
     QLayout * layoutButtonExplorer = new QHBoxLayout( widget );
     layoutButtonExplorer->setMargin(0);
     layoutButtonExplorer->setSpacing(0);
 
     QToolButton * q1 = new QToolButton();
-    q1->setIcon(Config::ImageFactory::newInstance()->icon("folder-new"));
+    q1->setIcon(Config::ImageFactory::instance()->icon("folder-new"));
     q1->setToolTip(i18n("New root basket"));
     connect( q1, SIGNAL(clicked()), m_treeExplorer, SLOT(addBasketToRoot()) );
     layoutButtonExplorer->addWidget(q1);
 
     QToolButton * q3 = new QToolButton();
-    q3->setIcon(Config::ImageFactory::newInstance()->icon("edit-delete"));
+    q3->setIcon(Config::ImageFactory::instance()->icon("edit-delete"));
     q3->setToolTip(i18n("Delete basket"));
     connect( q3, SIGNAL(clicked()), m_treeExplorer, SLOT(delCurrentBasket()) );
     layoutButtonExplorer->addWidget(q3);
@@ -346,9 +359,9 @@ Scene::CustomGraphicsView * MainWindow::currentView()
 void MainWindow::initSystemTray()
 {
     m_trayIcon = new KSystemTrayIcon(this);
-    m_trayIcon->setIcon(Config::ImageFactory::newInstance()->icon("basket.png"));
+    m_trayIcon->setIcon(Config::ImageFactory::instance()->icon("basket.png"));
     m_trayIcon->show();
-    setWindowIcon(Config::ImageFactory::newInstance()->icon("basket.png"));
+    setWindowIcon(Config::ImageFactory::instance()->icon("basket.png"));
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
