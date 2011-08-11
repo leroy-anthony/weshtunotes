@@ -132,9 +132,9 @@ namespace Item
 
     void NoteItem::setFontStrikeOut( bool strikeOut )
     {
-        QFont f(m_plainTextEdit->font());
-        f.setStrikeOut( strikeOut );
-        m_plainTextEdit->setFont(f);
+        QTextCharFormat textCharFormat = m_plainTextEdit->currentCharFormat();
+        textCharFormat.setFontStrikeOut(strikeOut);
+        m_plainTextEdit->setCurrentCharFormat(textCharFormat);
     }
 
     void NoteItem::setFontPointSize( int weight )
