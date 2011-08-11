@@ -327,6 +327,8 @@ namespace Handle
         QWidget::resize(width, width);
 
         setPin( settings.valueGroup( id, "pin", false) != "false" );
+
+        setId(id);
     }
 
     void HandleItem::load()
@@ -336,6 +338,7 @@ namespace Handle
 
     void HandleItem::save()
     {
+
         QStringList children;
         for ( int i=0 ; i<m_handles.size() ; ++i)
         {
