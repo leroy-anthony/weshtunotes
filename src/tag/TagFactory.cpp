@@ -57,11 +57,11 @@ namespace Tag
         setupUi( main );
         setMainWidget( main );
 
-        m_boldText->setIcon(Config::ImageFactory::newInstance()->icon("format-text-bold.png"));
-        m_italicText->setIcon(Config::ImageFactory::newInstance()->icon("format-text-italic.png"));
-        m_underlineText->setIcon(Config::ImageFactory::newInstance()->icon("format-text-underline.png"));
-        m_strikeText->setIcon(Config::ImageFactory::newInstance()->icon("format-text-strikethrough.png"));
-        m_delTagButton->setIcon(Config::ImageFactory::newInstance()->icon("edit-delete.png"));
+        m_boldText->setIcon(Config::ImageFactory::instance()->icon("format-text-bold.png"));
+        m_italicText->setIcon(Config::ImageFactory::instance()->icon("format-text-italic.png"));
+        m_underlineText->setIcon(Config::ImageFactory::instance()->icon("format-text-underline.png"));
+        m_strikeText->setIcon(Config::ImageFactory::instance()->icon("format-text-strikethrough.png"));
+        m_delTagButton->setIcon(Config::ImageFactory::instance()->icon("edit-delete.png"));
 
         connect(m_delTagButton, SIGNAL(clicked()), this, SLOT(del()));
         connect(m_newTagButton, SIGNAL(clicked()), this, SLOT(newTag()));
@@ -334,7 +334,7 @@ namespace Tag
         m_sizeText->setCurrentIndex( m_sizeText->findText( QString("%1").arg(state->fontPointSize()) ) );
         m_strikeText->setChecked( state->fontStrikeOut() );
         m_underlineText->setChecked( state->underline() );
-        m_iconButton->setIcon( Config::ImageFactory::newInstance()->icon(state->symbol()) );
+        m_iconButton->setIcon( Config::ImageFactory::instance()->icon(state->symbol()) );
         m_withIcon->setChecked( state->symbol() != QString() );
         m_withColorBackground->setChecked( state->itemColor() != QColor() );
 

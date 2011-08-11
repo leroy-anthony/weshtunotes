@@ -56,7 +56,7 @@ namespace Config
     class ImageFactory
     {
     public:
-        static ImageFactory * newInstance();
+        static ImageFactory * instance();
 
         const KIcon & icon( const QString & iconId );
         const QPixmap & pixmap( const QString & pixmapId, QPixmap & pix  );

@@ -80,7 +80,7 @@ namespace Scene
                 QString name = info.pluginName();
 
                 QListWidgetItem * item = new QListWidgetItem();
-                item->setIcon(Config::ImageFactory::newInstance()->icon(info.icon()));
+                item->setIcon(Config::ImageFactory::instance()->icon(info.icon()));
                 item->setText(info.pluginName());
                 item->setToolTip(info.comment());
 

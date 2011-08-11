@@ -138,7 +138,7 @@ namespace Tag
             {
                 setFixedSize(QSize(m_sizeSymbol,m_sizeSymbol));
                 setIconSize(QSize(m_sizeSymbol,m_sizeSymbol));
-                setIcon( Config::ImageFactory::newInstance()->icon(m_currentState->symbol()) );
+                setIcon( Config::ImageFactory::instance()->icon(m_currentState->symbol()) );
                 setVisibleTag( true );
             }
             else

@@ -148,7 +148,7 @@ namespace Basket
         m_icon = settings.valueGroup( "basket", "icon", "folder" );
         m_name = settings.valueGroup( "basket", "name", "<unknow>" );
         m_order = settings.valueGroup( "basket", "order", 0 ).toInt();
-        m_backgroundColor = settings.valueGroup( "basket", "color", Settings::colorBasket().name() );
+        m_backgroundColor = settings.valueGroup( "basket", "color", Settings::colorBasket() );
 
         setId( settings.valueGroup( "basket", "id", GeneratorID::id() ) );
 

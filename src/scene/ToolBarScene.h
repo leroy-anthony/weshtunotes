@@ -62,6 +62,7 @@ namespace Scene
         void setAlignmentRight( bool checked );
         void setAlignmentLeft( bool checked );
         void setAlignmentCenter( bool checked );
+        void setAlignmentBlock( bool checked );
         void setFontUnderline( bool checked );
         void setTextBackgroundColor( const QColor & c );
         void setTextColor( const QColor & c );
@@ -97,6 +98,7 @@ namespace Scene
         KAction * m_alignleftAction;
         KAction * m_aligncenterAction;
         KAction * m_alignrightAction;
+        KAction * m_alignblockAction;
 
     };
 
