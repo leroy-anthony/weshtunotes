@@ -70,6 +70,7 @@ namespace Scene
 
     AbstractScene::~AbstractScene()
     {
+        m_scene.disconnect();
     }
 
     void AbstractScene::showMessageStatus()
