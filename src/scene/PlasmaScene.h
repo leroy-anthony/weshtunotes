@@ -19,12 +19,18 @@
 #ifndef PLASMASCENE_H
 #define PLASMASCENE_H
 
-#include "../scene/AbstractScene.h"
-
 #include <KDE/Plasma/Corona>
+
+#include "../scene/AbstractScene.h"
 
 class QEvent;
 class QGraphicsSceneMouseEvent;
+
+namespace Handle
+{
+    class HandleItem;
+}
+
 
 namespace Plasma
 {
@@ -46,7 +52,7 @@ namespace Scene
         Handle::HandleItem * currentHandle();
 
         void addItemToScene( Handle::GraphicHandleItem * item );
-        QGraphicsProxyWidget * addHandleToScene( Handle::HandleItem * handle );
+        Handle::GraphicHandleItem * addHandleToScene( Handle::HandleItem * handle );
         Handle::HandleItem * newHandle( int x, int y );
 
         Handle::HandleItem * addData( const QMimeData * data );

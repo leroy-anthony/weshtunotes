@@ -22,7 +22,6 @@
 #include <QTreeWidget>
 
 #include "../explorer/AbstractExplorer.h"
-#include "../explorer/ItemTreeBasket.h"
 
 namespace Basket
 {
@@ -31,6 +30,7 @@ namespace Basket
 
 namespace Explorer
 {
+    class ItemTreeBasket;
 
     class TreeExplorer : public QTreeWidget, public AbstractExplorer
     {

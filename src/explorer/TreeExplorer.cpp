@@ -29,16 +29,18 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 
+#include "settings.h"
 #include "../basket/NewBasketDialog.h"
 #include "../basket/PropertiesBasketDialog.h"
-#include "../explorer/ItemTreeBasket.h"
+#include "../basket/ClipperBasket.h"
 #include "../basket/BasketFactory.h"
+#include "../explorer/ItemTreeBasket.h"
 #include "../scene/FreeScene.h"
 #include "../scene/LayoutScene.h"
 #include "../config/Configuration.h"
 #include "../config/ImageFactory.h"
 #include "../synchro/ConnectionFactory.h"
-#include "../basket/ClipperBasket.h"
+#include "../data/DataManager.h"
 
 namespace Explorer
 {

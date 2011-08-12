@@ -16,6 +16,13 @@
 
 */
 
+#include <QGraphicsWidget>
+#include <QApplication>
+#include <QClipboard>
+#include <QMap>
+#include <QGraphicsLayout>
+#include <QGraphicsProxyWidget>
+
 #include "ClipperBasket.h"
 #include "../config/ImageFactory.h"
 #include "../explorer/ItemTreeBasket.h"
@@ -27,11 +34,6 @@
 #include "../handle/HandleItem.h"
 #include "../scene/CustomGraphicsView.h"
 #include "settings.h"
-
-#include <QApplication>
-#include <QClipboard>
-#include <QMap>
-#include <QGraphicsLayout>
 
 namespace Basket
 {

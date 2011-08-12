@@ -26,6 +26,7 @@
 #include "../scene/SceneFactory.h"
 #include "../basket/Basket.h"
 #include "../basket/BasketFactory.h"
+#include "../basket/AbstractBasket.h"
 #include "../explorer/TreeExplorer.h"
 
 namespace Explorer

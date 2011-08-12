@@ -19,7 +19,6 @@
 #ifndef NOTEITEM_H_
 #define NOTEITEM_H_
 
-#include "CustomTextEdit.h"
 #include "AbstractItem.h"
 #include "../interface/ITextEdition.h"
 #include "../interface/IVisualItemEdition.h"
@@ -33,6 +32,7 @@ namespace Tag
 
 namespace Item
 {
+    class CustomTextEdit;
 
     class NoteItem : public Item::AbstractItem, public ITextEdition//, public IVisualItemEdition
     {

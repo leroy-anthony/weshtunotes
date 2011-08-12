@@ -20,8 +20,7 @@
 #define STATE_H
 
 #include "../interface/ITextEdition.h"
-#include "../item/NoteItem.h"
-#include "../config/Configuration.h"
+#include "../interface/IVisualItemEdition.h"
 #include "../data/DataManager.h"
 
 namespace Item
@@ -31,6 +30,7 @@ namespace Item
 
 namespace Tag
 {
+    class NoteTag;
 
     class State : public Item::ITextEdition, public Item::IVisualItemEdition
     {

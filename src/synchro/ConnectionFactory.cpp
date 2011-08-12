@@ -3,6 +3,7 @@
 
 #include "ConnectionFactory.h"
 
+#include <QAction>
 
 #include <KLocalizedString>
 

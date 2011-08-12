@@ -21,8 +21,6 @@
 
 #include "AbstractScene.h"
 
-#include <KUrl>
-
 namespace Scene
 {
 

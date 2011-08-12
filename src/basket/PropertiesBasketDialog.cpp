@@ -31,8 +31,10 @@
 #include "settings.h"
 #include "../data/DataManager.h"
 #include "../basket/BasketFactory.h"
+#include "../basket/AbstractBasket.h"
 #include "../tag/TagFactory.h"
 #include "../scene/AbstractScene.h"
+#include "../explorer/ItemTreeBasket.h"
 
 namespace Basket
 {

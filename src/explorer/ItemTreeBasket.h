@@ -22,8 +22,11 @@
 #include <QTreeWidgetItem>
 
 #include "../main/general.h"
-#include "../basket/AbstractBasket.h"
 
+namespace Basket
+{
+    class AbstractBasket;
+}
 
 namespace Explorer
 {

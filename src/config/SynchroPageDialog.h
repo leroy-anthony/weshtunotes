@@ -21,11 +21,10 @@
 
 #include <QWidget>
 #include <QMap>
-#include <QCheckBox>
-
-#include <KEditListBox>
 
 #include <SynchroSettings.h>
+
+class QCheckBox;
 
 namespace Config
 {

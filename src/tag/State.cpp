@@ -24,6 +24,7 @@
 #include "../config/Configuration.h"
 #include "../config/VisualAspect.h"
 #include "../tag/NoteTag.h"
+#include "../item/NoteItem.h"
 
 namespace Tag
 {
