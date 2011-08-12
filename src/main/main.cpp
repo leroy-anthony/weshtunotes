@@ -42,9 +42,11 @@ int main(int argc, char *argv[])
                          "leroy.anthony@gmail.com");
 
     aboutData.addAuthor( ki18n("Anthony Leroy"),
-                         ki18n("dev"),
+                         ki18n("Developer"),
                          "leroy.anthony@gmail.com",
                          "http://code.google.com/p/weshtunotes/" );
+
+    aboutData.setTranslator( ki18n("Anthony Leroy"), ki18n("leroy.anthony@gmail.com") );
 
     aboutData.setProgramIconName("basket");
 
