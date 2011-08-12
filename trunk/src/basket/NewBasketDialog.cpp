@@ -32,7 +32,11 @@
 #include "settings.h"
 #include "../data/DataManager.h"
 #include "../basket/BasketFactory.h"
+#include "../basket/AbstractBasket.h"
 #include "../synchro/ConnectionFactory.h"
+#include "../synchro/SynchroManager.h"
+#include "../explorer/AbstractExplorer.h"
+#include "../explorer/ItemTreeBasket.h"
 #include "../tag/TagFactory.h"
 
 namespace Basket

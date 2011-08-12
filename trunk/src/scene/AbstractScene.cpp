@@ -34,6 +34,7 @@
 #include "../item/ItemFactory.h"
 #include "../data/AssociationManager.h"
 #include "../data/DataManager.h"
+#include "../scene/CustomGraphicsView.h"
 
 namespace Scene
 {

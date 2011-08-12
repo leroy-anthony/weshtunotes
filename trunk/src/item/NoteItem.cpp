@@ -44,6 +44,7 @@
 #include "../config/VisualAspect.h"
 #include "../data/DataManager.h"
 #include "../handle/HandleItem.h"
+#include "../item/CustomTextEdit.h"
 #include "settings.h"
 
 namespace Item

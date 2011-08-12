@@ -19,11 +19,11 @@
 #ifndef TAGFACTORY_H
 #define TAGFACTORY_H
 
-#include "tag_factory.h"
-
 #include <QMap>
 
-#include "kdialog.h"
+#include <KDialog>
+
+#include "tag_factory.h"
 
 namespace Tag
 {

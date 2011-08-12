@@ -19,10 +19,11 @@
 #ifndef ITEMFACTORY_H
 #define ITEMFACTORY_H
 
-#include "../item/AbstractItem.h"
+#include <QString>
 
 namespace Item
 {
+    class AbstractItem;
 
     class ItemFactory
     {

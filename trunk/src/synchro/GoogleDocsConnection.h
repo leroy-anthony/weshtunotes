@@ -20,12 +20,7 @@
 #define GOOGLEDOCSCONNECTION_H
 
 #include <QString>
-#include <QNetworkReply>
 #include <QNetworkRequest>
-#include <QEventLoop>
-#include <QObject>
-#include <QHttp>
-#include <QSslError>
 
 #include "../synchro/AbstractConnection.h"
 

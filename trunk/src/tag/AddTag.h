@@ -23,8 +23,6 @@
 
 #include <KMenu>
 
-#include "../config/ImageFactory.h"
-
 class QMouseEvent;
 
 namespace Item

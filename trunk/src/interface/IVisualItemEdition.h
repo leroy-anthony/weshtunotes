@@ -22,7 +22,6 @@
 #include <QString>
 #include <QColor>
 
-#include "../config/Configuration.h"
 #include "../data/DataManager.h"
 
 namespace Item

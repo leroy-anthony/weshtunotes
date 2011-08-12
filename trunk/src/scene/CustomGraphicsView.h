@@ -21,9 +21,11 @@
 
 #include <QGraphicsView>
 #include <QTimer>
-#include <QGraphicsScene>
 
-#include "../handle/GraphicHandleItem.h"
+namespace Handle
+{
+    class GraphicHandleItem;
+}
 
 namespace Scene
 {

@@ -5,12 +5,13 @@
 #define CONNECTIONFACTORY_H
 
 #include <QList>
-#include <QAction>
+#include <QStringList>
 
-#include "../synchro/AbstractConnection.h"
+class QAction;
 
 namespace Synchro
 {
+    class AbstractConnection;
 
     class ConnectionFactory
     {

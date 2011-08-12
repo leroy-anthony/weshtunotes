@@ -21,10 +21,7 @@
 
 #include "FreeScene.h"
 
-#include <QGraphicsProxyWidget>
 #include <QHash>
-#include <QToolBar>
-#include <QGraphicsLinearLayout>
 
 namespace Scene
 {

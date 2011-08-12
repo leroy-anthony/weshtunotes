@@ -21,12 +21,16 @@
 
 #include <KDialog>
 
-#include "../explorer/ItemTreeBasket.h"
-#include "../explorer/AbstractExplorer.h"
-
 class KComboBox;
 class KIconButton;
 class KColorCombo;
+class QLineEdit;
+
+namespace Explorer
+{
+    class AbstractExplorer;
+    class ItemTreeBasket;
+}
 
 namespace Basket
 {
@@ -45,9 +49,9 @@ namespace Basket
         Explorer::AbstractExplorer * m_basketExplorer;
         Explorer::ItemTreeBasket * m_itemBasket;
 
-        QLineEdit      * m_basketName;
-        KIconButton    * m_iconButton;
-        KColorCombo    * m_colorBackground;
+        QLineEdit * m_basketName;
+        KIconButton * m_iconButton;
+        KColorCombo * m_colorBackground;
 
     };
 

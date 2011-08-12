@@ -30,6 +30,7 @@
 
 #include "../scene/NewAppletDialog.h"
 #include "../config/ImageFactory.h"
+#include "../handle/GraphicHandleItem.h"
 
 namespace Scene
 {
@@ -123,7 +124,7 @@ namespace Scene
     {
     }
 
-    QGraphicsProxyWidget * PlasmaScene::addHandleToScene( Handle::HandleItem * handle )
+    Handle::GraphicHandleItem * PlasmaScene::addHandleToScene( Handle::HandleItem * handle )
     {
         return 0;
     }

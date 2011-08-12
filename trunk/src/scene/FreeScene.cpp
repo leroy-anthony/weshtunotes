@@ -51,6 +51,8 @@
 #include "../config/Configuration.h"
 #include "../handle/GraphicHandleItem.h"
 #include "../animation/AnimationManager.h"
+#include "../item/AbstractItem.h"
+#include "../item/NoteItem.h"
 
 namespace Scene
 {

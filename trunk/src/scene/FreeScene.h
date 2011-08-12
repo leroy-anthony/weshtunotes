@@ -19,11 +19,9 @@
 #ifndef FREESCENE_H_
 #define FREESCENE_H_
 
-#include "AbstractScene.h"
-
 #include <QHash>
 
-#include "../item/NoteItem.h"
+#include "AbstractScene.h"
 
 class QGraphicsProxyWidget;
 class QToolBar;

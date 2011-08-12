@@ -22,12 +22,13 @@
 #include <QDir>
 #include <QLabel>
 
-#include <kpassworddialog.h>
 #include <KCmdLineArgs>
 #include <KAboutData>
 #include <KApplication>
 #include <KMessageBox>
 #include <QTextListFormat>
+#include <KProgressDialog>
+#include <KWallet/Wallet>
 
 #include "../config/Configuration.h"
 #include "../scene/AbstractScene.h"

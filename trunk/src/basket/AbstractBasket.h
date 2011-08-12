@@ -21,12 +21,7 @@
 
 #include <QList>
 
-#include <KUrl>
-#include <kpassworddialog.h>
-#include <KWallet/Wallet>
-
 #include "../technic/GeneratorID.h"
-#include "../synchro/GoogleDocsConnection.h"
 
 namespace Scene
 {

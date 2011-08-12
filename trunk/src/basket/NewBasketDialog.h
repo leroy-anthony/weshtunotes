@@ -22,15 +22,22 @@
 #include <KDialog>
 
 #include "NewBasketForm.h"
-#include "../explorer/ItemTreeBasket.h"
-#include "../explorer/AbstractExplorer.h"
-#include "../synchro/SynchroManager.h"
-#include "../synchro/GoogleDocsConnection.h"
 
 class KComboBox;
 class KIconButton;
 class KColorCombo;
 class KTabWidget;
+
+namespace Explorer
+{
+    class ItemTreeBasket;
+    class AbstractExplorer;
+}
+
+namespace Synchro
+{
+    class SynchroManager;
+}
 
 namespace Basket
 {

@@ -19,9 +19,6 @@
 #ifndef ABSTRACTCONNECTION_H
 #define ABSTRACTCONNECTION_H
 
-#include <kpassworddialog.h>
-#include <KWallet/Wallet>
-
 #include "../technic/GeneratorID.h"
 #include "../synchro/NetworkAccessManagerProxy.h"
 

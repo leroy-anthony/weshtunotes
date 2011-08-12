@@ -21,11 +21,17 @@
 
 #include "settings.h"
 
-#include <KWallet/Wallet>
 #include <KTextEdit>
-#include <KProgressDialog>
+#include <kpassworddialog.h>
 
 #include "../synchro/AbstractConnection.h"
+
+class KProgressDialog;
+
+namespace KWallet
+{
+    class Wallet;
+}
 
 namespace Synchro
 {

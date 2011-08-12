@@ -21,6 +21,7 @@
 #include <iostream>
 
 #include <QStyle>
+#include <QTextCharFormat>
 
 #include <KFontSizeAction>
 #include <KAction>
@@ -36,6 +37,8 @@
 #include "../widget/ColorCombo.h"
 #include "../scene/FreeScene.h"
 #include "../scene/LayoutScene.h"
+#include "../scene/CustomGraphicsView.h"
+#include "../item/AbstractItem.h"
 
 namespace Scene
 {

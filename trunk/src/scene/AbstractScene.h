@@ -21,13 +21,13 @@
 
 #include <QGraphicsScene>
 
-#include "../item/AbstractItem.h"
-#include "../scene/CustomGraphicsView.h"
+#include "../technic/GeneratorID.h"
 
 template <typename T> class QList;
 class QMimeData;
 class QGraphicsWidget;
 class QGraphicsLinearLayout;
+class QGraphicsProxyWidget;
 
 namespace Handle
 {
@@ -35,8 +35,14 @@ namespace Handle
     class GraphicHandleItem;
 }
 
+namespace Item
+{
+    class AbstractItem;
+}
+
 namespace Scene
 {
+    class CustomGraphicsView;
 
     class AbstractScene : public QObject, public Technic::GeneratorID
     {
@@ -53,7 +59,7 @@ namespace Scene
         virtual Handle::HandleItem * currentHandle()       = 0;
 
         virtual void addItemToScene( Handle::GraphicHandleItem * item ) = 0;
-        virtual QGraphicsProxyWidget * addHandleToScene( Handle::HandleItem * handle ) = 0;
+        virtual Handle::GraphicHandleItem * addHandleToScene( Handle::HandleItem * handle ) = 0;
         virtual Handle::HandleItem * newHandle( int x, int y ) = 0;
 
         void loadHandles( const QList<QString> & filesName, QPointF centerPt = QPointF(0,0), int selectionWidth = 0, int selectionHeigth = 0, bool newHandles = false );
@@ -91,8 +97,8 @@ namespace Scene
 
     protected:
         void buildListHandleToLoad( Handle::HandleItem * h, QStringList & l );
-        bool canInsertFromMimeData( const QMimeData *source ) const;
-        void insertFromMimeData( const QMimeData *source );
+        bool canInsertFromMimeData( const QMimeData * source ) const;
+        void insertFromMimeData( const QMimeData * source );
 
         QTransform m_transformView;
         int m_horizontalScrollBarValueView;

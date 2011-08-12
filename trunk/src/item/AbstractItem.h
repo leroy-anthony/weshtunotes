@@ -21,7 +21,6 @@
 
 #include <QWidget>
 
-#include "IStorageData.h"
 #include "../technic/GeneratorID.h"
 
 class QString;
