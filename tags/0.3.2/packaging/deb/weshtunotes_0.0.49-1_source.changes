@@ -1,0 +1,25 @@
+Format: 1.8
+Date: Sat, 22 Aug 2009 20:52:28 +0200
+Source: weshtunotes
+Binary: weshtunotes
+Architecture: source
+Version: 0.0.49-1
+Distribution: unstable
+Urgency: low
+Maintainer: anthony leroy <leroy.anthony@gmail.com>
+Changed-By: anthony leroy <leroy.anthony@gmail.com>
+Description: 
+ weshtunotes - Gérer et organiser la prise de notes.
+Changes: 
+ weshtunotes (0.0.49-1) unstable; urgency=low
+ .
+   * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+Checksums-Sha1: 
+ 201e82b701c5237757aee94201c4758a40b1ac26 555 weshtunotes_0.0.49-1.dsc
+ f7314543bcd04e52b9a048c816a2ca4f147e2a42 180368 weshtunotes_0.0.49-1.tar.gz
+Checksums-Sha256: 
+ 27b24ace390048a9f76fe58343c4709b1fdcb73889c3b59bbcfc41226fe87efa 555 weshtunotes_0.0.49-1.dsc
+ c7c8671210990cb548976ae51f4faf1db9594d81082e6b5b133c64de942a5a7f 180368 weshtunotes_0.0.49-1.tar.gz
+Files: 
+ 9c9cadf402fc9909413007bebfb35dd2 555 unknown extra weshtunotes_0.0.49-1.dsc
+ 2d28374a989326aa7efa0f89ea85b554 180368 unknown extra weshtunotes_0.0.49-1.tar.gz

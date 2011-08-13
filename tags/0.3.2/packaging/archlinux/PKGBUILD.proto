@@ -1,0 +1,35 @@
+# Contributor: Leroy Anthony <leroy.anthony@gmail.com>
+pkgname=kweshtunotes-svn
+pkgver=<SVN_REVISION>
+pkgrel=1
+pkgdesc="Note"
+arch=(i686 x86_64)
+url="http://code.google.com/p/weshtunotes/"
+license=('GPL')
+groups=()
+depends=('qt' 'kdebase-runtime>=4.3' 'kdelibs')
+makedepends=('subversion' 'automoc4' 'cmake')
+provides=()
+conflicts=()
+replaces=()
+backup=()
+source=($pkgname-$pkgver.tar.gz)
+noextract=()
+md5sums=('<MD5SUM>') #generate with 'makepkg -g'
+
+_svntrunk=http://weshtunotes.googlecode.com/svn/trunk
+_svnmod=kweshtunotes
+
+build() {
+  cd "$srcdir"
+  
+  msg "Doing SVN checkout ..."
+  svn co $_svntrunk --config-dir ./ -r $pkgver $_svnmod || return 1
+  cd ${_svnmod}
+
+  mkdir -p ${srcdir}/build
+  cd ${srcdir}/build
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RELEASE ..
+  make || return 1
+  make DESTDIR=${pkgdir} install || return 1
+}
