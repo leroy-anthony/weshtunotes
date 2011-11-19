@@ -1,12 +1,15 @@
 [Desktop Entry]
 Exec=kweshtunotes
-OnlyShowIn=KDE;
-Type=Application
+Icon=knotes
 Terminal=false
-Icon=kweshtunotes
-GenericName=Note
+Type=Application
+
+GenericName=Notes manager
+GenericName[fr]=Gestionnaire de notes
+
 Name=KWeshTuNotes
+Name[fr]=KWeshTuNotes
+
 X-KDE-StartupNotify=true
 X-DBUS-StartupType=Unique
-
-Name[fr]=test test
+Categories=Qt;KDE;Utility;TextTools;X-KDE-Utilities-Desktop;
